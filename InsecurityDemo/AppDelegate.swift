@@ -13,6 +13,7 @@ import Insecurity
         self.window = window
         
         let navigationController = UINavigationController()
+        navigationController.interactivePopGestureRecognizer?.isEnabled = true
         
         window.rootViewController = navigationController
         
@@ -55,10 +56,6 @@ class GalleryCoordinator: NavichildCoordinator<Never> {
             return galleryViewController
         }
     }
-    
-    func start() {
-        
-    }
 }
 
 class ProductViewController: UIViewController {
@@ -80,16 +77,16 @@ class ProductCoordinator: NavichildCoordinator<Void> {
             let viewController = ProductViewController()
             
             viewController.onContentsRequested = {
-                let contentsCoordinator = ContentsCoordinator()
+                let contentsCoordinator = CartCoordinator()
                 
                 navitroller.startChild(contentsCoordinator, animated: true) { result in
-                    print("End Contents \(result)")
-                    switch result {
-                    case .dismissed:
-                        finish(())
-                    case .normal:
-                        finish(())
-                    }
+                    print("End Cart \(result)")
+//                    switch result {
+//                    case .dismissed:
+//                        finish(())
+//                    case .normal:
+//                        finish(())
+//                    }
                 }
             }
             
@@ -98,29 +95,58 @@ class ProductCoordinator: NavichildCoordinator<Void> {
     }
 }
 
-
-class ContentsViewController: UIViewController {
-    var onFinishRequested: (() -> Void)?
+class CartViewController: UIViewController {
+    var onPayRequested: (() -> Void)?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemYellow
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.onFinishRequested?()
+            self.onPayRequested?()
         }
     }
 }
 
 
-class ContentsCoordinator: NavichildCoordinator<Void> {
+class CartCoordinator: NavichildCoordinator<Void> {
+    init() {
+        super.init { navitroller, finish in
+            let cartViewController = CartViewController()
+            cartViewController.onPayRequested = {
+                let paymentCoordinator = PaymentCoordinator()
+                
+                navitroller.startChild(paymentCoordinator, animated: true) { result in
+                    print("End Payment")
+                    finish(())
+                }
+            }
+            return cartViewController
+        }
+    }
+}
+
+class PaymentViewController: UIViewController {
+    var onFinish: (() -> Void)?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBlue
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.onFinish?()
+        }
+    }
+}
+
+class PaymentCoordinator: NavichildCoordinator<Void> {
     init() {
         super.init { _, finish in
-            let contentsViewController = ContentsViewController()
-            contentsViewController.onFinishRequested = {
+            let paymentViewController = PaymentViewController()
+            paymentViewController.onFinish = {
                 finish(())
             }
-            return contentsViewController
+            return paymentViewController
         }
     }
 }

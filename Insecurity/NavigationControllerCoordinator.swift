@@ -19,7 +19,7 @@ public class NavitrollerCoordinator {
             case disposed
         }
         
-        let viewController: UIViewController
+        weak var viewController: UIViewController?
         let coordinator: NavichildCoordinatorAny
         let state: State
     }
@@ -64,13 +64,30 @@ public class NavitrollerCoordinator {
         navigationController.setViewControllers(realViewControllers, animated: true)
     }
     
-    func finalize(_ navichild: NavichildCoordinatorAny) {
+    func purgeOnDealloc(_ navichild: NavichildCoordinatorAny) {
         let index = navData.firstIndex { navData in
             navData.coordinator === navichild
         }
         
         guard let index = index else {
             assertionFailure("Finalizing non-existing navichild")
+            return
+        }
+        
+        var newNavData = self.navData
+        assert(index == newNavData.endIndex - 1, "Dealocation ensued not from the end")
+        newNavData.remove(at: index)
+        
+        self.navData = newNavData
+    }
+    
+    func finalize(_ navichild: NavichildCoordinatorAny) {
+        let index = navData.firstIndex { navData in
+            navData.coordinator === navichild
+        }
+        
+        guard let index = index else {
+            assertionFailure("Finalizing non-existing navichild. Maybe it's too early to call the completion of the coordinator? Or it's a bug...")
             return
         }
  
@@ -84,14 +101,24 @@ public class NavitrollerCoordinator {
     }
     
     public func startChild<Result>(_ navichild: NavichildCoordinator<Result>, animated: Bool, _ completion: @escaping (NavichildResult<Result>) -> Void) {
+        weak var weakControler: UIViewController?
         let controller = navichild.make(self) { [weak self] result in
             guard let self = self else { return }
+            weakControler?.onDeinit = nil
             self.finalize(navichild)
             self.finalizationDepth += 1
             completion(.normal(result))
             self.finalizationDepth -= 1
             self.purge()
         }
+        weakControler = controller
+        
+        controller.onDeinit = { [weak self] in
+            guard let self = self else { return }
+            self.purgeOnDealloc(navichild)
+            completion(.dismissed)
+        }
+        
         dispatch(controller, navichild: navichild)
         navigationController.pushViewController(controller, animated: animated)
     }
