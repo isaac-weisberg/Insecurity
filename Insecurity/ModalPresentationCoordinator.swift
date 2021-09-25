@@ -89,6 +89,23 @@ public class ModarollerCoordinator {
         navData[index] = NavData(viewController: oldNavData.viewController, coordinator: oldNavData.coordinator, state: .finished)
     }
     
+    func purgeOnDealloc(_ modachild: ModachildCoordinatorAny) {
+        let index = navData.firstIndex { navData in
+            navData.coordinator === modachild
+        }
+        
+        guard let index = index else {
+            assertionFailure("Finalizing non-existing modachild")
+            return
+        }
+        
+        var newNavData = self.navData
+        assert(index == newNavData.endIndex - 1, "Dealocation ensued not from the end")
+        newNavData.remove(at: index)
+        
+        self.navData = newNavData
+    }
+    
     func dispatch(_ controller: UIViewController, _ animated: Bool, _ modachild: ModachildCoordinatorAny) {
         let electedHost: UIViewController?
         if let topNavData = navData.last {
@@ -119,15 +136,27 @@ public class ModarollerCoordinator {
     }
     
     public func startChild<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModarollerResult<NewResult>) -> Void) {
+        weak var weakControler: UIViewController?
         let controller = modachild.make(self) { [weak self] result in
             guard let self = self else { return }
             
+            assert(weakControler != nil, "Called coordinator finish way before it could be started")
+            weakControler?.onDeinit = nil
             self.finalize(modachild)
             self.finalizationDepth += 1
             completion(.normal(result))
             self.finalizationDepth -= 1
             self.purge()
         }
+        
+        weakControler = controller
+        
+        controller.onDeinit = { [weak self] in
+            guard let self = self else { return }
+            self.purgeOnDealloc(modachild)
+            completion(.dismissed)
+        }
+        
         dispatch(controller, animated, modachild)
     }
 }

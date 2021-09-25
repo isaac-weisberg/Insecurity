@@ -35,8 +35,8 @@ import Insecurity
         let coordinator = ModarollerCoordinator(rootViewController)
         let galleryCoordinator = GalleryModalCoordinator()
 
-        coordinator.startChild(galleryCoordinator, animated: false) { never in
-
+        coordinator.startChild(galleryCoordinator, animated: false) { result in
+            print("End Gallery \(result)")
         }
 
 
@@ -202,10 +202,10 @@ class PaymentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBlue
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.onFinish?()
-        }
+//        
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+//            self.onFinish?()
+//        }
     }
 }
 

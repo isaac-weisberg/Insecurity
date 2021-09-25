@@ -103,6 +103,8 @@ open class NavitrollerCoordinator {
         weak var weakControler: UIViewController?
         let controller = navichild.make(self) { [weak self] result in
             guard let self = self else { return }
+            
+            assert(weakControler != nil, "Called coordinator finish way before it could be started")
             weakControler?.onDeinit = nil
             self.finalize(navichild)
             self.finalizationDepth += 1
