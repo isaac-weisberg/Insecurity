@@ -5,7 +5,7 @@ public enum NavichildResult<NormalResult> {
     case dismissed
 }
 
-public class NavitrollerCoordinator {
+open class NavitrollerCoordinator {
     let navigationController: UINavigationController
     
     public init(_ navigationController: UINavigationController) {
@@ -16,7 +16,6 @@ public class NavitrollerCoordinator {
         enum State {
             case running
             case finished
-            case disposed
         }
         
         weak var viewController: UIViewController?
@@ -42,7 +41,7 @@ public class NavitrollerCoordinator {
                 switch navData.state {
                 case .running:
                     return nil
-                case .finished, .disposed:
+                case .finished:
                     return (index, navData)
                 }
             }

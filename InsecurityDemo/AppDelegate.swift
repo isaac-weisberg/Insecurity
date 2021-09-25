@@ -11,21 +11,35 @@ import Insecurity
         
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
+//
+//        let navigationController = UINavigationController()
+//        navigationController.interactivePopGestureRecognizer?.isEnabled = true
+//
+//        window.rootViewController = navigationController
+//
+//        let coordinator = NavitrollerCoordinator(navigationController)
+//        let galleryCoordinator = GalleryCoordinator()
+//
+//        coordinator.startChild(galleryCoordinator, animated: false) { never in
+//
+//        }
+//
+//        window.makeKeyAndVisible()
         
-        let navigationController = UINavigationController()
-        navigationController.interactivePopGestureRecognizer?.isEnabled = true
-        
-        window.rootViewController = navigationController
-        
-        let coordinator = NavitrollerCoordinator(navigationController)
-        let galleryCoordinator = GalleryCoordinator()
-        
-        coordinator.startChild(galleryCoordinator, animated: false) { never in
-            
-        }
-        
+        let rootViewController = UIViewController()
+        rootViewController.view.backgroundColor = .white
+
+        window.rootViewController = rootViewController
         window.makeKeyAndVisible()
-        
+
+        let coordinator = ModarollerCoordinator(rootViewController)
+        let galleryCoordinator = GalleryModalCoordinator()
+
+        coordinator.startChild(galleryCoordinator, animated: false) { never in
+
+        }
+
+
         return true
     }
 }
@@ -50,6 +64,22 @@ class GalleryCoordinator: NavichildCoordinator<Never> {
             galleryViewController.onProductRequested = {
                 let productCoordinator = ProductCoordinator()
                 navitroller.startChild(productCoordinator, animated: true) { result in
+                    print("End Product \(result)")
+                }
+            }
+            return galleryViewController
+        }
+    }
+}
+
+class GalleryModalCoordinator: ModachildCoordinator<Never> {
+    init() {
+        super.init { modaroller, _ in
+            let galleryViewController = GalleryViewController(nibName: nil, bundle: nil)
+            
+            galleryViewController.onProductRequested = {
+                let productCoordinator = ProductModalCoordinator()
+                modaroller.startChild(productCoordinator, animated: true) { result in
                     print("End Product \(result)")
                 }
             }
@@ -95,6 +125,30 @@ class ProductCoordinator: NavichildCoordinator<Void> {
     }
 }
 
+class ProductModalCoordinator: ModachildCoordinator<Void> {
+    init() {
+        super.init { modaroller, finish in
+            let viewController = ProductViewController()
+            
+            viewController.onContentsRequested = {
+                let cartCoordinator = CartModalCoordinator()
+                
+                modaroller.startChild(cartCoordinator, animated: true) { result in
+                    print("End Cart \(result)")
+                    switch result {
+                    case .dismissed:
+                        finish(())
+                    case .normal:
+                        finish(())
+                    }
+                }
+            }
+            
+            return viewController
+        }
+    }
+}
+
 class CartViewController: UIViewController {
     var onPayRequested: (() -> Void)?
     
@@ -108,7 +162,6 @@ class CartViewController: UIViewController {
     }
 }
 
-
 class CartCoordinator: NavichildCoordinator<Void> {
     init() {
         super.init { navitroller, finish in
@@ -117,6 +170,23 @@ class CartCoordinator: NavichildCoordinator<Void> {
                 let paymentCoordinator = PaymentCoordinator()
                 
                 navitroller.startChild(paymentCoordinator, animated: true) { result in
+                    print("End Payment")
+                    finish(())
+                }
+            }
+            return cartViewController
+        }
+    }
+}
+
+class CartModalCoordinator: ModachildCoordinator<Void> {
+    init() {
+        super.init { modaroller, finish in
+            let cartViewController = CartViewController()
+            cartViewController.onPayRequested = {
+                let paymentCoordinator = PaymentModalCoordinator()
+                
+                modaroller.startChild(paymentCoordinator, animated: true) { result in
                     print("End Payment")
                     finish(())
                 }
@@ -140,6 +210,18 @@ class PaymentViewController: UIViewController {
 }
 
 class PaymentCoordinator: NavichildCoordinator<Void> {
+    init() {
+        super.init { _, finish in
+            let paymentViewController = PaymentViewController()
+            paymentViewController.onFinish = {
+                finish(())
+            }
+            return paymentViewController
+        }
+    }
+}
+
+class PaymentModalCoordinator: ModachildCoordinator<Void> {
     init() {
         super.init { _, finish in
             let paymentViewController = PaymentViewController()
