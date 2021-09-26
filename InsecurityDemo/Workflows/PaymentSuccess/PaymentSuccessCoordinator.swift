@@ -6,7 +6,6 @@ class PaymentSuccessCoordinator: ModachildCoordinator<Void> {
             let viewController = PaymentSuccessViewController()
             
             viewController.onConfirm = {
-//                let navigationCoordinator = NavitrollerCoordinator(<#T##navigationController: UINavigationController##UINavigationController#>)
                 finish(())
             }
             

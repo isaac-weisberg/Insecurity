@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		A34CBF6526FFD796007AF9B8 /* ModalPresentationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */; };
+		A3683FBE2700FB590048B3CF /* LoginPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FBD2700FB590048B3CF /* LoginPhoneViewController.swift */; };
+		A3683FC12700FBCC0048B3CF /* LoginSMSCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC02700FBCC0048B3CF /* LoginSMSCodeViewController.swift */; };
+		A3683FC32700FC3F0048B3CF /* LoginPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */; };
+		A3683FC52700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC42700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift */; };
 		A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370767F26FFCED600ED7391 /* DeinitObservable.swift */; };
 		A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382532F27007EA900FBC6DC /* GalleryViewController.swift */; };
 		A382533227007ED200FBC6DC /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382533127007ED200FBC6DC /* ApplicationCoordinator.swift */; };
@@ -54,6 +58,10 @@
 
 /* Begin PBXFileReference section */
 		A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresentationCoordinator.swift; sourceTree = "<group>"; };
+		A3683FBD2700FB590048B3CF /* LoginPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneViewController.swift; sourceTree = "<group>"; };
+		A3683FC02700FBCC0048B3CF /* LoginSMSCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeViewController.swift; sourceTree = "<group>"; };
+		A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneCoordinator.swift; sourceTree = "<group>"; };
+		A3683FC42700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeCoordinator.swift; sourceTree = "<group>"; };
 		A370767F26FFCED600ED7391 /* DeinitObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
 		A382532F27007EA900FBC6DC /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		A382533127007ED200FBC6DC /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
@@ -94,9 +102,29 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A3683FBC2700FB460048B3CF /* LoginPhone */ = {
+			isa = PBXGroup;
+			children = (
+				A3683FBD2700FB590048B3CF /* LoginPhoneViewController.swift */,
+				A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */,
+			);
+			path = LoginPhone;
+			sourceTree = "<group>";
+		};
+		A3683FBF2700FBBE0048B3CF /* LoginSMSCode */ = {
+			isa = PBXGroup;
+			children = (
+				A3683FC02700FBCC0048B3CF /* LoginSMSCodeViewController.swift */,
+				A3683FC42700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift */,
+			);
+			path = LoginSMSCode;
+			sourceTree = "<group>";
+		};
 		A382532D27007E8A00FBC6DC /* Workflows */ = {
 			isa = PBXGroup;
 			children = (
+				A3683FBF2700FBBE0048B3CF /* LoginSMSCode */,
+				A3683FBC2700FB460048B3CF /* LoginPhone */,
 				A38253482700919800FBC6DC /* PaymentSuccess */,
 				A382534327008FC300FBC6DC /* Payment */,
 				A382533E27008C7400FBC6DC /* Cart */,
@@ -325,12 +353,16 @@
 				A3968FEE26FF260000B6A59B /* AppDelegate.swift in Sources */,
 				A382534C2700924400FBC6DC /* PaymentSuccessCoordinator.swift in Sources */,
 				A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */,
+				A3683FC52700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift in Sources */,
 				A382534227008DEE00FBC6DC /* CartCoordinator.swift in Sources */,
 				A38253472700906100FBC6DC /* PaymentCoordinator.swift in Sources */,
 				A3825339270086CF00FBC6DC /* ProductCoordinator.swift in Sources */,
+				A3683FC12700FBCC0048B3CF /* LoginSMSCodeViewController.swift in Sources */,
 				A382533227007ED200FBC6DC /* ApplicationCoordinator.swift in Sources */,
 				A38253372700817C00FBC6DC /* ProductViewController.swift in Sources */,
+				A3683FC32700FC3F0048B3CF /* LoginPhoneCoordinator.swift in Sources */,
 				A382534027008C7F00FBC6DC /* CartViewController.swift in Sources */,
+				A3683FBE2700FB590048B3CF /* LoginPhoneViewController.swift in Sources */,
 				A382534527008FCB00FBC6DC /* PaymentViewController.swift in Sources */,
 				A38253342700804700FBC6DC /* GalleryCoordinator.swift in Sources */,
 				A382534A270091A900FBC6DC /* PaymentSuccessViewController.swift in Sources */,

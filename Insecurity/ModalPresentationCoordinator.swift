@@ -51,7 +51,7 @@ public class ModarollerCoordinator {
                 return nil
             }
         }
-        .reversed()
+            .reversed()
         
         let controllerToDismissFrom: UIViewController?
         if let topNavData = prunedNavData.last {
@@ -84,7 +84,7 @@ public class ModarollerCoordinator {
             assertionFailure("Finalizing non-existing modachild. Maybe it's too early to call the completion of the coordinator? Or it's a bug...")
             return
         }
- 
+        
         let oldNavData = navData[index]
         navData[index] = NavData(viewController: oldNavData.viewController, coordinator: oldNavData.coordinator, state: .finished)
     }
@@ -135,6 +135,29 @@ public class ModarollerCoordinator {
         electedHost.present(controller, animated: true, completion: nil)
     }
     
+    public func startNavitrollerChild<NewResult>(_ navigationController: UINavigationController,
+                                                 _ child: NavichildCoordinator<NewResult>,
+                                                 _ completion: @escaping (ModarollerResult<NewResult>) -> Void) {
+        var modachildFinish: ((NewResult) -> Void)?
+        let navitrollerCoordinator = NavitrollerCoordinator(navigationController, child) { result in
+            if let modachildFinish = modachildFinish {
+                modachildFinish(result)
+            } else {
+                assertionFailure("Navigation Controller child has called finish way before we could initialize the coordinator")
+            }
+        }
+        let modachild = ModachildCoordinator<NewResult>(navitrollerCoordinator) { modaroller, finish in
+            modachildFinish = { result in
+                finish(result)
+            }
+            return navigationController
+        }
+        
+        self.startChild(modachild, animated: true) { modarollerResult in
+            completion(modarollerResult)
+        }
+    }
+    
     public func startChild<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModarollerResult<NewResult>) -> Void) {
         weak var weakControler: UIViewController?
         let controller = modachild.make(self) { [weak self] result in
@@ -160,11 +183,11 @@ public class ModarollerCoordinator {
         dispatch(controller, animated, modachild)
     }
     
-    #if DEBUG
+#if DEBUG
     deinit {
         print("Modal Presentation Coordinator deinit")
     }
-    #endif
+#endif
 }
 
 protocol ModachildCoordinatorAny: AnyObject {
@@ -173,8 +196,17 @@ protocol ModachildCoordinatorAny: AnyObject {
 
 open class ModachildCoordinator<Result>: ModachildCoordinatorAny {
     let make: (ModarollerCoordinator, @escaping (Result) -> Void) -> UIViewController
+    let navitrollerChild: NavitrollerCoordinator<Result>?
     
     public init(_ make: @escaping (ModarollerCoordinator, @escaping (Result) -> Void) -> UIViewController) {
+        self.make = make
+        self.navitrollerChild = nil
+    }
+    
+    init(_ navitrollerChild: NavitrollerCoordinator<Result>,
+         _ make: @escaping (ModarollerCoordinator, @escaping (Result) -> Void) -> UIViewController) {
+        
+        self.navitrollerChild  = navitrollerChild
         self.make = make
     }
 }
