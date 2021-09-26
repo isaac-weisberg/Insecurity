@@ -9,6 +9,8 @@ class PaymentViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBrown
         
+        navigationItem.title = "Payment"
+        
         payButton.translatesAutoresizingMaskIntoConstraints = false
         payButton.setTitle("Pay", for: .normal)
         view.addSubview(payButton)

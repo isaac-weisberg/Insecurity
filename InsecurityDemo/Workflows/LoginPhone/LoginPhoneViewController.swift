@@ -9,6 +9,8 @@ class LoginPhoneViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemMint
         
+        navigationItem.title = "Login"
+        
         sendSMSButton.translatesAutoresizingMaskIntoConstraints = false
         sendSMSButton.setTitle("Send SMS", for: .normal)
         view.addSubview(sendSMSButton)

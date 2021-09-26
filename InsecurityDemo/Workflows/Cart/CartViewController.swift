@@ -11,6 +11,8 @@ class CartViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemYellow
         
+        navigationItem.title = "Cart"
+        
         payButton.translatesAutoresizingMaskIntoConstraints = false
         payButton.setTitle("Pay", for: .normal)
         view.addSubview(payButton)

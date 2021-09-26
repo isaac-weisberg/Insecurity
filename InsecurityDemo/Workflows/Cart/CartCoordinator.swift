@@ -3,7 +3,6 @@ import UIKit
 
 enum CartCoordinatorResult {
     case purchased
-    case canceledPurchase
 }
 
 class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
@@ -24,7 +23,7 @@ class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
                             finish(.purchased)
                         }
                     case .dismissed:
-                        finish(.canceledPurchase)
+                        break
                     }
                 }
             }
@@ -51,7 +50,7 @@ class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
                                         finish(.purchased)
                                     }
                                 case .dismissed:
-                                    finish(.canceledPurchase)
+                                    break
                                 }
                             }
                         }

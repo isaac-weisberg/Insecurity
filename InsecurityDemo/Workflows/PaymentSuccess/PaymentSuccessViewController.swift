@@ -9,6 +9,8 @@ class PaymentSuccessViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemGray
         
+        navigationItem.title = "Success"
+        
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         confirmButton.setTitle("Confirm", for: .normal)
         view.addSubview(confirmButton)

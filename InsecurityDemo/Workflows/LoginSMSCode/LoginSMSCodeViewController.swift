@@ -9,6 +9,8 @@ class LoginSMSCodeViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemRed
         
+        navigationItem.title = "Code"
+        
         sendSMSCodeButton.translatesAutoresizingMaskIntoConstraints = false
         sendSMSCodeButton.setTitle("Confirm SMS code", for: .normal)
         view.addSubview(sendSMSCodeButton)

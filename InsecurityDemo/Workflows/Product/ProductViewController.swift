@@ -7,7 +7,9 @@ class ProductViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemPink
+        
+        navigationItem.title = "Product"
         
         cartButton.translatesAutoresizingMaskIntoConstraints = false
         cartButton.setTitle("Go to cart", for: .normal)
