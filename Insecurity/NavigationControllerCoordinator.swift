@@ -129,6 +129,18 @@ open class NavitrollerCoordinator {
         print("Navigation Controller Coordinator deinit")
     }
     #endif
+    
+    var modaroller: ModarollerCoordinator?
+    public func asModarollerCoordinator() -> ModarollerCoordinator {
+        if let modaroller = modaroller {
+            return modaroller
+        }
+        
+        let modaroller = ModarollerCoordinator(navigationController)
+        self.modaroller = modaroller
+        
+        return modaroller
+    }
 }
 
 protocol NavichildCoordinatorAny: AnyObject {
