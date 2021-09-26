@@ -8,27 +8,18 @@ class ApplicationCoordinator {
         self.window = window
     }
     
-    var navitrollerCoordinator: NavitrollerCoordinator?
+    var navitrollerCoordinator: NavitrollerCoordinator<Void>?
     
     func start() {
         let navigationController = UINavigationController()
         
         window.rootViewController = navigationController
         
-        let navitrollerCoordinator = NavitrollerCoordinator(navigationController)
-        
-        let galleryCoordinator = GalleryCoordinator()
-        
-        navitrollerCoordinator.startChild(galleryCoordinator, animated: false) { result in
-            switch result {
-            case .normal:
-                // Impossible because it's Never
-                break
-            case .dismissed:
-                // Impossible because it's a root controller
-                break
-            }
+        let navitrollerCoordinator = NavitrollerCoordinator(navigationController, GalleryCoordinator()) { result in
+            print("End Gallery \(result)")
+            self.navitrollerCoordinator = nil
         }
+        self.navitrollerCoordinator = navitrollerCoordinator
         
         window.makeKeyAndVisible()
     }

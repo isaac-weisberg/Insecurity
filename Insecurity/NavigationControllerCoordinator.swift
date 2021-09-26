@@ -5,11 +5,56 @@ public enum NavichildResult<NormalResult> {
     case dismissed
 }
 
-open class NavitrollerCoordinator {
+public protocol NavitrollerCoordinatorAny: AnyObject {
+    func startChild<NewResult>(_ navichild: NavichildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (NavichildResult<NewResult>) -> Void)
+    
+    func asModarollerCoordinator() -> ModarollerCoordinator
+}
+
+open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     let navigationController: UINavigationController
     
-    public init(_ navigationController: UINavigationController) {
+    enum SelfState {
+        case running
+        case finished
+    }
+    var selfState = SelfState.running
+    
+    public init(_ navigationController: UINavigationController, _ initialChild: NavichildCoordinator<Result>, _ completion: @escaping (Result) -> Void) {
         self.navigationController = navigationController
+        
+        var weakControllerInitialized = false
+        weak var weakController: UIViewController?
+        let controller = initialChild.make(self) { [weak self] result in
+            guard let self = self else { return }
+            
+            switch self.selfState {
+            case .running:
+                self.selfState = .finished
+                if let weakController = weakController {
+                    assert(weakController === navigationController.viewControllers.first, "Navigation Controller tree has been modified from outside and now the root controller doesnt match the initial child")
+                    
+                    // It's a plus-one because the root view controller is not mentioned in the navData and is located at index 0
+                    assert(navigationController.viewControllers.count == self.navData.count + 1, "Navigation controller stack depth doesnt match the known information, which is undoubtedly a bug")
+                    
+                    completion(result)
+                } else {
+                    if weakControllerInitialized {
+                        assertionFailure("Navigation Controller tree has been modified from outside and now the initial child of this coordinator is dead")
+                    } else {
+                        assertionFailure("Finish was insta-called way before the coordinator could ever be initialized")
+                    }
+                }
+                
+            case .finished:
+                assertionFailure("We have already finished, but the finish was called again")
+            }
+        }
+        
+        weakController = controller
+        weakControllerInitialized = true
+        
+        navigationController.setViewControllers([controller], animated: true)
     }
     
     struct NavData {
@@ -33,7 +78,8 @@ open class NavitrollerCoordinator {
         }
         
         let navData = self.navData
-        assert(navData.count == navigationController.viewControllers.count, "Unexpected navigation controller stack count")
+        // It's a plus-one because the root view controller is not mentioned in the navData and is located at index 0
+        assert(navData.count + 1 == navigationController.viewControllers.count, "Unexpected navigation controller stack count")
         let indicesAndDatas = navData
             .enumerated()
             .reversed()
@@ -50,7 +96,8 @@ open class NavitrollerCoordinator {
         var realViewControllers = navigationController.viewControllers
         
         indicesAndDatas.forEach { index, navData in
-            if let viewController = realViewControllers.at(index) {
+            // It's a plus-one because the `realViewControllers` array contains the viewController index 0, which does not appear in the `navData` array
+            if let viewController = realViewControllers.at(index + 1) {
                 assert(viewController == navData.viewController, "Wrong instance of navigation controller stack member")
                 realViewControllers.remove(at: index)
                 newNavData.remove(at: index)
@@ -81,6 +128,14 @@ open class NavitrollerCoordinator {
     }
     
     func finalize(_ navichild: NavichildCoordinatorAny) {
+        switch selfState {
+        case .running:
+            break
+        case .finished:
+            assertionFailure("Navigation Controller Coordinator has already finished with a result, but a new child was about to propagate its result")
+            return
+        }
+        
         let index = navData.firstIndex { navData in
             navData.coordinator === navichild
         }
@@ -95,13 +150,21 @@ open class NavitrollerCoordinator {
     }
     
     func dispatch(_ controller: UIViewController, navichild: NavichildCoordinatorAny) {
+        switch selfState {
+        case .running:
+            break
+        case .finished:
+            assertionFailure("Navigation Controller Coordinator has already finished with a result, but a new child was about to be started")
+            return
+        }
+        
         let navData = NavData(viewController: controller, coordinator: navichild, state: .running)
         self.navData.append(navData)
     }
     
-    public func startChild<Result>(_ navichild: NavichildCoordinator<Result>, animated: Bool, _ completion: @escaping (NavichildResult<Result>) -> Void) {
+    public func startChild<NewResult>(_ navichild: NavichildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (NavichildResult<NewResult>) -> Void) {
         weak var weakControler: UIViewController?
-        let controller = navichild.make(self) { [weak self] result in
+        let controller = navichild.make(self) { [weak self] (result: NewResult) in
             guard let self = self else { return }
             
             assert(weakControler != nil, "Called coordinator finish way before it could be started")
@@ -148,9 +211,9 @@ protocol NavichildCoordinatorAny: AnyObject {
 }
 
 open class NavichildCoordinator<Result>: NavichildCoordinatorAny {
-    let make: (NavitrollerCoordinator, @escaping (Result) -> Void) -> UIViewController
+    let make: (NavitrollerCoordinatorAny, @escaping (Result) -> Void) -> UIViewController
     
-    public init(_ make: @escaping (NavitrollerCoordinator, @escaping (Result) -> Void) -> UIViewController) {
+    public init(_ make: @escaping (NavitrollerCoordinatorAny, @escaping (Result) -> Void) -> UIViewController) {
         self.make = make
     }
 }

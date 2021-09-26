@@ -5,6 +5,7 @@ class GalleryViewController: UIViewController {
     var onAltButton: (() -> Void)?
     
     let button = UIButton(type: .system)
+    let magicEndButton = UIButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,9 +21,22 @@ class GalleryViewController: UIViewController {
             button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
         button.addTarget(self, action: #selector(onTap), for: .touchUpInside)
+        
+        magicEndButton.translatesAutoresizingMaskIntoConstraints = false
+        magicEndButton.setTitle("Magic end", for: .normal)
+        view.addSubview(magicEndButton)
+        NSLayoutConstraint.activate([
+            magicEndButton.bottomAnchor.constraint(equalTo: button.topAnchor, constant: -8),
+            magicEndButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        ])
+        magicEndButton.addTarget(self, action: #selector(onMagicEndButtonTap), for: .touchUpInside)
     }
     
     @objc func onTap() {
         onProductRequested?()
+    }
+    
+    @objc func onMagicEndButtonTap() {
+        onAltButton?()
     }
 }

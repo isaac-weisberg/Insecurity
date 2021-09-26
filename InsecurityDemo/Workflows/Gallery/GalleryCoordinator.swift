@@ -1,6 +1,6 @@
 import Insecurity
 
-class GalleryCoordinator: NavichildCoordinator<Never> {
+class GalleryCoordinator: NavichildCoordinator<Void> {
     init() {
         super.init { navitroller, finish in
             let galleryViewController = GalleryViewController(nibName: nil, bundle: nil)
@@ -13,7 +13,7 @@ class GalleryCoordinator: NavichildCoordinator<Never> {
             }
             
             galleryViewController.onAltButton = {
-                // Nothing
+                finish(())
             }
             
             return galleryViewController
