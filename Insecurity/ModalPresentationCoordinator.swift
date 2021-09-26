@@ -159,6 +159,12 @@ public class ModarollerCoordinator {
         
         dispatch(controller, animated, modachild)
     }
+    
+    #if DEBUG
+    deinit {
+        print("Modal Presentation Coordinator deinit")
+    }
+    #endif
 }
 
 protocol ModachildCoordinatorAny: AnyObject {

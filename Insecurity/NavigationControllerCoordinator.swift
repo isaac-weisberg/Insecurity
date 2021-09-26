@@ -123,6 +123,12 @@ open class NavitrollerCoordinator {
         dispatch(controller, navichild: navichild)
         navigationController.pushViewController(controller, animated: animated)
     }
+    
+    #if DEBUG
+    deinit {
+        print("Navigation Controller Coordinator deinit")
+    }
+    #endif
 }
 
 protocol NavichildCoordinatorAny: AnyObject {

@@ -3,14 +3,15 @@ import Insecurity
 
 @main class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-    
-    func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
-    ) -> Bool {
-        
-        let window = UIWindow(frame: UIScreen.main.bounds)
-        self.window = window
+//
+//    func application(
+//        _ application: UIApplication,
+//        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
+//    ) -> Bool {
+//
+//        let window = UIWindow(frame: UIScreen.main.bounds)
+//        self.window = window
+//
 //
 //        let navigationController = UINavigationController()
 //        navigationController.interactivePopGestureRecognizer?.isEnabled = true
@@ -20,11 +21,24 @@ import Insecurity
 //        let coordinator = NavitrollerCoordinator(navigationController)
 //        let galleryCoordinator = GalleryCoordinator()
 //
-//        coordinator.startChild(galleryCoordinator, animated: false) { never in
-//
+//        coordinator.startChild(galleryCoordinator, animated: false) { result in
+//            print("End Gallery \(result)")
 //        }
 //
 //        window.makeKeyAndVisible()
+//
+//        return true
+//    }
+    
+    
+    var modalCoordinator: ModarollerCoordinator?
+    
+    func application(
+        _ application: UIApplication,
+        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
+    ) -> Bool {
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        self.window = window
         
         let rootViewController = UIViewController()
         rootViewController.view.backgroundColor = .white
@@ -33,12 +47,13 @@ import Insecurity
         window.makeKeyAndVisible()
 
         let coordinator = ModarollerCoordinator(rootViewController)
+        modalCoordinator = coordinator
         let galleryCoordinator = GalleryModalCoordinator()
 
         coordinator.startChild(galleryCoordinator, animated: false) { result in
             print("End Gallery \(result)")
+            self.modalCoordinator = nil
         }
-
 
         return true
     }
@@ -46,19 +61,36 @@ import Insecurity
 
 class GalleryViewController: UIViewController {
     var onProductRequested: (() -> Void)?
+    var onKillMyself: (() -> Void)?
+    
+    let button = UIButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .cyan
+        
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("Dieeeee", for: .normal)
+        view.addSubview(button)
+        NSLayoutConstraint.activate([
+            button.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            button.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        ])
+        button.addTarget(self, action: #selector(onTap), for: .touchUpInside)
+        
         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
             self.onProductRequested?()
         }
     }
+    
+    @objc func onTap() {
+        onKillMyself?()
+    }
 }
 
-class GalleryCoordinator: NavichildCoordinator<Never> {
+class GalleryCoordinator: NavichildCoordinator<Void> {
     init() {
-        super.init { navitroller, _ in
+        super.init { navitroller, finish in
             let galleryViewController = GalleryViewController(nibName: nil, bundle: nil)
             
             galleryViewController.onProductRequested = {
@@ -67,14 +99,19 @@ class GalleryCoordinator: NavichildCoordinator<Never> {
                     print("End Product \(result)")
                 }
             }
+            
+            galleryViewController.onKillMyself = {
+                finish(())
+            }
+            
             return galleryViewController
         }
     }
 }
 
-class GalleryModalCoordinator: ModachildCoordinator<Never> {
+class GalleryModalCoordinator: ModachildCoordinator<Void> {
     init() {
-        super.init { modaroller, _ in
+        super.init { modaroller, finish in
             let galleryViewController = GalleryViewController(nibName: nil, bundle: nil)
             
             galleryViewController.onProductRequested = {
@@ -83,6 +120,11 @@ class GalleryModalCoordinator: ModachildCoordinator<Never> {
                     print("End Product \(result)")
                 }
             }
+            
+            galleryViewController.onKillMyself = {
+                finish(())
+            }
+            
             return galleryViewController
         }
     }
@@ -170,7 +212,7 @@ class CartCoordinator: NavichildCoordinator<Void> {
                 let paymentCoordinator = PaymentCoordinator()
                 
                 navitroller.startChild(paymentCoordinator, animated: true) { result in
-                    print("End Payment")
+                    print("End Payment \(result)")
                     finish(())
                 }
             }
@@ -187,7 +229,7 @@ class CartModalCoordinator: ModachildCoordinator<Void> {
                 let paymentCoordinator = PaymentModalCoordinator()
                 
                 modaroller.startChild(paymentCoordinator, animated: true) { result in
-                    print("End Payment")
+                    print("End Payment \(result)")
                     finish(())
                 }
             }
@@ -202,10 +244,10 @@ class PaymentViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBlue
-//        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-//            self.onFinish?()
-//        }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.onFinish?()
+        }
     }
 }
 
