@@ -6,9 +6,13 @@ public enum ModarollerResult<NormalResult> {
 }
 
 public class ModarollerCoordinator {
-    let host: UIViewController
+    weak var host: UIViewController?
     
     public init(_ host: UIViewController) {
+        self.host = host
+    }
+    
+    init(optionalHost host: UIViewController?) {
         self.host = host
     }
     
@@ -27,6 +31,11 @@ public class ModarollerCoordinator {
     var navData: [NavData] = []
     
     func purge() {
+        guard let host = host else {
+            assertionFailure("Modal Coordinator child has finished working, but his presenting parent was long dead, which is bug")
+            return
+        }
+        
         assert(finalizationDepth >= 0, "Weird context closures")
         guard finalizationDepth == 0 else {
             return
@@ -72,7 +81,11 @@ public class ModarollerCoordinator {
         }
         
         self.navData = Array(prunedNavData)
-        controllerToDismissFrom?.dismiss(animated: true)
+        
+        controllerToDismissFrom?.dismiss(animated: true) { [weak self] in
+            guard let self = self else { return }
+            self.enqueuedChildStartRoutine?()
+        }
     }
     
     func finalize(_ modachild: ModachildCoordinatorAny) {
@@ -104,6 +117,8 @@ public class ModarollerCoordinator {
         newNavData.remove(at: index)
         
         self.navData = newNavData
+        
+        assert(enqueuedChildStartRoutine == nil, "Child start couldn't ve been enqueued because dealloc purge is called before the result is propagated to the parent")
     }
     
     func dispatch(_ controller: UIViewController, _ animated: Bool, _ modachild: ModachildCoordinatorAny) {
@@ -143,13 +158,19 @@ public class ModarollerCoordinator {
             if let modachildFinish = modachildFinish {
                 modachildFinish(result)
             } else {
-                assertionFailure("Navigation Controller child has called finish way before we could initialize the coordinator")
+                assertionFailure("Navigation Controller child has called finish way before we could initialize the coordinator or after when it has already completed")
             }
         }
-        let modachild = ModachildCoordinator<NewResult>(navitrollerCoordinator) { modaroller, finish in
+        let modachild = ModachildCoordinator<NewResult>(navitrollerCoordinator) { [weak navigationController] modaroller, finish in
             modachildFinish = { result in
+                modachildFinish = nil
                 finish(result)
             }
+            
+            guard let navigationController = navigationController else {
+                fatalError("Navigation controller was released way before the bridge coordinator could be initialized")
+            }
+            
             return navigationController
         }
         
@@ -158,7 +179,22 @@ public class ModarollerCoordinator {
         }
     }
     
+    var enqueuedChildStartRoutine: (() -> Void)?
+    
     public func startChild<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModarollerResult<NewResult>) -> Void) {
+        if finalizationDepth > 0 {
+            // Enqueing the start to happen after batch purge
+            enqueuedChildStartRoutine = { [weak self] in
+                guard let self = self else { return }
+                self.enqueuedChildStartRoutine = nil
+                self.startChildImmediately(modachild, animated: animated, completion)
+            }
+        } else {
+            startChildImmediately(modachild, animated: animated, completion)
+        }
+    }
+    
+    public func startChildImmediately<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModarollerResult<NewResult>) -> Void) {
         weak var weakControler: UIViewController?
         let controller = modachild.make(self) { [weak self] result in
             guard let self = self else { return }
@@ -174,8 +210,8 @@ public class ModarollerCoordinator {
         
         weakControler = controller
         
-        controller.onDeinit = { [weak self] in
-            guard let self = self else { return }
+        controller.onDeinit = { [weak self, weak modachild] in
+            guard let self = self, let modachild = modachild else { return }
             self.purgeOnDealloc(modachild)
             completion(.dismissed)
         }

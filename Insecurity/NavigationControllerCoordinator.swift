@@ -12,7 +12,7 @@ public protocol NavitrollerCoordinatorAny: AnyObject {
 }
 
 open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
-    let navigationController: UINavigationController
+    weak var navigationController: UINavigationController?
     
     enum SelfState {
         case running
@@ -27,6 +27,12 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
         weak var weakController: UIViewController?
         let controller = initialChild.make(self) { [weak self] result in
             guard let self = self else { return }
+            
+            guard let navigationController = self.navigationController else {
+                assertionFailure("Navigation Controller child has attempted to finish, but the hosting UINavigationController was dead, which is a bug")
+                return
+            }
+
             
             switch self.selfState {
             case .running:
@@ -72,6 +78,11 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     var navData: [NavData] = []
     
     func purge() {
+        guard let navigationController = navigationController else {
+            assertionFailure("Navigation Coordinator child has finished work, but the hosting UINavigationController is already dead, which is bug")
+            return
+        }
+        
         assert(finalizationDepth >= 0, "Weird context closures")
         guard finalizationDepth == 0 else {
             return
@@ -99,7 +110,7 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
             // It's a plus-one because the `realViewControllers` array contains the viewController index 0, which does not appear in the `navData` array
             if let viewController = realViewControllers.at(index + 1) {
                 assert(viewController == navData.viewController, "Wrong instance of navigation controller stack member")
-                realViewControllers.remove(at: index)
+                realViewControllers.remove(at: index + 1)
                 newNavData.remove(at: index)
             } else {
                 assertionFailure("Miscounted view controllers")
@@ -163,6 +174,11 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     }
     
     public func startChild<NewResult>(_ navichild: NavichildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (NavichildResult<NewResult>) -> Void) {
+        guard let navigationController = navigationController else {
+            assertionFailure("Navigation Coordinator has attempted to start a child, but the navigation controller has long since died")
+            return
+        }
+        
         weak var weakControler: UIViewController?
         let controller = navichild.make(self) { [weak self] (result: NewResult) in
             guard let self = self else { return }
@@ -177,8 +193,8 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
         }
         weakControler = controller
         
-        controller.onDeinit = { [weak self] in
-            guard let self = self else { return }
+        controller.onDeinit = { [weak self, weak navichild] in
+            guard let self = self, let navichild = navichild else { return }
             self.purgeOnDealloc(navichild)
             completion(.dismissed)
         }
@@ -195,11 +211,12 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     
     var modaroller: ModarollerCoordinator?
     public func asModarollerCoordinator() -> ModarollerCoordinator {
+        
         if let modaroller = modaroller {
             return modaroller
         }
         
-        let modaroller = ModarollerCoordinator(navigationController)
+        let modaroller = ModarollerCoordinator(optionalHost: navigationController)
         self.modaroller = modaroller
         
         return modaroller

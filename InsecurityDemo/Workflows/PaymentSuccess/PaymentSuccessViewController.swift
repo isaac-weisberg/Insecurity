@@ -7,7 +7,7 @@ class PaymentSuccessViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBrown
+        view.backgroundColor = .systemGray
         
         confirmButton.translatesAutoresizingMaskIntoConstraints = false
         confirmButton.setTitle("Confirm", for: .normal)
