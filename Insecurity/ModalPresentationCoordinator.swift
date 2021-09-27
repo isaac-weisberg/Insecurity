@@ -76,14 +76,27 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
         let controllerToDismissFrom: UIViewController?
         if let topNavData = prunedNavData.last {
             if let topController = topNavData.viewController {
-                controllerToDismissFrom = topController
+                if topController.presentedViewController != nil {
+                    controllerToDismissFrom = topController
+                } else {
+                    // There used to be an assertion that the host has a presentedViewController, but what I found out recently is that if
+                    // the view controller is removed from window, the modal chain of relationships between view controllers
+                    // is broken and presented view controller becomes nil
+                    // This means only one thing - the batching of change applications is inevitable
+                    // But for this time, this will have to do
+                    controllerToDismissFrom = nil
+                }
             } else {
                 print("Modaroller child is supposed to dismiss his content, but instead turns out he's dead")
                 controllerToDismissFrom = nil
             }
         } else {
             let hostHasPresentedController = host.presentedViewController != nil
-            assert(hostHasPresentedController, "Host is supposed to dismiss its content, but it has Jack Nicholson presented, so it's a bug")
+            // There used to be an assertion that the host has a presentedViewController, but what I found out recently is that if
+            // the view controller is removed from window, the modal chain of relationships between view controllers
+            // is broken and presented view controller becomes nil
+            // This means only one thing - the batching of change applications is inevitable
+            // But for this time, this will have to do
             if hostHasPresentedController {
                 controllerToDismissFrom = host
             } else {
