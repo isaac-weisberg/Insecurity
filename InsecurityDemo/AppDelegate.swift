@@ -4,7 +4,7 @@ import Insecurity
 @main class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
-    var applicationCoordinator: ApplicationCoordinator?
+    var windowCoordinator: WindowCoordinator?
     
     func application(
         _ application: UIApplication,
@@ -13,14 +13,20 @@ import Insecurity
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
         
-        let rootViewController = UIViewController()
-        rootViewController.view.backgroundColor = .white
-
-        window.rootViewController = rootViewController
+        let windowCoordinator = WindowCoordinator(window)
         
-        let applicationCoordinator = ApplicationCoordinator(window)
-        self.applicationCoordinator = applicationCoordinator
-        applicationCoordinator.start()
+        let navigationController = UINavigationController()
+        let galleryCoordinator = GalleryCoordinator()
+        windowCoordinator.startNavitroller(navigationController, galleryCoordinator) { result in
+            print("End Gallery \(result)")
+            
+            let navigationController = UINavigationController()
+            let productCoordinator = ProductCoordinator()
+            windowCoordinator.startNavitroller(navigationController, productCoordinator) { result in
+                print("End Product after Gallery ended artificially \(result)")
+            }
+        }
+        window.makeKeyAndVisible()
 
         return true
     }

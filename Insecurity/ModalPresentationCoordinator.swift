@@ -195,7 +195,7 @@ public class ModarollerCoordinator {
         }
     }
     
-    public func startChildImmediately<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
+    func startChildImmediately<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
         weak var weakControler: UIViewController?
         let controller = modachild.make(self) { [weak self] result in
             guard let self = self else { return }

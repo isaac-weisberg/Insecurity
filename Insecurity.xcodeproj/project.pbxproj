@@ -13,8 +13,8 @@
 		A3683FC32700FC3F0048B3CF /* LoginPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */; };
 		A3683FC52700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC42700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift */; };
 		A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370767F26FFCED600ED7391 /* DeinitObservable.swift */; };
+		A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37991292702659600550B8E /* WindowCoordinator.swift */; };
 		A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382532F27007EA900FBC6DC /* GalleryViewController.swift */; };
-		A382533227007ED200FBC6DC /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382533127007ED200FBC6DC /* ApplicationCoordinator.swift */; };
 		A38253342700804700FBC6DC /* GalleryCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38253332700804700FBC6DC /* GalleryCoordinator.swift */; };
 		A38253372700817C00FBC6DC /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38253362700817C00FBC6DC /* ProductViewController.swift */; };
 		A3825339270086CF00FBC6DC /* ProductCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3825338270086CF00FBC6DC /* ProductCoordinator.swift */; };
@@ -63,8 +63,8 @@
 		A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneCoordinator.swift; sourceTree = "<group>"; };
 		A3683FC42700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeCoordinator.swift; sourceTree = "<group>"; };
 		A370767F26FFCED600ED7391 /* DeinitObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
+		A37991292702659600550B8E /* WindowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowCoordinator.swift; sourceTree = "<group>"; };
 		A382532F27007EA900FBC6DC /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
-		A382533127007ED200FBC6DC /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
 		A38253332700804700FBC6DC /* GalleryCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCoordinator.swift; sourceTree = "<group>"; };
 		A38253362700817C00FBC6DC /* ProductViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
 		A3825338270086CF00FBC6DC /* ProductCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCoordinator.swift; sourceTree = "<group>"; };
@@ -204,6 +204,7 @@
 				A3968FFF26FF26A700B6A59B /* NavigationControllerCoordinator.swift */,
 				A370767F26FFCED600ED7391 /* DeinitObservable.swift */,
 				A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */,
+				A37991292702659600550B8E /* WindowCoordinator.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -213,7 +214,6 @@
 			children = (
 				A382532D27007E8A00FBC6DC /* Workflows */,
 				A3968FED26FF260000B6A59B /* AppDelegate.swift */,
-				A382533127007ED200FBC6DC /* ApplicationCoordinator.swift */,
 				A3968FF626FF260200B6A59B /* Assets.xcassets */,
 				A3968FF826FF260200B6A59B /* LaunchScreen.storyboard */,
 				A3968FFB26FF260200B6A59B /* Info.plist */,
@@ -342,6 +342,7 @@
 			files = (
 				A396900026FF26A700B6A59B /* NavigationControllerCoordinator.swift in Sources */,
 				A34CBF6526FFD796007AF9B8 /* ModalPresentationCoordinator.swift in Sources */,
+				A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -358,7 +359,6 @@
 				A38253472700906100FBC6DC /* PaymentCoordinator.swift in Sources */,
 				A3825339270086CF00FBC6DC /* ProductCoordinator.swift in Sources */,
 				A3683FC12700FBCC0048B3CF /* LoginSMSCodeViewController.swift in Sources */,
-				A382533227007ED200FBC6DC /* ApplicationCoordinator.swift in Sources */,
 				A38253372700817C00FBC6DC /* ProductViewController.swift in Sources */,
 				A3683FC32700FC3F0048B3CF /* LoginPhoneCoordinator.swift in Sources */,
 				A382534027008C7F00FBC6DC /* CartViewController.swift in Sources */,
