@@ -5,7 +5,18 @@ public enum ModachildResult<NormalResult> {
     case dismissed
 }
 
-public class ModarollerCoordinator {
+public protocol ModarollerCoordinatorAny {
+    func startNavitrollerChild<NewResult>(_ navigationController: UINavigationController,
+                                          _ child: NavichildCoordinator<NewResult>,
+                                          animated: Bool,
+                                          _ completion: @escaping (ModachildResult<NewResult>) -> Void)
+    
+    func startChild<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+                               animated: Bool,
+                               _ completion: @escaping (ModachildResult<NewResult>) -> Void)
+}
+
+public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
     weak var host: UIViewController?
     
     public init(_ host: UIViewController) {
@@ -232,16 +243,16 @@ protocol ModachildCoordinatorAny: AnyObject {
 }
 
 open class ModachildCoordinator<Result>: ModachildCoordinatorAny {
-    let make: (ModarollerCoordinator, @escaping (Result) -> Void) -> UIViewController
+    let make: (ModarollerCoordinatorAny, @escaping (Result) -> Void) -> UIViewController
     let navitrollerChild: NavitrollerCoordinator<Result>?
     
-    public init(_ make: @escaping (ModarollerCoordinator, @escaping (Result) -> Void) -> UIViewController) {
+    public init(_ make: @escaping (ModarollerCoordinatorAny, @escaping (Result) -> Void) -> UIViewController) {
         self.make = make
         self.navitrollerChild = nil
     }
     
     init(_ navitrollerChild: NavitrollerCoordinator<Result>,
-         _ make: @escaping (ModarollerCoordinator, @escaping (Result) -> Void) -> UIViewController) {
+         _ make: @escaping (ModarollerCoordinatorAny, @escaping (Result) -> Void) -> UIViewController) {
         
         self.navitrollerChild  = navitrollerChild
         self.make = make

@@ -20,11 +20,18 @@ import Insecurity
         windowCoordinator.startNavitroller(navigationController, galleryCoordinator) { result in
             print("End Gallery \(result)")
             
-            let navigationController = UINavigationController()
-            let productCoordinator = ProductCoordinator()
-            windowCoordinator.startNavitroller(navigationController, productCoordinator) { result in
-                print("End Product after Gallery ended artificially \(result)")
+            let paymentSuccessCoordinator = PaymentCoordinator()
+            windowCoordinator.startModaroller(paymentSuccessCoordinator) { result in
+                print("End PaymentResult after Gallery ended artificially \(result)")
+                
+                let navigationController = UINavigationController()
+                let productCoordinator = ProductCoordinator()
+                windowCoordinator.startNavitroller(navigationController, productCoordinator) { result in
+                    print("End Product after Gallery ended artificially \(result)")
+                    // Not actually supposed to happen though
+                }
             }
+            
         }
         window.makeKeyAndVisible()
 

@@ -41,7 +41,6 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
                 assertionFailure("Navigation Controller child has attempted to finish, but the hosting UINavigationController was dead, which is a bug")
                 return
             }
-
             
             switch self.selfState {
             case .running:
@@ -239,13 +238,13 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     }
     #endif
     
-    var modaroller: ModarollerCoordinator?
-    func asModarollerCoordinator() -> ModarollerCoordinator {
+    var modaroller: ModarollerCoordinator<Result>?
+    func asModarollerCoordinator() -> ModarollerCoordinator<Result> {
         if let modaroller = modaroller {
             return modaroller
         }
         
-        let modaroller = ModarollerCoordinator(optionalHost: navigationController)
+        let modaroller = ModarollerCoordinator<Result>(optionalHost: navigationController)
         self.modaroller = modaroller
         
         return modaroller
