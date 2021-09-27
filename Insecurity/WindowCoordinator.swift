@@ -1,6 +1,6 @@
 import UIKit
 
-public class WindowCoordinator {
+open class WindowCoordinator {
     weak var window: UIWindow?
     
     public init(_ window: UIWindow) {
@@ -54,4 +54,10 @@ public class WindowCoordinator {
         
         window.rootViewController = navigationController
     }
+    
+    #if DEBUG
+    deinit {
+        print("Window Coordinator deinit \(type(of: self))")
+    }
+    #endif
 }

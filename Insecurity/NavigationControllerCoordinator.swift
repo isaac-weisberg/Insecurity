@@ -234,7 +234,7 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     
     #if DEBUG
     deinit {
-        print("Navigation Controller Coordinator deinit")
+        print("Navigation Controller Coordinator deinit \(type(of: self))")
     }
     #endif
     

@@ -233,7 +233,7 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
     
 #if DEBUG
     deinit {
-        print("Modal Presentation Coordinator deinit")
+        print("Modal Presentation Coordinator deinit \(type(of: self))")
     }
 #endif
 }
