@@ -36,7 +36,10 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
         var weakControllerInitialized = false
         weak var weakController: UIViewController?
         
-        self.modaroller = ModarollerCoordinator(navigationController) { result in
+        self.modaroller = ModarollerCoordinator({ finish in
+            // Navigation controller on itself doesn't really call finish
+            return navigationController
+        }) { result in
             assertionFailure("Navitroller's own Modaroller is not supposed to end ever")
         }
         

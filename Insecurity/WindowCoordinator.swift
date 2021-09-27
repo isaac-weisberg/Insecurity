@@ -10,7 +10,7 @@ open class WindowCoordinator {
     var navitrollerChild: NavitrollerCoordinatorAny?
     var modarollerChild: ModarollerCoordinatorAny?
     
-    public func startModaroller<NewResult>(_ modachild: ModachildCoordinator<NewResult>, _ completion: @escaping (NewResult) -> Void) {
+    public func startModaroller<NewResult>(_ make: @escaping (@escaping (NewResult) -> Void) -> UIViewController, _ completion: @escaping (NewResult) -> Void) {
         guard let window = window else {
             assertionFailure("Window Coordinator attempted to start a child on a dead window")
             return
@@ -19,18 +19,29 @@ open class WindowCoordinator {
         assert(navitrollerChild == nil, "Window Coordinator attempted to start a child when another navitrollerChild is still running")
         assert(modarollerChild == nil, "Window Coordinator attempted to start a child when another modarollerChild is still running")
         
-        let modaroller = ModarollerCoordinator(<#T##host: UIViewController##UIViewController#>, <#T##completion: (_) -> Void##(_) -> Void#>)
+        // Jesus Christ
+        var createdController: UIViewController?
         
-//        // Holy moly, I hope I don't regret these design choices
-//        let modaroller = ModarollerCoordinator<NewResult>(optionalHost: nil)
-//        let controller = modachild.make(modaroller) { [weak self] result in
-//            self?.modarollerChild = nil
-//            completion(result)
-//        }
-//        modaroller.host = controller
-//        self.modarollerChild = modaroller
+        let modaroller = ModarollerCoordinator<NewResult>({ finish in
+            let controller = make(finish)
+            createdController = controller
+            return controller
+        }, { [weak self] result in
+            guard let self = self else {
+                assertionFailure("Window Coordinator's Modal Coordinator child has ended, but the window coordinator is dead")
+                return
+            }
+            self.modarollerChild = nil
+            completion(result)
+        })
         
-        window.rootViewController = controller
+        guard let createdController = createdController else {
+            assertionFailure("Attempted to start a Modal Navigation Coordinator, but the Coordinator didn't bother to create a viewController, which is a bug")
+            return
+        }
+        
+        self.modarollerChild = modaroller
+        window.rootViewController = createdController
     }
     
     public func startNavitroller<NewResult>(_ navigationController: UINavigationController,

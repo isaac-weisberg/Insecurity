@@ -19,8 +19,10 @@ public protocol ModarollerCoordinatorAny {
 public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
     weak var host: UIViewController?
     
-    init(_ host: UIViewController, _ completion: @escaping (Result) -> Void) {
-        self.host = host
+    init(_ make: @escaping (@escaping (Result) -> Void) -> UIViewController, _ completion: @escaping (Result) -> Void) {
+        self.host = make { result in
+            completion(result)
+        }
     }
     
     struct NavData {
