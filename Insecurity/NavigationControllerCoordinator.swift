@@ -182,7 +182,7 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     }
     
     public func startChild<NewResult>(_ navichild: NavichildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (NavichildResult<NewResult>) -> Void) {
-        guard let navigationController = navigationController else {
+        guard let selfNavigationController = navigationController else {
             assertionFailure("Navigation Coordinator has attempted to start a child, but the navigation controller has long since died")
             return
         }
@@ -208,13 +208,25 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
         }
         
         dispatch(controller, navichild: navichild)
-        navigationController.pushViewController(controller, animated: animated)
+        selfNavigationController.pushViewController(controller, animated: animated)
     }
     
     public func startModachild<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
                                           animated: Bool,
                                           _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
-        let modaroller = self.asModarollerCoordinator()
+        guard let selfNavigationController = navigationController else {
+            assertionFailure("Navigation Coordinator has attempted to start a child, but the navigation controller has long since died")
+            return
+        }
+        
+        let modaroller: ModarollerCoordinator<Result>
+        if let modarollerFromSelf = self.modaroller {
+            modaroller = modarollerFromSelf
+        } else {
+            let newModaroller = ModarollerCoordinator<Result>(selfNavigationController)
+            self.modaroller = newModaroller
+            modaroller = newModaroller
+        }
         
         modaroller.startChild(modachild, animated: animated) { result in
             completion(result)
@@ -225,7 +237,19 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
                                                       _ initialChild: NavichildCoordinator<NewResult>,
                                                       animated: Bool,
                                                       _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
-        let modaroller = self.asModarollerCoordinator()
+        guard let selfNavigationController = self.navigationController else {
+            assertionFailure("Navigation Coordinator has attempted to start a child, but the navigation controller has long since died")
+            return
+        }
+        
+        let modaroller: ModarollerCoordinator<Result>
+        if let modarollerFromSelf = self.modaroller {
+            modaroller = modarollerFromSelf
+        } else {
+            let newModaroller = ModarollerCoordinator<Result>(selfNavigationController)
+            self.modaroller = newModaroller
+            modaroller = newModaroller
+        }
 
         modaroller.startNavitrollerChild(navigationController, initialChild, animated: animated) { result in
             completion(result)
@@ -239,16 +263,6 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     #endif
     
     var modaroller: ModarollerCoordinator<Result>?
-    func asModarollerCoordinator() -> ModarollerCoordinator<Result> {
-        if let modaroller = modaroller {
-            return modaroller
-        }
-        
-        let modaroller = ModarollerCoordinator<Result>(optionalHost: navigationController)
-        self.modaroller = modaroller
-        
-        return modaroller
-    }
 }
 
 protocol NavichildCoordinatorAny: AnyObject {

@@ -23,10 +23,6 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
         self.host = host
     }
     
-    init(optionalHost host: UIViewController?) {
-        self.host = host
-    }
-    
     struct NavData {
         enum State {
             case running
