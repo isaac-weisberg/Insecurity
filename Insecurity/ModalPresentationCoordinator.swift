@@ -19,7 +19,7 @@ public protocol ModarollerCoordinatorAny {
 public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
     weak var host: UIViewController?
     
-    public init(_ host: UIViewController) {
+    init(_ host: UIViewController) {
         self.host = host
     }
     
@@ -83,7 +83,7 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
             }
         } else {
             let hostHasPresentedController = host.presentedViewController != nil
-            assert(hostHasPresentedController, "Host is supposed to dismiss its content, but it has Jack Nickolson presented, so it's a bug")
+            assert(hostHasPresentedController, "Host is supposed to dismiss its content, but it has Jack Nicholson presented, so it's a bug")
             if hostHasPresentedController {
                 controllerToDismissFrom = host
             } else {
