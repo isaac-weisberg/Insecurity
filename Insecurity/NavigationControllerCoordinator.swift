@@ -28,12 +28,18 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
         case finished
     }
     var selfState = SelfState.running
+    let modaroller: ModarollerCoordinator<Result>
     
     public init(_ navigationController: UINavigationController, _ initialChild: NavichildCoordinator<Result>, _ completion: @escaping (Result) -> Void) {
         self.navigationController = navigationController
         
         var weakControllerInitialized = false
         weak var weakController: UIViewController?
+        
+        self.modaroller = ModarollerCoordinator(navigationController) { result in
+            assertionFailure("Navitroller's own Modaroller is not supposed to end ever")
+        }
+        
         let controller = initialChild.make(self) { [weak self] result in
             guard let self = self else { return }
             
@@ -214,19 +220,19 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     public func startModachild<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
                                           animated: Bool,
                                           _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
-        guard let selfNavigationController = navigationController else {
-            assertionFailure("Navigation Coordinator has attempted to start a child, but the navigation controller has long since died")
-            return
-        }
+//        guard let selfNavigationController = navigationController else {
+//            assertionFailure("Navigation Coordinator has attempted to start a child, but the navigation controller has long since died")
+//            return
+//        }
         
-        let modaroller: ModarollerCoordinator<Result>
-        if let modarollerFromSelf = self.modaroller {
-            modaroller = modarollerFromSelf
-        } else {
-            let newModaroller = ModarollerCoordinator<Result>(selfNavigationController)
-            self.modaroller = newModaroller
-            modaroller = newModaroller
-        }
+//        let modaroller: ModarollerCoordinator<Result>
+//        if let modarollerFromSelf = self.modaroller {
+//            modaroller = modarollerFromSelf
+//        } else {
+//            let newModaroller = ModarollerCoordinator<Result>(selfNavigationController)
+//            self.modaroller = newModaroller
+//            modaroller = newModaroller
+//        }
         
         modaroller.startChild(modachild, animated: animated) { result in
             completion(result)
@@ -237,19 +243,19 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
                                                       _ initialChild: NavichildCoordinator<NewResult>,
                                                       animated: Bool,
                                                       _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
-        guard let selfNavigationController = self.navigationController else {
-            assertionFailure("Navigation Coordinator has attempted to start a child, but the navigation controller has long since died")
-            return
-        }
+//        guard let selfNavigationController = self.navigationController else {
+//            assertionFailure("Navigation Coordinator has attempted to start a child, but the navigation controller has long since died")
+//            return
+//        }
         
-        let modaroller: ModarollerCoordinator<Result>
-        if let modarollerFromSelf = self.modaroller {
-            modaroller = modarollerFromSelf
-        } else {
-            let newModaroller = ModarollerCoordinator<Result>(selfNavigationController)
-            self.modaroller = newModaroller
-            modaroller = newModaroller
-        }
+//        let modaroller: ModarollerCoordinator<Result>
+//        if let modarollerFromSelf = self.modaroller {
+//            modaroller = modarollerFromSelf
+//        } else {
+//            let newModaroller = ModarollerCoordinator<Result>(selfNavigationController)
+//            self.modaroller = newModaroller
+//            modaroller = newModaroller
+//        }
 
         modaroller.startNavitrollerChild(navigationController, initialChild, animated: animated) { result in
             completion(result)
@@ -261,8 +267,6 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
         print("Navigation Controller Coordinator deinit \(type(of: self))")
     }
     #endif
-    
-    var modaroller: ModarollerCoordinator<Result>?
 }
 
 protocol NavichildCoordinatorAny: AnyObject {

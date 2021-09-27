@@ -19,7 +19,7 @@ public protocol ModarollerCoordinatorAny {
 public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
     weak var host: UIViewController?
     
-    init(_ host: UIViewController) {
+    init(_ host: UIViewController, _ completion: @escaping (Result) -> Void) {
         self.host = host
     }
     
