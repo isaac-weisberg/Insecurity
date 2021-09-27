@@ -1,6 +1,6 @@
 import UIKit
 
-public enum ModarollerResult<NormalResult> {
+public enum ModachildResult<NormalResult> {
     case normal(NormalResult)
     case dismissed
 }
@@ -152,7 +152,8 @@ public class ModarollerCoordinator {
     
     public func startNavitrollerChild<NewResult>(_ navigationController: UINavigationController,
                                                  _ child: NavichildCoordinator<NewResult>,
-                                                 _ completion: @escaping (ModarollerResult<NewResult>) -> Void) {
+                                                 animated: Bool,
+                                                 _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
         var modachildFinish: ((NewResult) -> Void)?
         let navitrollerCoordinator = NavitrollerCoordinator(navigationController, child) { result in
             if let modachildFinish = modachildFinish {
@@ -174,14 +175,14 @@ public class ModarollerCoordinator {
             return navigationController
         }
         
-        self.startChild(modachild, animated: true) { modarollerResult in
+        self.startChild(modachild, animated: animated) { modarollerResult in
             completion(modarollerResult)
         }
     }
     
     var enqueuedChildStartRoutine: (() -> Void)?
     
-    public func startChild<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModarollerResult<NewResult>) -> Void) {
+    public func startChild<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
         if finalizationDepth > 0 {
             // Enqueing the start to happen after batch purge
             enqueuedChildStartRoutine = { [weak self] in
@@ -194,7 +195,7 @@ public class ModarollerCoordinator {
         }
     }
     
-    public func startChildImmediately<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModarollerResult<NewResult>) -> Void) {
+    public func startChildImmediately<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
         weak var weakControler: UIViewController?
         let controller = modachild.make(self) { [weak self] result in
             guard let self = self else { return }

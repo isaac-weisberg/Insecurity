@@ -12,9 +12,8 @@ class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
             
             cartViewController.onPayRequested = {
                 let paymentCoordinator = PaymentCoordinator()
-                let modaroller = navitroller.asModarollerCoordinator()
                 
-                modaroller.startChild(paymentCoordinator, animated: true) { result in
+                navitroller.startModachild(paymentCoordinator, animated: true) { result in
                     print("End Payment Regular \(result)")
                     switch result {
                     case .normal(let paymentResult):
@@ -31,9 +30,7 @@ class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
             cartViewController.onPayButLoginFirstRequested = {
                 let loginPhoneCoordinator = LoginPhoneCoordinator()
                 
-                let modaroller = navitroller.asModarollerCoordinator()
-                
-                modaroller.startNavitrollerChild(UINavigationController(), loginPhoneCoordinator) { result in
+                navitroller.startModalNavitrollerChild(UINavigationController(), loginPhoneCoordinator, animated: true) { result in
                     print("End Login \(result)")
                     switch result {
                     case .normal(let loginResult):
@@ -41,7 +38,7 @@ class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
                         case .loggedIn:
                             let paymentCoordinator = PaymentCoordinator()
                             
-                            modaroller.startChild(paymentCoordinator, animated: true) { result in
+                            navitroller.startModachild(paymentCoordinator, animated: true) { result in
                                 print("End Payment After Login \(result)")
                                 switch result {
                                 case .normal(let paymentResult):

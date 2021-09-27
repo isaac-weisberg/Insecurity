@@ -6,9 +6,18 @@ public enum NavichildResult<NormalResult> {
 }
 
 public protocol NavitrollerCoordinatorAny: AnyObject {
-    func startChild<NewResult>(_ navichild: NavichildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (NavichildResult<NewResult>) -> Void)
+    func startChild<NewResult>(_ navichild: NavichildCoordinator<NewResult>,
+                               animated: Bool,
+                               _ completion: @escaping (NavichildResult<NewResult>) -> Void)
     
-    func asModarollerCoordinator() -> ModarollerCoordinator
+    func startModachild<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+                                   animated: Bool,
+                                   _ completion: @escaping (ModachildResult<NewResult>) -> Void)
+    
+    func startModalNavitrollerChild<NewResult>(_ navigationController: UINavigationController,
+                                               _ initialChild: NavichildCoordinator<NewResult>,
+                                               animated: Bool,
+                                               _ completion: @escaping (ModachildResult<NewResult>) -> Void)
 }
 
 open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
@@ -203,6 +212,27 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
         navigationController.pushViewController(controller, animated: animated)
     }
     
+    public func startModachild<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+                                          animated: Bool,
+                                          _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
+        let modaroller = self.asModarollerCoordinator()
+        
+        modaroller.startChild(modachild, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    public func startModalNavitrollerChild<NewResult>(_ navigationController: UINavigationController,
+                                                      _ initialChild: NavichildCoordinator<NewResult>,
+                                                      animated: Bool,
+                                                      _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
+        let modaroller = self.asModarollerCoordinator()
+
+        modaroller.startNavitrollerChild(navigationController, initialChild, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
     #if DEBUG
     deinit {
         print("Navigation Controller Coordinator deinit")
@@ -210,8 +240,7 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     #endif
     
     var modaroller: ModarollerCoordinator?
-    public func asModarollerCoordinator() -> ModarollerCoordinator {
-        
+    func asModarollerCoordinator() -> ModarollerCoordinator {
         if let modaroller = modaroller {
             return modaroller
         }
