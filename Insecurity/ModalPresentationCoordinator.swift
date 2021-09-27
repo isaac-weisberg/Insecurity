@@ -79,11 +79,16 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
                 if topController.presentedViewController != nil {
                     controllerToDismissFrom = topController
                 } else {
-                    // There used to be an assertion that the host has a presentedViewController, but what I found out recently is that if
-                    // the view controller is removed from window, the modal chain of relationships between view controllers
-                    // is broken and presented view controller becomes nil
-                    // This means only one thing - the batching of change applications is inevitable
-                    // But for this time, this will have to do
+                    if topController.view.window == nil {
+                        // The modal chain has broken because the UIViewController or its parent has been removed from the window
+                        // This is expected but only when the finish propagation that happens inside this Modatroller
+                        // causes UIWindow to release the modal host AND/OR modal children (assuming they belonged to the same UIWindow)
+                        // somewhere up the coordinator chain.
+                        //
+                        // If presentedViewController is nil for some other reason, then it's a bug
+                    } else {
+                        assertionFailure("Modal child is supposed to dismiss its presentedViewControler content, but it has Jack Nicholson presented, so it's a bug")
+                    }
                     controllerToDismissFrom = nil
                 }
             } else {
@@ -100,6 +105,16 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
             if hostHasPresentedController {
                 controllerToDismissFrom = host
             } else {
+                if host.view.window == nil {
+                    // The modal chain has broken because the UIViewController or its parent has been removed from the window
+                    // This is expected but only when the finish propagation that happens inside this Modatroller
+                    // causes UIWindow to release the modal host AND/OR modal children (assuming they belonged to the same UIWindow)
+                    // somewhere up the coordinator chain.
+                    //
+                    // If presentedViewController is nil for some other reason, then it's a bug
+                } else {
+                    assertionFailure("Host is supposed to dismiss its presentedViewControler content, but it has Jack Nicholson presented, so it's a bug")
+                }
                 controllerToDismissFrom = nil
             }
         }
