@@ -8,7 +8,7 @@
 import Foundation
 
 struct Creds {
-    
+    let token: String
 }
 
 protocol IAuthService: AnyObject {
@@ -19,6 +19,8 @@ protocol IAuthService: AnyObject {
     func logout()
     
     func saveCreds(_ creds: Creds)
+    
+    func getCreds() -> Creds?
 }
 
 class AuthService: IAuthService {
@@ -37,5 +39,9 @@ class AuthService: IAuthService {
     
     var hasCreds: Bool {
         creds != nil
+    }
+    
+    func getCreds() -> Creds? {
+        return creds
     }
 }

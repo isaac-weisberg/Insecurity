@@ -50,4 +50,17 @@ class ApplicationCoordinator: WindowCoordinator {
             
         }
     }
+    
+    func deviceShaken() {
+        startDebugCoordinator()
+    }
+    
+    func startDebugCoordinator() {
+        let debugCoordinator = DebugViewCoordinator(di: di)
+        
+        self.startModaroller(debugCoordinator) { [weak self] result in
+            print("End DebugView \(result)")
+            self?.start()
+        }
+    }
 }

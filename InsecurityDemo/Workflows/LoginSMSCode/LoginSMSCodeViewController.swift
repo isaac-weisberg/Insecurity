@@ -36,7 +36,7 @@ class LoginSMSCodeViewController: UIViewController {
     
     @objc func onConfirmSMSCodeButtonTap() {
         // Imagine we logged in and saved them credits
-        di.authService.saveCreds(Creds())
+        di.authService.saveCreds(Creds(token: "pqierbgu-qbrfr13yncr8020y37cyn0q"))
         onSmsCodeConfirmed?()
     }
 }

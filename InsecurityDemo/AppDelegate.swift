@@ -1,10 +1,10 @@
 import UIKit
 import Insecurity
 
-@main class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
-    var windowCoordinator: WindowCoordinator?
+    var coordinator: ApplicationCoordinator?
     
     func application(
         _ application: UIApplication,
@@ -13,12 +13,16 @@ import Insecurity
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
         
-        let windowCoordinator = ApplicationCoordinator(window)
-        self.windowCoordinator = windowCoordinator
-        windowCoordinator.start()
+        let coordinator = ApplicationCoordinator(window)
+        self.coordinator = coordinator
+        coordinator.start()
         
         window.makeKeyAndVisible()
         
         return true
+    }
+    
+    func shakeDetected() {
+        coordinator?.deviceShaken()
     }
 }
