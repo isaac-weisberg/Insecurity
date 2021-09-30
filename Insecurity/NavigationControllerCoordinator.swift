@@ -140,7 +140,24 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
         }
         
         var newNavData = self.navData
-        assert(index == newNavData.endIndex - 1, "Dealocation ensued not from the end")
+        #if DEBUG
+        
+        let shouldCheckIfDeallocatedIndexIsAtTheEnd: Bool
+        
+        let thereAreViewControllerWithNoWindow = self.navData.contains { navData in
+            if let viewController = navData.viewController {
+                return viewController.view.window == nil
+            }
+            return false
+        }
+        
+        shouldCheckIfDeallocatedIndexIsAtTheEnd = !thereAreViewControllerWithNoWindow
+        
+        if shouldCheckIfDeallocatedIndexIsAtTheEnd {
+            assert(index == newNavData.endIndex - 1, "Dealocation ensued not from the end")
+        }
+        #endif
+        
         newNavData.remove(at: index)
         
         self.navData = newNavData

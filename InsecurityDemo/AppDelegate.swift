@@ -14,6 +14,7 @@ import Insecurity
         self.window = window
         
         let windowCoordinator = ApplicationCoordinator(window)
+        self.windowCoordinator = windowCoordinator
         windowCoordinator.start()
         
         window.makeKeyAndVisible()

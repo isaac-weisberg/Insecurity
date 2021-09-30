@@ -5,9 +5,11 @@ enum PaymentCoordinatorResult {
 }
 
 class PaymentCoordinator: ModachildCoordinator<PaymentCoordinatorResult> {
-    init() {
+    typealias DI = PaymentViewController.DI
+    
+    init(di: DI) {
         super.init { modaroller, finish in
-            let paymentViewController = PaymentViewController()
+            let paymentViewController = PaymentViewController(di: di)
             paymentViewController.onPaymentSuccess = {
                 let successCoordinator = PaymentSuccessCoordinator()
                 

@@ -16,9 +16,6 @@ open class WindowCoordinator {
             return
         }
         
-        assert(navitrollerChild == nil, "Window Coordinator attempted to start a child when another navitrollerChild is still running")
-        assert(modarollerChild == nil, "Window Coordinator attempted to start a child when another modarollerChild is still running")
-        
         // Holy moly, I hope I don't regret these design choices
         let modaroller = ModarollerCoordinator<NewResult>(optionalHost: nil)
         let controller = modachild.make(modaroller) { [weak self] result in
@@ -38,9 +35,6 @@ open class WindowCoordinator {
             assertionFailure("Window Coordinator attempted to start a child on a dead window")
             return
         }
-        
-        assert(navitrollerChild == nil, "Window Coordinator attempted to start a child when another navitrollerChild is still running")
-        assert(modarollerChild == nil, "Window Coordinator attempted to start a child when another modarollerChild is still running")
         
         let navitroller = NavitrollerCoordinator<NewResult>(navigationController, initialChild) { [weak self] result in
             guard let self = self else { return }

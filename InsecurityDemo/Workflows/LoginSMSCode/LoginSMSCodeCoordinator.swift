@@ -5,9 +5,11 @@ enum LoginSMSCodeCoordinatorResult {
 }
 
 class LoginSMSCodeCoordinator: NavichildCoordinator<LoginSMSCodeCoordinatorResult> {
-    init() {
+    typealias DI = LoginSMSCodeViewController.DI
+    
+    init(di: DI) {
         super.init { _, finish in
-            let controller = LoginSMSCodeViewController()
+            let controller = LoginSMSCodeViewController(di: di)
             
             controller.onSmsCodeConfirmed = {
                 finish(.loggedIn)

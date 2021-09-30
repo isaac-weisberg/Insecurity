@@ -5,12 +5,14 @@ enum LoginPhoneCoordinatorResult {
 }
 
 class LoginPhoneCoordinator: NavichildCoordinator<LoginPhoneCoordinatorResult> {
-    init() {
+    typealias DI = HasAuthService
+    
+    init(di: DI) {
         super.init { navitroller, finish in
             let controller = LoginPhoneViewController()
             
             controller.onSmsCodeSent = {
-                let loginSMSCodeCoordinator = LoginSMSCodeCoordinator()
+                let loginSMSCodeCoordinator = LoginSMSCodeCoordinator(di: di)
                 
                 navitroller.startChild(loginSMSCodeCoordinator, animated: true) { result in
                     print("End LoginSMSCode \(result)")

@@ -13,6 +13,8 @@
 		A3683FC32700FC3F0048B3CF /* LoginPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */; };
 		A3683FC52700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC42700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift */; };
 		A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370767F26FFCED600ED7391 /* DeinitObservable.swift */; };
+		A370FB5D2706689100D5EF51 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370FB5C2706689100D5EF51 /* AuthService.swift */; };
+		A370FB5F270668BD00D5EF51 /* DI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370FB5E270668BD00D5EF51 /* DI.swift */; };
 		A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37991292702659600550B8E /* WindowCoordinator.swift */; };
 		A379912C27026E3A00550B8E /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A379912B27026E3A00550B8E /* ApplicationCoordinator.swift */; };
 		A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382532F27007EA900FBC6DC /* GalleryViewController.swift */; };
@@ -64,6 +66,8 @@
 		A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneCoordinator.swift; sourceTree = "<group>"; };
 		A3683FC42700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeCoordinator.swift; sourceTree = "<group>"; };
 		A370767F26FFCED600ED7391 /* DeinitObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
+		A370FB5C2706689100D5EF51 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		A370FB5E270668BD00D5EF51 /* DI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DI.swift; sourceTree = "<group>"; };
 		A37991292702659600550B8E /* WindowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowCoordinator.swift; sourceTree = "<group>"; };
 		A379912B27026E3A00550B8E /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
 		A382532F27007EA900FBC6DC /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
@@ -120,6 +124,15 @@
 				A3683FC42700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift */,
 			);
 			path = LoginSMSCode;
+			sourceTree = "<group>";
+		};
+		A370FB5B2706688500D5EF51 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A370FB5C2706689100D5EF51 /* AuthService.swift */,
+				A370FB5E270668BD00D5EF51 /* DI.swift */,
+			);
+			path = Services;
 			sourceTree = "<group>";
 		};
 		A382532D27007E8A00FBC6DC /* Workflows */ = {
@@ -214,6 +227,7 @@
 		A3968FEC26FF260000B6A59B /* InsecurityDemo */ = {
 			isa = PBXGroup;
 			children = (
+				A370FB5B2706688500D5EF51 /* Services */,
 				A382532D27007E8A00FBC6DC /* Workflows */,
 				A3968FED26FF260000B6A59B /* AppDelegate.swift */,
 				A379912B27026E3A00550B8E /* ApplicationCoordinator.swift */,
@@ -356,6 +370,7 @@
 			files = (
 				A3968FEE26FF260000B6A59B /* AppDelegate.swift in Sources */,
 				A382534C2700924400FBC6DC /* PaymentSuccessCoordinator.swift in Sources */,
+				A370FB5F270668BD00D5EF51 /* DI.swift in Sources */,
 				A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */,
 				A3683FC52700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift in Sources */,
 				A382534227008DEE00FBC6DC /* CartCoordinator.swift in Sources */,
@@ -368,6 +383,7 @@
 				A3683FBE2700FB590048B3CF /* LoginPhoneViewController.swift in Sources */,
 				A382534527008FCB00FBC6DC /* PaymentViewController.swift in Sources */,
 				A38253342700804700FBC6DC /* GalleryCoordinator.swift in Sources */,
+				A370FB5D2706689100D5EF51 /* AuthService.swift in Sources */,
 				A382534A270091A900FBC6DC /* PaymentSuccessViewController.swift in Sources */,
 				A379912C27026E3A00550B8E /* ApplicationCoordinator.swift in Sources */,
 			);

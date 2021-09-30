@@ -6,12 +6,15 @@ enum CartCoordinatorResult {
 }
 
 class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
-    init() {
+    typealias DI = PaymentCoordinator.DI
+        & LoginPhoneCoordinator.DI
+    
+    init(di: DI) {
         super.init { navitroller, finish in
             let cartViewController = CartViewController()
             
             cartViewController.onPayRequested = {
-                let paymentCoordinator = PaymentCoordinator()
+                let paymentCoordinator = PaymentCoordinator(di: di)
                 
                 navitroller.startModachild(paymentCoordinator, animated: true) { result in
                     print("End Payment Regular \(result)")
@@ -28,7 +31,7 @@ class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
             }
             
             cartViewController.onPayButLoginFirstRequested = {
-                let loginPhoneCoordinator = LoginPhoneCoordinator()
+                let loginPhoneCoordinator = LoginPhoneCoordinator(di: di)
                 
                 navitroller.startModalNavitrollerChild(UINavigationController(), loginPhoneCoordinator, animated: true) { result in
                     print("End Login \(result)")
@@ -36,7 +39,7 @@ class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
                     case .normal(let loginResult):
                         switch loginResult {
                         case .loggedIn:
-                            let paymentCoordinator = PaymentCoordinator()
+                            let paymentCoordinator = PaymentCoordinator(di: di)
                             
                             navitroller.startModachild(paymentCoordinator, animated: true) { result in
                                 print("End Payment After Login \(result)")
