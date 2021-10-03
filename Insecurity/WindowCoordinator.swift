@@ -10,7 +10,10 @@ open class WindowCoordinator {
     var navitrollerChild: NavitrollerCoordinatorAny?
     var modarollerChild: ModarollerCoordinatorAny?
     
-    public func startModaroller<NewResult>(_ modachild: ModachildCoordinator<NewResult>, _ completion: @escaping (NewResult) -> Void) {
+    public func startModaroller<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+                                           duration: TimeInterval? = nil,
+                                           options: UIView.AnimationOptions? = nil,
+                                           _ completion: @escaping (NewResult) -> Void) {
         guard let window = window else {
             assertionFailure("Window Coordinator attempted to start a child on a dead window")
             return
@@ -26,10 +29,20 @@ open class WindowCoordinator {
         self.modarollerChild = modaroller
         
         window.rootViewController = controller
+        
+        if let duration = duration, let options = options {
+            UIView.transition(with: window,
+                              duration: duration,
+                              options: options,
+                              animations: {},
+                              completion: nil)
+        }
     }
     
     public func startNavitroller<NewResult>(_ navigationController: UINavigationController,
                                             _ initialChild: NavichildCoordinator<NewResult>,
+                                            duration: TimeInterval? = nil,
+                                            options: UIView.AnimationOptions? = nil,
                                             _ completion: @escaping (NewResult) -> Void) {
         guard let window = window else {
             assertionFailure("Window Coordinator attempted to start a child on a dead window")
@@ -47,6 +60,14 @@ open class WindowCoordinator {
         self.navitrollerChild = navitroller
         
         window.rootViewController = navigationController
+        
+        if let duration = duration, let options = options {
+            UIView.transition(with: window,
+                              duration: duration,
+                              options: options,
+                              animations: {},
+                              completion: nil)
+        }
     }
     
     #if DEBUG
