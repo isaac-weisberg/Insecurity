@@ -3,9 +3,11 @@ import UIKit
 class CartViewController: UIViewController {
     var onPayRequested: (() -> Void)?
     var onPayButLoginFirstRequested: (() -> Void)?
+    var onPayButScoringFirstRequested: (() -> Void)?
     
     let payButton = UIButton(type: .system)
-    let payButLogingFirstButton = UIButton(type: .system)
+    let payButLoginFirstButton = UIButton(type: .system)
+    let payButScoringFirstButton = UIButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,13 +24,22 @@ class CartViewController: UIViewController {
             payButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
         
-        payButLogingFirstButton.translatesAutoresizingMaskIntoConstraints = false
-        payButLogingFirstButton.setTitle("Pay but loging first", for: .normal)
-        view.addSubview(payButLogingFirstButton)
-        payButLogingFirstButton.addTarget(self, action: #selector(onPayButLogingFirstButtonTap), for: .touchUpInside)
+        payButLoginFirstButton.translatesAutoresizingMaskIntoConstraints = false
+        payButLoginFirstButton.setTitle("Pay but loging first", for: .normal)
+        view.addSubview(payButLoginFirstButton)
+        payButLoginFirstButton.addTarget(self, action: #selector(onPayButLogingFirstButtonTap), for: .touchUpInside)
         NSLayoutConstraint.activate([
-            payButLogingFirstButton.bottomAnchor.constraint(equalTo: payButton.topAnchor, constant: -8),
-            payButLogingFirstButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            payButLoginFirstButton.bottomAnchor.constraint(equalTo: payButton.topAnchor, constant: -8),
+            payButLoginFirstButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+        ])
+        
+        payButScoringFirstButton.translatesAutoresizingMaskIntoConstraints = false
+        payButScoringFirstButton.setTitle("Pay but scoring first", for: .normal)
+        view.addSubview(payButScoringFirstButton)
+        payButScoringFirstButton.addTarget(self, action: #selector(onPayButScoringFirstButtonTap), for: .touchUpInside)
+        NSLayoutConstraint.activate([
+            payButScoringFirstButton.bottomAnchor.constraint(equalTo: payButLoginFirstButton.topAnchor, constant: -8),
+            payButScoringFirstButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
     }
     
@@ -38,5 +49,9 @@ class CartViewController: UIViewController {
     
     @objc func onPayButLogingFirstButtonTap() {
         onPayButLoginFirstRequested?()
+    }
+    
+    @objc func onPayButScoringFirstButtonTap() {
+        onPayButScoringFirstRequested?()
     }
 }

@@ -8,6 +8,7 @@ enum CartCoordinatorResult {
 class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
     typealias DI = PaymentCoordinator.DI
         & LoginPhoneCoordinator.DI
+        & ScoringCoordinator.DI
     
     init(di: DI) {
         super.init { navitroller, finish in
@@ -34,7 +35,7 @@ class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
                 let loginPhoneCoordinator = LoginPhoneCoordinator(di: di)
                 
                 navitroller.startModalNavitrollerChild(UINavigationController(), loginPhoneCoordinator, animated: true) { result in
-                    print("End Login \(result)")
+                    print("End Login after payWithLogin requested \(result)")
                     switch result {
                     case .normal(let loginResult):
                         switch loginResult {
@@ -52,6 +53,33 @@ class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
                                 case .dismissed:
                                     break
                                 }
+                            }
+                        }
+                    case .dismissed:
+                        break
+                    }
+                }
+            }
+            
+            cartViewController.onPayButScoringFirstRequested = {
+                let scoringCoordinator = ScoringCoordinator(di: di)
+                
+                navitroller.startModachild(scoringCoordinator, animated: true) { result in
+                    print("End Login after payWithScoring requested \(result)")
+                    switch result {
+                    case .normal:
+                        let paymentCoordinator = PaymentCoordinator(di: di)
+                        
+                        navitroller.startModachild(paymentCoordinator, animated: true) { result in
+                            print("End Payment After Login \(result)")
+                            switch result {
+                            case .normal(let paymentResult):
+                                switch paymentResult {
+                                case .success:
+                                    finish(.purchased)
+                                }
+                            case .dismissed:
+                                break
                             }
                         }
                     case .dismissed:

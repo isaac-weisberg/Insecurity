@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		A34CBF6526FFD796007AF9B8 /* ModalPresentationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */; };
+		A35A78232709EF3E00256FBD /* ScoringCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */; };
+		A35A78252709EFFB00256FBD /* ScoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78242709EFFB00256FBD /* ScoringViewController.swift */; };
 		A3683FBE2700FB590048B3CF /* LoginPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FBD2700FB590048B3CF /* LoginPhoneViewController.swift */; };
 		A3683FC12700FBCC0048B3CF /* LoginSMSCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC02700FBCC0048B3CF /* LoginSMSCodeViewController.swift */; };
 		A3683FC32700FC3F0048B3CF /* LoginPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */; };
@@ -65,6 +67,8 @@
 
 /* Begin PBXFileReference section */
 		A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresentationCoordinator.swift; sourceTree = "<group>"; };
+		A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
+		A35A78242709EFFB00256FBD /* ScoringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringViewController.swift; sourceTree = "<group>"; };
 		A3683FBD2700FB590048B3CF /* LoginPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneViewController.swift; sourceTree = "<group>"; };
 		A3683FC02700FBCC0048B3CF /* LoginSMSCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeViewController.swift; sourceTree = "<group>"; };
 		A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneCoordinator.swift; sourceTree = "<group>"; };
@@ -116,6 +120,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		A35A78212709EF2E00256FBD /* Scoring */ = {
+			isa = PBXGroup;
+			children = (
+				A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */,
+				A35A78242709EFFB00256FBD /* ScoringViewController.swift */,
+			);
+			path = Scoring;
+			sourceTree = "<group>";
+		};
 		A3683FBC2700FB460048B3CF /* LoginPhone */ = {
 			isa = PBXGroup;
 			children = (
@@ -155,6 +168,7 @@
 		A382532D27007E8A00FBC6DC /* Workflows */ = {
 			isa = PBXGroup;
 			children = (
+				A35A78212709EF2E00256FBD /* Scoring */,
 				A370FB60270675D800D5EF51 /* DebugViewController */,
 				A3683FBF2700FBBE0048B3CF /* LoginSMSCode */,
 				A3683FBC2700FB460048B3CF /* LoginPhone */,
@@ -398,12 +412,14 @@
 				A3825339270086CF00FBC6DC /* ProductCoordinator.swift in Sources */,
 				A3683FC12700FBCC0048B3CF /* LoginSMSCodeViewController.swift in Sources */,
 				A38253372700817C00FBC6DC /* ProductViewController.swift in Sources */,
+				A35A78252709EFFB00256FBD /* ScoringViewController.swift in Sources */,
 				A3683FC32700FC3F0048B3CF /* LoginPhoneCoordinator.swift in Sources */,
 				A382534027008C7F00FBC6DC /* CartViewController.swift in Sources */,
 				A3683FBE2700FB590048B3CF /* LoginPhoneViewController.swift in Sources */,
 				A382534527008FCB00FBC6DC /* PaymentViewController.swift in Sources */,
 				A38253342700804700FBC6DC /* GalleryCoordinator.swift in Sources */,
 				A370FB662706780900D5EF51 /* Application.swift in Sources */,
+				A35A78232709EF3E00256FBD /* ScoringCoordinator.swift in Sources */,
 				A370FB5D2706689100D5EF51 /* AuthService.swift in Sources */,
 				A382534A270091A900FBC6DC /* PaymentSuccessViewController.swift in Sources */,
 				A370FB682706782E00D5EF51 /* main.swift in Sources */,
