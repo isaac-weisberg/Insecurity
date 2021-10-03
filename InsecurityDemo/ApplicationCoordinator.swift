@@ -55,12 +55,19 @@ class ApplicationCoordinator: WindowCoordinator {
         startDebugCoordinator()
     }
     
+    var startedDebugCoordinator = false
+    
     func startDebugCoordinator() {
+        guard !startedDebugCoordinator else {
+            return
+        }
+        startedDebugCoordinator = true
+        
         let debugCoordinator = DebugViewCoordinator(di: di)
         
-        self.startModaroller(debugCoordinator) { [weak self] result in
+        self.startOverTop(debugCoordinator, animated: true) { [weak self] result in
+            self?.startedDebugCoordinator = false
             print("End DebugView \(result)")
-            self?.start()
         }
     }
 }

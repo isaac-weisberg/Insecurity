@@ -18,6 +18,10 @@ public protocol NavitrollerCoordinatorAny: AnyObject {
                                                _ initialChild: NavichildCoordinator<NewResult>,
                                                animated: Bool,
                                                _ completion: @escaping (ModachildResult<NewResult>) -> Void)
+    
+    func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (ModachildResult<NewResult>) -> Void)
 }
 
 open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
@@ -265,6 +269,16 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
         self.modaroller = modaroller
         
         return modaroller
+    }
+    
+    public func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+                                        animated: Bool,
+                                        _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
+        let modaroller = self.asModarollerCoordinator()
+        
+        modaroller.startOverTop(modachild, animated: animated) { result in
+            completion(result)
+        }
     }
 }
 

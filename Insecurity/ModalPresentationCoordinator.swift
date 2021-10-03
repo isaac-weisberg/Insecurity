@@ -14,6 +14,10 @@ public protocol ModarollerCoordinatorAny {
     func startChild<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
                                animated: Bool,
                                _ completion: @escaping (ModachildResult<NewResult>) -> Void)
+    
+    func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (ModachildResult<NewResult>) -> Void)
 }
 
 public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
@@ -151,8 +155,24 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
             return
         }
         
+        #if DEBUG
+        let shouldCheckDeallocationOrder: Bool
+        
+        if let firstNonDeadNavData = self.navData.first(where: { navData in
+            navData.viewController != nil
+        }) {
+            let viewController = firstNonDeadNavData.viewController!
+            shouldCheckDeallocationOrder = viewController.view.window != nil
+        } else {
+            shouldCheckDeallocationOrder = true
+        }
+    
+        if shouldCheckDeallocationOrder {
+            assert(index == self.navData.endIndex - 1, "Dealocation ensued not from the end")
+        }
+        #endif
+        
         var newNavData = self.navData
-        assert(index == newNavData.endIndex - 1, "Dealocation ensued not from the end")
         newNavData.remove(at: index)
         
         self.navData = newNavData
@@ -187,6 +207,14 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
         let navData = NavData(viewController: controller, coordinator: modachild, state: .running)
         self.navData.append(navData)
         electedHost.present(controller, animated: true, completion: nil)
+    }
+    
+    public func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+                                        animated: Bool,
+                                        _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
+        startChild(modachild, animated: animated) { result in
+            completion(result)
+        }
     }
     
     public func startNavitrollerChild<NewResult>(_ navigationController: UINavigationController,

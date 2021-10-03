@@ -54,4 +54,26 @@ open class WindowCoordinator {
         print("Window Coordinator deinit \(type(of: self))")
     }
     #endif
+    
+    public func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+                                        animated: Bool,
+                                        _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
+        if let navitrollerChild = navitrollerChild {
+            assert(modarollerChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
+            navitrollerChild.startOverTop(modachild, animated: animated) { result in
+                completion(result)
+            }
+            return
+        }
+        if let modarollerChild = modarollerChild {
+            assert(navitrollerChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
+            modarollerChild.startOverTop(modachild, animated: animated) { result in
+                completion(result)
+            }
+            return
+        }
+        self.startModaroller(modachild) { result in
+            completion(.normal(result))
+        }
+    }
 }
