@@ -228,7 +228,13 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
                                             animated: Bool,
                                             _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         var modachildFinish: ((NewResult) -> Void)?
-        let navitrollerCoordinator = NavitrollerCoordinator(navigationController, child)
+        let navitrollerCoordinator = NavitrollerCoordinator<NewResult>(navigationController, child)
+        
+        child.navitroller = navitrollerCoordinator
+        child._finishImplementation = {
+            
+        }
+        
         navitrollerCoordinator._finishImplementation = { result in
             if let modachildFinish = modachildFinish {
                 modachildFinish(result)

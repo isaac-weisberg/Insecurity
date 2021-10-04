@@ -66,6 +66,9 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
         _finishImplementation(result)
     }
     
+    //
+    // Danger: this API should never be exported because this initialized performs side-effects
+    //
     init(_ navigationController: UINavigationController, _ initialChild: NavichildCoordinator<Result>) {
         self.navigationController = navigationController
         
