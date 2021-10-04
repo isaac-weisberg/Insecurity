@@ -57,9 +57,8 @@ open class WindowCoordinator: WindowCoordinatorAny {
             return
         }
         
-        // Holy moly, I hope I don't regret these design choices
         let controller = modachild.viewController
-        let modaroller = ModarollerCoordinator<NewResult>(optionalHost: controller)
+        let modaroller = ModarollerCoordinator(controller)
         modachild.modaroller = modaroller
         modachild._finishImplementation = { [weak self] result in
             self?.modarollerChild = nil
@@ -88,15 +87,18 @@ open class WindowCoordinator: WindowCoordinatorAny {
             return
         }
         
-        let navitroller = NavitrollerCoordinator<NewResult>(navigationController, initialChild)
+        let navitroller = NavitrollerCoordinator(navigationController)
         
-        navitroller._finishImplementation = { [weak self] result in
+        initialChild.navitroller = navitroller
+        initialChild._finishImplementation = { [weak self] result in
             guard let self = self else { return }
             
             self.navitrollerChild = nil
             
             completion(result)
         }
+        
+        navigationController.setViewControllers([ initialChild.viewController ], animated: navigationControllerRootIsAssignedWithAnimation)
         
         self.navitrollerChild = navitroller
         

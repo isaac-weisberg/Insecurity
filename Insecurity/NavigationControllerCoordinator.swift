@@ -1,5 +1,7 @@
 import UIKit
 
+internal let navigationControllerRootIsAssignedWithAnimation = true
+
 public protocol NavitrollerCoordinatorAny: AnyObject {
     func startChild<NewResult>(_ navichild: NavichildCoordinator<NewResult>,
                                animated: Bool,
@@ -46,63 +48,14 @@ public extension NavitrollerCoordinatorAny {
     }
 }
 
-open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
+open class NavitrollerCoordinator: NavitrollerCoordinatorAny {
     weak var navigationController: UINavigationController?
-    
-    enum SelfState {
-        case running
-        case finished
-    }
-    var selfState = SelfState.running
-    
-    var _finishImplementation: ((Result) -> Void)?
-    
-    public func finish(_ result: Result) {
-        guard let _finishImplementation = _finishImplementation else {
-            assertionFailure("Finish called before the coordinator was started")
-            return
-        }
-        
-        _finishImplementation(result)
-    }
     
     //
     // Danger: this API should never be exported because this initialized performs side-effects
     //
-    init(_ navigationController: UINavigationController, _ initialChild: NavichildCoordinator<Result>) {
+    init(_ navigationController: UINavigationController) {
         self.navigationController = navigationController
-        
-        initialChild.navitroller = self
-        let controller = initialChild.viewController
-        weak var weakController = controller
-        initialChild._finishImplementation = { [weak self] result in
-            guard let self = self else { return }
-            
-            guard let navigationController = self.navigationController else {
-                assertionFailure("Navigation Controller child has attempted to finish, but the hosting UINavigationController was dead, which is a bug")
-                return
-            }
-            
-            switch self.selfState {
-            case .running:
-                self.selfState = .finished
-                if let weakController = weakController {
-                    assert(weakController === navigationController.viewControllers.first, "Navigation Controller tree has been modified from outside and now the root controller doesnt match the initial child")
-                    
-                    // It's a plus-one because the root view controller is not mentioned in the navData and is located at index 0
-                    assert(navigationController.viewControllers.count == self.navData.count + 1, "Navigation controller stack depth doesnt match the known information, which is undoubtedly a bug")
-                    
-                    self.finish(result)
-                } else {
-                    assertionFailure("Navigation Controller tree has been modified from outside and now the initial child of this coordinator is dead")
-                }
-                
-            case .finished:
-                assertionFailure("We have already finished, but the finish was called again")
-            }
-        }
-        
-        navigationController.setViewControllers([controller], animated: true)
     }
     
     struct NavData {
@@ -198,14 +151,6 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     }
     
     func finalize(_ navichild: NavichildCoordinatorAny) {
-        switch selfState {
-        case .running:
-            break
-        case .finished:
-            assertionFailure("Navigation Controller Coordinator has already finished with a result, but a new child was about to propagate its result")
-            return
-        }
-        
         let index = navData.firstIndex { navData in
             navData.coordinator === navichild
         }
@@ -220,14 +165,6 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     }
     
     func dispatch(_ controller: UIViewController, navichild: NavichildCoordinatorAny) {
-        switch selfState {
-        case .running:
-            break
-        case .finished:
-            assertionFailure("Navigation Controller Coordinator has already finished with a result, but a new child was about to be started")
-            return
-        }
-        
         let navData = NavData(viewController: controller, coordinator: navichild, state: .running)
         self.navData.append(navData)
     }
@@ -290,13 +227,13 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     }
     #endif
     
-    var modaroller: ModarollerCoordinator<Result>?
-    func asModarollerCoordinator() -> ModarollerCoordinator<Result> {
+    var modaroller: ModarollerCoordinator?
+    func asModarollerCoordinator() -> ModarollerCoordinator {
         if let modaroller = modaroller {
             return modaroller
         }
         
-        let modaroller = ModarollerCoordinator<Result>(optionalHost: navigationController)
+        let modaroller = ModarollerCoordinator(optionalHost: navigationController)
         self.modaroller = modaroller
         
         return modaroller
