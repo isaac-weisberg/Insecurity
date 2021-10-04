@@ -176,19 +176,28 @@ open class NavitrollerCoordinator: NavitrollerCoordinatorAny {
         }
         
         navichild.navitroller = self
-        let controller = navichild.viewController
-        weak var weakControler = controller
+        var weakControllerInitialized = false
+        weak var weakController: UIViewController?
         navichild._finishImplementation = { [weak self, weak navichild] (result: NewResult) in
             guard let self = self, let navichild = navichild else { return }
             
-            assert(weakControler != nil, "Called coordinator finish way before it could be started")
-            weakControler?.onDeinit = nil
+            #if DEBUG
+            if weakControllerInitialized {
+                assert(weakController != nil, "Finish called but the controller is long dead")
+            } else {
+                assertionFailure("Finish called way before we could start the coordinator")
+            }
+            #endif
+            weakController?.onDeinit = nil
             self.finalize(navichild)
             self.finalizationDepth += 1
             completion(.normal(result))
             self.finalizationDepth -= 1
             self.purge()
         }
+        let controller = navichild.viewController
+        weakController = controller
+        weakControllerInitialized = true
         
         controller.onDeinit = { [weak self, weak navichild] in
             guard let self = self, let navichild = navichild else { return }

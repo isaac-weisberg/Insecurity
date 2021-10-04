@@ -91,10 +91,7 @@ open class WindowCoordinator: WindowCoordinatorAny {
         
         initialChild.navitroller = navitroller
         initialChild._finishImplementation = { [weak self] result in
-            guard let self = self else { return }
-            
-            self.navitrollerChild = nil
-            
+            self?.navitrollerChild = nil
             completion(result)
         }
         

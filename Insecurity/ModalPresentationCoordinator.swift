@@ -264,19 +264,28 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
     func startChildImmediately<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         
         modachild.modaroller = self
-        let controller = modachild.viewController
-        weak var weakControler: UIViewController? = controller
+        var weakControllerInitialized = false
+        weak var weakController: UIViewController?
         modachild._finishImplementation = { [weak self, weak modachild] result in
             guard let self = self, let modachild = modachild else { return }
             
-            assert(weakControler != nil, "Finish called but the controller is long dead")
-            weakControler?.onDeinit = nil
+            #if DEBUG
+            if weakControllerInitialized {
+                assert(weakController != nil, "Finish called but the controller is long dead")
+            } else {
+                assertionFailure("Finish called way before we could start the coordinator")
+            }
+            #endif
+            weakController?.onDeinit = nil
             self.finalize(modachild)
             self.finalizationDepth += 1
             completion(.normal(result))
             self.finalizationDepth -= 1
             self.purge()
         }
+        let controller = modachild.viewController
+        weakController = controller
+        weakControllerInitialized = true
         
         controller.onDeinit = { [weak self, weak modachild] in
             guard let self = self, let modachild = modachild else { return }
