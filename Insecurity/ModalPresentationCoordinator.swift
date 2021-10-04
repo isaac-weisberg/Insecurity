@@ -26,7 +26,7 @@ public extension ModarollerCoordinatorAny {
     }
 }
 
-public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
+public class ModarollerCoordinator: ModarollerCoordinatorAny {
     weak var host: UIViewController?
     
     init(_ host: UIViewController) {
@@ -227,27 +227,19 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
                                             _ child: NavichildCoordinator<NewResult>,
                                             animated: Bool,
                                             _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        var modachildFinish: ((NewResult) -> Void)?
-        let navitrollerCoordinator = NavitrollerCoordinator<NewResult>(navigationController, child)
+        let navitrollerCoordinator = NavitrollerCoordinator(navigationController)
+        
+        let modachild = ModachildWithNavitroller<NewResult>(navitrollerCoordinator, navigationController)
         
         child.navitroller = navitrollerCoordinator
-        child._finishImplementation = {
-            
-        }
-        
-        navitrollerCoordinator._finishImplementation = { result in
-            if let modachildFinish = modachildFinish {
-                modachildFinish(result)
+        child._finishImplementation = { [weak modachild] result in
+            if let modachild = modachild {
+                modachild.finish(result)
             } else {
                 assertionFailure("Navigation Controller child has called finish way before we could initialize the coordinator or after when it has already completed")
             }
         }
-
-        let modachild = ModachildWithNavitroller<NewResult>(navitrollerCoordinator, navigationController)
-        modachildFinish = { result in
-            modachildFinish = nil
-            modachild.finish(result)
-        }
+        navigationController.setViewControllers([ child.viewController ], animated: navigationControllerRootIsAssignedWithAnimation)
         
         self.startChild(modachild, animated: animated) { modarollerResult in
             completion(modarollerResult)
@@ -340,14 +332,14 @@ open class ModachildCoordinator<Result>: ModachildCoordinatorAny {
 }
 
 class ModachildWithNavitroller<Result>: ModachildCoordinator<Result> {
-    let navitrollerChild: NavitrollerCoordinator<Result>?
+    let navitrollerChild: NavitrollerCoordinator?
     weak var _storedViewController: UIViewController?
     
     override var viewController: UIViewController {
         return _storedViewController!
     }
     
-    init(_ navitrollerChild: NavitrollerCoordinator<Result>,
+    init(_ navitrollerChild: NavitrollerCoordinator,
          _ _storedViewController: UIViewController?) {
         
         self.navitrollerChild = navitrollerChild
