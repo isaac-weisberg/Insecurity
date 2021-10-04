@@ -88,7 +88,9 @@ open class WindowCoordinator: WindowCoordinatorAny {
             return
         }
         
-        let navitroller = NavitrollerCoordinator<NewResult>(navigationController, initialChild) { [weak self] result in
+        let navitroller = NavitrollerCoordinator<NewResult>(navigationController, initialChild)
+        
+        navitroller._finishImplementation = { [weak self] result in
             guard let self = self else { return }
             
             self.navitrollerChild = nil

@@ -55,7 +55,18 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     }
     var selfState = SelfState.running
     
-    public init(_ navigationController: UINavigationController, _ initialChild: NavichildCoordinator<Result>, _ completion: @escaping (Result) -> Void) {
+    var _finishImplementation: ((Result) -> Void)?
+    
+    public func finish(_ result: Result) {
+        guard let _finishImplementation = _finishImplementation else {
+            assertionFailure("Finish called before the coordinator was started")
+            return
+        }
+        
+        _finishImplementation(result)
+    }
+    
+    init(_ navigationController: UINavigationController, _ initialChild: NavichildCoordinator<Result>) {
         self.navigationController = navigationController
         
         initialChild.navitroller = self
@@ -78,7 +89,7 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
                     // It's a plus-one because the root view controller is not mentioned in the navData and is located at index 0
                     assert(navigationController.viewControllers.count == self.navData.count + 1, "Navigation controller stack depth doesnt match the known information, which is undoubtedly a bug")
                     
-                    completion(result)
+                    self.finish(result)
                 } else {
                     assertionFailure("Navigation Controller tree has been modified from outside and now the initial child of this coordinator is dead")
                 }
