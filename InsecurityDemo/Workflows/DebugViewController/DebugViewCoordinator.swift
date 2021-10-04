@@ -1,15 +1,20 @@
 import Insecurity
+import UIKit
 
 class DebugViewCoordinator: ModachildCoordinator<Void> {
     typealias DI = DebugViewController.DI
     
+    let di: DI
+    
     init(di: DI) {
-        super.init { _, finish in
-            let viewController = DebugViewController(di: di)
-            
-            viewController.onClose = { finish (()) }
-            
-            return viewController
-        }
+        self.di = di
+    }
+    
+    override var viewController: UIViewController {
+        let viewController = DebugViewController(di: di)
+        
+        viewController.onClose = { self.finish(()) }
+        
+        return viewController
     }
 }

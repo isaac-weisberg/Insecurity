@@ -1,4 +1,5 @@
 import Insecurity
+import UIKit
 
 enum PaymentCoordinatorResult {
     case success
@@ -7,19 +8,23 @@ enum PaymentCoordinatorResult {
 class PaymentCoordinator: ModachildCoordinator<PaymentCoordinatorResult> {
     typealias DI = PaymentViewController.DI
     
-    init(di: DI) {
-        super.init { modaroller, finish in
-            let paymentViewController = PaymentViewController(di: di)
-            paymentViewController.onPaymentSuccess = {
-                let successCoordinator = PaymentSuccessCoordinator()
-                
-                modaroller.startChild(successCoordinator, animated: true) { result in
-                    print("End PaymentSuccess \(result)")
-                    finish(.success)
-                }
+    override var viewController: UIViewController {
+        let paymentViewController = PaymentViewController(di: di)
+        paymentViewController.onPaymentSuccess = {
+            let successCoordinator = PaymentSuccessCoordinator()
+            
+            modaroller.startChild(successCoordinator, animated: true) { result in
+                print("End PaymentSuccess \(result)")
+                finish(.success)
             }
-            return paymentViewController
         }
+        return paymentViewController
+    }
+    
+    let di: DI
+    
+    init(di: DI) {
+        self.di = di
     }
 }
 

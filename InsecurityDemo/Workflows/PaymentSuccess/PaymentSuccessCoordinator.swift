@@ -1,15 +1,14 @@
 import Insecurity
+import UIKit
 
 class PaymentSuccessCoordinator: ModachildCoordinator<Void> {
-    init() {
-        super.init { _, finish in
-            let viewController = PaymentSuccessViewController()
-            
-            viewController.onConfirm = {
-                finish(())
-            }
-            
-            return viewController
+    override var viewController: UIViewController {
+        let viewController = PaymentSuccessViewController()
+        
+        viewController.onConfirm = {
+            self.finish(())
         }
+        
+        return viewController
     }
 }

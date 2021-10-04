@@ -4,33 +4,38 @@ import UIKit
 class ScoringCoordinator: ModachildCoordinator<Void> {
     typealias DI = LoginSMSCodeViewController.DI
     
+    let di: DI
+    
     init(di: DI) {
-        super.init { _, finish in
-            let phoneViewController = LoginPhoneViewController()
+        self.di = di
+    }
+    
+    override var viewController: UIViewController {
+        let di = self.di
+        let phoneViewController = LoginPhoneViewController()
+        
+        let navigationController = UINavigationController(rootViewController: phoneViewController)
+        
+        phoneViewController.onSmsCodeSent = { [unowned navigationController, unowned phoneViewController] in
+            let smsViewController = LoginSMSCodeViewController(di: di)
             
-            let navigationController = UINavigationController(rootViewController: phoneViewController)
-            
-            phoneViewController.onSmsCodeSent = { [unowned navigationController, unowned phoneViewController] in
-                let smsViewController = LoginSMSCodeViewController(di: di)
+            smsViewController.onSmsCodeConfirmed = { [unowned navigationController, unowned phoneViewController] in
+                let scoringViewController = ScoringViewController()
                 
-                smsViewController.onSmsCodeConfirmed = { [unowned navigationController, unowned phoneViewController] in
-                    let scoringViewController = ScoringViewController()
-                    
-                    scoringViewController.onSuccess = {
-                        finish(())
-                    }
-                    
-                    scoringViewController.onLoginUnderAnotherUserRequested = { [unowned navigationController, unowned phoneViewController] in
-                        navigationController.setViewControllers([phoneViewController], animated: true)
-                    }
-                    
-                    navigationController.setViewControllers([phoneViewController, scoringViewController], animated: true)
+                scoringViewController.onSuccess = {
+                    self.finish(())
                 }
                 
-                navigationController.pushViewController(smsViewController, animated: true)
+                scoringViewController.onLoginUnderAnotherUserRequested = { [unowned navigationController, unowned phoneViewController] in
+                    navigationController.setViewControllers([phoneViewController], animated: true)
+                }
+                
+                navigationController.setViewControllers([phoneViewController, scoringViewController], animated: true)
             }
             
-            return navigationController
+            navigationController.pushViewController(smsViewController, animated: true)
         }
+        
+        return navigationController
     }
 }

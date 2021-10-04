@@ -229,17 +229,11 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
                 assertionFailure("Navigation Controller child has called finish way before we could initialize the coordinator or after when it has already completed")
             }
         }
-        let modachild = ModachildCoordinator<NewResult>(navitrollerCoordinator) { [weak navigationController] modaroller, finish in
-            modachildFinish = { result in
-                modachildFinish = nil
-                finish(result)
-            }
-            
-            guard let navigationController = navigationController else {
-                fatalError("Navigation controller was released way before the bridge coordinator could be initialized")
-            }
-            
-            return navigationController
+
+        let modachild = ModachildWithNavitroller<NewResult>(navitrollerCoordinator, navigationController)
+        modachildFinish = { result in
+            modachildFinish = nil
+            modachild.finish(result)
         }
         
         self.startChild(modachild, animated: animated) { modarollerResult in
@@ -263,11 +257,13 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
     }
     
     func startChildImmediately<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
-        weak var weakControler: UIViewController?
-        let controller = modachild.make(self) { [weak self] result in
+        
+        let controller = modachild.viewController
+        weak var weakControler: UIViewController? = controller
+        modachild._finishImplementation = { [weak self] result in
             guard let self = self else { return }
             
-            assert(weakControler != nil, "Called coordinator finish way before it could be started")
+            assert(weakControler != nil, "Finish called but the controller is long dead")
             weakControler?.onDeinit = nil
             self.finalize(modachild)
             self.finalizationDepth += 1
@@ -275,8 +271,6 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
             self.finalizationDepth -= 1
             self.purge()
         }
-        
-        weakControler = controller
         
         controller.onDeinit = { [weak self, weak modachild] in
             guard let self = self, let modachild = modachild else { return }
@@ -299,18 +293,38 @@ protocol ModachildCoordinatorAny: AnyObject {
 }
 
 open class ModachildCoordinator<Result>: ModachildCoordinatorAny {
-    let make: (ModarollerCoordinatorAny, @escaping (Result) -> Void) -> UIViewController
-    let navitrollerChild: NavitrollerCoordinator<Result>?
+    open var viewController: UIViewController {
+        fatalError("This coordinator didn't define a viewController")
+    }
     
-    public init(_ make: @escaping (ModarollerCoordinatorAny, @escaping (Result) -> Void) -> UIViewController) {
-        self.make = make
-        self.navitrollerChild = nil
+    var _finishImplementation: ((Result) -> Void)?
+    
+    public func finish(_ result: Result) {
+        guard let _finishImplementation = _finishImplementation else {
+            assertionFailure("Finish called before the coordinator was started")
+            return
+        }
+        
+        _finishImplementation(result)
+    }
+    
+    public init() {
+        
+    }
+}
+
+class ModachildWithNavitroller<Result>: ModachildCoordinator<Result> {
+    let navitrollerChild: NavitrollerCoordinator<Result>?
+    weak var _storedViewController: UIViewController?
+    
+    override var viewController: UIViewController {
+        return _storedViewController!
     }
     
     init(_ navitrollerChild: NavitrollerCoordinator<Result>,
-         _ make: @escaping (ModarollerCoordinatorAny, @escaping (Result) -> Void) -> UIViewController) {
+         _ _storedViewController: UIViewController?) {
         
-        self.navitrollerChild  = navitrollerChild
-        self.make = make
+        self.navitrollerChild = navitrollerChild
+        self._storedViewController = _storedViewController
     }
 }

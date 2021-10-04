@@ -20,12 +20,12 @@ open class WindowCoordinator {
         }
         
         // Holy moly, I hope I don't regret these design choices
-        let modaroller = ModarollerCoordinator<NewResult>(optionalHost: nil)
-        let controller = modachild.make(modaroller) { [weak self] result in
+        let controller = modachild.viewController
+        let modaroller = ModarollerCoordinator<NewResult>(optionalHost: controller)
+        modachild._finishImplementation = { [weak self] result in
             self?.modarollerChild = nil
             completion(result)
         }
-        modaroller.host = controller
         self.modarollerChild = modaroller
         
         window.rootViewController = controller
