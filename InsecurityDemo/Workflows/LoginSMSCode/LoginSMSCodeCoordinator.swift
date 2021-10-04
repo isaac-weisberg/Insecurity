@@ -1,4 +1,5 @@
 import Insecurity
+import UIKit
 
 enum LoginSMSCodeCoordinatorResult {
     case loggedIn
@@ -7,15 +8,19 @@ enum LoginSMSCodeCoordinatorResult {
 class LoginSMSCodeCoordinator: NavichildCoordinator<LoginSMSCodeCoordinatorResult> {
     typealias DI = LoginSMSCodeViewController.DI
     
-    init(di: DI) {
-        super.init { _, finish in
-            let controller = LoginSMSCodeViewController(di: di)
-            
-            controller.onSmsCodeConfirmed = {
-                finish(.loggedIn)
-            }
-            
-            return controller
+    override var viewController: UIViewController {
+        let controller = LoginSMSCodeViewController(di: di)
+        
+        controller.onSmsCodeConfirmed = { [self] in
+            finish(.loggedIn)
         }
+        
+        return controller
+    }
+    
+    let di: DI
+    
+    init(di: DI) {
+        self.di = di
     }
 }

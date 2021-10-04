@@ -261,8 +261,8 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
         modachild.modaroller = self
         let controller = modachild.viewController
         weak var weakControler: UIViewController? = controller
-        modachild._finishImplementation = { [weak self, unowned modachild] result in
-            guard let self = self else { return }
+        modachild._finishImplementation = { [weak self, weak modachild] result in
+            guard let self = self, let modachild = modachild else { return }
             
             assert(weakControler != nil, "Finish called but the controller is long dead")
             weakControler?.onDeinit = nil

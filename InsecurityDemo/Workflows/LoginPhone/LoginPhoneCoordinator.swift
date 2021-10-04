@@ -1,4 +1,5 @@
 import Insecurity
+import UIKit
 
 enum LoginPhoneCoordinatorResult {
     case loggedIn
@@ -7,28 +8,32 @@ enum LoginPhoneCoordinatorResult {
 class LoginPhoneCoordinator: NavichildCoordinator<LoginPhoneCoordinatorResult> {
     typealias DI = HasAuthService
     
-    init(di: DI) {
-        super.init { navitroller, finish in
-            let controller = LoginPhoneViewController()
+    override var viewController: UIViewController {
+        let controller = LoginPhoneViewController()
+        
+        controller.onSmsCodeSent = { [self] in
+            let loginSMSCodeCoordinator = LoginSMSCodeCoordinator(di: di)
             
-            controller.onSmsCodeSent = {
-                let loginSMSCodeCoordinator = LoginSMSCodeCoordinator(di: di)
-                
-                navitroller.startChild(loginSMSCodeCoordinator, animated: true) { result in
-                    print("End LoginSMSCode \(result)")
-                    switch result {
-                    case .normal(let smsCodeResult):
-                        switch smsCodeResult {
-                        case .loggedIn:
-                            finish(.loggedIn)
-                        }
-                    case .dismissed:
-                        break
+            navitroller.startChild(loginSMSCodeCoordinator, animated: true) { result in
+                print("End LoginSMSCode \(result)")
+                switch result {
+                case .normal(let smsCodeResult):
+                    switch smsCodeResult {
+                    case .loggedIn:
+                        finish(.loggedIn)
                     }
+                case .dismissed:
+                    break
                 }
             }
-            
-            return controller
         }
+        
+        return controller
+    }
+    
+    let di: DI
+    
+    init(di: DI) {
+        self.di = di
     }
 }

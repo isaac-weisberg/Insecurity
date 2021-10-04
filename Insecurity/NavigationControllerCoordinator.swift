@@ -36,9 +36,10 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
     public init(_ navigationController: UINavigationController, _ initialChild: NavichildCoordinator<Result>, _ completion: @escaping (Result) -> Void) {
         self.navigationController = navigationController
         
-        var weakControllerInitialized = false
-        weak var weakController: UIViewController?
-        let controller = initialChild.make(self) { [weak self] result in
+        initialChild.navitroller = self
+        let controller = initialChild.viewController
+        weak var weakController = controller
+        initialChild._finishImplementation = { [weak self] result in
             guard let self = self else { return }
             
             guard let navigationController = self.navigationController else {
@@ -57,20 +58,13 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
                     
                     completion(result)
                 } else {
-                    if weakControllerInitialized {
-                        assertionFailure("Navigation Controller tree has been modified from outside and now the initial child of this coordinator is dead")
-                    } else {
-                        assertionFailure("Finish was insta-called way before the coordinator could ever be initialized")
-                    }
+                    assertionFailure("Navigation Controller tree has been modified from outside and now the initial child of this coordinator is dead")
                 }
                 
             case .finished:
                 assertionFailure("We have already finished, but the finish was called again")
             }
         }
-        
-        weakController = controller
-        weakControllerInitialized = true
         
         navigationController.setViewControllers([controller], animated: true)
     }
@@ -208,9 +202,11 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
             return
         }
         
-        weak var weakControler: UIViewController?
-        let controller = navichild.make(self) { [weak self] (result: NewResult) in
-            guard let self = self else { return }
+        navichild.navitroller = self
+        let controller = navichild.viewController
+        weak var weakControler = controller
+        navichild._finishImplementation = { [weak self, weak navichild] (result: NewResult) in
+            guard let self = self, let navichild = navichild else { return }
             
             assert(weakControler != nil, "Called coordinator finish way before it could be started")
             weakControler?.onDeinit = nil
@@ -220,7 +216,6 @@ open class NavitrollerCoordinator<Result>: NavitrollerCoordinatorAny {
             self.finalizationDepth -= 1
             self.purge()
         }
-        weakControler = controller
         
         controller.onDeinit = { [weak self, weak navichild] in
             guard let self = self, let navichild = navichild else { return }
@@ -287,10 +282,35 @@ protocol NavichildCoordinatorAny: AnyObject {
 }
 
 open class NavichildCoordinator<Result>: NavichildCoordinatorAny {
-    let make: (NavitrollerCoordinatorAny, @escaping (Result) -> Void) -> UIViewController
+    private weak var _navitroller: NavitrollerCoordinatorAny?
     
-    public init(_ make: @escaping (NavitrollerCoordinatorAny, @escaping (Result) -> Void) -> UIViewController) {
-        self.make = make
+    public var navitroller: NavitrollerCoordinatorAny! {
+        get {
+            assert(_navitroller != nil, "Attempted to use navitroller before the coordinator was started or after it has finished")
+            return _navitroller
+        }
+        set {
+            _navitroller = newValue
+        }
+    }
+    
+    open var viewController: UIViewController {
+        fatalError("This coordinator didn't define a viewController")
+    }
+    
+    var _finishImplementation: ((Result) -> Void)?
+    
+    public func finish(_ result: Result) {
+        guard let _finishImplementation = _finishImplementation else {
+            assertionFailure("Finish called before the coordinator was started")
+            return
+        }
+        
+        _finishImplementation(result)
+    }
+    
+    public init() {
+        
     }
 }
 

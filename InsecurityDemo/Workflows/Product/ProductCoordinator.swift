@@ -1,21 +1,26 @@
 import Insecurity
+import UIKit
 
 class ProductCoordinator: NavichildCoordinator<Void> {
     typealias DI = CartCoordinator.DI
     
-    init(di: DI) {
-        super.init { navitroller, finish in
-            let viewController = ProductViewController()
+    override var viewController: UIViewController {
+        let viewController = ProductViewController()
+        
+        viewController.onCartRequested = { [self] in
+            let contentsCoordinator = CartCoordinator(di: di)
             
-            viewController.onCartRequested = {
-                let contentsCoordinator = CartCoordinator(di: di)
-                
-                navitroller.startChild(contentsCoordinator, animated: true) { result in
-                    print("End Cart \(result)")
-                }
+            navitroller.startChild(contentsCoordinator, animated: true) { result in
+                print("End Cart \(result)")
             }
-            
-            return viewController
         }
+        
+        return viewController
+    }
+    
+    let di: DI
+    
+    init(di: DI) {
+        self.di = di
     }
 }
