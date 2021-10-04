@@ -13,9 +13,9 @@ class PaymentCoordinator: ModachildCoordinator<PaymentCoordinatorResult> {
         paymentViewController.onPaymentSuccess = {
             let successCoordinator = PaymentSuccessCoordinator()
             
-            modaroller.startChild(successCoordinator, animated: true) { result in
+            self.modaroller.startChild(successCoordinator, animated: true) { result in
                 print("End PaymentSuccess \(result)")
-                finish(.success)
+                self.finish(.success)
             }
         }
         return paymentViewController

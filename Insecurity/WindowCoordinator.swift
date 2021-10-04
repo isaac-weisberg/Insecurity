@@ -22,6 +22,7 @@ open class WindowCoordinator {
         // Holy moly, I hope I don't regret these design choices
         let controller = modachild.viewController
         let modaroller = ModarollerCoordinator<NewResult>(optionalHost: controller)
+        modachild.modaroller = modaroller
         modachild._finishImplementation = { [weak self] result in
             self?.modarollerChild = nil
             completion(result)

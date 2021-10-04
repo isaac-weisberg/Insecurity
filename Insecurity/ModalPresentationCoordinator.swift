@@ -5,7 +5,7 @@ public enum ModachildResult<NormalResult> {
     case dismissed
 }
 
-public protocol ModarollerCoordinatorAny {
+public protocol ModarollerCoordinatorAny: AnyObject {
     func startNavitrollerChild<NewResult>(_ navigationController: UINavigationController,
                                           _ child: NavichildCoordinator<NewResult>,
                                           animated: Bool,
@@ -258,9 +258,10 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
     
     func startChildImmediately<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
         
+        modachild.modaroller = self
         let controller = modachild.viewController
         weak var weakControler: UIViewController? = controller
-        modachild._finishImplementation = { [weak self] result in
+        modachild._finishImplementation = { [weak self, unowned modachild] result in
             guard let self = self else { return }
             
             assert(weakControler != nil, "Finish called but the controller is long dead")
@@ -293,6 +294,18 @@ protocol ModachildCoordinatorAny: AnyObject {
 }
 
 open class ModachildCoordinator<Result>: ModachildCoordinatorAny {
+    private weak var _modaroller: ModarollerCoordinatorAny?
+    
+    public var modaroller: ModarollerCoordinatorAny! {
+        get {
+            assert(_modaroller != nil, "Attempted to use modaroller before the coordinator was started or after it has finished")
+            return _modaroller
+        }
+        set {
+            _modaroller = newValue
+        }
+    }
+    
     open var viewController: UIViewController {
         fatalError("This coordinator didn't define a viewController")
     }
