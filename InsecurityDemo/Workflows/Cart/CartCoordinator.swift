@@ -16,7 +16,7 @@ class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
         cartViewController.onPayRequested = { [self] in
             let paymentCoordinator = PaymentCoordinator(di: di)
             
-            navitroller.startModachild(paymentCoordinator, animated: true) { result in
+            navitroller.start(paymentCoordinator, animated: true) { result in
                 print("End Payment Regular \(result)")
                 switch result {
                 case .normal(let paymentResult):
@@ -33,7 +33,7 @@ class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
         cartViewController.onPayButLoginFirstRequested = { [self] in
             let loginPhoneCoordinator = LoginPhoneCoordinator(di: di)
             
-            navitroller.startModalNavitrollerChild(UINavigationController(), loginPhoneCoordinator, animated: true) { result in
+            navitroller.start(UINavigationController(), loginPhoneCoordinator, animated: true) { result in
                 print("End Login after payWithLogin requested \(result)")
                 switch result {
                 case .normal(let loginResult):
@@ -63,13 +63,13 @@ class CartCoordinator: NavichildCoordinator<CartCoordinatorResult> {
         cartViewController.onPayButScoringFirstRequested = { [self] in
             let scoringCoordinator = ScoringCoordinator(di: di)
             
-            navitroller.startModachild(scoringCoordinator, animated: true) { result in
+            navitroller.start(scoringCoordinator, animated: true) { result in
                 print("End Login after payWithScoring requested \(result)")
                 switch result {
                 case .normal:
                     let paymentCoordinator = PaymentCoordinator(di: di)
                     
-                    navitroller.startModachild(paymentCoordinator, animated: true) { result in
+                    navitroller.start(paymentCoordinator, animated: true) { result in
                         print("End Payment After Login \(result)")
                         switch result {
                         case .normal(let paymentResult):

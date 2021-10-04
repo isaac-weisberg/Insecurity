@@ -9,7 +9,7 @@ class GalleryCoordinator: NavichildCoordinator<Void> {
         
         galleryViewController.onProductRequested = { [self] in
             let productCoordinator = ProductCoordinator(di: di)
-            navitroller.startChild(productCoordinator, animated: true) { result in
+            navitroller.start(productCoordinator, animated: true) { result in
                 print("End Product \(result)")
             }
         }

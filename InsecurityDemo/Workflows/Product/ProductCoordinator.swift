@@ -10,7 +10,7 @@ class ProductCoordinator: NavichildCoordinator<Void> {
         viewController.onCartRequested = { [self] in
             let contentsCoordinator = CartCoordinator(di: di)
             
-            navitroller.startChild(contentsCoordinator, animated: true) { result in
+            navitroller.start(contentsCoordinator, animated: true) { result in
                 print("End Cart \(result)")
             }
         }

@@ -1,6 +1,44 @@
 import UIKit
 
-open class WindowCoordinator {
+public protocol WindowCoordinatorAny: AnyObject {
+    func startModaroller<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+                                    duration: TimeInterval?,
+                                    options: UIView.AnimationOptions?,
+                                    _ completion: @escaping (NewResult) -> Void)
+    
+    func startNavitroller<NewResult>(_ navigationController: UINavigationController,
+                                     _ initialChild: NavichildCoordinator<NewResult>,
+                                     duration: TimeInterval?,
+                                     options: UIView.AnimationOptions?,
+                                     _ completion: @escaping (NewResult) -> Void)
+    
+    func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+}
+
+public extension WindowCoordinatorAny {
+    func start<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+               duration: TimeInterval? = nil,
+               options: UIView.AnimationOptions? = nil,
+               _ completion: @escaping (NewResult) -> Void) {
+        startModaroller(modachild, duration: duration, options: options) { result in
+            completion(result)
+        }
+    }
+    
+    func start<NewResult>(_ navigationController: UINavigationController,
+                          _ initialChild: NavichildCoordinator<NewResult>,
+                          duration: TimeInterval? = nil,
+                          options: UIView.AnimationOptions? = nil,
+                          _ completion: @escaping (NewResult) -> Void) {
+        startNavitroller(navigationController, initialChild, duration: duration, options: options) { result in
+            completion(result)
+        }
+    }
+}
+
+open class WindowCoordinator: WindowCoordinatorAny {
     weak var window: UIWindow?
     
     public init(_ window: UIWindow) {
@@ -79,7 +117,7 @@ open class WindowCoordinator {
     
     public func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
                                         animated: Bool,
-                                        _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
+                                        _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         if let navitrollerChild = navitrollerChild {
             assert(modarollerChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
             navitrollerChild.startOverTop(modachild, animated: animated) { result in

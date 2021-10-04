@@ -39,6 +39,7 @@
 		A396900026FF26A700B6A59B /* NavigationControllerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3968FFF26FF26A700B6A59B /* NavigationControllerCoordinator.swift */; };
 		A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A396900326FF26CA00B6A59B /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -99,6 +100,7 @@
 		A3968FF926FF260200B6A59B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A3968FFB26FF260200B6A59B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3968FFF26FF26A700B6A59B /* NavigationControllerCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerCoordinator.swift; sourceTree = "<group>"; };
+		A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorResult.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -252,6 +254,7 @@
 				A370767F26FFCED600ED7391 /* DeinitObservable.swift */,
 				A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */,
 				A37991292702659600550B8E /* WindowCoordinator.swift */,
+				A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -394,6 +397,7 @@
 				A396900026FF26A700B6A59B /* NavigationControllerCoordinator.swift in Sources */,
 				A34CBF6526FFD796007AF9B8 /* ModalPresentationCoordinator.swift in Sources */,
 				A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */,
+				A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

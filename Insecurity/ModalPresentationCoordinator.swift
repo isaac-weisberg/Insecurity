@@ -1,23 +1,29 @@
 import UIKit
 
-public enum ModachildResult<NormalResult> {
-    case normal(NormalResult)
-    case dismissed
-}
-
 public protocol ModarollerCoordinatorAny: AnyObject {
-    func startNavitrollerChild<NewResult>(_ navigationController: UINavigationController,
-                                          _ child: NavichildCoordinator<NewResult>,
-                                          animated: Bool,
-                                          _ completion: @escaping (ModachildResult<NewResult>) -> Void)
+    func startNavitroller<NewResult>(_ navigationController: UINavigationController,
+                                     _ child: NavichildCoordinator<NewResult>,
+                                     animated: Bool,
+                                     _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
     func startChild<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
                                animated: Bool,
-                               _ completion: @escaping (ModachildResult<NewResult>) -> Void)
+                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
     func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
                                  animated: Bool,
-                                 _ completion: @escaping (ModachildResult<NewResult>) -> Void)
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+}
+
+public extension ModarollerCoordinatorAny {
+    func start<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+               animated: Bool,
+               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        
+        startChild(modachild, animated: animated) { result in
+            completion(result)
+        }
+    }
 }
 
 public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
@@ -211,16 +217,16 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
     
     public func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
                                         animated: Bool,
-                                        _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
+                                        _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         startChild(modachild, animated: animated) { result in
             completion(result)
         }
     }
     
-    public func startNavitrollerChild<NewResult>(_ navigationController: UINavigationController,
-                                                 _ child: NavichildCoordinator<NewResult>,
-                                                 animated: Bool,
-                                                 _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
+    public func startNavitroller<NewResult>(_ navigationController: UINavigationController,
+                                            _ child: NavichildCoordinator<NewResult>,
+                                            animated: Bool,
+                                            _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         var modachildFinish: ((NewResult) -> Void)?
         let navitrollerCoordinator = NavitrollerCoordinator(navigationController, child) { result in
             if let modachildFinish = modachildFinish {
@@ -243,7 +249,7 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
     
     var enqueuedChildStartRoutine: (() -> Void)?
     
-    public func startChild<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
+    public func startChild<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         if finalizationDepth > 0 {
             // Enqueing the start to happen after batch purge
             enqueuedChildStartRoutine = { [weak self] in
@@ -256,7 +262,7 @@ public class ModarollerCoordinator<Result>: ModarollerCoordinatorAny {
         }
     }
     
-    func startChildImmediately<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (ModachildResult<NewResult>) -> Void) {
+    func startChildImmediately<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         
         modachild.modaroller = self
         let controller = modachild.viewController

@@ -14,7 +14,7 @@ class LoginPhoneCoordinator: NavichildCoordinator<LoginPhoneCoordinatorResult> {
         controller.onSmsCodeSent = { [self] in
             let loginSMSCodeCoordinator = LoginSMSCodeCoordinator(di: di)
             
-            navitroller.startChild(loginSMSCodeCoordinator, animated: true) { result in
+            navitroller.start(loginSMSCodeCoordinator, animated: true) { result in
                 print("End LoginSMSCode \(result)")
                 switch result {
                 case .normal(let smsCodeResult):
