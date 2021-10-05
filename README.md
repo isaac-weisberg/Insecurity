@@ -5,8 +5,8 @@ This implementation of Coordinator pattern provides:
 - Automatic `pushViewController`/`popViewController` calls for `UINavigationController` presentation
 - Automatic dismissal/popping of **multiple** view controllers if all of them finish simultaneously
 - Automatic detection of modal iOS 13 form sheet dismissal in modal presentation
-- Automatic detection of `interactivePopGestureRecognized` dismissal in `UINavigationController`
-- Propagation of results of showing a screen to the parent
+- Automatic detection of `interactivePopGestureRecognizer` dismissal in `UINavigationController`
+- Propagation of results to the parent
 - Ability to organize custom coordinators that allow for magical modification of `UINavigationController` stack or modal presentation stack
 - Automatic management of a `UIWindow`
 
@@ -25,7 +25,7 @@ We start with having a "Select Currency" screen.
 The screen will emit an event when the user selects a currency.
 Once the selection is made, we need to close the screen.
 
-![Currency Selection Screen](./docs/img/select_currency.jpg)
+<img src="./docs/img/select_currency.jpg" width="250">
 
 We do this by subclassing `ModachildCoordinator`.
 
@@ -103,7 +103,7 @@ If the `UIViewController` managed by the coordinator is dismissed before a `fini
 
 > ⚠️ **One coordinator == one `UIViewController` that it manages, no more no less**
 
-There is more thing before we move on: in order to make this code actually work, we need to **retain** the `ModarollerCoordinator` and release it when we're done. Here is the valid and final code:
+There is one more thing before we move on: in order to make this code actually work, we need to **retain** the `ModarollerCoordinator` and release it when we're done. Here is the valid and final code:
 
 ```swift
 class ParentViewController: UIViewController {
