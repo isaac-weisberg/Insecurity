@@ -27,3 +27,11 @@ class CurrencySelectionCoordinator: ModachildCoordinator<CurrencySelection> {
     }
 }
 ```
+
+# Development
+
+1. Clone the repo
+2. `bundle config --set path vendor/bundle`
+3. `bundle install`, make sure your Xcode can be found at /Applications/Xcode.app, otherwise the ffi native extensions required by CocoaPods won't compile
+4. `bundle exec pod install`
+5. `open Insecurity.xcworkspace`

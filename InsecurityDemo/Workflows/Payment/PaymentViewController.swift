@@ -21,7 +21,7 @@ class PaymentViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBrown
+        view.backgroundColor = .systemBrownCompat
         
         navigationItem.title = "Payment"
         

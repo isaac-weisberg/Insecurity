@@ -7,7 +7,7 @@ class LoginPhoneViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemMint
+        view.backgroundColor = .systemMintCompat
         
         navigationItem.title = "Login"
         

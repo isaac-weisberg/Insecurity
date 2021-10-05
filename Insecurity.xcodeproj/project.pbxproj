@@ -14,6 +14,8 @@
 		A3677F44270CE024003AC3E6 /* CurrencySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F43270CE024003AC3E6 /* CurrencySelectionViewController.swift */; };
 		A3677F47270CE038003AC3E6 /* CurrencySelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F46270CE038003AC3E6 /* CurrencySelection.swift */; };
 		A3677F4A270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F49270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift */; };
+		A3677F4C270CE796003AC3E6 /* CurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F4B270CE796003AC3E6 /* CurrencyView.swift */; };
+		A3677F4E270CEA0E003AC3E6 /* UIColor+system.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F4D270CEA0E003AC3E6 /* UIColor+system.swift */; };
 		A3683FBE2700FB590048B3CF /* LoginPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FBD2700FB590048B3CF /* LoginPhoneViewController.swift */; };
 		A3683FC12700FBCC0048B3CF /* LoginSMSCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC02700FBCC0048B3CF /* LoginSMSCodeViewController.swift */; };
 		A3683FC32700FC3F0048B3CF /* LoginPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */; };
@@ -44,6 +46,7 @@
 		A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A396900326FF26CA00B6A59B /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */; };
+		D4BA0B4FA7A6F24D6294ED70 /* libPods-InsecurityDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -71,6 +74,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		54B8E663025AD7F0FACA2B0B /* Pods-InsecurityDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.release.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.release.xcconfig"; sourceTree = "<group>"; };
+		5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresentationCoordinator.swift; sourceTree = "<group>"; };
 		A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
 		A35A78242709EFFB00256FBD /* ScoringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringViewController.swift; sourceTree = "<group>"; };
@@ -78,6 +83,8 @@
 		A3677F43270CE024003AC3E6 /* CurrencySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionViewController.swift; sourceTree = "<group>"; };
 		A3677F46270CE038003AC3E6 /* CurrencySelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelection.swift; sourceTree = "<group>"; };
 		A3677F49270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+asyncAfter.swift"; sourceTree = "<group>"; };
+		A3677F4B270CE796003AC3E6 /* CurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyView.swift; sourceTree = "<group>"; };
+		A3677F4D270CEA0E003AC3E6 /* UIColor+system.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+system.swift"; sourceTree = "<group>"; };
 		A3683FBD2700FB590048B3CF /* LoginPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneViewController.swift; sourceTree = "<group>"; };
 		A3683FC02700FBCC0048B3CF /* LoginSMSCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeViewController.swift; sourceTree = "<group>"; };
 		A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneCoordinator.swift; sourceTree = "<group>"; };
@@ -109,6 +116,7 @@
 		A3968FFB26FF260200B6A59B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3968FFF26FF26A700B6A59B /* NavigationControllerCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerCoordinator.swift; sourceTree = "<group>"; };
 		A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorResult.swift; sourceTree = "<group>"; };
+		BB61D608FF8A49075BF920EF /* Pods-InsecurityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,12 +132,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */,
+				D4BA0B4FA7A6F24D6294ED70 /* libPods-InsecurityDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		3B9DCFDC184B14695D924E6C /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				BB61D608FF8A49075BF920EF /* Pods-InsecurityDemo.debug.xcconfig */,
+				54B8E663025AD7F0FACA2B0B /* Pods-InsecurityDemo.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		A35A78212709EF2E00256FBD /* Scoring */ = {
 			isa = PBXGroup;
 			children = (
@@ -144,6 +162,7 @@
 			children = (
 				A3677F41270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift */,
 				A3677F43270CE024003AC3E6 /* CurrencySelectionViewController.swift */,
+				A3677F4B270CE796003AC3E6 /* CurrencyView.swift */,
 			);
 			path = CurrencySelection;
 			sourceTree = "<group>";
@@ -160,6 +179,7 @@
 			isa = PBXGroup;
 			children = (
 				A3677F49270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift */,
+				A3677F4D270CEA0E003AC3E6 /* UIColor+system.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -269,6 +289,7 @@
 				A3968FEC26FF260000B6A59B /* InsecurityDemo */,
 				A3968FDE26FF25A800B6A59B /* Products */,
 				A396900126FF26CA00B6A59B /* Frameworks */,
+				3B9DCFDC184B14695D924E6C /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -314,6 +335,7 @@
 		A396900126FF26CA00B6A59B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -353,6 +375,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A3968FFC26FF260200B6A59B /* Build configuration list for PBXNativeTarget "InsecurityDemo" */;
 			buildPhases = (
+				6285E1EA0307A5D157EF79C1 /* [CP] Check Pods Manifest.lock */,
 				A3968FE726FF260000B6A59B /* Sources */,
 				A3968FE826FF260000B6A59B /* Frameworks */,
 				A3968FE926FF260000B6A59B /* Resources */,
@@ -425,6 +448,31 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		6285E1EA0307A5D157EF79C1 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-InsecurityDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		A3968FD926FF25A800B6A59B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -457,6 +505,8 @@
 				A3683FC32700FC3F0048B3CF /* LoginPhoneCoordinator.swift in Sources */,
 				A3677F42270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift in Sources */,
 				A382534027008C7F00FBC6DC /* CartViewController.swift in Sources */,
+				A3677F4C270CE796003AC3E6 /* CurrencyView.swift in Sources */,
+				A3677F4E270CEA0E003AC3E6 /* UIColor+system.swift in Sources */,
 				A3683FBE2700FB590048B3CF /* LoginPhoneViewController.swift in Sources */,
 				A382534527008FCB00FBC6DC /* PaymentViewController.swift in Sources */,
 				A38253342700804700FBC6DC /* GalleryCoordinator.swift in Sources */,
@@ -547,7 +597,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -605,7 +655,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -630,7 +680,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -660,7 +710,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -678,6 +728,7 @@
 		};
 		A3968FFD26FF260200B6A59B /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BB61D608FF8A49075BF920EF /* Pods-InsecurityDemo.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -690,7 +741,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -706,6 +757,7 @@
 		};
 		A3968FFE26FF260200B6A59B /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 54B8E663025AD7F0FACA2B0B /* Pods-InsecurityDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -718,7 +770,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
