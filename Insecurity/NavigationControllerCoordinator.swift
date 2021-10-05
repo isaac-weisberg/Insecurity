@@ -176,7 +176,11 @@ open class NavitrollerCoordinator: NavitrollerCoordinatorAny {
         var weakControllerInitialized = false
         weak var weakController: UIViewController?
         navichild._finishImplementation = { [weak self, weak navichild] (result: NewResult) in
-            guard let self = self, let navichild = navichild else { return }
+            guard let self = self else {
+                assertionFailure("NavitrollerCoordinator wasn't properly retained. Make sure you save it somewhere before starting any children.")
+                return
+            }
+            guard let navichild = navichild else { return }
             
             #if DEBUG
             if weakControllerInitialized {

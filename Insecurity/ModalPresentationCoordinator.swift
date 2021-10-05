@@ -267,7 +267,11 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
         var weakControllerInitialized = false
         weak var weakController: UIViewController?
         modachild._finishImplementation = { [weak self, weak modachild] result in
-            guard let self = self, let modachild = modachild else { return }
+            guard let self = self else {
+                assertionFailure("ModarollerCoordinator wasn't properly retained. Make sure you save it somewhere before starting any children.")
+                return
+            }
+            guard let modachild = modachild else { return }
             
             #if DEBUG
             if weakControllerInitialized {
