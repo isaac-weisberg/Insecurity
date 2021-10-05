@@ -51,10 +51,7 @@ public extension NavitrollerCoordinatorAny {
 open class NavitrollerCoordinator: NavitrollerCoordinatorAny {
     weak var navigationController: UINavigationController?
     
-    //
-    // Danger: this API should never be exported because this initialized performs side-effects
-    //
-    init(_ navigationController: UINavigationController) {
+    public init(_ navigationController: UINavigationController) {
         self.navigationController = navigationController
     }
     

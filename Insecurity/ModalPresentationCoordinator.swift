@@ -29,7 +29,7 @@ public extension ModarollerCoordinatorAny {
 public class ModarollerCoordinator: ModarollerCoordinatorAny {
     weak var host: UIViewController?
     
-    init(_ host: UIViewController) {
+    public init(_ host: UIViewController) {
         self.host = host
     }
     

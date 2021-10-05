@@ -18,8 +18,28 @@ class GalleryCoordinator: NavichildCoordinator<Void> {
             finish(())
         }
         
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let modaroller = ModarollerCoordinator(galleryViewController)
+            
+            let currencySelectionCoordinator = CurrencySelectionCoordinator()
+            
+            self.customModaroller = modaroller
+            
+            modaroller.start(currencySelectionCoordinator, animated: true) { result in
+                self.customModaroller = nil
+                switch result {
+                case .normal(let currencySelection):
+                    break
+                case .dismissed:
+                    break
+                }
+            }
+        }
+        
         return galleryViewController
     }
+    
+    var customModaroller: ModarollerCoordinator?
     
     let di: DI
     
