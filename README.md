@@ -10,6 +10,8 @@ This implementation of Coordinator pattern provides:
 - Ability to organize custom coordinators that allow for magical modification of `UINavigationController` stack or modal presentation stack
 - Automatic management of a `UIWindow`
 
+You can use it alongside any of your existing navigation solutions.
+
 # Installation
 
 Currently, only CocoaPods is supported. The minimum required iOS version is iOS 12, but it probably could run on iOS 8. This framework doesn't depend on anything.
@@ -25,7 +27,7 @@ We start with having a "Select Currency" screen.
 The screen will emit an event when the user selects a currency.
 Once the selection is made, we need to close the screen.
 
-<img src="./docs/img/select_currency.jpg" width="250">
+<img src="./docs/img/select_currency.jpg" width="350">
 
 We do this by subclassing `ModachildCoordinator`.
 
@@ -110,7 +112,7 @@ class ParentViewController: UIViewController {
     var customModaroller: ModarollerCoordinator?
 
     func startCurrencySelection() {
-        let modaroller = ModarollerCoordinator(galleryViewController)
+        let modaroller = ModarollerCoordinator(self)
             
         let currencySelectionCoordinator = CurrencySelectionCoordinator()
 
@@ -129,6 +131,59 @@ class ParentViewController: UIViewController {
     }
 }
 ```
+
+## Starting a coordinator from another coordinator
+
+Let's imagine that `ParentViewController` now also has a coordinator.
+
+```swift
+// We are using Never because we never call `finish` here, makes sense, right?
+class ParentCoordinator: ModachildCoordinator<Never> {
+    override var viewController: UIViewController {
+        let parentViewController = ParentViewController()
+        
+        return parentViewController
+    }
+}
+```
+
+Before, we used to create our own `ModarollerCoordinator` in order to show a `ModachildCoordinator`. But now that we are already operating from the context of an existing coordinator, we can find the `ModarollerCoordinator` on the `self`!
+
+```swift
+parentViewController.onCurrencySelectionRequested = {
+    let currencySelectionCoordinator = CurrencySelectionCoordinator()
+    
+    self.modaroller.start(currencySelectionCoordinator,
+                          animated: true) { result in
+        
+        switch result {
+        case .normal(let currencySelection):
+            // Good old currencySelection result
+            break
+        case .dismissed:
+            break
+        }
+    }
+}
+```
+
+You see?! `self.modaroller` and `self.finish` are the only two things that you will need! One will help you to start new coordinators, and one will help you kill the existing one!
+
+# Naming Quick Lookup
+
+ModarollerCoordinator = **Moda**l Chain Presentation View Cont**roller Coordinator**
+
+NavitrollerCoordinator = **Navi**gation Con**troller** Presentation **Coordinator**
+
+Child = Child
+
+Navigation method|Parent|Child
+---|---|---
+Modal presentation|`ModarollerCoordinator`|`ModachildCoordinator`
+`UINavigationControler`|`NavitrollerCoordinator`|`NavichildCoordinator`
+`UIWindow`|`WindowCoordinator`| No child version, `Modachild` is used instead
+
+Actually, I probably should create an API that will allow to use this stuff in a generalized way.
 
 # Philosophy
 

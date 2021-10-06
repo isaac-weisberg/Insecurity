@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A3383BC6270E430D006982B1 /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC5270E430D006982B1 /* ParentViewController.swift */; };
+		A3383BC8270E43B4006982B1 /* ParentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */; };
 		A34CBF6526FFD796007AF9B8 /* ModalPresentationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */; };
 		A35A78232709EF3E00256FBD /* ScoringCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */; };
 		A35A78252709EFFB00256FBD /* ScoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78242709EFFB00256FBD /* ScoringViewController.swift */; };
@@ -76,6 +78,8 @@
 /* Begin PBXFileReference section */
 		54B8E663025AD7F0FACA2B0B /* Pods-InsecurityDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.release.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.release.xcconfig"; sourceTree = "<group>"; };
 		5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3383BC5270E430D006982B1 /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
+		A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCoordinator.swift; sourceTree = "<group>"; };
 		A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresentationCoordinator.swift; sourceTree = "<group>"; };
 		A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
 		A35A78242709EFFB00256FBD /* ScoringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringViewController.swift; sourceTree = "<group>"; };
@@ -146,6 +150,15 @@
 				54B8E663025AD7F0FACA2B0B /* Pods-InsecurityDemo.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		A3383BC4270E42FE006982B1 /* ParentSample */ = {
+			isa = PBXGroup;
+			children = (
+				A3383BC5270E430D006982B1 /* ParentViewController.swift */,
+				A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */,
+			);
+			path = ParentSample;
 			sourceTree = "<group>";
 		};
 		A35A78212709EF2E00256FBD /* Scoring */ = {
@@ -223,6 +236,7 @@
 		A382532D27007E8A00FBC6DC /* Workflows */ = {
 			isa = PBXGroup;
 			children = (
+				A3383BC4270E42FE006982B1 /* ParentSample */,
 				A3677F40270CDFDB003AC3E6 /* CurrencySelection */,
 				A35A78212709EF2E00256FBD /* Scoring */,
 				A370FB60270675D800D5EF51 /* DebugViewController */,
@@ -490,9 +504,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3383BC8270E43B4006982B1 /* ParentCoordinator.swift in Sources */,
 				A3968FEE26FF260000B6A59B /* AppDelegate.swift in Sources */,
 				A382534C2700924400FBC6DC /* PaymentSuccessCoordinator.swift in Sources */,
 				A370FB5F270668BD00D5EF51 /* DI.swift in Sources */,
+				A3383BC6270E430D006982B1 /* ParentViewController.swift in Sources */,
 				A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */,
 				A3677F47270CE038003AC3E6 /* CurrencySelection.swift in Sources */,
 				A3683FC52700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift in Sources */,
