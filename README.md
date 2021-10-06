@@ -169,6 +169,8 @@ parentViewController.onCurrencySelectionRequested = {
 
 You see?! `self.modaroller` and `self.finish` are the only two things that you will need! One will help you to start new coordinators, and one will help you kill the existing one!
 
+> ⚠️ **Never retain the viewController on the Coordinator. This breaks dismissal detection mechanism.**
+
 # Naming Quick Lookup
 
 ModarollerCoordinator = **Moda**l Chain Presentation View Cont**roller Coordinator**
