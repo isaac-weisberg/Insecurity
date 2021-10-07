@@ -6,7 +6,7 @@ class ParentViewController: UIViewController {
     var onCurrencySelectionRequested: (() -> Void)?
     
     // Or, if you want to start a coordinator from outside:
-    var customModaroller: ModarollerCoordinator?
+    var customModaroller: ModarollerCoordinatorAny?
 
     func startCurrencySelection() {
         let modaroller = ModarollerCoordinator(self)

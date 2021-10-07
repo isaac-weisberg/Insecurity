@@ -48,7 +48,7 @@ public extension NavitrollerCoordinatorAny {
     }
 }
 
-open class NavitrollerCoordinator: NavitrollerCoordinatorAny {
+public class NavitrollerCoordinator: NavitrollerCoordinatorAny {
     weak var navigationController: UINavigationController?
     
     public init(_ navigationController: UINavigationController) {

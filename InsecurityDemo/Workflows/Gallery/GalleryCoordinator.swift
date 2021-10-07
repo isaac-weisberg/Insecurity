@@ -39,7 +39,7 @@ class GalleryCoordinator: InsecurityChild<Void> {
         return galleryViewController
     }
     
-    var customModaroller: ModarollerCoordinator?
+    var customModaroller: ModarollerCoordinatorAny?
     
     let di: DI
     
