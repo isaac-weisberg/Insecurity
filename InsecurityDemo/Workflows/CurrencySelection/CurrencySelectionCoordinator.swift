@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class CurrencySelectionCoordinator: ModachildCoordinator<CurrencySelection> {
+class CurrencySelectionCoordinator: InsecurityChild<CurrencySelection> {
     override var viewController: UIViewController {
         let viewController = CurrencySelectionViewController()
         

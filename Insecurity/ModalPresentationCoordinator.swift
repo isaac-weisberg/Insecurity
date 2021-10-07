@@ -231,7 +231,7 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
         
         let modachild = ModachildWithNavitroller<NewResult>(navitrollerCoordinator, navigationController)
         
-        child.navitroller = navitrollerCoordinator
+        child._navitroller = navitrollerCoordinator
         child._finishImplementation = { [weak modachild] result in
             if let modachild = modachild {
                 modachild.finish(result)
@@ -263,7 +263,7 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
     
     func startChildImmediately<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         
-        modachild.modaroller = self
+        modachild._modaroller = self
         var weakControllerInitialized = false
         weak var weakController: UIViewController?
         modachild._finishImplementation = { [weak self, weak modachild] result in
@@ -305,57 +305,4 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
         print("Modal Presentation Coordinator deinit \(type(of: self))")
     }
 #endif
-}
-
-protocol ModachildCoordinatorAny: AnyObject {
-    
-}
-
-open class ModachildCoordinator<Result>: ModachildCoordinatorAny {
-    private weak var _modaroller: ModarollerCoordinatorAny?
-    
-    public var modaroller: ModarollerCoordinatorAny! {
-        get {
-            assert(_modaroller != nil, "Attempted to use modaroller before the coordinator was started or after it has finished")
-            return _modaroller
-        }
-        set {
-            _modaroller = newValue
-        }
-    }
-    
-    open var viewController: UIViewController {
-        fatalError("This coordinator didn't define a viewController")
-    }
-    
-    var _finishImplementation: ((Result) -> Void)?
-    
-    public func finish(_ result: Result) {
-        guard let _finishImplementation = _finishImplementation else {
-            assertionFailure("Finish called before the coordinator was started")
-            return
-        }
-        
-        _finishImplementation(result)
-    }
-    
-    public init() {
-        
-    }
-}
-
-class ModachildWithNavitroller<Result>: ModachildCoordinator<Result> {
-    let navitrollerChild: NavitrollerCoordinator?
-    weak var _storedViewController: UIViewController?
-    
-    override var viewController: UIViewController {
-        return _storedViewController!
-    }
-    
-    init(_ navitrollerChild: NavitrollerCoordinator,
-         _ _storedViewController: UIViewController?) {
-        
-        self.navitrollerChild = navitrollerChild
-        self._storedViewController = _storedViewController
-    }
 }

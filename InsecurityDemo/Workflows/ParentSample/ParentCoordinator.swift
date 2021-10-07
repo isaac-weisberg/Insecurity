@@ -1,14 +1,14 @@
 import Insecurity
 import UIKit
 
-class ParentCoordinator: ModachildCoordinator<Never> {
+class ParentCoordinator: InsecurityChild<Never> {
     override var viewController: UIViewController {
         let parentViewController = ParentViewController()
         
         parentViewController.onCurrencySelectionRequested = {
             let currencySelectionCoordinator = CurrencySelectionCoordinator()
             
-            self.modaroller.start(currencySelectionCoordinator,
+            self.navigation.start(currencySelectionCoordinator,
                                   animated: true) { result in
                 
                 switch result {

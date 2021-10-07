@@ -172,7 +172,7 @@ open class NavitrollerCoordinator: NavitrollerCoordinatorAny {
             return
         }
         
-        navichild.navitroller = self
+        navichild._navitroller = self
         var weakControllerInitialized = false
         weak var weakController: UIViewController?
         navichild._finishImplementation = { [weak self, weak navichild] (result: NewResult) in
@@ -265,16 +265,11 @@ protocol NavichildCoordinatorAny: AnyObject {
 }
 
 open class NavichildCoordinator<Result>: NavichildCoordinatorAny {
-    private weak var _navitroller: NavitrollerCoordinatorAny?
+    weak var _navitroller: NavitrollerCoordinatorAny?
     
     public var navitroller: NavitrollerCoordinatorAny! {
-        get {
-            assert(_navitroller != nil, "Attempted to use navitroller before the coordinator was started or after it has finished")
-            return _navitroller
-        }
-        set {
-            _navitroller = newValue
-        }
+        assert(_navitroller != nil, "Attempted to use navitroller before the coordinator was started or after it has finished")
+        return _navitroller
     }
     
     open var viewController: UIViewController {
@@ -294,6 +289,20 @@ open class NavichildCoordinator<Result>: NavichildCoordinatorAny {
     
     public init() {
         
+    }
+}
+
+class NavichildMagicCoordinator<Result>: NavichildCoordinator<Result> {
+    let child: InsecurityChild<Result>
+    
+    override var viewController: UIViewController {
+        child.viewController
+    }
+    
+    init(_ child: InsecurityChild<Result>) {
+        self.child = child
+        super.init()
+        self._finishImplementation = child._finishImplementation
     }
 }
 

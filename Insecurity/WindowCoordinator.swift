@@ -59,7 +59,7 @@ open class WindowCoordinator: WindowCoordinatorAny {
         
         let controller = modachild.viewController
         let modaroller = ModarollerCoordinator(controller)
-        modachild.modaroller = modaroller
+        modachild._modaroller = modaroller
         modachild._finishImplementation = { [weak self] result in
             self?.modarollerChild = nil
             completion(result)
@@ -89,7 +89,7 @@ open class WindowCoordinator: WindowCoordinatorAny {
         
         let navitroller = NavitrollerCoordinator(navigationController)
         
-        initialChild.navitroller = navitroller
+        initialChild._navitroller = navitroller
         initialChild._finishImplementation = { [weak self] result in
             self?.navitrollerChild = nil
             completion(result)
