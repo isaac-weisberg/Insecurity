@@ -64,6 +64,7 @@ open class WindowCoordinator: WindowCoordinatorAny {
             self?.modarollerChild = nil
             completion(result)
         }
+        self.navitrollerChild = nil // Just in case...
         self.modarollerChild = modaroller
         
         window.rootViewController = controller
@@ -97,6 +98,7 @@ open class WindowCoordinator: WindowCoordinatorAny {
         
         navigationController.setViewControllers([ initialChild.viewController ], animated: navigationControllerRootIsAssignedWithAnimation)
         
+        self.modarollerChild = nil // Just in case...
         self.navitrollerChild = navitroller
         
         window.rootViewController = navigationController
