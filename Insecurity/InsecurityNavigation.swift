@@ -15,65 +15,24 @@ public protocol InsecurityNavigation: AnyObject {
                                _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
 }
 
-extension NavitrollerCoordinator: InsecurityNavigation {
-    var navitroller: NavitrollerCoordinator {
-        return self
-    }
-    
+extension NavitrollerCoordinatorAny {
     public func start<NewResult>(_ child: InsecurityChild<NewResult>,
-                          animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         let navitrollerChild = NavichildMagicCoordinator(child)
         
-        navitroller.startChild(navitrollerChild, animated: animated) { result in
+        self.startChild(navitrollerChild, animated: animated) { result in
             completion(result)
         }
     }
     
     public func start<NewResult>(_ navigationController: UINavigationController,
-                          _ child: InsecurityChild<NewResult>,
-                          animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ child: InsecurityChild<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         let navitrollerChild = NavichildMagicCoordinator(child)
         
-        navitroller.startNewNavitroller(navigationController, navitrollerChild, animated: animated) { result in
-            completion(result)
-        }
-    }
-    
-    public func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
-                               animated: Bool,
-                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        
-        let modachild = ModachildMagicCoordinator(child)
-        navitroller.startModachild(modachild, animated: animated) { result in
-            completion(result)
-        }
-    }
-}
-
-extension ModarollerCoordinator: InsecurityNavigation {
-    var modaroller: ModarollerCoordinatorAny {
-        return self
-    }
-    
-    public func start<NewResult>(_ child: InsecurityChild<NewResult>,
-                          animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        let modachild = ModachildMagicCoordinator(child)
-        
-        modaroller.startChild(modachild, animated: animated) { result in
-            completion(result)
-        }
-    }
-    
-    public func start<NewResult>(_ navigationController: UINavigationController,
-                          _ child: InsecurityChild<NewResult>,
-                          animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        let navitrollerChild = NavichildMagicCoordinator(child)
-        
-        modaroller.startNavitroller(navigationController, navitrollerChild, animated: animated) { result in
+        self.startNewNavitroller(navigationController, navitrollerChild, animated: animated) { result in
             completion(result)
         }
     }
@@ -81,7 +40,40 @@ extension ModarollerCoordinator: InsecurityNavigation {
     public func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
                                       animated: Bool,
                                       _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        start(child, animated: animated) { result in
+        
+        let modachild = ModachildMagicCoordinator(child)
+        self.startModachild(modachild, animated: animated) { result in
+            completion(result)
+        }
+    }
+}
+
+extension ModarollerCoordinatorAny {
+    public func start<NewResult>(_ child: InsecurityChild<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        let modachild = ModachildMagicCoordinator(child)
+        
+        self.startChild(modachild, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    public func start<NewResult>(_ navigationController: UINavigationController,
+                                 _ child: InsecurityChild<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        let navitrollerChild = NavichildMagicCoordinator(child)
+        
+        self.startNavitroller(navigationController, navitrollerChild, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    public func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
+                                      animated: Bool,
+                                      _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        self.start(child, animated: animated) { result in
             completion(result)
         }
     }
@@ -99,10 +91,8 @@ extension WindowCoordinator: InsecurityNavigation {
             options = nil
         }
         
-        let modachild = ModachildMagicCoordinator<NewResult>(child)
-        
-        self.start(modachild, duration: duration, options: options) { result in
-            completion(.normal(result))
+        self.start(child, duration: duration, options: options) { result in
+            completion(result)
         }
     }
     
@@ -117,6 +107,33 @@ extension WindowCoordinator: InsecurityNavigation {
             options = nil
         }
         
+        self.start(navigationController, child, duration: duration, options: options) { result in
+            completion(result)
+        }
+    }
+    
+    public func startModal<NewResult>(_ child: InsecurityChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        self.start(child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    public func start<NewResult>(_ child: InsecurityChild<NewResult>,
+                                 duration: TimeInterval?,
+                                 options: UIView.AnimationOptions?,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        let modachild = ModachildMagicCoordinator<NewResult>(child)
+        
+        self.start(modachild, duration: duration, options: options) { result in
+            completion(.normal(result))
+        }
+    }
+    
+    public func start<NewResult>(_ navigationController: UINavigationController,
+                                 _ child: InsecurityChild<NewResult>,
+                                 duration: TimeInterval?,
+                                 options: UIView.AnimationOptions?,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         let navichild = NavichildMagicCoordinator(child)
         
         self.startNavitroller(navigationController, navichild, duration: duration, options: options) { result in
@@ -124,8 +141,11 @@ extension WindowCoordinator: InsecurityNavigation {
         }
     }
     
-    public func startModal<NewResult>(_ child: InsecurityChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        self.start(child, animated: animated) { result in
+    public func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
+                                      duration: TimeInterval?,
+                                      options: UIView.AnimationOptions?,
+                                      _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        self.start(child, duration: duration, options: options) { result in
             completion(result)
         }
     }

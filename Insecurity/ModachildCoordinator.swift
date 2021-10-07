@@ -35,12 +35,17 @@ open class ModachildCoordinator<Result>: ModachildCoordinatorAny {
 class ModachildMagicCoordinator<Result>: ModachildCoordinator<Result> {
     let child: InsecurityChild<Result>
     
-    override var modaroller: ModarollerCoordinatorAny? {
-        guard let modaroller = child._navigation as? ModarollerCoordinatorAny else {
-            assertionFailure("Insecurity child was operating in the semantics of Modaroller before, but now it doesn't")
-            return nil
+    override var _modaroller: ModarollerCoordinatorAny? {
+        get {
+            guard let modaroller = child.navigation as? ModarollerCoordinatorAny else {
+                assertionFailure("Insecurity child was operating in the semantics of Modaroller before, but now it doesn't")
+                return nil
+            }
+            return modaroller
         }
-        return modaroller
+        set {
+            child._navigation = newValue
+        }
     }
     
     override var _finishImplementation: ((Result) -> Void)? {
@@ -59,7 +64,6 @@ class ModachildMagicCoordinator<Result>: ModachildCoordinator<Result> {
     init(_ child: InsecurityChild<Result>) {
         self.child = child
         super.init()
-        self._finishImplementation = child._finishImplementation
     }
 }
 

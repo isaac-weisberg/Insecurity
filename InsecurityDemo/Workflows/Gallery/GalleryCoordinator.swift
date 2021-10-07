@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class GalleryCoordinator: NavichildCoordinator<Void> {
+class GalleryCoordinator: InsecurityChild<Void> {
     typealias DI = ProductCoordinator.DI
     
     override var viewController: UIViewController {
@@ -9,7 +9,7 @@ class GalleryCoordinator: NavichildCoordinator<Void> {
         
         galleryViewController.onProductRequested = { [self] in
             let productCoordinator = ProductCoordinator(di: di)
-            navitroller.start(productCoordinator, animated: true) { result in
+            navigation.start(productCoordinator, animated: true) { result in
                 print("End Product \(result)")
             }
         }

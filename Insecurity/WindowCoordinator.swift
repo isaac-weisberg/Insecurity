@@ -19,9 +19,9 @@ public protocol WindowCoordinatorAny: AnyObject {
 
 public extension WindowCoordinatorAny {
     func start<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
-               duration: TimeInterval? = nil,
-               options: UIView.AnimationOptions? = nil,
-               _ completion: @escaping (NewResult) -> Void) {
+                          duration: TimeInterval? = nil,
+                          options: UIView.AnimationOptions? = nil,
+                          _ completion: @escaping (NewResult) -> Void) {
         startModaroller(modachild, duration: duration, options: options) { result in
             completion(result)
         }
@@ -110,11 +110,11 @@ open class WindowCoordinator: WindowCoordinatorAny {
         }
     }
     
-    #if DEBUG
+#if DEBUG
     deinit {
         print("Window Coordinator deinit \(type(of: self))")
     }
-    #endif
+#endif
     
     public func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
                                         animated: Bool,

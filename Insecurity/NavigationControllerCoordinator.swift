@@ -2,7 +2,7 @@ import UIKit
 
 internal let navigationControllerRootIsAssignedWithAnimation = true
 
-public protocol NavitrollerCoordinatorAny: AnyObject {
+public protocol NavitrollerCoordinatorAny: InsecurityNavigation {
     func startChild<NewResult>(_ navichild: NavichildCoordinator<NewResult>,
                                animated: Bool,
                                _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
@@ -12,9 +12,9 @@ public protocol NavitrollerCoordinatorAny: AnyObject {
                                    _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
     func startNewNavitroller<NewResult>(_ navigationController: UINavigationController,
-                                               _ initialChild: NavichildCoordinator<NewResult>,
-                                               animated: Bool,
-                                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+                                        _ initialChild: NavichildCoordinator<NewResult>,
+                                        animated: Bool,
+                                        _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
     func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
                                  animated: Bool,
@@ -124,7 +124,7 @@ open class NavitrollerCoordinator: NavitrollerCoordinatorAny {
         }
         
         var newNavData = self.navData
-        #if DEBUG
+#if DEBUG
         
         let shouldCheckIfDeallocatedIndexIsAtTheEnd: Bool
         
@@ -140,7 +140,7 @@ open class NavitrollerCoordinator: NavitrollerCoordinatorAny {
         if shouldCheckIfDeallocatedIndexIsAtTheEnd {
             assert(index == newNavData.endIndex - 1, "Dealocation ensued not from the end")
         }
-        #endif
+#endif
         
         newNavData.remove(at: index)
         
@@ -156,7 +156,7 @@ open class NavitrollerCoordinator: NavitrollerCoordinatorAny {
             assertionFailure("Finalizing non-existing navichild. Maybe it's too early to call the completion of the coordinator? Or it's a bug...")
             return
         }
- 
+        
         let oldNavData = navData[index]
         navData[index] = NavData(viewController: oldNavData.viewController, coordinator: oldNavData.coordinator, state: .finished)
     }
@@ -182,13 +182,13 @@ open class NavitrollerCoordinator: NavitrollerCoordinatorAny {
             }
             guard let navichild = navichild else { return }
             
-            #if DEBUG
+#if DEBUG
             if weakControllerInitialized {
                 assert(weakController != nil, "Finish called but the controller is long dead")
             } else {
                 assertionFailure("Finish called way before we could start the coordinator")
             }
-            #endif
+#endif
             weakController?.onDeinit = nil
             self.finalize(navichild)
             self.finalizationDepth += 1
@@ -221,21 +221,21 @@ open class NavitrollerCoordinator: NavitrollerCoordinatorAny {
     }
     
     public func startNewNavitroller<NewResult>(_ navigationController: UINavigationController,
-                                                      _ initialChild: NavichildCoordinator<NewResult>,
-                                                      animated: Bool,
-                                                      _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                               _ initialChild: NavichildCoordinator<NewResult>,
+                                               animated: Bool,
+                                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         let modaroller = self.asModarollerCoordinator()
-
+        
         modaroller.startNavitroller(navigationController, initialChild, animated: animated) { result in
             completion(result)
         }
     }
     
-    #if DEBUG
+#if DEBUG
     deinit {
         print("Navigation Controller Coordinator deinit \(type(of: self))")
     }
-    #endif
+#endif
     
     var modaroller: ModarollerCoordinator?
     func asModarollerCoordinator() -> ModarollerCoordinator {
@@ -257,52 +257,6 @@ open class NavitrollerCoordinator: NavitrollerCoordinatorAny {
         modaroller.startOverTop(modachild, animated: animated) { result in
             completion(result)
         }
-    }
-}
-
-protocol NavichildCoordinatorAny: AnyObject {
-    
-}
-
-open class NavichildCoordinator<Result>: NavichildCoordinatorAny {
-    weak var _navitroller: NavitrollerCoordinatorAny?
-    
-    public var navitroller: NavitrollerCoordinatorAny! {
-        assert(_navitroller != nil, "Attempted to use navitroller before the coordinator was started or after it has finished")
-        return _navitroller
-    }
-    
-    open var viewController: UIViewController {
-        fatalError("This coordinator didn't define a viewController")
-    }
-    
-    var _finishImplementation: ((Result) -> Void)?
-    
-    public func finish(_ result: Result) {
-        guard let _finishImplementation = _finishImplementation else {
-            assertionFailure("Finish called before the coordinator was started")
-            return
-        }
-        
-        _finishImplementation(result)
-    }
-    
-    public init() {
-        
-    }
-}
-
-class NavichildMagicCoordinator<Result>: NavichildCoordinator<Result> {
-    let child: InsecurityChild<Result>
-    
-    override var viewController: UIViewController {
-        child.viewController
-    }
-    
-    init(_ child: InsecurityChild<Result>) {
-        self.child = child
-        super.init()
-        self._finishImplementation = child._finishImplementation
     }
 }
 

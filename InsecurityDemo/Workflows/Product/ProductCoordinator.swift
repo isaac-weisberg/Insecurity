@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class ProductCoordinator: NavichildCoordinator<Void> {
+class ProductCoordinator: InsecurityChild<Void> {
     typealias DI = CartCoordinator.DI
     
     override var viewController: UIViewController {
@@ -10,7 +10,7 @@ class ProductCoordinator: NavichildCoordinator<Void> {
         viewController.onCartRequested = { [self] in
             let contentsCoordinator = CartCoordinator(di: di)
             
-            navitroller.start(contentsCoordinator, animated: true) { result in
+            navigation.start(contentsCoordinator, animated: true) { result in
                 print("End Cart \(result)")
             }
         }

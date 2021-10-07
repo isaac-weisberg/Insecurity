@@ -21,10 +21,15 @@ class ApplicationCoordinator: WindowCoordinator {
         let loginCoordinator = LoginPhoneCoordinator(di: di)
         self.start(UINavigationController(), loginCoordinator, duration: 0.3, options: [.transitionFlipFromRight, .curveEaseInOut]) { [weak self] loginResult in
             switch loginResult {
-            case .loggedIn:
-                print("End Login after logout")
-                
-                self?.startGallery()
+            case .normal(let result):
+                switch result {
+                case .loggedIn:
+                    print("End Login after logout")
+                    
+                    self?.startGallery()
+                }
+            case .dismissed:
+                fatalError("Not expected to happen")
             }
         }
     }

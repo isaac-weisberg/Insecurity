@@ -5,7 +5,7 @@ enum PaymentCoordinatorResult {
     case success
 }
 
-class PaymentCoordinator: ModachildCoordinator<PaymentCoordinatorResult> {
+class PaymentCoordinator: InsecurityChild<PaymentCoordinatorResult> {
     typealias DI = PaymentViewController.DI
     
     override var viewController: UIViewController {
@@ -13,7 +13,7 @@ class PaymentCoordinator: ModachildCoordinator<PaymentCoordinatorResult> {
         paymentViewController.onPaymentSuccess = {
             let successCoordinator = PaymentSuccessCoordinator()
             
-            self.modaroller.start(successCoordinator, animated: true) { result in
+            self.navigation.start(successCoordinator, animated: true) { result in
                 print("End PaymentSuccess \(result)")
                 self.finish(.success)
             }

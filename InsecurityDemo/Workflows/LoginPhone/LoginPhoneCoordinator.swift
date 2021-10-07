@@ -5,7 +5,7 @@ enum LoginPhoneCoordinatorResult {
     case loggedIn
 }
 
-class LoginPhoneCoordinator: NavichildCoordinator<LoginPhoneCoordinatorResult> {
+class LoginPhoneCoordinator: InsecurityChild<LoginPhoneCoordinatorResult> {
     typealias DI = HasAuthService
     
     override var viewController: UIViewController {
@@ -14,7 +14,7 @@ class LoginPhoneCoordinator: NavichildCoordinator<LoginPhoneCoordinatorResult> {
         controller.onSmsCodeSent = { [self] in
             let loginSMSCodeCoordinator = LoginSMSCodeCoordinator(di: di)
             
-            navitroller.start(loginSMSCodeCoordinator, animated: true) { result in
+            navigation.start(loginSMSCodeCoordinator, animated: true) { result in
                 print("End LoginSMSCode \(result)")
                 switch result {
                 case .normal(let smsCodeResult):

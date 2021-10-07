@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol ModarollerCoordinatorAny: AnyObject {
+public protocol ModarollerCoordinatorAny: InsecurityNavigation {
     func startNavitroller<NewResult>(_ navigationController: UINavigationController,
                                      _ child: NavichildCoordinator<NewResult>,
                                      animated: Bool,
@@ -17,8 +17,8 @@ public protocol ModarollerCoordinatorAny: AnyObject {
 
 public extension ModarollerCoordinatorAny {
     func start<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
-               animated: Bool,
-               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                          animated: Bool,
+                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         
         startChild(modachild, animated: animated) { result in
             completion(result)
@@ -161,7 +161,7 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
             return
         }
         
-        #if DEBUG
+#if DEBUG
         let shouldCheckDeallocationOrder: Bool
         
         if let firstNonDeadNavData = self.navData.first(where: { navData in
@@ -172,11 +172,11 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
         } else {
             shouldCheckDeallocationOrder = true
         }
-    
+        
         if shouldCheckDeallocationOrder {
             assert(index == self.navData.endIndex - 1, "Dealocation ensued not from the end")
         }
-        #endif
+#endif
         
         var newNavData = self.navData
         newNavData.remove(at: index)
@@ -273,13 +273,13 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
             }
             guard let modachild = modachild else { return }
             
-            #if DEBUG
+#if DEBUG
             if weakControllerInitialized {
                 assert(weakController != nil, "Finish called but the controller is long dead")
             } else {
                 assertionFailure("Finish called way before we could start the coordinator")
             }
-            #endif
+#endif
             weakController?.onDeinit = nil
             self.finalize(modachild)
             self.finalizationDepth += 1
