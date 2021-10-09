@@ -2,28 +2,17 @@ import UIKit
 
 public protocol ModarollerCoordinatorAny: InsecurityNavigation {
     func startNavitroller<NewResult>(_ navigationController: UINavigationController,
-                                     _ child: NavichildCoordinator<NewResult>,
+                                     _ child: InsecurityChild<NewResult>,
                                      animated: Bool,
                                      _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
-    func startChild<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+    func startChild<NewResult>(_ child: InsecurityChild<NewResult>,
                                animated: Bool,
                                _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
-    func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+    func startOverTop<NewResult>(_ child: InsecurityChild<NewResult>,
                                  animated: Bool,
                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-}
-
-public extension ModarollerCoordinatorAny {
-    func start<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
-                          animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        
-        startChild(modachild, animated: animated) { result in
-            completion(result)
-        }
-    }
 }
 
 public class ModarollerCoordinator: ModarollerCoordinatorAny {
@@ -44,7 +33,7 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
         }
         
         weak var viewController: UIViewController?
-        let coordinator: ModachildCoordinatorAny
+        let coordinator: InsecurityChildAny
         let state: State
     }
     
@@ -137,13 +126,13 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
         }
     }
     
-    func finalize(_ modachild: ModachildCoordinatorAny) {
+    func finalize(_ child: InsecurityChildAny) {
         let index = navData.firstIndex { navData in
-            navData.coordinator === modachild
+            navData.coordinator === child
         }
         
         guard let index = index else {
-            assertionFailure("Finalizing non-existing modachild. Maybe it's too early to call the completion of the coordinator? Or it's a bug...")
+            assertionFailure("Finalizing non-existing child. Maybe it's too early to call the completion of the coordinator? Or it's a bug...")
             return
         }
         
@@ -151,13 +140,13 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
         navData[index] = NavData(viewController: oldNavData.viewController, coordinator: oldNavData.coordinator, state: .finished)
     }
     
-    func purgeOnDealloc(_ modachild: ModachildCoordinatorAny) {
+    func purgeOnDealloc(_ child: InsecurityChildAny) {
         let index = navData.firstIndex { navData in
-            navData.coordinator === modachild
+            navData.coordinator === child
         }
         
         guard let index = index else {
-            assertionFailure("Finalizing non-existing modachild")
+            assertionFailure("Finalizing non-existing child")
             return
         }
         
@@ -186,7 +175,7 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
         assert(enqueuedChildStartRoutine == nil, "Child start couldn't ve been enqueued because dealloc purge is called before the result is propagated to the parent")
     }
     
-    func dispatch(_ controller: UIViewController, _ animated: Bool, _ modachild: ModachildCoordinatorAny) {
+    func dispatch(_ controller: UIViewController, _ animated: Bool, _ child: InsecurityChildAny) {
         let electedHost: UIViewController?
         if let topNavData = navData.last {
             if let hostController = topNavData.viewController {
@@ -210,68 +199,68 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
             return
         }
         
-        let navData = NavData(viewController: controller, coordinator: modachild, state: .running)
+        let navData = NavData(viewController: controller, coordinator: child, state: .running)
         self.navData.append(navData)
         electedHost.present(controller, animated: true, completion: nil)
     }
     
-    public func startOverTop<NewResult>(_ modachild: ModachildCoordinator<NewResult>,
+    public func startOverTop<NewResult>(_ child: InsecurityChild<NewResult>,
                                         animated: Bool,
                                         _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        startChild(modachild, animated: animated) { result in
+        startChild(child, animated: animated) { result in
             completion(result)
         }
     }
     
     public func startNavitroller<NewResult>(_ navigationController: UINavigationController,
-                                            _ child: NavichildCoordinator<NewResult>,
+                                            _ child: InsecurityChild<NewResult>,
                                             animated: Bool,
                                             _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         let navitrollerCoordinator = NavitrollerCoordinator(navigationController)
         
-        let modachild = ModachildWithNavitroller<NewResult>(navitrollerCoordinator, navigationController)
+        let child = InsecurityChildWithNavitroller<NewResult>(navitrollerCoordinator, navigationController)
         
-        child._navitroller = navitrollerCoordinator
-        child._finishImplementation = { [weak modachild] result in
-            if let modachild = modachild {
-                modachild.finish(result)
+        child._navigation = navitrollerCoordinator
+        child._finishImplementation = { [weak child] result in
+            if let child = child {
+                child.finish(result)
             } else {
                 assertionFailure("Navigation Controller child has called finish way before we could initialize the coordinator or after when it has already completed")
             }
         }
         navigationController.setViewControllers([ child.viewController ], animated: navigationControllerRootIsAssignedWithAnimation)
         
-        self.startChild(modachild, animated: animated) { modarollerResult in
+        self.startModal(child, animated: animated) { modarollerResult in
             completion(modarollerResult)
         }
     }
     
     var enqueuedChildStartRoutine: (() -> Void)?
     
-    public func startChild<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+    public func startChild<NewResult>(_ child: InsecurityChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         if finalizationDepth > 0 {
             // Enqueing the start to happen after batch purge
             enqueuedChildStartRoutine = { [weak self] in
                 guard let self = self else { return }
                 self.enqueuedChildStartRoutine = nil
-                self.startChildImmediately(modachild, animated: animated, completion)
+                self.startChildImmediately(child, animated: animated, completion)
             }
         } else {
-            startChildImmediately(modachild, animated: animated, completion)
+            startChildImmediately(child, animated: animated, completion)
         }
     }
     
-    func startChildImmediately<NewResult>(_ modachild: ModachildCoordinator<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+    func startChildImmediately<NewResult>(_ child: InsecurityChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         
-        modachild._modaroller = self
+        child._navigation = self
         var weakControllerInitialized = false
         weak var weakController: UIViewController?
-        modachild._finishImplementation = { [weak self, weak modachild] result in
+        child._finishImplementation = { [weak self, weak child] result in
             guard let self = self else {
                 assertionFailure("ModarollerCoordinator wasn't properly retained. Make sure you save it somewhere before starting any children.")
                 return
             }
-            guard let modachild = modachild else { return }
+            guard let child = child else { return }
             
 #if DEBUG
             if weakControllerInitialized {
@@ -281,23 +270,23 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
             }
 #endif
             weakController?.onDeinit = nil
-            self.finalize(modachild)
+            self.finalize(child)
             self.finalizationDepth += 1
             completion(.normal(result))
             self.finalizationDepth -= 1
             self.purge()
         }
-        let controller = modachild.viewController
+        let controller = child.viewController
         weakController = controller
         weakControllerInitialized = true
         
-        controller.onDeinit = { [weak self, weak modachild] in
-            guard let self = self, let modachild = modachild else { return }
-            self.purgeOnDealloc(modachild)
+        controller.onDeinit = { [weak self, weak child] in
+            guard let self = self, let child = child else { return }
+            self.purgeOnDealloc(child)
             completion(.dismissed)
         }
         
-        dispatch(controller, animated, modachild)
+        dispatch(controller, animated, child)
     }
     
 #if DEBUG

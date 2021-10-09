@@ -12,8 +12,6 @@
 		A3441880270F95C200CE49E4 /* InsecurityChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A344187F270F95C200CE49E4 /* InsecurityChild.swift */; };
 		A3441882270F95E400CE49E4 /* InsecurityNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3441881270F95E400CE49E4 /* InsecurityNavigation.swift */; };
 		A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3441883270F9CD800CE49E4 /* Insecurity.swift */; };
-		A3441886270FA03600CE49E4 /* ModachildCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3441885270FA03600CE49E4 /* ModachildCoordinator.swift */; };
-		A3441888270FA57900CE49E4 /* NavichildCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3441887270FA57900CE49E4 /* NavichildCoordinator.swift */; };
 		A34CBF6526FFD796007AF9B8 /* ModalPresentationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */; };
 		A35A78232709EF3E00256FBD /* ScoringCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */; };
 		A35A78252709EFFB00256FBD /* ScoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78242709EFFB00256FBD /* ScoringViewController.swift */; };
@@ -88,8 +86,6 @@
 		A344187F270F95C200CE49E4 /* InsecurityChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsecurityChild.swift; sourceTree = "<group>"; };
 		A3441881270F95E400CE49E4 /* InsecurityNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsecurityNavigation.swift; sourceTree = "<group>"; };
 		A3441883270F9CD800CE49E4 /* Insecurity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insecurity.swift; sourceTree = "<group>"; };
-		A3441885270FA03600CE49E4 /* ModachildCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModachildCoordinator.swift; sourceTree = "<group>"; };
-		A3441887270FA57900CE49E4 /* NavichildCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavichildCoordinator.swift; sourceTree = "<group>"; };
 		A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresentationCoordinator.swift; sourceTree = "<group>"; };
 		A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
 		A35A78242709EFFB00256FBD /* ScoringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringViewController.swift; sourceTree = "<group>"; };
@@ -337,8 +333,6 @@
 				A3441881270F95E400CE49E4 /* InsecurityNavigation.swift */,
 				A344187F270F95C200CE49E4 /* InsecurityChild.swift */,
 				A3441883270F9CD800CE49E4 /* Insecurity.swift */,
-				A3441885270FA03600CE49E4 /* ModachildCoordinator.swift */,
-				A3441887270FA57900CE49E4 /* NavichildCoordinator.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -513,8 +507,6 @@
 				A3441880270F95C200CE49E4 /* InsecurityChild.swift in Sources */,
 				A34CBF6526FFD796007AF9B8 /* ModalPresentationCoordinator.swift in Sources */,
 				A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */,
-				A3441886270FA03600CE49E4 /* ModachildCoordinator.swift in Sources */,
-				A3441888270FA57900CE49E4 /* NavichildCoordinator.swift in Sources */,
 				A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,
 			);

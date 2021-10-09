@@ -1,6 +1,6 @@
 import UIKit
 
-protocol InsecurityChildAny {
+protocol InsecurityChildAny: AnyObject {
     var navigation: InsecurityNavigation! { get }
 }
 
@@ -29,5 +29,21 @@ open class InsecurityChild<Result>: InsecurityChildAny {
     
     public init() {
         
+    }
+}
+
+class InsecurityChildWithNavitroller<Result>: InsecurityChild<Result> {
+    let navitrollerChild: NavitrollerCoordinator?
+    weak var _storedViewController: UIViewController?
+    
+    override var viewController: UIViewController {
+        return _storedViewController!
+    }
+    
+    init(_ navitrollerChild: NavitrollerCoordinator,
+         _ _storedViewController: UIViewController?) {
+        
+        self.navitrollerChild = navitrollerChild
+        self._storedViewController = _storedViewController
     }
 }
