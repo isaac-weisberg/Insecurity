@@ -15,10 +15,70 @@
 		A37ADE162712F3E40096E75A /* NavigationControllerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADE0E2712F3E40096E75A /* NavigationControllerCoordinator.swift */; };
 		A37ADE172712F3E40096E75A /* InsecurityChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADE0F2712F3E40096E75A /* InsecurityChild.swift */; };
 		A37ADE182712F3E40096E75A /* InsecurityNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADE102712F3E40096E75A /* InsecurityNavigation.swift */; };
+		A37ADEFA2712F7000096E75A /* UIColor+system.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEC82712F7000096E75A /* UIColor+system.swift */; };
+		A37ADEFB2712F7000096E75A /* DispatchQueue+asyncAfter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEC92712F7000096E75A /* DispatchQueue+asyncAfter.swift */; };
+		A37ADEFC2712F7000096E75A /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADECA2712F7000096E75A /* ApplicationCoordinator.swift */; };
+		A37ADEFD2712F7000096E75A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A37ADECB2712F7000096E75A /* Assets.xcassets */; };
+		A37ADEFE2712F7000096E75A /* LoginSMSCodeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADECE2712F7000096E75A /* LoginSMSCodeCoordinator.swift */; };
+		A37ADEFF2712F7000096E75A /* LoginSMSCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADECF2712F7000096E75A /* LoginSMSCodeViewController.swift */; };
+		A37ADF002712F7000096E75A /* DebugViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADED12712F7000096E75A /* DebugViewCoordinator.swift */; };
+		A37ADF012712F7000096E75A /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADED22712F7000096E75A /* DebugViewController.swift */; };
+		A37ADF022712F7000096E75A /* PaymentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADED42712F7000096E75A /* PaymentCoordinator.swift */; };
+		A37ADF032712F7000096E75A /* PaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADED52712F7000096E75A /* PaymentViewController.swift */; };
+		A37ADF042712F7000096E75A /* GalleryCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADED72712F7000096E75A /* GalleryCoordinator.swift */; };
+		A37ADF052712F7000096E75A /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADED82712F7000096E75A /* GalleryViewController.swift */; };
+		A37ADF062712F7000096E75A /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEDA2712F7000096E75A /* ProductViewController.swift */; };
+		A37ADF072712F7000096E75A /* ProductCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEDB2712F7000096E75A /* ProductCoordinator.swift */; };
+		A37ADF082712F7000096E75A /* PaymentSuccessCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEDD2712F7000096E75A /* PaymentSuccessCoordinator.swift */; };
+		A37ADF092712F7000096E75A /* PaymentSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEDE2712F7000096E75A /* PaymentSuccessViewController.swift */; };
+		A37ADF0A2712F7000096E75A /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE02712F7000096E75A /* ParentViewController.swift */; };
+		A37ADF0B2712F7000096E75A /* ParentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE12712F7000096E75A /* ParentCoordinator.swift */; };
+		A37ADF0C2712F7000096E75A /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE32712F7000096E75A /* CartViewController.swift */; };
+		A37ADF0D2712F7000096E75A /* CartCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE42712F7000096E75A /* CartCoordinator.swift */; };
+		A37ADF0E2712F7000096E75A /* ScoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE62712F7000096E75A /* ScoringViewController.swift */; };
+		A37ADF0F2712F7000096E75A /* ScoringCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE72712F7000096E75A /* ScoringCoordinator.swift */; };
+		A37ADF102712F7000096E75A /* CurrencySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE92712F7000096E75A /* CurrencySelectionViewController.swift */; };
+		A37ADF112712F7000096E75A /* CurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEEA2712F7000096E75A /* CurrencyView.swift */; };
+		A37ADF122712F7000096E75A /* CurrencySelectionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEEB2712F7000096E75A /* CurrencySelectionCoordinator.swift */; };
+		A37ADF132712F7000096E75A /* LoginPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEED2712F7000096E75A /* LoginPhoneViewController.swift */; };
+		A37ADF142712F7000096E75A /* LoginPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEEE2712F7000096E75A /* LoginPhoneCoordinator.swift */; };
+		A37ADF152712F7000096E75A /* CurrencySelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEF02712F7000096E75A /* CurrencySelection.swift */; };
+		A37ADF162712F7000096E75A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A37ADEF12712F7000096E75A /* LaunchScreen.storyboard */; };
+		A37ADF172712F7000096E75A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEF32712F7000096E75A /* AppDelegate.swift */; };
+		A37ADF182712F7000096E75A /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEF42712F7000096E75A /* Application.swift */; };
+		A37ADF192712F7000096E75A /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEF52712F7000096E75A /* main.swift */; };
+		A37ADF1B2712F7000096E75A /* DI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEF82712F7000096E75A /* DI.swift */; };
+		A37ADF1C2712F7000096E75A /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEF92712F7000096E75A /* AuthService.swift */; };
+		A37ADF222712F7190096E75A /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A33EDF9C2712F2B50041F32A /* Insecurity.framework */; };
+		A37ADF232712F7190096E75A /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A33EDF9C2712F2B50041F32A /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		A37ADF242712F7190096E75A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A33EDF932712F2B50041F32A /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A33EDF9B2712F2B50041F32A;
+			remoteInfo = InsecurityXcode12;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		A37ADF262712F7190096E75A /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A37ADF232712F7190096E75A /* Insecurity.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
-		A33EDF9C2712F2B50041F32A /* InsecurityXcode12.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = InsecurityXcode12.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A33EDF9C2712F2B50041F32A /* Insecurity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Insecurity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A33EDFA02712F2B50041F32A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A37ADE092712F3E40096E75A /* DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
 		A37ADE0A2712F3E40096E75A /* CoordinatorResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoordinatorResult.swift; sourceTree = "<group>"; };
@@ -28,6 +88,42 @@
 		A37ADE0E2712F3E40096E75A /* NavigationControllerCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationControllerCoordinator.swift; sourceTree = "<group>"; };
 		A37ADE0F2712F3E40096E75A /* InsecurityChild.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsecurityChild.swift; sourceTree = "<group>"; };
 		A37ADE102712F3E40096E75A /* InsecurityNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsecurityNavigation.swift; sourceTree = "<group>"; };
+		A37ADEAE2712F6CB0096E75A /* InsecurityDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A37ADEBE2712F6CC0096E75A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A37ADEC82712F7000096E75A /* UIColor+system.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+system.swift"; sourceTree = "<group>"; };
+		A37ADEC92712F7000096E75A /* DispatchQueue+asyncAfter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+asyncAfter.swift"; sourceTree = "<group>"; };
+		A37ADECA2712F7000096E75A /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
+		A37ADECB2712F7000096E75A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A37ADECE2712F7000096E75A /* LoginSMSCodeCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeCoordinator.swift; sourceTree = "<group>"; };
+		A37ADECF2712F7000096E75A /* LoginSMSCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeViewController.swift; sourceTree = "<group>"; };
+		A37ADED12712F7000096E75A /* DebugViewCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugViewCoordinator.swift; sourceTree = "<group>"; };
+		A37ADED22712F7000096E75A /* DebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
+		A37ADED42712F7000096E75A /* PaymentCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentCoordinator.swift; sourceTree = "<group>"; };
+		A37ADED52712F7000096E75A /* PaymentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentViewController.swift; sourceTree = "<group>"; };
+		A37ADED72712F7000096E75A /* GalleryCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryCoordinator.swift; sourceTree = "<group>"; };
+		A37ADED82712F7000096E75A /* GalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
+		A37ADEDA2712F7000096E75A /* ProductViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
+		A37ADEDB2712F7000096E75A /* ProductCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductCoordinator.swift; sourceTree = "<group>"; };
+		A37ADEDD2712F7000096E75A /* PaymentSuccessCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSuccessCoordinator.swift; sourceTree = "<group>"; };
+		A37ADEDE2712F7000096E75A /* PaymentSuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSuccessViewController.swift; sourceTree = "<group>"; };
+		A37ADEE02712F7000096E75A /* ParentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
+		A37ADEE12712F7000096E75A /* ParentCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentCoordinator.swift; sourceTree = "<group>"; };
+		A37ADEE32712F7000096E75A /* CartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartViewController.swift; sourceTree = "<group>"; };
+		A37ADEE42712F7000096E75A /* CartCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartCoordinator.swift; sourceTree = "<group>"; };
+		A37ADEE62712F7000096E75A /* ScoringViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoringViewController.swift; sourceTree = "<group>"; };
+		A37ADEE72712F7000096E75A /* ScoringCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
+		A37ADEE92712F7000096E75A /* CurrencySelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectionViewController.swift; sourceTree = "<group>"; };
+		A37ADEEA2712F7000096E75A /* CurrencyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyView.swift; sourceTree = "<group>"; };
+		A37ADEEB2712F7000096E75A /* CurrencySelectionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectionCoordinator.swift; sourceTree = "<group>"; };
+		A37ADEED2712F7000096E75A /* LoginPhoneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginPhoneViewController.swift; sourceTree = "<group>"; };
+		A37ADEEE2712F7000096E75A /* LoginPhoneCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginPhoneCoordinator.swift; sourceTree = "<group>"; };
+		A37ADEF02712F7000096E75A /* CurrencySelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelection.swift; sourceTree = "<group>"; };
+		A37ADEF22712F7000096E75A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A37ADEF32712F7000096E75A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A37ADEF42712F7000096E75A /* Application.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
+		A37ADEF52712F7000096E75A /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		A37ADEF82712F7000096E75A /* DI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DI.swift; sourceTree = "<group>"; };
+		A37ADEF92712F7000096E75A /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,6 +131,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A37ADEAB2712F6CB0096E75A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A37ADF222712F7190096E75A /* Insecurity.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -46,14 +150,18 @@
 			children = (
 				A37ADE082712F3E40096E75A /* Insecurity */,
 				A33EDF9E2712F2B50041F32A /* InsecurityXcode12 */,
+				A37ADEC62712F7000096E75A /* InsecurityDemo */,
+				A37ADEAF2712F6CB0096E75A /* InsecurityDemoXcode12 */,
 				A33EDF9D2712F2B50041F32A /* Products */,
+				A37ADF212712F7190096E75A /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
 		A33EDF9D2712F2B50041F32A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				A33EDF9C2712F2B50041F32A /* InsecurityXcode12.framework */,
+				A33EDF9C2712F2B50041F32A /* Insecurity.framework */,
+				A37ADEAE2712F6CB0096E75A /* InsecurityDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -81,6 +189,182 @@
 			path = Insecurity;
 			sourceTree = "<group>";
 		};
+		A37ADEAF2712F6CB0096E75A /* InsecurityDemoXcode12 */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADEBE2712F6CC0096E75A /* Info.plist */,
+			);
+			path = InsecurityDemoXcode12;
+			sourceTree = "<group>";
+		};
+		A37ADEC62712F7000096E75A /* InsecurityDemo */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADEC72712F7000096E75A /* Util */,
+				A37ADECA2712F7000096E75A /* ApplicationCoordinator.swift */,
+				A37ADECB2712F7000096E75A /* Assets.xcassets */,
+				A37ADECC2712F7000096E75A /* Workflows */,
+				A37ADEEF2712F7000096E75A /* Models */,
+				A37ADEF12712F7000096E75A /* LaunchScreen.storyboard */,
+				A37ADEF32712F7000096E75A /* AppDelegate.swift */,
+				A37ADEF42712F7000096E75A /* Application.swift */,
+				A37ADEF52712F7000096E75A /* main.swift */,
+				A37ADEF72712F7000096E75A /* Services */,
+			);
+			path = InsecurityDemo;
+			sourceTree = "<group>";
+		};
+		A37ADEC72712F7000096E75A /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADEC82712F7000096E75A /* UIColor+system.swift */,
+				A37ADEC92712F7000096E75A /* DispatchQueue+asyncAfter.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		A37ADECC2712F7000096E75A /* Workflows */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADECD2712F7000096E75A /* LoginSMSCode */,
+				A37ADED02712F7000096E75A /* DebugViewController */,
+				A37ADED32712F7000096E75A /* Payment */,
+				A37ADED62712F7000096E75A /* Gallery */,
+				A37ADED92712F7000096E75A /* Product */,
+				A37ADEDC2712F7000096E75A /* PaymentSuccess */,
+				A37ADEDF2712F7000096E75A /* ParentSample */,
+				A37ADEE22712F7000096E75A /* Cart */,
+				A37ADEE52712F7000096E75A /* Scoring */,
+				A37ADEE82712F7000096E75A /* CurrencySelection */,
+				A37ADEEC2712F7000096E75A /* LoginPhone */,
+			);
+			path = Workflows;
+			sourceTree = "<group>";
+		};
+		A37ADECD2712F7000096E75A /* LoginSMSCode */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADECE2712F7000096E75A /* LoginSMSCodeCoordinator.swift */,
+				A37ADECF2712F7000096E75A /* LoginSMSCodeViewController.swift */,
+			);
+			path = LoginSMSCode;
+			sourceTree = "<group>";
+		};
+		A37ADED02712F7000096E75A /* DebugViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADED12712F7000096E75A /* DebugViewCoordinator.swift */,
+				A37ADED22712F7000096E75A /* DebugViewController.swift */,
+			);
+			path = DebugViewController;
+			sourceTree = "<group>";
+		};
+		A37ADED32712F7000096E75A /* Payment */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADED42712F7000096E75A /* PaymentCoordinator.swift */,
+				A37ADED52712F7000096E75A /* PaymentViewController.swift */,
+			);
+			path = Payment;
+			sourceTree = "<group>";
+		};
+		A37ADED62712F7000096E75A /* Gallery */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADED72712F7000096E75A /* GalleryCoordinator.swift */,
+				A37ADED82712F7000096E75A /* GalleryViewController.swift */,
+			);
+			path = Gallery;
+			sourceTree = "<group>";
+		};
+		A37ADED92712F7000096E75A /* Product */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADEDA2712F7000096E75A /* ProductViewController.swift */,
+				A37ADEDB2712F7000096E75A /* ProductCoordinator.swift */,
+			);
+			path = Product;
+			sourceTree = "<group>";
+		};
+		A37ADEDC2712F7000096E75A /* PaymentSuccess */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADEDD2712F7000096E75A /* PaymentSuccessCoordinator.swift */,
+				A37ADEDE2712F7000096E75A /* PaymentSuccessViewController.swift */,
+			);
+			path = PaymentSuccess;
+			sourceTree = "<group>";
+		};
+		A37ADEDF2712F7000096E75A /* ParentSample */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADEE02712F7000096E75A /* ParentViewController.swift */,
+				A37ADEE12712F7000096E75A /* ParentCoordinator.swift */,
+			);
+			path = ParentSample;
+			sourceTree = "<group>";
+		};
+		A37ADEE22712F7000096E75A /* Cart */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADEE32712F7000096E75A /* CartViewController.swift */,
+				A37ADEE42712F7000096E75A /* CartCoordinator.swift */,
+			);
+			path = Cart;
+			sourceTree = "<group>";
+		};
+		A37ADEE52712F7000096E75A /* Scoring */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADEE62712F7000096E75A /* ScoringViewController.swift */,
+				A37ADEE72712F7000096E75A /* ScoringCoordinator.swift */,
+			);
+			path = Scoring;
+			sourceTree = "<group>";
+		};
+		A37ADEE82712F7000096E75A /* CurrencySelection */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADEE92712F7000096E75A /* CurrencySelectionViewController.swift */,
+				A37ADEEA2712F7000096E75A /* CurrencyView.swift */,
+				A37ADEEB2712F7000096E75A /* CurrencySelectionCoordinator.swift */,
+			);
+			path = CurrencySelection;
+			sourceTree = "<group>";
+		};
+		A37ADEEC2712F7000096E75A /* LoginPhone */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADEED2712F7000096E75A /* LoginPhoneViewController.swift */,
+				A37ADEEE2712F7000096E75A /* LoginPhoneCoordinator.swift */,
+			);
+			path = LoginPhone;
+			sourceTree = "<group>";
+		};
+		A37ADEEF2712F7000096E75A /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADEF02712F7000096E75A /* CurrencySelection.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A37ADEF72712F7000096E75A /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				A37ADEF82712F7000096E75A /* DI.swift */,
+				A37ADEF92712F7000096E75A /* AuthService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		A37ADF212712F7190096E75A /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -94,9 +378,9 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		A33EDF9B2712F2B50041F32A /* InsecurityXcode12 */ = {
+		A33EDF9B2712F2B50041F32A /* Insecurity */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A33EDFA42712F2B60041F32A /* Build configuration list for PBXNativeTarget "InsecurityXcode12" */;
+			buildConfigurationList = A33EDFA42712F2B60041F32A /* Build configuration list for PBXNativeTarget "Insecurity" */;
 			buildPhases = (
 				A33EDF972712F2B50041F32A /* Headers */,
 				A33EDF982712F2B50041F32A /* Sources */,
@@ -107,10 +391,29 @@
 			);
 			dependencies = (
 			);
-			name = InsecurityXcode12;
+			name = Insecurity;
 			productName = InsecurityXcode12;
-			productReference = A33EDF9C2712F2B50041F32A /* InsecurityXcode12.framework */;
+			productReference = A33EDF9C2712F2B50041F32A /* Insecurity.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		A37ADEAD2712F6CB0096E75A /* InsecurityDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A37ADEC12712F6CC0096E75A /* Build configuration list for PBXNativeTarget "InsecurityDemo" */;
+			buildPhases = (
+				A37ADEAA2712F6CB0096E75A /* Sources */,
+				A37ADEAB2712F6CB0096E75A /* Frameworks */,
+				A37ADEAC2712F6CB0096E75A /* Resources */,
+				A37ADF262712F7190096E75A /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A37ADF252712F7190096E75A /* PBXTargetDependency */,
+			);
+			name = InsecurityDemo;
+			productName = InsecurityDemoXcode12;
+			productReference = A37ADEAE2712F6CB0096E75A /* InsecurityDemo.app */;
+			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
 
@@ -118,9 +421,13 @@
 		A33EDF932712F2B50041F32A /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1200;
 				LastUpgradeCheck = 1200;
 				TargetAttributes = {
 					A33EDF9B2712F2B50041F32A = {
+						CreatedOnToolsVersion = 12.0;
+					};
+					A37ADEAD2712F6CB0096E75A = {
 						CreatedOnToolsVersion = 12.0;
 					};
 				};
@@ -138,7 +445,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				A33EDF9B2712F2B50041F32A /* InsecurityXcode12 */,
+				A33EDF9B2712F2B50041F32A /* Insecurity */,
+				A37ADEAD2712F6CB0096E75A /* InsecurityDemo */,
 			);
 		};
 /* End PBXProject section */
@@ -148,6 +456,15 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A37ADEAC2712F6CB0096E75A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A37ADEFD2712F7000096E75A /* Assets.xcassets in Resources */,
+				A37ADF162712F7000096E75A /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -169,7 +486,65 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		A37ADEAA2712F6CB0096E75A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A37ADF182712F7000096E75A /* Application.swift in Sources */,
+				A37ADF112712F7000096E75A /* CurrencyView.swift in Sources */,
+				A37ADF0B2712F7000096E75A /* ParentCoordinator.swift in Sources */,
+				A37ADF122712F7000096E75A /* CurrencySelectionCoordinator.swift in Sources */,
+				A37ADF052712F7000096E75A /* GalleryViewController.swift in Sources */,
+				A37ADF172712F7000096E75A /* AppDelegate.swift in Sources */,
+				A37ADF152712F7000096E75A /* CurrencySelection.swift in Sources */,
+				A37ADEFA2712F7000096E75A /* UIColor+system.swift in Sources */,
+				A37ADF012712F7000096E75A /* DebugViewController.swift in Sources */,
+				A37ADF1B2712F7000096E75A /* DI.swift in Sources */,
+				A37ADF002712F7000096E75A /* DebugViewCoordinator.swift in Sources */,
+				A37ADF132712F7000096E75A /* LoginPhoneViewController.swift in Sources */,
+				A37ADF0F2712F7000096E75A /* ScoringCoordinator.swift in Sources */,
+				A37ADEFB2712F7000096E75A /* DispatchQueue+asyncAfter.swift in Sources */,
+				A37ADF0E2712F7000096E75A /* ScoringViewController.swift in Sources */,
+				A37ADF1C2712F7000096E75A /* AuthService.swift in Sources */,
+				A37ADEFC2712F7000096E75A /* ApplicationCoordinator.swift in Sources */,
+				A37ADF062712F7000096E75A /* ProductViewController.swift in Sources */,
+				A37ADF042712F7000096E75A /* GalleryCoordinator.swift in Sources */,
+				A37ADF022712F7000096E75A /* PaymentCoordinator.swift in Sources */,
+				A37ADEFF2712F7000096E75A /* LoginSMSCodeViewController.swift in Sources */,
+				A37ADF032712F7000096E75A /* PaymentViewController.swift in Sources */,
+				A37ADF142712F7000096E75A /* LoginPhoneCoordinator.swift in Sources */,
+				A37ADF092712F7000096E75A /* PaymentSuccessViewController.swift in Sources */,
+				A37ADF072712F7000096E75A /* ProductCoordinator.swift in Sources */,
+				A37ADEFE2712F7000096E75A /* LoginSMSCodeCoordinator.swift in Sources */,
+				A37ADF0A2712F7000096E75A /* ParentViewController.swift in Sources */,
+				A37ADF0C2712F7000096E75A /* CartViewController.swift in Sources */,
+				A37ADF192712F7000096E75A /* main.swift in Sources */,
+				A37ADF0D2712F7000096E75A /* CartCoordinator.swift in Sources */,
+				A37ADF102712F7000096E75A /* CurrencySelectionViewController.swift in Sources */,
+				A37ADF082712F7000096E75A /* PaymentSuccessCoordinator.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A37ADF252712F7190096E75A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A33EDF9B2712F2B50041F32A /* Insecurity */;
+			targetProxy = A37ADF242712F7190096E75A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		A37ADEF12712F7000096E75A /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A37ADEF22712F7000096E75A /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		A33EDFA22712F2B60041F32A /* Debug */ = {
@@ -342,6 +717,46 @@
 			};
 			name = Release;
 		};
+		A37ADEBF2712F6CC0096E75A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QZRPL4EC5L;
+				INFOPLIST_FILE = InsecurityDemoXcode12/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityDemoXcode12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A37ADEC02712F6CC0096E75A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = QZRPL4EC5L;
+				INFOPLIST_FILE = InsecurityDemoXcode12/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityDemoXcode12;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -354,11 +769,20 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A33EDFA42712F2B60041F32A /* Build configuration list for PBXNativeTarget "InsecurityXcode12" */ = {
+		A33EDFA42712F2B60041F32A /* Build configuration list for PBXNativeTarget "Insecurity" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A33EDFA52712F2B60041F32A /* Debug */,
 				A33EDFA62712F2B60041F32A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A37ADEC12712F6CC0096E75A /* Build configuration list for PBXNativeTarget "InsecurityDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A37ADEBF2712F6CC0096E75A /* Debug */,
+				A37ADEC02712F6CC0096E75A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
