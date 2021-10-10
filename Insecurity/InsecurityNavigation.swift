@@ -15,52 +15,6 @@ public protocol InsecurityNavigation: AnyObject {
                                _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
 }
 
-extension NavitrollerCoordinatorAny {
-    public func start<NewResult>(_ child: InsecurityChild<NewResult>,
-                                 animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        self.startChild(child, animated: animated) { result in
-            completion(result)
-        }
-    }
-    
-    public func start<NewResult>(_ navigationController: UINavigationController,
-                                 _ child: InsecurityChild<NewResult>,
-                                 animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        self.startNewNavitroller(navigationController, child, animated: animated) { result in
-            completion(result)
-        }
-    }
-}
-
-extension ModarollerCoordinatorAny {
-    public func start<NewResult>(_ child: InsecurityChild<NewResult>,
-                                 animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        self.startChild(child, animated: animated) { result in
-            completion(result)
-        }
-    }
-    
-    public func start<NewResult>(_ navigationController: UINavigationController,
-                                 _ child: InsecurityChild<NewResult>,
-                                 animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        self.startNavitroller(navigationController, child, animated: animated) { result in
-            completion(result)
-        }
-    }
-    
-    public func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
-                                      animated: Bool,
-                                      _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        self.startChild(child, animated: animated) { result in
-            completion(result)
-        }
-    }
-}
-
 extension WindowCoordinator: InsecurityNavigation {
     public func start<NewResult>(_ child: InsecurityChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         let duration: TimeInterval?

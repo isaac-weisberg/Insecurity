@@ -231,6 +231,25 @@ public class NavitrollerCoordinator: NavitrollerCoordinatorAny {
             completion(result)
         }
     }
+    
+    // MARK: - InsecurityNavigation
+    
+    public func start<NewResult>(_ child: InsecurityChild<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        self.startChild(child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    public func start<NewResult>(_ navigationController: UINavigationController,
+                                 _ child: InsecurityChild<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        self.startNewNavitroller(navigationController, child, animated: animated) { result in
+            completion(result)
+        }
+    }
 }
 
 extension Array {

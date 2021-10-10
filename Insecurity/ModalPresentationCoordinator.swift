@@ -217,20 +217,19 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
                                             animated: Bool,
                                             _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         let navitrollerCoordinator = NavitrollerCoordinator(navigationController)
-        
-        let child = InsecurityChildWithNavitroller<NewResult>(navitrollerCoordinator, navigationController)
+        let navitrollerChild = InsecurityChildWithNavitroller<NewResult>(navitrollerCoordinator, navigationController)
         
         child._navigation = navitrollerCoordinator
-        child._finishImplementation = { [weak child] result in
-            if let child = child {
-                child.finish(result)
+        child._finishImplementation = { [weak navitrollerChild] result in
+            if let navitrollerChild = navitrollerChild {
+                navitrollerChild.finish(result)
             } else {
                 assertionFailure("Navigation Controller child has called finish way before we could initialize the coordinator or after when it has already completed")
             }
         }
         navigationController.setViewControllers([ child.viewController ], animated: navigationControllerRootIsAssignedWithAnimation)
         
-        self.startModal(child, animated: animated) { modarollerResult in
+        self.startChild(navitrollerChild, animated: animated) { modarollerResult in
             completion(modarollerResult)
         }
     }
@@ -294,4 +293,31 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
         print("Modal Presentation Coordinator deinit \(type(of: self))")
     }
 #endif
+    
+    // MARK: - InsecurityNavigation
+    
+    public func start<NewResult>(_ child: InsecurityChild<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        self.startChild(child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    public func start<NewResult>(_ navigationController: UINavigationController,
+                                 _ child: InsecurityChild<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        self.startNavitroller(navigationController, child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    public func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
+                                      animated: Bool,
+                                      _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        self.startChild(child, animated: animated) { result in
+            completion(result)
+        }
+    }
 }
