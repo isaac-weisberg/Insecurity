@@ -20,12 +20,13 @@ Pod::Spec.new do |spec|
 
   spec.homepage     = "https://github.com/isaac-weisberg/Insecurity"
   spec.license      = { :type => "MIT", :file => "LICENSE.txt" }
-  
+
   spec.author             = { "Isaac Weisberg" => "net.caroline.weisberg@gmail.com" }
   spec.social_media_url   = "http://caroline-weisberg.net/"
 
-  spec.platform     = :ios, "12.0"
-  spec.source       = { :git => "https://github.com/isaac-weisberg/Insecurity.git", :tag => "#{spec.version}" }
+  spec.platform      = :ios, "12.0"
+  spec.source        = { :git => "https://github.com/isaac-weisberg/Insecurity.git", :tag => "#{spec.version}" }
+  spec.swift_version = "5.0"
 
   spec.source_files  = "Insecurity/**/*.swift"
 end
