@@ -1,4 +1,5 @@
 import UIKit
+import Insecurity
 
 class GalleryViewController: UIViewController {
     var onProductRequested: (() -> Void)?
@@ -30,6 +31,12 @@ class GalleryViewController: UIViewController {
             magicEndButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
         magicEndButton.addTarget(self, action: #selector(onMagicEndButtonTap), for: .touchUpInside)
+        
+        DispatchQueue.main.asyncAfter(0.5) {
+//            self.startPaymentMethodScreen()
+//            self.startPaymentMethodScreenNavigation()
+            self.startPaymentMethodScreenWithNewNavigation()
+        }
     }
     
     @objc func onTap() {
@@ -38,5 +45,52 @@ class GalleryViewController: UIViewController {
     
     @objc func onMagicEndButtonTap() {
         onAltButton?()
+    }
+    
+    var customModalCoordinator: ModalCoordinatorAny?
+    
+    func startPaymentMethodScreen() {
+        let modalCoordinator = ModalCoordinator(self)
+        self.customModalCoordinator = modalCoordinator
+
+        let paymentMethodCoordinator = PaymentMethodCoordinator()
+
+        modalCoordinator.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+            self?.customModalCoordinator = nil
+            // result is PaymentMethodScreenResult
+        }
+    }
+    
+    var customNavigationCoordinator: NavigationCoordinatorAny?
+    
+    func startPaymentMethodScreenNavigation() {
+        let navigationController = self.navigationController!
+        
+        let navigationCoordinator = NavigationCoordinator(navigationController)
+        self.customNavigationCoordinator = navigationCoordinator
+
+        let paymentMethodCoordinator = PaymentMethodCoordinator()
+
+        navigationCoordinator.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+            self?.customNavigationCoordinator = nil
+            // result is PaymentMethodScreenResult
+        }
+    }
+    
+    func startPaymentMethodScreenWithNewNavigation() {
+        let navigationController = UINavigationController()
+        navigationController.setViewControllers([UIViewController(), UIViewController(), UIViewController()], animated: false)
+        
+        self.present(navigationController, animated: true)
+        
+        let navigationCoordinator = NavigationCoordinator(navigationController)
+        self.customNavigationCoordinator = navigationCoordinator
+
+        let paymentMethodCoordinator = PaymentMethodCoordinator()
+
+        navigationCoordinator.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+            self?.customNavigationCoordinator = nil
+            // result is PaymentMethodScreenResult
+        }
     }
 }

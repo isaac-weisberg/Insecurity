@@ -115,6 +115,10 @@ viewController.onNewPaymentMethodRequested = {
 
 > ⚠️ **Note the `weak viewController`. Be careful not to create any retain cycles.**
 
+## Starting a WindowCoordinator
+
+
+
 # Philosophy
 
 A process of showing a screen is an inherently functional operation. A classical Coordinator Tree implementation centers around a tree of objects. Parent coordinator retains the child coordinator, and so on and so forth. This tree can be freely traversed, usually for deeplinking propagation. However, the OOP-based model of Coordinator Tree doesn't advise anything on the event propagation, nor is it concerned with the quirks of using the navigation facilities of UIKit. And with this, comes an immense variety in visions of how the navigation is supposed to be performed.
@@ -130,7 +134,7 @@ So, all in all, no `RxSwift` this time around. Though it's very compatible with 
 # Development
 
 1. Clone the repo
-2. `bundle config --set path vendor/bundle`
-3. `bundle install`, make sure your Xcode can be found at `/Applications/Xcode.app`, otherwise the "ffi" package native extensions required by CocoaPods won't compile
-4. `bundle exec pod install`
-5. `open Insecurity.xcworkspace`
+1. `bundle config --set path vendor/bundle`
+1. `bundle install`, make sure your Xcode can be found at `/Applications/Xcode.app`, otherwise the "ffi" package native extensions required by CocoaPods won't compile
+1. `bundle exec pod install`
+1. `open Insecurity.xcworkspace`

@@ -20,54 +20,48 @@ class GalleryCoordinator: InsecurityChild<Void> {
         
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
 //            let modalCoordinator = ModalCoordinator(galleryViewController)
-//
-//            let currencySelectionCoordinator = CurrencySelectionCoordinator()
-//
 //            self.customModalCoordinator = modalCoordinator
 //
-//            modalCoordinator.start(currencySelectionCoordinator, animated: true) { result in
+//            let paymentMethodCoordinator = PaymentMethodCoordinator()
+//
+//            modalCoordinator.start(paymentMethodCoordinator, animated: true) { result in
 //                self.customModalCoordinator = nil
-//                switch result {
-//                case .normal(let currencySelection):
-//                    break
-//                case .dismissed:
-//                    break
-//                }
+//                // result is PaymentMethodScreenResult
 //            }
 //        }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let genericCoordinator = GenericChild(
-                .start(
-                    GenericChild(.start(
-                            GenericChild(.startNavigation(
-                                    GenericChild(.start(
-                                            GenericChild(.start(
-                                                    GenericChild(.startModal(
-                                                            GenericChild(.start(
-                                                                GenericChild(.startNavigation(
-                                                                    GenericChild(.start(
-                                                                        GenericChild(.start(
-                                                                            GenericChild(.startNavigation(
-                                                                                GenericChild(.start(
-                                                                                    GenericChild(.finish)
-                                                                                ))
-                                                                            ))
-                                                                        ))
-                                                                    ))
-                                                                ))
-                                                            ), .nothing)
-                                                        ))
-                                                ))
-                                    ))
-                                ))
-                        ))
-                ))
-
-            self.navigation.start(genericCoordinator, animated: true) { result in
-                print("End GenericChild root \(result)")
-            }
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//            let genericCoordinator = GenericChild(
+//                .start(
+//                    GenericChild(.start(
+//                            GenericChild(.startNavigation(
+//                                    GenericChild(.start(
+//                                            GenericChild(.start(
+//                                                    GenericChild(.startModal(
+//                                                            GenericChild(.start(
+//                                                                GenericChild(.startNavigation(
+//                                                                    GenericChild(.start(
+//                                                                        GenericChild(.start(
+//                                                                            GenericChild(.startNavigation(
+//                                                                                GenericChild(.start(
+//                                                                                    GenericChild(.finish)
+//                                                                                ))
+//                                                                            ))
+//                                                                        ))
+//                                                                    ))
+//                                                                ))
+//                                                            ), .nothing)
+//                                                        ))
+//                                                ))
+//                                    ))
+//                                ))
+//                        ))
+//                ))
+//
+//            self.navigation.start(genericCoordinator, animated: true) { result in
+//                print("End GenericChild root \(result)")
+//            }
+//        }
         
         return galleryViewController
     }
