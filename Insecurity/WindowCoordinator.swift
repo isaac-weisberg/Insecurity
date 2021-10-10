@@ -118,4 +118,25 @@ open class WindowCoordinator: WindowCoordinatorAny {
             completion(.normal(result))
         }
     }
+    
+    public func start<NewResult>(_ child: InsecurityChild<NewResult>,
+                                 duration: TimeInterval? = nil,
+                                 options: UIView.AnimationOptions? = nil,
+                                 _ completion: @escaping (NewResult) -> Void) {
+        
+        startModal(child, duration: duration, options: options) { result in
+            completion(result)
+        }
+    }
+    
+    
+    public func start<NewResult>(_ navigationController: UINavigationController,
+                                 _ initialChild: InsecurityChild<NewResult>,
+                                 duration: TimeInterval? = nil,
+                                 options: UIView.AnimationOptions? = nil,
+                                 _ completion: @escaping (NewResult) -> Void) {
+        startNavigation(navigationController, initialChild, duration: duration, options: options) { result in
+            completion(result)
+        }
+    }
 }

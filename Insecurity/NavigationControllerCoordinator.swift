@@ -6,13 +6,13 @@ public protocol NavigationCoordinatorAny: InsecurityNavigation {
                                _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
     func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
-                                   animated: Bool,
-                                   _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+                               animated: Bool,
+                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
     func startNewNavigation<NewResult>(_ navigationController: UINavigationController,
-                                        _ initialChild: InsecurityChild<NewResult>,
-                                        animated: Bool,
-                                        _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+                                       _ initialChild: InsecurityChild<NewResult>,
+                                       animated: Bool,
+                                       _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
     func startOverTop<NewResult>(_ child: InsecurityChild<NewResult>,
                                  animated: Bool,
@@ -182,8 +182,8 @@ public class NavigationCoordinator: NavigationCoordinatorAny {
     }
     
     public func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
-                                          animated: Bool,
-                                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                      animated: Bool,
+                                      _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         let modalCoordinator = self.asModalCoordinator()
         
         modalCoordinator.startChild(child, animated: animated) { result in
@@ -192,9 +192,9 @@ public class NavigationCoordinator: NavigationCoordinatorAny {
     }
     
     public func startNewNavigation<NewResult>(_ navigationController: UINavigationController,
-                                               _ initialChild: InsecurityChild<NewResult>,
-                                               animated: Bool,
-                                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                              _ initialChild: InsecurityChild<NewResult>,
+                                              animated: Bool,
+                                              _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         let modalCoordinator = self.asModalCoordinator()
         
         modalCoordinator.startNavigation(navigationController, initialChild, animated: animated) { result in
