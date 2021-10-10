@@ -42,6 +42,11 @@
 		A377B593271391A200A4331B /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B592271391A200A4331B /* ApplicationCoordinator.swift */; };
 		A377B596271391DA00A4331B /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B595271391DA00A4331B /* MainViewController.swift */; };
 		A377B5982713922400A4331B /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5972713922400A4331B /* MainCoordinator.swift */; };
+		A377B59B27139A2800A4331B /* PaymentMethodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B59A27139A2800A4331B /* PaymentMethodViewController.swift */; };
+		A377B59D27139A4200A4331B /* PaymentMethodCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B59C27139A4200A4331B /* PaymentMethodCoordinator.swift */; };
+		A377B59F27139A6600A4331B /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B59E27139A6600A4331B /* PaymentMethod.swift */; };
+		A377B5A227139C6000A4331B /* AddPaymentMethodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5A127139C6000A4331B /* AddPaymentMethodViewController.swift */; };
+		A377B5A427139CB700A4331B /* AddPaymentMethodCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5A327139CB700A4331B /* AddPaymentMethodCoordinator.swift */; };
 		A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37991292702659600550B8E /* WindowCoordinator.swift */; };
 		A379912C27026E3A00550B8E /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A379912B27026E3A00550B8E /* ApplicationCoordinator.swift */; };
 		A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382532F27007EA900FBC6DC /* GalleryViewController.swift */; };
@@ -130,6 +135,11 @@
 		A377B592271391A200A4331B /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
 		A377B595271391DA00A4331B /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		A377B5972713922400A4331B /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
+		A377B59A27139A2800A4331B /* PaymentMethodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodViewController.swift; sourceTree = "<group>"; };
+		A377B59C27139A4200A4331B /* PaymentMethodCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodCoordinator.swift; sourceTree = "<group>"; };
+		A377B59E27139A6600A4331B /* PaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
+		A377B5A127139C6000A4331B /* AddPaymentMethodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodViewController.swift; sourceTree = "<group>"; };
+		A377B5A327139CB700A4331B /* AddPaymentMethodCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodCoordinator.swift; sourceTree = "<group>"; };
 		A37991292702659600550B8E /* WindowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowCoordinator.swift; sourceTree = "<group>"; };
 		A379912B27026E3A00550B8E /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
 		A382532F27007EA900FBC6DC /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
@@ -224,6 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				A3677F46270CE038003AC3E6 /* CurrencySelection.swift */,
+				A377B59E27139A6600A4331B /* PaymentMethod.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -305,9 +316,29 @@
 			path = Workflows;
 			sourceTree = "<group>";
 		};
+		A377B59927139A1900A4331B /* PaymentMethod */ = {
+			isa = PBXGroup;
+			children = (
+				A377B59A27139A2800A4331B /* PaymentMethodViewController.swift */,
+				A377B59C27139A4200A4331B /* PaymentMethodCoordinator.swift */,
+			);
+			path = PaymentMethod;
+			sourceTree = "<group>";
+		};
+		A377B5A027139C5400A4331B /* AddPaymentMethod */ = {
+			isa = PBXGroup;
+			children = (
+				A377B5A127139C6000A4331B /* AddPaymentMethodViewController.swift */,
+				A377B5A327139CB700A4331B /* AddPaymentMethodCoordinator.swift */,
+			);
+			path = AddPaymentMethod;
+			sourceTree = "<group>";
+		};
 		A382532D27007E8A00FBC6DC /* Workflows */ = {
 			isa = PBXGroup;
 			children = (
+				A377B5A027139C5400A4331B /* AddPaymentMethod */,
+				A377B59927139A1900A4331B /* PaymentMethod */,
 				A377B5712713858300A4331B /* LongChain */,
 				A3383BC4270E42FE006982B1 /* ParentSample */,
 				A3677F40270CDFDB003AC3E6 /* CurrencySelection */,
@@ -660,13 +691,17 @@
 				A377B5732713859300A4331B /* GenericViewController.swift in Sources */,
 				A3677F47270CE038003AC3E6 /* CurrencySelection.swift in Sources */,
 				A3683FC52700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift in Sources */,
+				A377B59D27139A4200A4331B /* PaymentMethodCoordinator.swift in Sources */,
+				A377B5A227139C6000A4331B /* AddPaymentMethodViewController.swift in Sources */,
 				A382534227008DEE00FBC6DC /* CartCoordinator.swift in Sources */,
 				A38253472700906100FBC6DC /* PaymentCoordinator.swift in Sources */,
 				A3825339270086CF00FBC6DC /* ProductCoordinator.swift in Sources */,
 				A3683FC12700FBCC0048B3CF /* LoginSMSCodeViewController.swift in Sources */,
 				A38253372700817C00FBC6DC /* ProductViewController.swift in Sources */,
+				A377B5A427139CB700A4331B /* AddPaymentMethodCoordinator.swift in Sources */,
 				A35A78252709EFFB00256FBD /* ScoringViewController.swift in Sources */,
 				A3683FC32700FC3F0048B3CF /* LoginPhoneCoordinator.swift in Sources */,
+				A377B59F27139A6600A4331B /* PaymentMethod.swift in Sources */,
 				A3677F42270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift in Sources */,
 				A382534027008C7F00FBC6DC /* CartViewController.swift in Sources */,
 				A3677F4C270CE796003AC3E6 /* CurrencyView.swift in Sources */,
@@ -685,6 +720,7 @@
 				A3677F4A270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift in Sources */,
 				A3677F44270CE024003AC3E6 /* CurrencySelectionViewController.swift in Sources */,
 				A370FB642706775200D5EF51 /* DebugViewCoordinator.swift in Sources */,
+				A377B59B27139A2800A4331B /* PaymentMethodViewController.swift in Sources */,
 				A377B5772713862900A4331B /* GenericChild.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

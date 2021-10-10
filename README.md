@@ -14,8 +14,10 @@ You can use it alongside any of your existing navigation solutions.
 
 # Installation
 
-Currently, only CocoaPods is supported. The minimum required iOS version is iOS 12, but it probably could run on iOS 8. This framework doesn't depend on anything.
-
+Currently, only CocoaPods is supported.
+Minimum iOS version: 12.0
+Minimum Xcode version: 12.0
+This framework has no dependencies.
 
 ```ruby
 pod 'Insecurity'
@@ -23,25 +25,23 @@ pod 'Insecurity'
 
 # Getting Started
 
-We start with having a "Select Currency" screen.
-The screen will emit an event when the user selects a currency.
-Once the selection is made, we need to close the screen.
+We start with a "Select Payment Method" screen.  
+The screen will emit an event when the user presses Done button.  
+Once it happens, we need to close the screen.
 
-<img src="./docs/img/select_currency.jpg" width="350">
-
-We do this by subclassing `ModachildCoordinator`.
+We do this by subclassing `InsecurityChild`.
 
 ```swift
-struct CurrencySelection {
-    let currencyCode: String
+struct PaymentMethodScreenResult {
+    let paymentMethodChanged: Bool
 }
 
-class CurrencySelectionCoordinator: ModachildCoordinator<CurrencySelection> {
+class PaymentMethodCoordinator: InsecurityChild<PaymentMethodScreenResult> {
     override var viewController: UIViewController {
-        let viewController = CurrencySelectionViewController()
+        let viewController = PaymentMethodViewController()
         
-        viewController.onCurrencySelected = { selection in
-            self.finish(selection)
+        viewController.onDone = { result in
+            self.finish(result)
         }
         
         return viewController
@@ -49,143 +49,71 @@ class CurrencySelectionCoordinator: ModachildCoordinator<CurrencySelection> {
 }
 ```
 
-Then, we can start this coordinator from another `UIViewController`. We do this by creating an instance of `ModarollerCoordinator`.
+## Showing a new screen
+
+Then when a user presses "Add Payment Method" button, we need to open a next screen.  
+This screen will be "Create a new payment method".  
+Once it's finished, we need to notify the "Select Payment Method" screen of its creation.  
+
+Here is a coordinator for Add Payment Method screen.
+
 ```swift
-class ParentViewController: UIViewController {
-    func startCurrencySelection() {
-        let modaroller = ModarollerCoordinator(galleryViewController)
-            
-        let currencySelectionCoordinator = CurrencySelectionCoordinator()
-        
-        modaroller.start(currencySelectionCoordinator, animated: true) { result in
-            // The view controller was presented and dismissed automatically
-            // `result` here is the currency that was selected
-        }
-    }
+struct PaymentMethod {
+    let cardNumber: String
 }
-```
 
-We have just called the method `ModarollerCoordinator.start`, and we passed a closure, that will receive the result of running the child coordinator. Additinally, you should know that all the required calls to the `present`/`dismiss` are handled for you.
-
-However, in iOS 13 you can simply swipe down a modally presented view controller and it sorta just dies. What happens if user dismisses the `CurrencySelectionViewController` using a gesture? 
-
-Well, we handle that for you.
-
-```swift
-class ParentViewController: UIViewController {
-    func startCurrencySelection() {
-        let modaroller = ModarollerCoordinator(galleryViewController)
-            
-        let currencySelectionCoordinator = CurrencySelectionCoordinator()
-        
-        modaroller.start(currencySelectionCoordinator, animated: true) { result in
-            switch result {
-            case .normal(let currencySelection):
-                // Controller was dismissed after user has chosen a currency.
-                // `currencySelection` has the actual type `CurrencySelection`
-            case .dismissed:
-                // Controller was dismissed using a gesture 
-                // before any result was selected
-                // You can handle it in a separate way
-            }
-        }
-    }
-}
-```
-
-When you get the result, you don't instantly get the result of `CurrencySelectionCoordinator`, the `CurrencySelection`. What you get instead is this:
-```swift
-enum CoordinatorResult<NormalResult> {
-    case normal(NormalResult)
-    case dismissed
-}
-```
-
-If the `UIViewController` managed by the coordinator is dismissed before a `finish` was called, we don't have the actual result of the coordinator, so you receive the `dismissed` result. This also means that there is an important rule:
-
-> ⚠️ **One coordinator == one `UIViewController` that it manages, no more no less**
-
-There is one more thing before we move on: in order to make this code actually work, we need to **retain** the `ModarollerCoordinator` and release it when we're done. Here is the valid and final code:
-
-```swift
-class ParentViewController: UIViewController {
-    var customModaroller: ModarollerCoordinator?
-
-    func startCurrencySelection() {
-        let modaroller = ModarollerCoordinator(self)
-            
-        let currencySelectionCoordinator = CurrencySelectionCoordinator()
-
-        self.customModaroller = modaroller // Save the modaroller
-        
-        modaroller.start(currencySelectionCoordinator, animated: true) { [weak self] result in
-            // Release the modaroller, don't forget to `weak self`
-            self?.customModaroller = nil
-            switch result {
-            case .normal(let currencySelection):
-                break
-            case .dismissed:
-                break
-            }
-        }
-    }
-}
-```
-
-## Starting a coordinator from another coordinator
-
-Let's imagine that `ParentViewController` now also has a coordinator.
-
-```swift
-// We are using Never because we never call `finish` here, makes sense, right?
-class ParentCoordinator: ModachildCoordinator<Never> {
+class AddPaymentMethodCoordinator: InsecurityChild<PaymentMethod> {
     override var viewController: UIViewController {
-        let parentViewController = ParentViewController()
+        let addPaymentMethodViewController = AddPaymentMethodViewController()
         
-        return parentViewController
+        addPaymentMethodViewController.onPaymentMethodAdded = { paymentMethod in
+            self.finish(paymentMethod)
+        }
+        
+        return addPaymentMethodViewController
     }
 }
 ```
 
-Before, we used to create our own `ModarollerCoordinator` in order to show a `ModachildCoordinator`. But now that we are already operating from the context of an existing coordinator, we can find the `ModarollerCoordinator` on the `self`!
+And here is how we start it from `PaymentMethodCoordinator`:
 
 ```swift
-parentViewController.onCurrencySelectionRequested = {
-    let currencySelectionCoordinator = CurrencySelectionCoordinator()
+viewController.onNewPaymentMethodRequested = {
+    let addPaymentMethodCoordinator = AddPaymentMethodCoordinator()
     
-    self.modaroller.start(currencySelectionCoordinator,
-                          animated: true) { result in
-        
+    self.navigation.start(addPaymentMethodCoordinator, animated: true) { result in
+        // `result` is the PaymentMethod
+    }
+}
+```
+
+**Important part:** in iOS 13 user can also dismiss the screen by swiping it down using a gesture.  
+Insecurity framework handles this situation automatically.  
+
+The `result` you receive in the code will be:
+- `.dismissed` if the screen is dismissed by gesture
+- `.normal(PaymentMethod)` if the coordinator calls `finish`
+
+Here is the final code:
+
+```swift
+viewController.onNewPaymentMethodRequested = {
+    let addPaymentMethodCoordinator = AddPaymentMethodCoordinator()
+    
+    self.navigation.start(addPaymentMethodCoordinator, animated: true) { [weak viewController] result in
         switch result {
-        case .normal(let currencySelection):
-            // Good old currencySelection result
-            break
+        case .normal(let paymentMethod):
+            // User has added a new payment method
+            viewController?.handleNewPaymentMethodAdded(paymentMethod)
         case .dismissed:
+            // User dismissed the screen, nothing to do
             break
         }
     }
 }
 ```
 
-You see?! `self.modaroller` and `self.finish` are the only two things that you will need! One will help you to start new coordinators, and one will help you kill the existing one!
-
-> ⚠️ **Never retain the viewController on the Coordinator. This breaks dismissal detection mechanism.**
-
-# Naming Quick Lookup
-
-ModarollerCoordinator = **Moda**l Chain Presentation View Cont**roller Coordinator**
-
-NavitrollerCoordinator = **Navi**gation Con**troller** Presentation **Coordinator**
-
-Child = Child
-
-Navigation method|Parent|Child
----|---|---
-Modal presentation|`ModarollerCoordinator`|`ModachildCoordinator`
-`UINavigationControler`|`NavitrollerCoordinator`|`NavichildCoordinator`
-`UIWindow`|`WindowCoordinator`| No child version, `Modachild` is used instead
-
-Actually, I probably should create an API that will allow to use this stuff in a generalized way.
+> ⚠️ **Note the `weak viewController`. Be careful not to create any retain cycles.**
 
 # Philosophy
 
