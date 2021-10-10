@@ -25,7 +25,7 @@ class CartViewController: UIViewController {
         ])
         
         payButLoginFirstButton.translatesAutoresizingMaskIntoConstraints = false
-        payButLoginFirstButton.setTitle("Pay but loging first", for: .normal)
+        payButLoginFirstButton.setTitle("Pay but log in first", for: .normal)
         view.addSubview(payButLoginFirstButton)
         payButLoginFirstButton.addTarget(self, action: #selector(onPayButLogingFirstButtonTap), for: .touchUpInside)
         NSLayoutConstraint.activate([

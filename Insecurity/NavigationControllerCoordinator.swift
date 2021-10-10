@@ -1,8 +1,6 @@
 import UIKit
 
-internal let navigationControllerRootIsAssignedWithAnimation = true
-
-public protocol NavitrollerCoordinatorAny: InsecurityNavigation {
+public protocol NavigationCoordinatorAny: InsecurityNavigation {
     func startChild<NewResult>(_ child: InsecurityChild<NewResult>,
                                animated: Bool,
                                _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
@@ -11,7 +9,7 @@ public protocol NavitrollerCoordinatorAny: InsecurityNavigation {
                                    animated: Bool,
                                    _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
-    func startNewNavitroller<NewResult>(_ navigationController: UINavigationController,
+    func startNewNavigation<NewResult>(_ navigationController: UINavigationController,
                                         _ initialChild: InsecurityChild<NewResult>,
                                         animated: Bool,
                                         _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
@@ -21,7 +19,7 @@ public protocol NavitrollerCoordinatorAny: InsecurityNavigation {
                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
 }
 
-public class NavitrollerCoordinator: NavitrollerCoordinatorAny {
+public class NavigationCoordinator: NavigationCoordinatorAny {
     weak var navigationController: UINavigationController?
     
     public init(_ navigationController: UINavigationController) {
@@ -150,7 +148,7 @@ public class NavitrollerCoordinator: NavitrollerCoordinatorAny {
         weak var weakController: UIViewController?
         child._finishImplementation = { [weak self, weak child] (result: NewResult) in
             guard let self = self else {
-                assertionFailure("NavitrollerCoordinator wasn't properly retained. Make sure you save it somewhere before starting any children.")
+                assertionFailure("NavigationCoordinator wasn't properly retained. Make sure you save it somewhere before starting any children.")
                 return
             }
             guard let child = child else { return }
@@ -186,20 +184,20 @@ public class NavitrollerCoordinator: NavitrollerCoordinatorAny {
     public func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
                                           animated: Bool,
                                           _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        let modaroller = self.asModarollerCoordinator()
+        let modalCoordinator = self.asModalCoordinator()
         
-        modaroller.startChild(child, animated: animated) { result in
+        modalCoordinator.startChild(child, animated: animated) { result in
             completion(result)
         }
     }
     
-    public func startNewNavitroller<NewResult>(_ navigationController: UINavigationController,
+    public func startNewNavigation<NewResult>(_ navigationController: UINavigationController,
                                                _ initialChild: InsecurityChild<NewResult>,
                                                animated: Bool,
                                                _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        let modaroller = self.asModarollerCoordinator()
+        let modalCoordinator = self.asModalCoordinator()
         
-        modaroller.startNavitroller(navigationController, initialChild, animated: animated) { result in
+        modalCoordinator.startNavigation(navigationController, initialChild, animated: animated) { result in
             completion(result)
         }
     }
@@ -210,24 +208,24 @@ public class NavitrollerCoordinator: NavitrollerCoordinatorAny {
     }
 #endif
     
-    var modaroller: ModarollerCoordinator?
-    func asModarollerCoordinator() -> ModarollerCoordinator {
-        if let modaroller = modaroller {
-            return modaroller
+    var _modalCoordinator: ModalCoordinator?
+    func asModalCoordinator() -> ModalCoordinator {
+        if let modalCoordinator = _modalCoordinator {
+            return modalCoordinator
         }
         
-        let modaroller = ModarollerCoordinator(optionalHost: navigationController)
-        self.modaroller = modaroller
+        let modalCoordinator = ModalCoordinator(optionalHost: navigationController)
+        self._modalCoordinator = modalCoordinator
         
-        return modaroller
+        return modalCoordinator
     }
     
     public func startOverTop<NewResult>(_ child: InsecurityChild<NewResult>,
                                         animated: Bool,
                                         _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        let modaroller = self.asModarollerCoordinator()
+        let modalCoordinator = self.asModalCoordinator()
         
-        modaroller.startOverTop(child, animated: animated) { result in
+        modalCoordinator.startOverTop(child, animated: animated) { result in
             completion(result)
         }
     }
@@ -246,7 +244,7 @@ public class NavitrollerCoordinator: NavitrollerCoordinatorAny {
                                  _ child: InsecurityChild<NewResult>,
                                  animated: Bool,
                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        self.startNewNavitroller(navigationController, child, animated: animated) { result in
+        self.startNewNavigation(navigationController, child, animated: animated) { result in
             completion(result)
         }
     }

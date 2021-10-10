@@ -19,14 +19,14 @@ class GalleryCoordinator: InsecurityChild<Void> {
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let modaroller = ModarollerCoordinator(galleryViewController)
+            let modalCoordinator = ModalCoordinator(galleryViewController)
             
             let currencySelectionCoordinator = CurrencySelectionCoordinator()
             
-            self.customModaroller = modaroller
+            self.customModalCoordinator = modalCoordinator
             
-            modaroller.start(currencySelectionCoordinator, animated: true) { result in
-                self.customModaroller = nil
+            modalCoordinator.start(currencySelectionCoordinator, animated: true) { result in
+                self.customModalCoordinator = nil
                 switch result {
                 case .normal(let currencySelection):
                     break
@@ -39,7 +39,7 @@ class GalleryCoordinator: InsecurityChild<Void> {
         return galleryViewController
     }
     
-    var customModaroller: ModarollerCoordinatorAny?
+    var customModalCoordinator: ModalCoordinatorAny?
     
     let di: DI
     

@@ -24,8 +24,8 @@ open class WindowCoordinator: WindowCoordinatorAny {
         self.window = window
     }
     
-    var navitrollerChild: NavitrollerCoordinatorAny?
-    var modarollerChild: ModarollerCoordinatorAny?
+    var navigationCoordinatorChild: NavigationCoordinatorAny?
+    var modalCoordinatorChild: ModalCoordinatorAny?
     
     public func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
                                       duration: TimeInterval? = nil,
@@ -37,14 +37,14 @@ open class WindowCoordinator: WindowCoordinatorAny {
         }
         
         let controller = child.viewController
-        let modaroller = ModarollerCoordinator(controller)
-        child._navigation = modaroller
+        let modalCoordinator = ModalCoordinator(controller)
+        child._navigation = modalCoordinator
         child._finishImplementation = { [weak self] result in
-            self?.modarollerChild = nil
+            self?.modalCoordinatorChild = nil
             completion(result)
         }
-        self.navitrollerChild = nil // Just in case...
-        self.modarollerChild = modaroller
+        self.navigationCoordinatorChild = nil // Just in case...
+        self.modalCoordinatorChild = modalCoordinator
         
         window.rootViewController = controller
         
@@ -67,18 +67,18 @@ open class WindowCoordinator: WindowCoordinatorAny {
             return
         }
         
-        let navitroller = NavitrollerCoordinator(navigationController)
+        let navigationCoordinator = NavigationCoordinator(navigationController)
         
-        initialChild._navigation = navitroller
+        initialChild._navigation = navigationCoordinator
         initialChild._finishImplementation = { [weak self] result in
-            self?.navitrollerChild = nil
+            self?.navigationCoordinatorChild = nil
             completion(result)
         }
         
-        navigationController.setViewControllers([ initialChild.viewController ], animated: navigationControllerRootIsAssignedWithAnimation)
+        navigationController.setViewControllers([ initialChild.viewController ], animated: Insecurity.navigationControllerRootIsAssignedWithAnimation)
         
-        self.modarollerChild = nil // Just in case...
-        self.navitrollerChild = navitroller
+        self.modalCoordinatorChild = nil // Just in case...
+        self.navigationCoordinatorChild = navigationCoordinator
         
         window.rootViewController = navigationController
         
@@ -100,16 +100,16 @@ open class WindowCoordinator: WindowCoordinatorAny {
     public func startOverTop<NewResult>(_ child: InsecurityChild<NewResult>,
                                         animated: Bool,
                                         _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        if let navitrollerChild = navitrollerChild {
-            assert(modarollerChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
-            navitrollerChild.startOverTop(child, animated: animated) { result in
+        if let navigationCoordinatorChild = navigationCoordinatorChild {
+            assert(modalCoordinatorChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
+            navigationCoordinatorChild.startOverTop(child, animated: animated) { result in
                 completion(result)
             }
             return
         }
-        if let modarollerChild = modarollerChild {
-            assert(navitrollerChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
-            modarollerChild.startOverTop(child, animated: animated) { result in
+        if let modalCoordinatorChild = modalCoordinatorChild {
+            assert(navigationCoordinatorChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
+            modalCoordinatorChild.startOverTop(child, animated: animated) { result in
                 completion(result)
             }
             return

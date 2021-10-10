@@ -1,7 +1,7 @@
 import UIKit
 
-public protocol ModarollerCoordinatorAny: InsecurityNavigation {
-    func startNavitroller<NewResult>(_ navigationController: UINavigationController,
+public protocol ModalCoordinatorAny: InsecurityNavigation {
+    func startNavigation<NewResult>(_ navigationController: UINavigationController,
                                      _ child: InsecurityChild<NewResult>,
                                      animated: Bool,
                                      _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
@@ -15,7 +15,7 @@ public protocol ModarollerCoordinatorAny: InsecurityNavigation {
                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
 }
 
-public class ModarollerCoordinator: ModarollerCoordinatorAny {
+public class ModalCoordinator: ModalCoordinatorAny {
     weak var host: UIViewController?
     
     public init(_ host: UIViewController) {
@@ -91,7 +91,7 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
                     controllerToDismissFrom = nil
                 }
             } else {
-                print("Modaroller child is supposed to dismiss his content, but instead turns out he's dead")
+                print("ModalCoordinator child is supposed to dismiss his content, but instead turns out he's dead")
                 controllerToDismissFrom = nil
             }
         } else {
@@ -212,25 +212,25 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
         }
     }
     
-    public func startNavitroller<NewResult>(_ navigationController: UINavigationController,
-                                            _ child: InsecurityChild<NewResult>,
+    public func startNavigation<NewResult>(_ navigationController: UINavigationController,
+                                            _ initialChild: InsecurityChild<NewResult>,
                                             animated: Bool,
                                             _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        let navitrollerCoordinator = NavitrollerCoordinator(navigationController)
-        let navitrollerChild = InsecurityChildWithNavitroller<NewResult>(navitrollerCoordinator, navigationController)
+        let navigationCoordinator = NavigationCoordinator(navigationController)
+        let navigationChild = InsecurityChildWithNavigationCoordinator<NewResult>(navigationCoordinator, navigationController)
         
-        child._navigation = navitrollerCoordinator
-        child._finishImplementation = { [weak navitrollerChild] result in
-            if let navitrollerChild = navitrollerChild {
-                navitrollerChild.finish(result)
+        initialChild._navigation = navigationCoordinator
+        initialChild._finishImplementation = { [weak navigationChild] result in
+            if let navigationChild = navigationChild {
+                navigationChild.finish(result)
             } else {
-                assertionFailure("Navigation Controller child has called finish way before we could initialize the coordinator or after when it has already completed")
+                assertionFailure("NavigationCoordinator child has called finish way before we could initialize the coordinator or after it has already completed")
             }
         }
-        navigationController.setViewControllers([ child.viewController ], animated: navigationControllerRootIsAssignedWithAnimation)
+        navigationController.setViewControllers([ initialChild.viewController ], animated: Insecurity.navigationControllerRootIsAssignedWithAnimation)
         
-        self.startChild(navitrollerChild, animated: animated) { modarollerResult in
-            completion(modarollerResult)
+        self.startChild(navigationChild, animated: animated) { modalCoordinatorResult in
+            completion(modalCoordinatorResult)
         }
     }
     
@@ -256,7 +256,7 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
         weak var weakController: UIViewController?
         child._finishImplementation = { [weak self, weak child] result in
             guard let self = self else {
-                assertionFailure("ModarollerCoordinator wasn't properly retained. Make sure you save it somewhere before starting any children.")
+                assertionFailure("ModalCoordinator wasn't properly retained. Make sure you save it somewhere before starting any children.")
                 return
             }
             guard let child = child else { return }
@@ -308,7 +308,7 @@ public class ModarollerCoordinator: ModarollerCoordinatorAny {
                                  _ child: InsecurityChild<NewResult>,
                                  animated: Bool,
                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        self.startNavitroller(navigationController, child, animated: animated) { result in
+        self.startNavigation(navigationController, child, animated: animated) { result in
             completion(result)
         }
     }

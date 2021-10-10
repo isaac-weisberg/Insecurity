@@ -32,18 +32,18 @@ open class InsecurityChild<Result>: InsecurityChildAny {
     }
 }
 
-class InsecurityChildWithNavitroller<Result>: InsecurityChild<Result> {
-    let navitrollerChild: NavitrollerCoordinator?
+class InsecurityChildWithNavigationCoordinator<Result>: InsecurityChild<Result> {
+    let navigationCoordinatorChild: NavigationCoordinator?
     weak var _storedViewController: UIViewController?
     
     override var viewController: UIViewController {
         return _storedViewController!
     }
     
-    init(_ navitrollerChild: NavitrollerCoordinator,
+    init(_ navigationCoordinatorChild: NavigationCoordinator,
          _ _storedViewController: UIViewController?) {
         
-        self.navitrollerChild = navitrollerChild
+        self.navigationCoordinatorChild = navigationCoordinatorChild
         self._storedViewController = _storedViewController
     }
 }
