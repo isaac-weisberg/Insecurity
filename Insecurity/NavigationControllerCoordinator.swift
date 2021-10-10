@@ -85,11 +85,11 @@ public class NavigationCoordinator: NavigationCoordinatorAny {
     }
     
     func purgeOnDealloc(_ child: InsecurityChildAny) {
-        let index = navData.firstIndex { navData in
+        let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
         
-        guard let index = index else {
+        guard let index = indexOpt else {
             assertionFailure("Finalizing non-existing child")
             return
         }
@@ -119,11 +119,11 @@ public class NavigationCoordinator: NavigationCoordinatorAny {
     }
     
     func finalize(_ child: InsecurityChildAny) {
-        let index = navData.firstIndex { navData in
+        let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
         
-        guard let index = index else {
+        guard let index = indexOpt else {
             assertionFailure("Finalizing non-existing child. Maybe it's too early to call the completion of the coordinator? Or it's a bug...")
             return
         }

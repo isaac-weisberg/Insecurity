@@ -11,7 +11,7 @@ class ScoringViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemMintCompat
+        view.backgroundColor = .systemIndigoCompat
         
         navigationItem.title = "Scoring Form"
         

@@ -9,19 +9,19 @@ extension UIColor {
         }
     }
     
-    static var systemBrownCompat: UIColor {
+    static var systemTealCompat: UIColor {
         if #available(iOS 13.0, *) {
-            return .systemBrown
+            return .systemTeal
         } else {
-            return .brown
+            return UIColor(red: 0, green: 0.502, blue: 0.502, alpha: 1.0)
         }
     }
     
-    static var systemMintCompat: UIColor {
-        if #available(iOS 15.0, *) {
-            return .systemMint
+    static var systemIndigoCompat: UIColor {
+        if #available(iOS 13.0, *) {
+            return .systemIndigo
         } else {
-            return UIColor(red: 0, green: 0.8667, blue: 0.7216, alpha: 1.0) // or whatever...
+            return UIColor(red: 0.2941, green: 0, blue: 0.5098, alpha: 1.0)
         }
     }
 }

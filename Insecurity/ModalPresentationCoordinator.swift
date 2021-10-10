@@ -127,11 +127,11 @@ public class ModalCoordinator: ModalCoordinatorAny {
     }
     
     func finalize(_ child: InsecurityChildAny) {
-        let index = navData.firstIndex { navData in
+        let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
         
-        guard let index = index else {
+        guard let index = indexOpt else {
             assertionFailure("Finalizing non-existing child. Maybe it's too early to call the completion of the coordinator? Or it's a bug...")
             return
         }
@@ -141,11 +141,11 @@ public class ModalCoordinator: ModalCoordinatorAny {
     }
     
     func purgeOnDealloc(_ child: InsecurityChildAny) {
-        let index = navData.firstIndex { navData in
+        let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
         
-        guard let index = index else {
+        guard let index = indexOpt else {
             assertionFailure("Finalizing non-existing child")
             return
         }
@@ -176,25 +176,25 @@ public class ModalCoordinator: ModalCoordinatorAny {
     }
     
     func dispatch(_ controller: UIViewController, _ animated: Bool, _ child: InsecurityChildAny) {
-        let electedHost: UIViewController?
+        let electedHostOpt: UIViewController?
         if let topNavData = navData.last {
             if let hostController = topNavData.viewController {
                 let hostDoesntPresentAnything = hostController.presentedViewController == nil
                 if hostDoesntPresentAnything {
-                    electedHost = hostController
+                    electedHostOpt = hostController
                 } else {
                     assertionFailure("Top controller in the modal stack is already busy presenting something else, which is unexpected...")
-                    electedHost = nil
+                    electedHostOpt = nil
                 }
             } else {
                 assertionFailure("The top controller of modal stack is somehow dead")
-                electedHost = nil
+                electedHostOpt = nil
             }
         } else {
-            electedHost = self.host
+            electedHostOpt = self.host
         }
         
-        guard let electedHost = electedHost else {
+        guard let electedHost = electedHostOpt else {
             assertionFailure("No host was found to start a child")
             return
         }
