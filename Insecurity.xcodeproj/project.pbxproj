@@ -32,6 +32,9 @@
 		A370FB642706775200D5EF51 /* DebugViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370FB632706775200D5EF51 /* DebugViewCoordinator.swift */; };
 		A370FB662706780900D5EF51 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370FB652706780900D5EF51 /* Application.swift */; };
 		A370FB682706782E00D5EF51 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370FB672706782E00D5EF51 /* main.swift */; };
+		A377B5732713859300A4331B /* GenericViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5722713859300A4331B /* GenericViewController.swift */; };
+		A377B575271385BA00A4331B /* UIColor+random.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B574271385BA00A4331B /* UIColor+random.swift */; };
+		A377B5772713862900A4331B /* GenericChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5762713862900A4331B /* GenericChild.swift */; };
 		A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37991292702659600550B8E /* WindowCoordinator.swift */; };
 		A379912C27026E3A00550B8E /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A379912B27026E3A00550B8E /* ApplicationCoordinator.swift */; };
 		A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382532F27007EA900FBC6DC /* GalleryViewController.swift */; };
@@ -106,6 +109,9 @@
 		A370FB632706775200D5EF51 /* DebugViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewCoordinator.swift; sourceTree = "<group>"; };
 		A370FB652706780900D5EF51 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		A370FB672706782E00D5EF51 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		A377B5722713859300A4331B /* GenericViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericViewController.swift; sourceTree = "<group>"; };
+		A377B574271385BA00A4331B /* UIColor+random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+random.swift"; sourceTree = "<group>"; };
+		A377B5762713862900A4331B /* GenericChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericChild.swift; sourceTree = "<group>"; };
 		A37991292702659600550B8E /* WindowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowCoordinator.swift; sourceTree = "<group>"; };
 		A379912B27026E3A00550B8E /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
 		A382532F27007EA900FBC6DC /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
@@ -199,6 +205,7 @@
 			children = (
 				A3677F49270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift */,
 				A3677F4D270CEA0E003AC3E6 /* UIColor+system.swift */,
+				A377B574271385BA00A4331B /* UIColor+random.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -239,9 +246,19 @@
 			path = DebugViewController;
 			sourceTree = "<group>";
 		};
+		A377B5712713858300A4331B /* LongChain */ = {
+			isa = PBXGroup;
+			children = (
+				A377B5722713859300A4331B /* GenericViewController.swift */,
+				A377B5762713862900A4331B /* GenericChild.swift */,
+			);
+			path = LongChain;
+			sourceTree = "<group>";
+		};
 		A382532D27007E8A00FBC6DC /* Workflows */ = {
 			isa = PBXGroup;
 			children = (
+				A377B5712713858300A4331B /* LongChain */,
 				A3383BC4270E42FE006982B1 /* ParentSample */,
 				A3677F40270CDFDB003AC3E6 /* CurrencySelection */,
 				A35A78212709EF2E00256FBD /* Scoring */,
@@ -522,6 +539,7 @@
 				A370FB5F270668BD00D5EF51 /* DI.swift in Sources */,
 				A3383BC6270E430D006982B1 /* ParentViewController.swift in Sources */,
 				A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */,
+				A377B5732713859300A4331B /* GenericViewController.swift in Sources */,
 				A3677F47270CE038003AC3E6 /* CurrencySelection.swift in Sources */,
 				A3683FC52700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift in Sources */,
 				A382534227008DEE00FBC6DC /* CartCoordinator.swift in Sources */,
@@ -543,11 +561,13 @@
 				A370FB5D2706689100D5EF51 /* AuthService.swift in Sources */,
 				A382534A270091A900FBC6DC /* PaymentSuccessViewController.swift in Sources */,
 				A370FB682706782E00D5EF51 /* main.swift in Sources */,
+				A377B575271385BA00A4331B /* UIColor+random.swift in Sources */,
 				A370FB622706760600D5EF51 /* DebugViewController.swift in Sources */,
 				A379912C27026E3A00550B8E /* ApplicationCoordinator.swift in Sources */,
 				A3677F4A270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift in Sources */,
 				A3677F44270CE024003AC3E6 /* CurrencySelectionViewController.swift in Sources */,
 				A370FB642706775200D5EF51 /* DebugViewCoordinator.swift in Sources */,
+				A377B5772713862900A4331B /* GenericChild.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

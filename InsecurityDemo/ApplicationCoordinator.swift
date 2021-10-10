@@ -5,6 +5,9 @@ class ApplicationCoordinator: WindowCoordinator {
     let di = DIContainer()
     
     func start() {
+        startGallery()
+        
+        return
         if di.authService.hasCreds {
             startGallery()
         } else {
