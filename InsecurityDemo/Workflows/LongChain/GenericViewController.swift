@@ -8,11 +8,6 @@ class GenericViewController: UIViewController {
         
         view.backgroundColor = UIColor.random
         
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
         DispatchQueue.main.asyncAfter(0.10) { [weak self] in
             self?.onEvent?()
         }
