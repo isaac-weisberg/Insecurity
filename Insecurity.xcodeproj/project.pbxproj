@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6039A8D0C53204A35B9478F6 /* libPods-InsecurityPodspecTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */; };
 		A3383BC6270E430D006982B1 /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC5270E430D006982B1 /* ParentViewController.swift */; };
 		A3383BC8270E43B4006982B1 /* ParentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */; };
 		A3441880270F95C200CE49E4 /* InsecurityChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A344187F270F95C200CE49E4 /* InsecurityChild.swift */; };
@@ -35,6 +36,12 @@
 		A377B5732713859300A4331B /* GenericViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5722713859300A4331B /* GenericViewController.swift */; };
 		A377B575271385BA00A4331B /* UIColor+random.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B574271385BA00A4331B /* UIColor+random.swift */; };
 		A377B5772713862900A4331B /* GenericChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5762713862900A4331B /* GenericChild.swift */; };
+		A377B58827138FD900A4331B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A377B58727138FD900A4331B /* Assets.xcassets */; };
+		A377B58B27138FD900A4331B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A377B58927138FD900A4331B /* LaunchScreen.storyboard */; };
+		A377B59127138FFC00A4331B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B59027138FFC00A4331B /* AppDelegate.swift */; };
+		A377B593271391A200A4331B /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B592271391A200A4331B /* ApplicationCoordinator.swift */; };
+		A377B596271391DA00A4331B /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B595271391DA00A4331B /* MainViewController.swift */; };
+		A377B5982713922400A4331B /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5972713922400A4331B /* MainCoordinator.swift */; };
 		A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37991292702659600550B8E /* WindowCoordinator.swift */; };
 		A379912C27026E3A00550B8E /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A379912B27026E3A00550B8E /* ApplicationCoordinator.swift */; };
 		A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382532F27007EA900FBC6DC /* GalleryViewController.swift */; };
@@ -82,8 +89,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		07F1A30A8467E9454829BA91 /* Pods-InsecurityPodspecTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPodspecTest.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityPodspecTest/Pods-InsecurityPodspecTest.debug.xcconfig"; sourceTree = "<group>"; };
+		27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPodspecTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		54B8E663025AD7F0FACA2B0B /* Pods-InsecurityDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.release.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.release.xcconfig"; sourceTree = "<group>"; };
 		5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		9630C86ACEA183BA279A7CFE /* Pods-InsecurityPodspecTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPodspecTest.release.xcconfig"; path = "Target Support Files/Pods-InsecurityPodspecTest/Pods-InsecurityPodspecTest.release.xcconfig"; sourceTree = "<group>"; };
 		A3383BC5270E430D006982B1 /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
 		A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCoordinator.swift; sourceTree = "<group>"; };
 		A344187F270F95C200CE49E4 /* InsecurityChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsecurityChild.swift; sourceTree = "<group>"; };
@@ -112,6 +122,14 @@
 		A377B5722713859300A4331B /* GenericViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericViewController.swift; sourceTree = "<group>"; };
 		A377B574271385BA00A4331B /* UIColor+random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+random.swift"; sourceTree = "<group>"; };
 		A377B5762713862900A4331B /* GenericChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericChild.swift; sourceTree = "<group>"; };
+		A377B57C27138FD800A4331B /* InsecurityPodspecTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityPodspecTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A377B58727138FD900A4331B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A377B58A27138FD900A4331B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A377B58C27138FD900A4331B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A377B59027138FFC00A4331B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A377B592271391A200A4331B /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
+		A377B595271391DA00A4331B /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		A377B5972713922400A4331B /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		A37991292702659600550B8E /* WindowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowCoordinator.swift; sourceTree = "<group>"; };
 		A379912B27026E3A00550B8E /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
 		A382532F27007EA900FBC6DC /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
@@ -136,6 +154,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		A377B57927138FD800A4331B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6039A8D0C53204A35B9478F6 /* libPods-InsecurityPodspecTest.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A3968FDA26FF25A800B6A59B /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -160,6 +186,8 @@
 			children = (
 				BB61D608FF8A49075BF920EF /* Pods-InsecurityDemo.debug.xcconfig */,
 				54B8E663025AD7F0FACA2B0B /* Pods-InsecurityDemo.release.xcconfig */,
+				07F1A30A8467E9454829BA91 /* Pods-InsecurityPodspecTest.debug.xcconfig */,
+				9630C86ACEA183BA279A7CFE /* Pods-InsecurityPodspecTest.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -255,6 +283,28 @@
 			path = LongChain;
 			sourceTree = "<group>";
 		};
+		A377B57D27138FD800A4331B /* InsecurityPodspecTest */ = {
+			isa = PBXGroup;
+			children = (
+				A377B594271391CF00A4331B /* Workflows */,
+				A377B592271391A200A4331B /* ApplicationCoordinator.swift */,
+				A377B59027138FFC00A4331B /* AppDelegate.swift */,
+				A377B58727138FD900A4331B /* Assets.xcassets */,
+				A377B58927138FD900A4331B /* LaunchScreen.storyboard */,
+				A377B58C27138FD900A4331B /* Info.plist */,
+			);
+			path = InsecurityPodspecTest;
+			sourceTree = "<group>";
+		};
+		A377B594271391CF00A4331B /* Workflows */ = {
+			isa = PBXGroup;
+			children = (
+				A377B595271391DA00A4331B /* MainViewController.swift */,
+				A377B5972713922400A4331B /* MainCoordinator.swift */,
+			);
+			path = Workflows;
+			sourceTree = "<group>";
+		};
 		A382532D27007E8A00FBC6DC /* Workflows */ = {
 			isa = PBXGroup;
 			children = (
@@ -324,6 +374,7 @@
 			children = (
 				A3968FDF26FF25A800B6A59B /* Insecurity */,
 				A3968FEC26FF260000B6A59B /* InsecurityDemo */,
+				A377B57D27138FD800A4331B /* InsecurityPodspecTest */,
 				A3968FDE26FF25A800B6A59B /* Products */,
 				A396900126FF26CA00B6A59B /* Frameworks */,
 				3B9DCFDC184B14695D924E6C /* Pods */,
@@ -335,6 +386,7 @@
 			children = (
 				A3968FDD26FF25A800B6A59B /* Insecurity.framework */,
 				A3968FEB26FF260000B6A59B /* InsecurityDemo.app */,
+				A377B57C27138FD800A4331B /* InsecurityPodspecTest.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -376,6 +428,7 @@
 			isa = PBXGroup;
 			children = (
 				5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */,
+				27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -393,6 +446,24 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		A377B57B27138FD800A4331B /* InsecurityPodspecTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A377B58F27138FD900A4331B /* Build configuration list for PBXNativeTarget "InsecurityPodspecTest" */;
+			buildPhases = (
+				BA687BA968070F59FE71DDC4 /* [CP] Check Pods Manifest.lock */,
+				A377B57827138FD800A4331B /* Sources */,
+				A377B57927138FD800A4331B /* Frameworks */,
+				A377B57A27138FD800A4331B /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = InsecurityPodspecTest;
+			productName = InsecurityPodspecTest;
+			productReference = A377B57C27138FD800A4331B /* InsecurityPodspecTest.app */;
+			productType = "com.apple.product-type.application";
+		};
 		A3968FDC26FF25A800B6A59B /* Insecurity */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = A3968FE426FF25A800B6A59B /* Build configuration list for PBXNativeTarget "Insecurity" */;
@@ -441,6 +512,10 @@
 				LastSwiftUpdateCheck = 1300;
 				LastUpgradeCheck = 1300;
 				TargetAttributes = {
+					A377B57B27138FD800A4331B = {
+						CreatedOnToolsVersion = 13.0;
+						LastSwiftMigration = 1300;
+					};
 					A3968FDC26FF25A800B6A59B = {
 						CreatedOnToolsVersion = 13.0;
 						LastSwiftMigration = 1300;
@@ -465,11 +540,21 @@
 			targets = (
 				A3968FDC26FF25A800B6A59B /* Insecurity */,
 				A3968FEA26FF260000B6A59B /* InsecurityDemo */,
+				A377B57B27138FD800A4331B /* InsecurityPodspecTest */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		A377B57A27138FD800A4331B /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A377B58B27138FD900A4331B /* LaunchScreen.storyboard in Resources */,
+				A377B58827138FD900A4331B /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A3968FDB26FF25A800B6A59B /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -511,9 +596,42 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		BA687BA968070F59FE71DDC4 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-InsecurityPodspecTest-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		A377B57827138FD800A4331B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A377B596271391DA00A4331B /* MainViewController.swift in Sources */,
+				A377B5982713922400A4331B /* MainCoordinator.swift in Sources */,
+				A377B59127138FFC00A4331B /* AppDelegate.swift in Sources */,
+				A377B593271391A200A4331B /* ApplicationCoordinator.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A3968FD926FF25A800B6A59B /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -582,6 +700,14 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		A377B58927138FD900A4331B /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A377B58A27138FD900A4331B /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
 		A3968FF826FF260200B6A59B /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -593,6 +719,67 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		A377B58D27138FD900A4331B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 07F1A30A8467E9454829BA91 /* Pods-InsecurityPodspecTest.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InsecurityPodspecTest/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityPodspecTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A377B58E27138FD900A4331B /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9630C86ACEA183BA279A7CFE /* Pods-InsecurityPodspecTest.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InsecurityPodspecTest/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityPodspecTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		A3968FE226FF25A800B6A59B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -835,6 +1022,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		A377B58F27138FD900A4331B /* Build configuration list for PBXNativeTarget "InsecurityPodspecTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A377B58D27138FD900A4331B /* Debug */,
+				A377B58E27138FD900A4331B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		A3968FD726FF25A800B6A59B /* Build configuration list for PBXProject "Insecurity" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
