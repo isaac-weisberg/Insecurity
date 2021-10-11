@@ -12,14 +12,16 @@ Or if you already use some implementation of Coordinator Tree pattern and want t
 
 However, in the code we've written so far, you can notice that these semantics are not stated explictly. There is no way to tell if this code is supposed to be running unside a modal presentation or `UINavigationController`.
 
-The answer is that this is decided by the host coordinator!
-There are 3 classes of host coordinators.
+The answer is that this is decided by the class of the Host Coordinator that you use!
+There are 3 classes of Host Coordinators.
 
 Coordinator Type|Manages|Funtionality
 ---|---|---
 `ModalCoordinator`|`UIViewController`|Starts its children inside a modal presentation chain of the managed controller
 `NavigationCoordinator`|`UINavigationController`|Starts its children inside a `UINavigationController`
 `WindowCoordinator`|`UIWindow`|Starts its children on the `rootViewController` with overwriting
+
+> ⚠️ All of the Host Coordinators accept `InsecurityChild` instances for starting.
 
 You can start a chain of presenting coordinators modally from outside using a `ModalCoordinator`.
 

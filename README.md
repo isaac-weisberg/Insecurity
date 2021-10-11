@@ -117,7 +117,60 @@ viewController.onNewPaymentMethodRequested = {
 
 ## Starting a WindowCoordinator
 
+In order to start working with Insecurity, you should use a coordinator that manages your `UIWindow`.  
+It's called `WindowCoordinator`.  
+Then, you call `start` methods on it in order to start your instances of `InsecurityChild.`
 
+```swift
+class AppCoordinator: WindowCoordinator {
+    func start() {
+        let paymentMethodCoordinator = PaymentMethodCoordinator()
+        
+        self.start(paymentMethodCoordinator, duration: 0.5, options: .transitionCrossDissolve) { result in
+            // Payment method coordinator result
+        }
+    }
+}
+```
+The `duration` and `options` parameters regulate that animation of `UIWindow.rootViewController` change.
+
+And here is how you start your instance of `AppCoordinator`:
+
+```swift
+@main class ApplicationDelegate: UIResponder, UIApplicationDelegate {
+    var window: UIWindow?
+    var appCoordinator: AppCoordinator?
+    
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        self.window = window
+        
+        let appCoordinator = AppCoordinator(window)
+        self.appCoordinator = appCoordinator
+        
+        appCoordinator.start()
+        
+        window.makeKeyAndVisible()
+        
+        return true
+    }
+}
+```
+
+# Important rules:
+
+- ⚠️ Never-ever retain the `UIViewController` that you return from `viewController`
+- ⚠️ One `InsecurityChild` manages strictly one `UIViewController`. New view controller = new `InsecurityChild`
+
+# Advanced topics
+
+- Working with a `UINavigationController`
+- Finishing several screens at a time
+- Forcefully changing navigation methods
+- Writing a custom coordinator that allows for magical navigation
+- Deeplinking
+- [Starting coordinator chain without `WindowCoordinator`](./docs/StartingFromNon-InsecurityContext.md)
 
 # Philosophy
 
