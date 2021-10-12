@@ -167,7 +167,7 @@ And here is how you start your instance of `AppCoordinator`:
 
 - Working with a `UINavigationController`
 - Finishing several screens at a time
-- Forcefully changing navigation methods
+- [Forcefully changing navigation methods](./docs/ChangingNavigationMethod.md)
 - Writing a custom coordinator that allows for magical navigation
 - Deeplinking
 - [Starting coordinator chain without `WindowCoordinator`](./docs/StartingFromNon-InsecurityContext.md)
