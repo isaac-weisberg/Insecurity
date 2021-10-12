@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		6039A8D0C53204A35B9478F6 /* libPods-InsecurityPodspecTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */; };
+		A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320332F27164E0400ABD197 /* ModalNavigation.swift */; };
+		A320333227164E1300ABD197 /* ModalChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333127164E1300ABD197 /* ModalChild.swift */; };
+		A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */; };
+		A320333827164F2800ABD197 /* NavigationChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333727164F2800ABD197 /* NavigationChild.swift */; };
 		A3383BC6270E430D006982B1 /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC5270E430D006982B1 /* ParentViewController.swift */; };
 		A3383BC8270E43B4006982B1 /* ParentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */; };
 		A3441880270F95C200CE49E4 /* InsecurityChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A344187F270F95C200CE49E4 /* InsecurityChild.swift */; };
@@ -101,6 +105,10 @@
 		54B8E663025AD7F0FACA2B0B /* Pods-InsecurityDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.release.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.release.xcconfig"; sourceTree = "<group>"; };
 		5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9630C86ACEA183BA279A7CFE /* Pods-InsecurityPodspecTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPodspecTest.release.xcconfig"; path = "Target Support Files/Pods-InsecurityPodspecTest/Pods-InsecurityPodspecTest.release.xcconfig"; sourceTree = "<group>"; };
+		A320332F27164E0400ABD197 /* ModalNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNavigation.swift; sourceTree = "<group>"; };
+		A320333127164E1300ABD197 /* ModalChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalChild.swift; sourceTree = "<group>"; };
+		A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerNavigation.swift; sourceTree = "<group>"; };
+		A320333727164F2800ABD197 /* NavigationChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationChild.swift; sourceTree = "<group>"; };
 		A3383BC5270E430D006982B1 /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
 		A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCoordinator.swift; sourceTree = "<group>"; };
 		A344187F270F95C200CE49E4 /* InsecurityChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsecurityChild.swift; sourceTree = "<group>"; };
@@ -439,6 +447,10 @@
 				A3441881270F95E400CE49E4 /* InsecurityNavigation.swift */,
 				A344187F270F95C200CE49E4 /* InsecurityChild.swift */,
 				A3441883270F9CD800CE49E4 /* Insecurity.swift */,
+				A320332F27164E0400ABD197 /* ModalNavigation.swift */,
+				A320333127164E1300ABD197 /* ModalChild.swift */,
+				A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */,
+				A320333727164F2800ABD197 /* NavigationChild.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -673,11 +685,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A320333227164E1300ABD197 /* ModalChild.swift in Sources */,
 				A396900026FF26A700B6A59B /* NavigationControllerCoordinator.swift in Sources */,
 				A3441882270F95E400CE49E4 /* InsecurityNavigation.swift in Sources */,
 				A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */,
+				A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */,
+				A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */,
 				A3441880270F95C200CE49E4 /* InsecurityChild.swift in Sources */,
 				A34CBF6526FFD796007AF9B8 /* ModalPresentationCoordinator.swift in Sources */,
+				A320333827164F2800ABD197 /* NavigationChild.swift in Sources */,
 				A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */,
 				A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,

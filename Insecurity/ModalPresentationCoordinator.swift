@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol ModalCoordinatorAny: InsecurityNavigation {
+public protocol ModalCoordinatorAny: InsecurityNavigation, ModalNavigation {
     func startNavigation<NewResult>(_ navigationController: UINavigationController,
                                     _ child: InsecurityChild<NewResult>,
                                     animated: Bool,
@@ -320,4 +320,23 @@ public class ModalCoordinator: ModalCoordinatorAny {
             completion(result)
         }
     }
+    
+    // MARK: - ModalNavigation
+    
+    public func start<NewResult>(_ child: ModalChild<NewResult>,
+                                 animated: Bool,
+                                 _ completion: (CoordinatorResult<NewResult>) -> Void) {
+        
+    }
+    
+    public func startNew<NewResult>(_ navigationController: UINavigationController,
+                                    _ child: InsecurityChild<NewResult>,
+                                    animated: Bool,
+                                    _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        
+    }
+}
+
+protocol a {
+    associatedtype Result
 }
