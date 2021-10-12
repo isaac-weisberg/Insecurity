@@ -110,5 +110,5 @@ Method of `InsecurityChild.navigation`|Effect
 ---|---
 `start` in the context of `UINavigationController`|Pushes `child.viewController` onto the `UINavigationController`
 `start` in the context of Modal Presentation|Presents `child.viewController` using `present`
-`start` with `UINavigationController` param|Starts a new modal context with `UINavigationController` and pushes `child.viewController` onto the `UINavigationController`
+`start` with `UINavigationController` parameter|Starts a new modal context with `UINavigationController` and pushes `child.viewController` onto the `UINavigationController`
 `startModal`|Starts a new modal context with `child.viewController`
