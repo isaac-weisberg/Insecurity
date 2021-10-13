@@ -1,15 +1,6 @@
 import UIKit
 
 public protocol ModalCoordinatorAny: InsecurityNavigation, ModalNavigation {
-    func startNavigation<NewResult>(_ navigationController: UINavigationController,
-                                    _ child: InsecurityChild<NewResult>,
-                                    animated: Bool,
-                                    _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-    
-    func startChild<NewResult>(_ child: InsecurityChild<NewResult>,
-                               animated: Bool,
-                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-    
     func startOverTop<NewResult>(_ child: InsecurityChild<NewResult>,
                                  animated: Bool,
                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
@@ -33,7 +24,7 @@ public class ModalCoordinator: ModalCoordinatorAny {
         }
         
         weak var viewController: UIViewController?
-        let coordinator: InsecurityChildAny
+        let coordinator: CommonChildAny
         let state: State
     }
     
@@ -126,7 +117,7 @@ public class ModalCoordinator: ModalCoordinatorAny {
         }
     }
     
-    func finalize(_ child: InsecurityChildAny) {
+    func finalize(_ child: CommonChildAny) {
         let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
@@ -140,7 +131,7 @@ public class ModalCoordinator: ModalCoordinatorAny {
         navData[index] = NavData(viewController: oldNavData.viewController, coordinator: oldNavData.coordinator, state: .finished)
     }
     
-    func purgeOnDealloc(_ child: InsecurityChildAny) {
+    func purgeOnDealloc(_ child: CommonChildAny) {
         let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
@@ -175,7 +166,7 @@ public class ModalCoordinator: ModalCoordinatorAny {
         assert(enqueuedChildStartRoutine == nil, "Child start couldn't ve been enqueued because dealloc purge is called before the result is propagated to the parent")
     }
     
-    func dispatch(_ controller: UIViewController, _ animated: Bool, _ child: InsecurityChildAny) {
+    func dispatch(_ controller: UIViewController, _ animated: Bool, _ child: CommonChildAny) {
         let electedHostOpt: UIViewController?
         if let topNavData = navData.last {
             if let hostController = topNavData.viewController {
@@ -207,19 +198,44 @@ public class ModalCoordinator: ModalCoordinatorAny {
     public func startOverTop<NewResult>(_ child: InsecurityChild<NewResult>,
                                         animated: Bool,
                                         _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        startChild(child, animated: animated) { result in
+        child._navigation = self
+        _startChild(child, animated: animated) { result in
             completion(result)
         }
     }
     
-    public func startNavigation<NewResult>(_ navigationController: UINavigationController,
-                                           _ initialChild: InsecurityChild<NewResult>,
-                                           animated: Bool,
-                                           _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+    func startNavigation<NewResult>(_ navigationController: UINavigationController,
+                                    _ initialChild: InsecurityChild<NewResult>,
+                                    animated: Bool,
+                                    _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        
+        _startNavigation(navigationController, initialChild, animated: animated, assignNavigationImplementation: { navigationCoordinator in
+            initialChild._navigation = navigationCoordinator
+        }) { result in
+            completion(result)
+        }
+    }
+    
+    func startNavigation<NewResult>(_ navigationController: UINavigationController,
+                                    _ initialChild: NavigationChild<NewResult>,
+                                    animated: Bool,
+                                    _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        _startNavigation(navigationController, initialChild, animated: animated, assignNavigationImplementation: { navigationCoordinator in
+            initialChild._navigation = navigationCoordinator
+        }) { result in
+            completion(result)
+        }
+    }
+    
+    private func _startNavigation<NewResult>(_ navigationController: UINavigationController,
+                                             _ initialChild: CommonChild<NewResult>,
+                                             animated: Bool,
+                                             assignNavigationImplementation: (NavigationCoordinator) -> Void,
+                                             _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         let navigationCoordinator = NavigationCoordinator(navigationController)
         let navigationChild = InsecurityChildWithNavigationCoordinator<NewResult>(navigationCoordinator, navigationController)
         
-        initialChild._navigation = navigationCoordinator
+        assignNavigationImplementation(navigationCoordinator)
         initialChild._finishImplementation = { [weak navigationChild] result in
             if let navigationChild = navigationChild {
                 navigationChild.finish(result)
@@ -229,14 +245,34 @@ public class ModalCoordinator: ModalCoordinatorAny {
         }
         navigationController.setViewControllers([ initialChild.viewController ], animated: Insecurity.navigationControllerRootIsAssignedWithAnimation)
         
-        self.startChild(navigationChild, animated: animated) { modalCoordinatorResult in
+        self._startChild(navigationChild, animated: animated) { modalCoordinatorResult in
             completion(modalCoordinatorResult)
+        }
+    }
+    
+    func startChild<NewResult>(_ child: InsecurityChild<NewResult>,
+                               animated: Bool,
+                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        child._navigation = self
+        
+        _startChild(child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    func startChild<NewResult>(_ child: ModalChild<NewResult>,
+                               animated: Bool,
+                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        child._navigation = self
+        
+        _startChild(child, animated: animated) { result in
+            completion(result)
         }
     }
     
     var enqueuedChildStartRoutine: (() -> Void)?
     
-    public func startChild<NewResult>(_ child: InsecurityChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+    private func _startChild<NewResult>(_ child: CommonChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         if finalizationDepth > 0 {
             // Enqueing the start to happen after batch purge
             enqueuedChildStartRoutine = { [weak self] in
@@ -249,9 +285,7 @@ public class ModalCoordinator: ModalCoordinatorAny {
         }
     }
     
-    func startChildImmediately<NewResult>(_ child: InsecurityChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        
-        child._navigation = self
+    private func startChildImmediately<NewResult>(_ child: CommonChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         var weakControllerInitialized = false
         weak var weakController: UIViewController?
         child._finishImplementation = { [weak self, weak child] result in
@@ -325,15 +359,19 @@ public class ModalCoordinator: ModalCoordinatorAny {
     
     public func start<NewResult>(_ child: ModalChild<NewResult>,
                                  animated: Bool,
-                                 _ completion: (CoordinatorResult<NewResult>) -> Void) {
-        
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        self.startChild(child, animated: animated) { result in
+            completion(result)
+        }
     }
     
-    public func startNew<NewResult>(_ navigationController: UINavigationController,
-                                    _ child: InsecurityChild<NewResult>,
+    public func start<NewResult>(_ navigationController: UINavigationController,
+                                    _ child: NavigationChild<NewResult>,
                                     animated: Bool,
                                     _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        
+        self.startNavigation(navigationController, child, animated: animated) { result in
+            completion(result)
+        }
     }
 }
 

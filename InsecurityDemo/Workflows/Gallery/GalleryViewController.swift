@@ -35,7 +35,7 @@ class GalleryViewController: UIViewController {
         DispatchQueue.main.asyncAfter(0.5) {
 //            self.startPaymentMethodScreen()
 //            self.startPaymentMethodScreenNavigation()
-            self.startPaymentMethodScreenWithNewNavigation()
+//            self.startPaymentMethodScreenWithNewNavigation()
         }
     }
     

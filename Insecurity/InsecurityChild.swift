@@ -1,10 +1,6 @@
 import UIKit
 
-protocol InsecurityChildAny: AnyObject {
-    var navigation: InsecurityNavigation! { get }
-}
-
-open class InsecurityChild<Result>: InsecurityChildAny {
+open class InsecurityChild<Result>: CommonChild<Result> {
     weak var _navigation: InsecurityNavigation?
     
     public var navigation: InsecurityNavigation! {
@@ -12,23 +8,8 @@ open class InsecurityChild<Result>: InsecurityChildAny {
         return _navigation
     }
     
-    open var viewController: UIViewController {
-        fatalError("This coordinator didn't define a viewController")
-    }
-    
-    var _finishImplementation: ((Result) -> Void)?
-    
-    public func finish(_ result: Result) {
-        guard let _finishImplementation = _finishImplementation else {
-            assertionFailure("`finish` called before the coordinator was started")
-            return
-        }
-        
-        _finishImplementation(result)
-    }
-    
-    public init() {
-        
+    public override init() {
+        super.init()
     }
 }
 

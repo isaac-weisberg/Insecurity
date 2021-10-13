@@ -1,6 +1,6 @@
 import UIKit
 
-open class NavigationChild<Result> {
+open class NavigationChild<Result>: CommonChild<Result> {
     weak var _navigation: NavigationControllerNavigation?
     
     public var navigation: NavigationControllerNavigation! {
@@ -8,22 +8,7 @@ open class NavigationChild<Result> {
         return _navigation
     }
     
-    open var viewController: UIViewController {
-        fatalError("This coordinator didn't define a viewController")
-    }
-    
-    var _finishImplementation: ((Result) -> Void)?
-    
-    public func finish(_ result: Result) {
-        guard let _finishImplementation = _finishImplementation else {
-            assertionFailure("`finish` called before the coordinator was started")
-            return
-        }
-        
-        _finishImplementation(result)
-    }
-    
-    public init() {
-        
+    public override init() {
+        super.init()
     }
 }

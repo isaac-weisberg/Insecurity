@@ -72,6 +72,7 @@
 		A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */; };
 		A39A458B2714DBEF000D36E5 /* SmallAppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458A2714DBEF000D36E5 /* SmallAppCoordinator.swift */; };
 		A39A458D2714DCEB000D36E5 /* SmallAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458C2714DCEB000D36E5 /* SmallAppDelegate.swift */; };
+		A39BA40B2716579D004A9A9B /* CommonChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39BA40A2716579D004A9A9B /* CommonChild.swift */; };
 		D4BA0B4FA7A6F24D6294ED70 /* libPods-InsecurityDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -172,6 +173,7 @@
 		A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorResult.swift; sourceTree = "<group>"; };
 		A39A458A2714DBEF000D36E5 /* SmallAppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallAppCoordinator.swift; sourceTree = "<group>"; };
 		A39A458C2714DCEB000D36E5 /* SmallAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallAppDelegate.swift; sourceTree = "<group>"; };
+		A39BA40A2716579D004A9A9B /* CommonChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonChild.swift; sourceTree = "<group>"; };
 		BB61D608FF8A49075BF920EF /* Pods-InsecurityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -451,6 +453,7 @@
 				A320333127164E1300ABD197 /* ModalChild.swift */,
 				A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */,
 				A320333727164F2800ABD197 /* NavigationChild.swift */,
+				A39BA40A2716579D004A9A9B /* CommonChild.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -696,6 +699,7 @@
 				A320333827164F2800ABD197 /* NavigationChild.swift in Sources */,
 				A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */,
 				A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */,
+				A39BA40B2716579D004A9A9B /* CommonChild.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

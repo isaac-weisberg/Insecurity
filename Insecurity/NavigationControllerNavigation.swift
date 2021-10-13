@@ -6,11 +6,11 @@ public protocol NavigationControllerNavigation: AnyObject {
                           _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
     func startNew<NewResult>(_ navigationController: UINavigationController,
-                             _ child: InsecurityChild<NewResult>,
+                             _ child: NavigationChild<NewResult>,
                              animated: Bool,
                              _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
-    func startNew<NewResult>(_ child: InsecurityChild<NewResult>,
-                             animated: Bool,
-                             _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+    func start<NewResult>(_ child: ModalChild<NewResult>,
+                          animated: Bool,
+                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
 }

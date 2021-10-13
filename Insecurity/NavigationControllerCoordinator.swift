@@ -1,19 +1,6 @@
 import UIKit
 
-public protocol NavigationCoordinatorAny: InsecurityNavigation {
-    func startChild<NewResult>(_ child: InsecurityChild<NewResult>,
-                               animated: Bool,
-                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-    
-    func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
-                               animated: Bool,
-                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-    
-    func startNewNavigation<NewResult>(_ navigationController: UINavigationController,
-                                       _ initialChild: InsecurityChild<NewResult>,
-                                       animated: Bool,
-                                       _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-    
+public protocol NavigationCoordinatorAny: InsecurityNavigation, NavigationControllerNavigation {
     func startOverTop<NewResult>(_ child: InsecurityChild<NewResult>,
                                  animated: Bool,
                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
@@ -33,7 +20,7 @@ public class NavigationCoordinator: NavigationCoordinatorAny {
         }
         
         weak var viewController: UIViewController?
-        let coordinator: InsecurityChildAny
+        let coordinator: CommonChildAny
         let state: State
     }
     
@@ -84,7 +71,7 @@ public class NavigationCoordinator: NavigationCoordinatorAny {
         navigationController.setViewControllers(realViewControllers, animated: true)
     }
     
-    func purgeOnDealloc(_ child: InsecurityChildAny) {
+    func purgeOnDealloc(_ child: CommonChildAny) {
         let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
@@ -118,7 +105,7 @@ public class NavigationCoordinator: NavigationCoordinatorAny {
         self.navData = newNavData
     }
     
-    func finalize(_ child: InsecurityChildAny) {
+    func finalize(_ child: CommonChildAny) {
         let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
@@ -132,18 +119,83 @@ public class NavigationCoordinator: NavigationCoordinatorAny {
         navData[index] = NavData(viewController: oldNavData.viewController, coordinator: oldNavData.coordinator, state: .finished)
     }
     
-    func dispatch(_ controller: UIViewController, child: InsecurityChildAny) {
+    func dispatch(_ controller: UIViewController, child: CommonChildAny) {
         let navData = NavData(viewController: controller, coordinator: child, state: .running)
         self.navData.append(navData)
     }
     
-    public func startChild<NewResult>(_ child: InsecurityChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+    // MARK: - Internal
+    
+    func startChild<NewResult>(_ child: InsecurityChild<NewResult>,
+                               animated: Bool,
+                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        child._navigation = self
+        
+        _startChild(child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    func startChild<NewResult>(_ child: NavigationChild<NewResult>,
+                               animated: Bool,
+                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        child._navigation = self
+        
+        _startChild(child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    func startNewModal<NewResult>(_ child: InsecurityChild<NewResult>,
+                                  animated: Bool,
+                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        let modalCoordinator = self.asModalCoordinator()
+        
+        modalCoordinator.startChild(child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    func startNewModal<NewResult>(_ child: ModalChild<NewResult>,
+                                  animated: Bool,
+                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        let modalCoordinator = self.asModalCoordinator()
+        
+        modalCoordinator.startChild(child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    func startNewNavigation<NewResult>(_ navigationController: UINavigationController,
+                                       _ initialChild: NavigationChild<NewResult>,
+                                       animated: Bool,
+                                       _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        let modalCoordinator = self.asModalCoordinator()
+        
+        modalCoordinator.startNavigation(navigationController, initialChild, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    func startNewNavigation<NewResult>(_ navigationController: UINavigationController,
+                                       _ initialChild: InsecurityChild<NewResult>,
+                                       animated: Bool,
+                                       _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        let modalCoordinator = self.asModalCoordinator()
+        
+        modalCoordinator.startNavigation(navigationController, initialChild, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    // MARK: - Private
+    
+    private func _startChild<NewResult>(_ child: CommonChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         guard let navigationController = navigationController else {
             assertionFailure("Navigation Coordinator has attempted to start a child, but the navigation controller has long since died")
             return
         }
         
-        child._navigation = self
         var weakControllerInitialized = false
         weak var weakController: UIViewController?
         child._finishImplementation = { [weak self, weak child] (result: NewResult) in
@@ -179,27 +231,6 @@ public class NavigationCoordinator: NavigationCoordinatorAny {
         
         dispatch(controller, child: child)
         navigationController.pushViewController(controller, animated: animated)
-    }
-    
-    public func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
-                                      animated: Bool,
-                                      _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        let modalCoordinator = self.asModalCoordinator()
-        
-        modalCoordinator.startChild(child, animated: animated) { result in
-            completion(result)
-        }
-    }
-    
-    public func startNewNavigation<NewResult>(_ navigationController: UINavigationController,
-                                              _ initialChild: InsecurityChild<NewResult>,
-                                              animated: Bool,
-                                              _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        let modalCoordinator = self.asModalCoordinator()
-        
-        modalCoordinator.startNavigation(navigationController, initialChild, animated: animated) { result in
-            completion(result)
-        }
     }
     
 #if DEBUG
@@ -245,6 +276,41 @@ public class NavigationCoordinator: NavigationCoordinatorAny {
                                  animated: Bool,
                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         self.startNewNavigation(navigationController, child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    public func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
+                                      animated: Bool,
+                                      _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        startNewModal(child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    // MARK: - NavigationControllerNavigation
+    
+    public func start<NewResult>(_ child: NavigationChild<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        startChild(child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    public func startNew<NewResult>(_ navigationController: UINavigationController,
+                                    _ child: NavigationChild<NewResult>,
+                                    animated: Bool,
+                                    _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        startNewNavigation(navigationController, child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    public func start<NewResult>(_ child: ModalChild<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        startNewModal(child, animated: animated) { result in
             completion(result)
         }
     }
