@@ -30,38 +30,38 @@ class GalleryCoordinator: NavigationChild<Void> {
 //            }
 //        }
         
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            let genericCoordinator = GenericChild(
-//                .start(
-//                    GenericChild(.start(
-//                            GenericChild(.startNavigation(
-//                                    GenericChild(.start(
-//                                            GenericChild(.start(
-//                                                    GenericChild(.startModal(
-//                                                            GenericChild(.start(
-//                                                                GenericChild(.startNavigation(
-//                                                                    GenericChild(.start(
-//                                                                        GenericChild(.start(
-//                                                                            GenericChild(.startNavigation(
-//                                                                                GenericChild(.start(
-//                                                                                    GenericChild(.finish)
-//                                                                                ))
-//                                                                            ))
-//                                                                        ))
-//                                                                    ))
-//                                                                ))
-//                                                            ), .nothing)
-//                                                        ))
-//                                                ))
-//                                    ))
-//                                ))
-//                        ))
-//                ))
-//
-//            self.navigation.start(genericCoordinator, animated: true) { result in
-//                print("End GenericChild root \(result)")
-//            }
-//        }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let genericCoordinator = GenericChild(
+                .start(
+                    GenericChild(.start(
+                            GenericChild(.startNavigation(
+                                    GenericChild(.start(
+                                            GenericChild(.start(
+                                                    GenericChild(.startModal(
+                                                            GenericChild(.start(
+                                                                GenericChild(.startNavigation(
+                                                                    GenericChild(.start(
+                                                                        GenericChild(.start(
+                                                                            GenericChild(.startNavigation(
+                                                                                GenericChild(.start(
+                                                                                    GenericChild(.finish)
+                                                                                ))
+                                                                            ))
+                                                                        ))
+                                                                    ))
+                                                                ))
+                                                            ), .nothing)
+                                                        ))
+                                                ))
+                                    ))
+                                ))
+                        ))
+                ))
+
+            self.navigation.start(genericCoordinator, animated: true) { result in
+                print("End GenericChild root \(result)")
+            }
+        }
         
         return galleryViewController
     }

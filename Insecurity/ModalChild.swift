@@ -1,11 +1,7 @@
 import UIKit
 
-protocol ModalChildAny: AnyObject {
-    
-}
-
-open class ModalChild<Result>: ModalChildAny {
-    weak var _navigation: ModalCoordinatorAny?
+open class ModalChild<Result>: CommonModalChild {
+    private weak var _navigation: ModalCoordinatorAny?
     
     public var navigation: ModalNavigation! {
         assert(_navigation != nil, "Attempted to use `navigation` before the coordinator was started or after it has finished")
@@ -25,6 +21,10 @@ open class ModalChild<Result>: ModalChildAny {
         }
         
         _finishImplementation(result)
+    }
+    
+    func _updateHostReference(_ host: ModalCoordinator) {
+        _navigation = host
     }
     
     public init() {
