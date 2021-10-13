@@ -44,7 +44,7 @@ class GalleryCoordinator: NavigationChild<Void> {
                                                                         GenericChild(.start(
                                                                             GenericChild(.startNavigation(
                                                                                 GenericChild(.start(
-                                                                                    GenericChild(.finish)
+                                                                                    GenericChild(.nothing)
                                                                                 ))
                                                                             ))
                                                                         ))

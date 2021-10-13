@@ -6,6 +6,7 @@ enum GenericEventAction {
     case start(GenericChild)
     case startNavigation(GenericChild)
     case startModal(GenericChild)
+    case nothing
 }
 
 enum GenericFinishAction {
@@ -37,6 +38,8 @@ class GenericChild: AdaptiveChild<Void> {
         
         genericViewController.onEvent = {
             switch self.action {
+            case .nothing:
+                break
             case .finish:
                 finish(())
             case .start(let genericChild):
