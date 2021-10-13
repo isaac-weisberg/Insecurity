@@ -1,6 +1,10 @@
 import UIKit
 
-open class ModalChild<Result>: CommonChild<Result> {
+protocol ModalChildAny: AnyObject {
+    
+}
+
+open class ModalChild<Result>: ModalChildAny {
     weak var _navigation: ModalCoordinatorAny?
     
     public var navigation: ModalNavigation! {
@@ -8,7 +12,38 @@ open class ModalChild<Result>: CommonChild<Result> {
         return _navigation
     }
     
-    public override init() {
-        super.init()
+    open var viewController: UIViewController {
+        fatalError("This coordinator didn't define a viewController")
+    }
+    
+    var _finishImplementation: ((Result) -> Void)?
+    
+    public func finish(_ result: Result) {
+        guard let _finishImplementation = _finishImplementation else {
+            assertionFailure("`finish` called before the coordinator was started")
+            return
+        }
+        
+        _finishImplementation(result)
+    }
+    
+    public init() {
+        
+    }
+}
+
+class ModalChildWithNavigationCoordinator<Result>: ModalChild<Result> {
+    let navigationCoordinatorChild: NavigationCoordinator?
+    weak var _storedViewController: UIViewController?
+    
+    override var viewController: UIViewController {
+        return _storedViewController!
+    }
+    
+    init(_ navigationCoordinatorChild: NavigationCoordinator,
+         _ _storedViewController: UIViewController?) {
+        
+        self.navigationCoordinatorChild = navigationCoordinatorChild
+        self._storedViewController = _storedViewController
     }
 }

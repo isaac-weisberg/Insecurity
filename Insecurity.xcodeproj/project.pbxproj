@@ -14,8 +14,6 @@
 		A320333827164F2800ABD197 /* NavigationChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333727164F2800ABD197 /* NavigationChild.swift */; };
 		A3383BC6270E430D006982B1 /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC5270E430D006982B1 /* ParentViewController.swift */; };
 		A3383BC8270E43B4006982B1 /* ParentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */; };
-		A3441880270F95C200CE49E4 /* InsecurityChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A344187F270F95C200CE49E4 /* InsecurityChild.swift */; };
-		A3441882270F95E400CE49E4 /* InsecurityNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3441881270F95E400CE49E4 /* InsecurityNavigation.swift */; };
 		A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3441883270F9CD800CE49E4 /* Insecurity.swift */; };
 		A34CBF6526FFD796007AF9B8 /* ModalPresentationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */; };
 		A35A78232709EF3E00256FBD /* ScoringCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */; };
@@ -72,7 +70,6 @@
 		A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */; };
 		A39A458B2714DBEF000D36E5 /* SmallAppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458A2714DBEF000D36E5 /* SmallAppCoordinator.swift */; };
 		A39A458D2714DCEB000D36E5 /* SmallAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458C2714DCEB000D36E5 /* SmallAppDelegate.swift */; };
-		A39BA40B2716579D004A9A9B /* CommonChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39BA40A2716579D004A9A9B /* CommonChild.swift */; };
 		D4BA0B4FA7A6F24D6294ED70 /* libPods-InsecurityDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -112,8 +109,6 @@
 		A320333727164F2800ABD197 /* NavigationChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationChild.swift; sourceTree = "<group>"; };
 		A3383BC5270E430D006982B1 /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
 		A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCoordinator.swift; sourceTree = "<group>"; };
-		A344187F270F95C200CE49E4 /* InsecurityChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsecurityChild.swift; sourceTree = "<group>"; };
-		A3441881270F95E400CE49E4 /* InsecurityNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsecurityNavigation.swift; sourceTree = "<group>"; };
 		A3441883270F9CD800CE49E4 /* Insecurity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insecurity.swift; sourceTree = "<group>"; };
 		A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresentationCoordinator.swift; sourceTree = "<group>"; };
 		A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
@@ -173,7 +168,6 @@
 		A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorResult.swift; sourceTree = "<group>"; };
 		A39A458A2714DBEF000D36E5 /* SmallAppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallAppCoordinator.swift; sourceTree = "<group>"; };
 		A39A458C2714DCEB000D36E5 /* SmallAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallAppDelegate.swift; sourceTree = "<group>"; };
-		A39BA40A2716579D004A9A9B /* CommonChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonChild.swift; sourceTree = "<group>"; };
 		BB61D608FF8A49075BF920EF /* Pods-InsecurityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -446,14 +440,11 @@
 				A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */,
 				A37991292702659600550B8E /* WindowCoordinator.swift */,
 				A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */,
-				A3441881270F95E400CE49E4 /* InsecurityNavigation.swift */,
-				A344187F270F95C200CE49E4 /* InsecurityChild.swift */,
 				A3441883270F9CD800CE49E4 /* Insecurity.swift */,
 				A320332F27164E0400ABD197 /* ModalNavigation.swift */,
 				A320333127164E1300ABD197 /* ModalChild.swift */,
 				A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */,
 				A320333727164F2800ABD197 /* NavigationChild.swift */,
-				A39BA40A2716579D004A9A9B /* CommonChild.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -690,16 +681,13 @@
 			files = (
 				A320333227164E1300ABD197 /* ModalChild.swift in Sources */,
 				A396900026FF26A700B6A59B /* NavigationControllerCoordinator.swift in Sources */,
-				A3441882270F95E400CE49E4 /* InsecurityNavigation.swift in Sources */,
 				A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */,
 				A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */,
 				A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */,
-				A3441880270F95C200CE49E4 /* InsecurityChild.swift in Sources */,
 				A34CBF6526FFD796007AF9B8 /* ModalPresentationCoordinator.swift in Sources */,
 				A320333827164F2800ABD197 /* NavigationChild.swift in Sources */,
 				A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */,
 				A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */,
-				A39BA40B2716579D004A9A9B /* CommonChild.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

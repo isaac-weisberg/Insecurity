@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class GalleryCoordinator: InsecurityChild<Void> {
+class GalleryCoordinator: NavigationChild<Void> {
     typealias DI = ProductCoordinator.DI
     
     override var viewController: UIViewController {

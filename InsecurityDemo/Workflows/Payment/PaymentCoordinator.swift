@@ -5,7 +5,7 @@ enum PaymentCoordinatorResult {
     case success
 }
 
-class PaymentCoordinator: InsecurityChild<PaymentCoordinatorResult> {
+class PaymentCoordinator: ModalChild<PaymentCoordinatorResult> {
     typealias DI = PaymentViewController.DI
     
     override var viewController: UIViewController {

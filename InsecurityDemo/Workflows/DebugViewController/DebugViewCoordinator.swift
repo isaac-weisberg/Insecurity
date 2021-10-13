@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class DebugViewCoordinator: InsecurityChild<Void> {
+class DebugViewCoordinator: ModalChild<Void> {
     typealias DI = DebugViewController.DI
     
     let di: DI

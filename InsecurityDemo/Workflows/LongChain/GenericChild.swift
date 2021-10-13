@@ -13,7 +13,7 @@ enum GenericFinishAction {
     case nothing
 }
 
-class GenericChild: InsecurityChild<Void> {
+class GenericChild: ModalChild<Void> {
     let action: GenericEventAction
     let finishAction: GenericFinishAction
     
@@ -36,25 +36,25 @@ class GenericChild: InsecurityChild<Void> {
         }
         
         genericViewController.onEvent = {
-            switch self.action {
-            case .finish:
-                finish(())
-            case .start(let genericChild):
-                self.navigation.start(genericChild, animated: true) { result in
-                    print("End GenericChild regular start \(result)")
-                    finish(())
-                }
-            case .startNavigation(let genericChild):
-                self.navigation.start(UINavigationController(), genericChild, animated: true) { result in
-                    print("End GenericChild navigation \(result)")
-                    finish(())
-                }
-            case .startModal(let genericChild):
-                self.navigation.startModal(genericChild, animated: true) { result in
-                    print("End GenericChild modal \(result)")
-                    finish(())
-                }
-            }
+//            switch self.action {
+//            case .finish:
+//                finish(())
+//            case .start(let genericChild):
+//                self.navigation.start(genericChild, animated: true) { result in
+//                    print("End GenericChild regular start \(result)")
+//                    finish(())
+//                }
+//            case .startNavigation(let genericChild):
+//                self.navigation.start(UINavigationController(), genericChild, animated: true) { result in
+//                    print("End GenericChild navigation \(result)")
+//                    finish(())
+//                }
+//            case .startModal(let genericChild):
+//                self.navigation.startModal(genericChild, animated: true) { result in
+//                    print("End GenericChild modal \(result)")
+//                    finish(())
+//                }
+//            }
         }
         
         return genericViewController

@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class ScoringCoordinator: InsecurityChild<Void> {
+class ScoringCoordinator: ModalChild<Void> {
     typealias DI = LoginSMSCodeViewController.DI
     
     let di: DI

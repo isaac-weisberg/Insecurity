@@ -5,7 +5,7 @@ public protocol NavigationControllerNavigation: AnyObject {
                           animated: Bool,
                           _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
-    func startNew<NewResult>(_ navigationController: UINavigationController,
+    func start<NewResult>(_ navigationController: UINavigationController,
                              _ child: NavigationChild<NewResult>,
                              animated: Bool,
                              _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)

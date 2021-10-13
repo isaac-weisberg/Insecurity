@@ -5,7 +5,7 @@ struct PaymentMethodScreenResult {
     let paymentMethodChanged: Bool
 }
 
-class PaymentMethodCoordinator: InsecurityChild<PaymentMethodScreenResult> {
+class PaymentMethodCoordinator: ModalChild<PaymentMethodScreenResult> {
     override var viewController: UIViewController {
         let viewController = PaymentMethodViewController()
         

@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class AddPaymentMethodCoordinator: InsecurityChild<PaymentMethod> {
+class AddPaymentMethodCoordinator: ModalChild<PaymentMethod> {
     override var viewController: UIViewController {
         let addPaymentMethodViewController = AddPaymentMethodViewController()
         
