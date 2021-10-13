@@ -16,7 +16,7 @@ class CartCoordinator: InsecurityChild<CartCoordinatorResult> {
         cartViewController.onPayRequested = { [self] in
             let paymentCoordinator = PaymentCoordinator(di: di)
             
-            navigation.start(paymentCoordinator, animated: true) { result in
+            navigation.startModal(paymentCoordinator, animated: true) { result in
                 print("End Payment Regular \(result)")
                 switch result {
                 case .normal(let paymentResult):
