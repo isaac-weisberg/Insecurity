@@ -5,7 +5,7 @@ struct PaymentMethodScreenResult {
     let paymentMethodChanged: Bool
 }
 
-class PaymentMethodCoordinator: AdaptiveChild<PaymentMethodScreenResult> {
+class PaymentMethodCoordinator: AdaptiveCoordinator<PaymentMethodScreenResult> {
     override var viewController: UIViewController {
         let viewController = PaymentMethodViewController()
         

@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class PaymentSuccessCoordinator: ModalChild<Void> {
+class PaymentSuccessCoordinator: ModalCoordinator<Void> {
     override var viewController: UIViewController {
         let viewController = PaymentSuccessViewController()
         

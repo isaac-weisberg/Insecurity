@@ -5,7 +5,7 @@ enum LoginSMSCodeCoordinatorResult {
     case loggedIn
 }
 
-class LoginSMSCodeCoordinator: NavigationChild<LoginSMSCodeCoordinatorResult> {
+class LoginSMSCodeCoordinator: NavigationCoordinator<LoginSMSCodeCoordinatorResult> {
     typealias DI = LoginSMSCodeViewController.DI
     
     override var viewController: UIViewController {

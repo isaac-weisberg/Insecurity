@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class GalleryCoordinator: NavigationChild<Void> {
+class GalleryCoordinator: NavigationCoordinator<Void> {
     typealias DI = ProductCoordinator.DI
     
     override var viewController: UIViewController {
@@ -19,32 +19,32 @@ class GalleryCoordinator: NavigationChild<Void> {
         }
         
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            let modalCoordinator = ModalCoordinator(galleryViewController)
-//            self.customModalCoordinator = modalCoordinator
+//            let modalHost = ModalHost(galleryViewController)
+//            self.customModalHost = modalHost
 //
 //            let paymentMethodCoordinator = PaymentMethodCoordinator()
 //
-//            modalCoordinator.start(paymentMethodCoordinator, animated: true) { result in
-//                self.customModalCoordinator = nil
+//            modalHost.start(paymentMethodCoordinator, animated: true) { result in
+//                self.customModalHost = nil
 //                // result is PaymentMethodScreenResult
 //            }
 //        }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let genericCoordinator = GenericChild(
+            let genericCoordinator = GenericCoordinator(
                 .start(
-                    GenericChild(.start(
-                            GenericChild(.startNavigation(
-                                    GenericChild(.start(
-                                            GenericChild(.start(
-                                                    GenericChild(.startModal(
-                                                            GenericChild(.start(
-                                                                GenericChild(.startNavigation(
-                                                                    GenericChild(.start(
-                                                                        GenericChild(.start(
-                                                                            GenericChild(.startNavigation(
-                                                                                GenericChild(.start(
-                                                                                    GenericChild(.nothing)
+                    GenericCoordinator(.start(
+                            GenericCoordinator(.startNavigation(
+                                    GenericCoordinator(.start(
+                                            GenericCoordinator(.start(
+                                                    GenericCoordinator(.startModal(
+                                                            GenericCoordinator(.start(
+                                                                GenericCoordinator(.startNavigation(
+                                                                    GenericCoordinator(.start(
+                                                                        GenericCoordinator(.start(
+                                                                            GenericCoordinator(.startNavigation(
+                                                                                GenericCoordinator(.start(
+                                                                                    GenericCoordinator(.nothing)
                                                                                 ))
                                                                             ))
                                                                         ))
@@ -59,14 +59,14 @@ class GalleryCoordinator: NavigationChild<Void> {
                 ))
 
             self.navigation.start(genericCoordinator, animated: true) { result in
-                print("End GenericChild root \(result)")
+                print("End GenericCoordinator root \(result)")
             }
         }
         
         return galleryViewController
     }
     
-    var customModalCoordinator: ModalCoordinatorAny?
+    var customModalHost: ModalHostAny?
     
     let di: DI
     

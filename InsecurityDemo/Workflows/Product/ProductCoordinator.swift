@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class ProductCoordinator: NavigationChild<Void> {
+class ProductCoordinator: NavigationCoordinator<Void> {
     typealias DI = CartCoordinator.DI
     
     override var viewController: UIViewController {

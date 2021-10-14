@@ -1,7 +1,7 @@
 import UIKit
 
-open class ModalChild<Result>: CommonModalChild {
-    private weak var _navigation: ModalCoordinatorAny?
+open class ModalCoordinator<Result>: CommonModalCoordinator {
+    private weak var _navigation: ModalHostAny?
     
     public var navigation: ModalNavigation! {
         assert(_navigation != nil, "Attempted to use `navigation` before the coordinator was started or after it has finished")
@@ -23,7 +23,7 @@ open class ModalChild<Result>: CommonModalChild {
         _finishImplementation(result)
     }
     
-    func _updateHostReference(_ host: ModalCoordinator) {
+    func _updateHostReference(_ host: ModalHost) {
         _navigation = host
     }
     
@@ -32,18 +32,18 @@ open class ModalChild<Result>: CommonModalChild {
     }
 }
 
-class ModalChildWithNavigationCoordinator<Result>: ModalChild<Result> {
-    let navigationCoordinatorChild: NavigationCoordinator?
+class ModalCoordinatorWithNavigationHost<Result>: ModalCoordinator<Result> {
+    let navigationHostChild: NavigationHost?
     weak var _storedViewController: UIViewController?
     
     override var viewController: UIViewController {
         return _storedViewController!
     }
     
-    init(_ navigationCoordinatorChild: NavigationCoordinator,
+    init(_ navigationHostChild: NavigationHost,
          _ _storedViewController: UIViewController?) {
         
-        self.navigationCoordinatorChild = navigationCoordinatorChild
+        self.navigationHostChild = navigationHostChild
         self._storedViewController = _storedViewController
     }
 }

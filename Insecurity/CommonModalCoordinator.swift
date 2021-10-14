@@ -2,16 +2,16 @@ import UIKit
 
 // This protocol exists purely for AnyObject
 // and is not supposed to declare any members
-protocol CommonModalChildAny: AnyObject {
+protocol CommonModalCoordinatorAny: AnyObject {
     
 }
 
-protocol CommonModalChild: CommonModalChildAny {
+protocol CommonModalCoordinator: CommonModalCoordinatorAny {
     associatedtype Result
     
     var viewController: UIViewController { get }
     
     var _finishImplementation: ((Result) -> Void)? { get set }
     
-    func _updateHostReference(_ host: ModalCoordinator)
+    func _updateHostReference(_ host: ModalHost)
 }

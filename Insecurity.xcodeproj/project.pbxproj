@@ -9,13 +9,13 @@
 /* Begin PBXBuildFile section */
 		6039A8D0C53204A35B9478F6 /* libPods-InsecurityPodspecTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */; };
 		A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320332F27164E0400ABD197 /* ModalNavigation.swift */; };
-		A320333227164E1300ABD197 /* ModalChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333127164E1300ABD197 /* ModalChild.swift */; };
+		A320333227164E1300ABD197 /* ModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333127164E1300ABD197 /* ModalCoordinator.swift */; };
 		A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */; };
-		A320333827164F2800ABD197 /* NavigationChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333727164F2800ABD197 /* NavigationChild.swift */; };
+		A320333827164F2800ABD197 /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333727164F2800ABD197 /* NavigationCoordinator.swift */; };
 		A3383BC6270E430D006982B1 /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC5270E430D006982B1 /* ParentViewController.swift */; };
 		A3383BC8270E43B4006982B1 /* ParentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */; };
 		A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3441883270F9CD800CE49E4 /* Insecurity.swift */; };
-		A34CBF6526FFD796007AF9B8 /* ModalPresentationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */; };
+		A34CBF6526FFD796007AF9B8 /* ModalPresentationHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34CBF6426FFD796007AF9B8 /* ModalPresentationHost.swift */; };
 		A35A78232709EF3E00256FBD /* ScoringCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */; };
 		A35A78252709EFFB00256FBD /* ScoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78242709EFFB00256FBD /* ScoringViewController.swift */; };
 		A3677F42270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F41270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift */; };
@@ -37,7 +37,7 @@
 		A370FB682706782E00D5EF51 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370FB672706782E00D5EF51 /* main.swift */; };
 		A377B5732713859300A4331B /* GenericViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5722713859300A4331B /* GenericViewController.swift */; };
 		A377B575271385BA00A4331B /* UIColor+random.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B574271385BA00A4331B /* UIColor+random.swift */; };
-		A377B5772713862900A4331B /* GenericChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5762713862900A4331B /* GenericChild.swift */; };
+		A377B5772713862900A4331B /* GenericCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5762713862900A4331B /* GenericCoordinator.swift */; };
 		A377B58827138FD900A4331B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A377B58727138FD900A4331B /* Assets.xcassets */; };
 		A377B58B27138FD900A4331B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A377B58927138FD900A4331B /* LaunchScreen.storyboard */; };
 		A377B59127138FFC00A4331B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B59027138FFC00A4331B /* AppDelegate.swift */; };
@@ -49,7 +49,7 @@
 		A377B59F27139A6600A4331B /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B59E27139A6600A4331B /* PaymentMethod.swift */; };
 		A377B5A227139C6000A4331B /* AddPaymentMethodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5A127139C6000A4331B /* AddPaymentMethodViewController.swift */; };
 		A377B5A427139CB700A4331B /* AddPaymentMethodCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5A327139CB700A4331B /* AddPaymentMethodCoordinator.swift */; };
-		A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37991292702659600550B8E /* WindowCoordinator.swift */; };
+		A379912A2702659600550B8E /* WindowHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37991292702659600550B8E /* WindowHost.swift */; };
 		A379912C27026E3A00550B8E /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A379912B27026E3A00550B8E /* ApplicationCoordinator.swift */; };
 		A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382532F27007EA900FBC6DC /* GalleryViewController.swift */; };
 		A38253342700804700FBC6DC /* GalleryCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38253332700804700FBC6DC /* GalleryCoordinator.swift */; };
@@ -61,14 +61,14 @@
 		A38253472700906100FBC6DC /* PaymentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38253462700906100FBC6DC /* PaymentCoordinator.swift */; };
 		A382534A270091A900FBC6DC /* PaymentSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3825349270091A900FBC6DC /* PaymentSuccessViewController.swift */; };
 		A382534C2700924400FBC6DC /* PaymentSuccessCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382534B2700924400FBC6DC /* PaymentSuccessCoordinator.swift */; };
-		A390C14A271792C900E9C905 /* AdaptiveChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C149271792C900E9C905 /* AdaptiveChild.swift */; };
+		A390C14A271792C900E9C905 /* AdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C149271792C900E9C905 /* AdaptiveCoordinator.swift */; };
 		A390C14C271792F100E9C905 /* AdaptiveNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C14B271792F100E9C905 /* AdaptiveNavigation.swift */; };
-		A390C14E2717965100E9C905 /* CommonNavigationChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C14D2717965100E9C905 /* CommonNavigationChild.swift */; };
-		A390C1502717992100E9C905 /* CommonModalChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C14F2717992100E9C905 /* CommonModalChild.swift */; };
+		A390C14E2717965100E9C905 /* CommonNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */; };
+		A390C1502717992100E9C905 /* CommonModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */; };
 		A3968FEE26FF260000B6A59B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3968FED26FF260000B6A59B /* AppDelegate.swift */; };
 		A3968FF726FF260200B6A59B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3968FF626FF260200B6A59B /* Assets.xcassets */; };
 		A3968FFA26FF260200B6A59B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3968FF826FF260200B6A59B /* LaunchScreen.storyboard */; };
-		A396900026FF26A700B6A59B /* NavigationControllerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3968FFF26FF26A700B6A59B /* NavigationControllerCoordinator.swift */; };
+		A396900026FF26A700B6A59B /* NavigationControllerHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */; };
 		A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A396900326FF26CA00B6A59B /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */; };
@@ -108,13 +108,13 @@
 		5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		9630C86ACEA183BA279A7CFE /* Pods-InsecurityPodspecTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPodspecTest.release.xcconfig"; path = "Target Support Files/Pods-InsecurityPodspecTest/Pods-InsecurityPodspecTest.release.xcconfig"; sourceTree = "<group>"; };
 		A320332F27164E0400ABD197 /* ModalNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNavigation.swift; sourceTree = "<group>"; };
-		A320333127164E1300ABD197 /* ModalChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalChild.swift; sourceTree = "<group>"; };
+		A320333127164E1300ABD197 /* ModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalCoordinator.swift; sourceTree = "<group>"; };
 		A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerNavigation.swift; sourceTree = "<group>"; };
-		A320333727164F2800ABD197 /* NavigationChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationChild.swift; sourceTree = "<group>"; };
+		A320333727164F2800ABD197 /* NavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCoordinator.swift; sourceTree = "<group>"; };
 		A3383BC5270E430D006982B1 /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
 		A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCoordinator.swift; sourceTree = "<group>"; };
 		A3441883270F9CD800CE49E4 /* Insecurity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insecurity.swift; sourceTree = "<group>"; };
-		A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresentationCoordinator.swift; sourceTree = "<group>"; };
+		A34CBF6426FFD796007AF9B8 /* ModalPresentationHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresentationHost.swift; sourceTree = "<group>"; };
 		A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
 		A35A78242709EFFB00256FBD /* ScoringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringViewController.swift; sourceTree = "<group>"; };
 		A3677F41270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionCoordinator.swift; sourceTree = "<group>"; };
@@ -136,7 +136,7 @@
 		A370FB672706782E00D5EF51 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		A377B5722713859300A4331B /* GenericViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericViewController.swift; sourceTree = "<group>"; };
 		A377B574271385BA00A4331B /* UIColor+random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+random.swift"; sourceTree = "<group>"; };
-		A377B5762713862900A4331B /* GenericChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericChild.swift; sourceTree = "<group>"; };
+		A377B5762713862900A4331B /* GenericCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericCoordinator.swift; sourceTree = "<group>"; };
 		A377B57C27138FD800A4331B /* InsecurityPodspecTest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityPodspecTest.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A377B58727138FD900A4331B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A377B58A27138FD900A4331B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -150,7 +150,7 @@
 		A377B59E27139A6600A4331B /* PaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
 		A377B5A127139C6000A4331B /* AddPaymentMethodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodViewController.swift; sourceTree = "<group>"; };
 		A377B5A327139CB700A4331B /* AddPaymentMethodCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodCoordinator.swift; sourceTree = "<group>"; };
-		A37991292702659600550B8E /* WindowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowCoordinator.swift; sourceTree = "<group>"; };
+		A37991292702659600550B8E /* WindowHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowHost.swift; sourceTree = "<group>"; };
 		A379912B27026E3A00550B8E /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
 		A382532F27007EA900FBC6DC /* GalleryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
 		A38253332700804700FBC6DC /* GalleryCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalleryCoordinator.swift; sourceTree = "<group>"; };
@@ -162,17 +162,17 @@
 		A38253462700906100FBC6DC /* PaymentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCoordinator.swift; sourceTree = "<group>"; };
 		A3825349270091A900FBC6DC /* PaymentSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSuccessViewController.swift; sourceTree = "<group>"; };
 		A382534B2700924400FBC6DC /* PaymentSuccessCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSuccessCoordinator.swift; sourceTree = "<group>"; };
-		A390C149271792C900E9C905 /* AdaptiveChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveChild.swift; sourceTree = "<group>"; };
+		A390C149271792C900E9C905 /* AdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveCoordinator.swift; sourceTree = "<group>"; };
 		A390C14B271792F100E9C905 /* AdaptiveNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveNavigation.swift; sourceTree = "<group>"; };
-		A390C14D2717965100E9C905 /* CommonNavigationChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavigationChild.swift; sourceTree = "<group>"; };
-		A390C14F2717992100E9C905 /* CommonModalChild.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonModalChild.swift; sourceTree = "<group>"; };
+		A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavigationCoordinator.swift; sourceTree = "<group>"; };
+		A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonModalCoordinator.swift; sourceTree = "<group>"; };
 		A3968FDD26FF25A800B6A59B /* Insecurity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Insecurity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3968FEB26FF260000B6A59B /* InsecurityDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3968FED26FF260000B6A59B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A3968FF626FF260200B6A59B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A3968FF926FF260200B6A59B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A3968FFB26FF260200B6A59B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A3968FFF26FF26A700B6A59B /* NavigationControllerCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerCoordinator.swift; sourceTree = "<group>"; };
+		A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerHost.swift; sourceTree = "<group>"; };
 		A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorResult.swift; sourceTree = "<group>"; };
 		A39A458A2714DBEF000D36E5 /* SmallAppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallAppCoordinator.swift; sourceTree = "<group>"; };
 		A39A458C2714DCEB000D36E5 /* SmallAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallAppDelegate.swift; sourceTree = "<group>"; };
@@ -305,7 +305,7 @@
 			isa = PBXGroup;
 			children = (
 				A377B5722713859300A4331B /* GenericViewController.swift */,
-				A377B5762713862900A4331B /* GenericChild.swift */,
+				A377B5762713862900A4331B /* GenericCoordinator.swift */,
 			);
 			path = LongChain;
 			sourceTree = "<group>";
@@ -443,20 +443,20 @@
 		A3968FDF26FF25A800B6A59B /* Insecurity */ = {
 			isa = PBXGroup;
 			children = (
-				A3968FFF26FF26A700B6A59B /* NavigationControllerCoordinator.swift */,
+				A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */,
 				A370767F26FFCED600ED7391 /* DeinitObservable.swift */,
-				A34CBF6426FFD796007AF9B8 /* ModalPresentationCoordinator.swift */,
-				A37991292702659600550B8E /* WindowCoordinator.swift */,
+				A34CBF6426FFD796007AF9B8 /* ModalPresentationHost.swift */,
+				A37991292702659600550B8E /* WindowHost.swift */,
 				A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */,
 				A3441883270F9CD800CE49E4 /* Insecurity.swift */,
 				A320332F27164E0400ABD197 /* ModalNavigation.swift */,
-				A320333127164E1300ABD197 /* ModalChild.swift */,
+				A320333127164E1300ABD197 /* ModalCoordinator.swift */,
 				A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */,
-				A320333727164F2800ABD197 /* NavigationChild.swift */,
+				A320333727164F2800ABD197 /* NavigationCoordinator.swift */,
 				A390C14B271792F100E9C905 /* AdaptiveNavigation.swift */,
-				A390C149271792C900E9C905 /* AdaptiveChild.swift */,
-				A390C14D2717965100E9C905 /* CommonNavigationChild.swift */,
-				A390C14F2717992100E9C905 /* CommonModalChild.swift */,
+				A390C149271792C900E9C905 /* AdaptiveCoordinator.swift */,
+				A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */,
+				A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -691,19 +691,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A320333227164E1300ABD197 /* ModalChild.swift in Sources */,
+				A320333227164E1300ABD197 /* ModalCoordinator.swift in Sources */,
 				A390C14C271792F100E9C905 /* AdaptiveNavigation.swift in Sources */,
-				A396900026FF26A700B6A59B /* NavigationControllerCoordinator.swift in Sources */,
-				A390C14A271792C900E9C905 /* AdaptiveChild.swift in Sources */,
+				A396900026FF26A700B6A59B /* NavigationControllerHost.swift in Sources */,
+				A390C14A271792C900E9C905 /* AdaptiveCoordinator.swift in Sources */,
 				A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */,
 				A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */,
 				A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */,
-				A34CBF6526FFD796007AF9B8 /* ModalPresentationCoordinator.swift in Sources */,
-				A320333827164F2800ABD197 /* NavigationChild.swift in Sources */,
-				A379912A2702659600550B8E /* WindowCoordinator.swift in Sources */,
+				A34CBF6526FFD796007AF9B8 /* ModalPresentationHost.swift in Sources */,
+				A320333827164F2800ABD197 /* NavigationCoordinator.swift in Sources */,
+				A379912A2702659600550B8E /* WindowHost.swift in Sources */,
 				A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */,
-				A390C1502717992100E9C905 /* CommonModalChild.swift in Sources */,
-				A390C14E2717965100E9C905 /* CommonNavigationChild.swift in Sources */,
+				A390C1502717992100E9C905 /* CommonModalCoordinator.swift in Sources */,
+				A390C14E2717965100E9C905 /* CommonNavigationCoordinator.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -753,7 +753,7 @@
 				A370FB642706775200D5EF51 /* DebugViewCoordinator.swift in Sources */,
 				A377B59B27139A2800A4331B /* PaymentMethodViewController.swift in Sources */,
 				A39A458D2714DCEB000D36E5 /* SmallAppDelegate.swift in Sources */,
-				A377B5772713862900A4331B /* GenericChild.swift in Sources */,
+				A377B5772713862900A4331B /* GenericCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -5,7 +5,7 @@ enum CartCoordinatorResult {
     case purchased
 }
 
-class CartCoordinator: NavigationChild<CartCoordinatorResult> {
+class CartCoordinator: NavigationCoordinator<CartCoordinatorResult> {
     typealias DI = PaymentCoordinator.DI
         & LoginPhoneCoordinator.DI
         & ScoringCoordinator.DI

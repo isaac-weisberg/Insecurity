@@ -1,50 +1,50 @@
 import UIKit
 
-public protocol WindowCoordinatorAny: AnyObject {
-    func startOverTop<NewResult>(_ child: ModalChild<NewResult>,
+public protocol WindowHostAny: AnyObject {
+    func startOverTop<NewResult>(_ child: ModalCoordinator<NewResult>,
                                  animated: Bool,
                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
-    func start<NewResult>(_ child: ModalChild<NewResult>,
+    func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                           duration: TimeInterval?,
                           options: UIView.AnimationOptions?,
                           _ completion: @escaping (NewResult) -> Void)
     
     func start<NewResult>(_ navigationController: UINavigationController,
-                          _ initialChild: NavigationChild<NewResult>,
+                          _ initialChild: NavigationCoordinator<NewResult>,
                           duration: TimeInterval?,
                           options: UIView.AnimationOptions?,
                           _ completion: @escaping (NewResult) -> Void)
 }
 
-open class WindowCoordinator: WindowCoordinatorAny {
+public class WindowHost: WindowHostAny {
     weak var window: UIWindow?
     
     public init(_ window: UIWindow) {
         self.window = window
     }
     
-    var navigationCoordinatorChild: NavigationCoordinatorAny?
-    var modalCoordinatorChild: ModalCoordinatorAny?
+    var navigationHostChild: NavigationHostAny?
+    var modalHostChild: ModalHostAny?
     
-    func _startModal<CoordinatorType: CommonModalChild>(_ child: CoordinatorType,
-                                      duration: TimeInterval? = nil,
-                                      options: UIView.AnimationOptions? = nil,
-                                                       _ completion: @escaping (CoordinatorType.Result) -> Void) {
+    func _startModal<CoordinatorType: CommonModalCoordinator>(_ child: CoordinatorType,
+                                                              duration: TimeInterval? = nil,
+                                                              options: UIView.AnimationOptions? = nil,
+                                                              _ completion: @escaping (CoordinatorType.Result) -> Void) {
         guard let window = window else {
-            assertionFailure("Window Coordinator attempted to start a child on a dead window")
+            assertionFailure("WindowHost attempted to start a child on a dead window")
             return
         }
         
         let controller = child.viewController
-        let modalCoordinator = ModalCoordinator(controller)
-        child._updateHostReference(modalCoordinator)
+        let modalHost = ModalHost(controller)
+        child._updateHostReference(modalHost)
         child._finishImplementation = { [weak self] result in
-            self?.modalCoordinatorChild = nil
+            self?.modalHostChild = nil
             completion(result)
         }
-        self.navigationCoordinatorChild = nil // Just in case...
-        self.modalCoordinatorChild = modalCoordinator
+        self.navigationHostChild = nil // Just in case...
+        self.modalHostChild = modalHost
         
         window.rootViewController = controller
         
@@ -57,28 +57,28 @@ open class WindowCoordinator: WindowCoordinatorAny {
         }
     }
     
-    func _startNavigation<CoordinatorType: CommonNavigationChild>(_ navigationController: UINavigationController,
-                                                                 _ initialChild: CoordinatorType,
-                                                                 duration: TimeInterval? = nil,
-                                                                 options: UIView.AnimationOptions? = nil,
-                                                                 _ completion: @escaping (CoordinatorType.Result) -> Void) {
+    func _startNavigation<CoordinatorType: CommonNavigationCoordinator>(_ navigationController: UINavigationController,
+                                                                        _ initialChild: CoordinatorType,
+                                                                        duration: TimeInterval? = nil,
+                                                                        options: UIView.AnimationOptions? = nil,
+                                                                        _ completion: @escaping (CoordinatorType.Result) -> Void) {
         guard let window = window else {
-            assertionFailure("Window Coordinator attempted to start a child on a dead window")
+            assertionFailure("WindowHost attempted to start a child on a dead window")
             return
         }
         
-        let navigationCoordinator = NavigationCoordinator(navigationController)
+        let navigationHost = NavigationHost(navigationController)
         
-        initialChild._updateHostReference(navigationCoordinator)
+        initialChild._updateHostReference(navigationHost)
         initialChild._finishImplementation = { [weak self] result in
-            self?.navigationCoordinatorChild = nil
+            self?.navigationHostChild = nil
             completion(result)
         }
         
         navigationController.setViewControllers([ initialChild.viewController ], animated: Insecurity.navigationControllerRootIsAssignedWithAnimation)
         
-        self.modalCoordinatorChild = nil // Just in case...
-        self.navigationCoordinatorChild = navigationCoordinator
+        self.modalHostChild = nil // Just in case...
+        self.navigationHostChild = navigationHost
         
         window.rootViewController = navigationController
         
@@ -93,23 +93,23 @@ open class WindowCoordinator: WindowCoordinatorAny {
     
 #if DEBUG
     deinit {
-        print("Window Coordinator deinit \(type(of: self))")
+        print("WindowHost deinit \(type(of: self))")
     }
 #endif
     
-    public func startOverTop<NewResult>(_ child: ModalChild<NewResult>,
+    public func startOverTop<NewResult>(_ child: ModalCoordinator<NewResult>,
                                         animated: Bool,
                                         _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        if let navigationCoordinatorChild = navigationCoordinatorChild {
-            assert(modalCoordinatorChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
-            navigationCoordinatorChild.startOverTop(child, animated: animated) { result in
+        if let navigationHostChild = navigationHostChild {
+            assert(modalHostChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
+            navigationHostChild.startOverTop(child, animated: animated) { result in
                 completion(result)
             }
             return
         }
-        if let modalCoordinatorChild = modalCoordinatorChild {
-            assert(navigationCoordinatorChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
-            modalCoordinatorChild.startOverTop(child, animated: animated) { result in
+        if let modalHostChild = modalHostChild {
+            assert(navigationHostChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
+            modalHostChild.startOverTop(child, animated: animated) { result in
                 completion(result)
             }
             return
@@ -119,7 +119,7 @@ open class WindowCoordinator: WindowCoordinatorAny {
         }
     }
     
-    public func start<NewResult>(_ child: ModalChild<NewResult>,
+    public func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
                                  _ completion: @escaping (NewResult) -> Void) {
@@ -131,7 +131,7 @@ open class WindowCoordinator: WindowCoordinatorAny {
     
     
     public func start<NewResult>(_ navigationController: UINavigationController,
-                                 _ initialChild: NavigationChild<NewResult>,
+                                 _ initialChild: NavigationCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
                                  _ completion: @escaping (NewResult) -> Void) {
@@ -140,7 +140,7 @@ open class WindowCoordinator: WindowCoordinatorAny {
         }
     }
     
-    public func start<NewResult>(_ child: AdaptiveChild<NewResult>,
+    public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
                                  _ completion: @escaping (NewResult) -> Void) {
@@ -150,7 +150,7 @@ open class WindowCoordinator: WindowCoordinatorAny {
     }
     
     public func start<NewResult>(_ navigationController: UINavigationController,
-                                 _ initialChild: AdaptiveChild<NewResult>,
+                                 _ initialChild: AdaptiveCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
                                  _ completion: @escaping (NewResult) -> Void) {

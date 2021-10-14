@@ -1,9 +1,9 @@
 import UIKit
 
-open class AdaptiveChild<Result>: CommonNavigationChild, CommonModalChild {
-    private weak var _navigation: AdaptiveNavigation?
+open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
+    private var _navigation: NavigationControllerNavigation?
     
-    public var navigation: AdaptiveNavigation! {
+    public var navigation: NavigationControllerNavigation! {
         assert(_navigation != nil, "Attempted to use `navigation` before the coordinator was started or after it has finished")
         return _navigation
     }
@@ -23,12 +23,7 @@ open class AdaptiveChild<Result>: CommonNavigationChild, CommonModalChild {
         _finishImplementation(result)
     }
     
-    
-    func _updateHostReference(_ host: NavigationCoordinator) {
-        _navigation = host
-    }
-    
-    func _updateHostReference(_ host: ModalCoordinator) {
+    func _updateHostReference(_ host: NavigationHost) {
         _navigation = host
     }
     

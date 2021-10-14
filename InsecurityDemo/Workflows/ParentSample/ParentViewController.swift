@@ -6,18 +6,18 @@ class ParentViewController: UIViewController {
     var onCurrencySelectionRequested: (() -> Void)?
     
     // Or, if you want to start a coordinator from outside:
-    var customModalCoordinator: ModalCoordinatorAny?
+    var customModalHost: ModalHostAny?
 
     func startCurrencySelection() {
-        let modalCoordinator = ModalCoordinator(self)
+        let modalHost = ModalHost(self)
             
         let currencySelectionCoordinator = CurrencySelectionCoordinator()
 
-        self.customModalCoordinator = modalCoordinator // Save the modalCoordinator
+        self.customModalHost = modalHost // Save the modalHost
         
-        modalCoordinator.start(currencySelectionCoordinator, animated: true) { [weak self] result in
-            // Release the modalCoordinator, don't forget to `weak self`
-            self?.customModalCoordinator = nil
+        modalHost.start(currencySelectionCoordinator, animated: true) { [weak self] result in
+            // Release the modalHost, don't forget to `weak self`
+            self?.customModalHost = nil
             switch result {
             case .normal(let currencySelection):
                 break
