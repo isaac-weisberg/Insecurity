@@ -3,6 +3,7 @@ import UIKit
 
 enum GenericEventAction {
     case finish
+    case nothing
     case start(GenericChild)
     case startNavigation(GenericChild)
     case startModal(GenericChild)
@@ -37,6 +38,8 @@ class GenericChild: InsecurityChild<Void> {
         
         genericViewController.onEvent = {
             switch self.action {
+            case .nothing:
+                break
             case .finish:
                 finish(())
             case .start(let genericChild):
