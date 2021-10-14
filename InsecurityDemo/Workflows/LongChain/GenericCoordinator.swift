@@ -2,11 +2,11 @@ import Insecurity
 import UIKit
 
 enum GenericEventAction {
-    case finish
     case nothing
-    case start(GenericChild)
-    case startNavigation(GenericChild)
-    case startModal(GenericChild)
+    case finish
+    case start(GenericCoordinator)
+    case startNavigation(GenericCoordinator)
+    case startModal(GenericCoordinator)
 }
 
 enum GenericFinishAction {
@@ -14,7 +14,7 @@ enum GenericFinishAction {
     case nothing
 }
 
-class GenericChild: InsecurityChild<Void> {
+class GenericCoordinator: AdaptiveCoordinator<Void> {
     let action: GenericEventAction
     let finishAction: GenericFinishAction
     
@@ -42,19 +42,19 @@ class GenericChild: InsecurityChild<Void> {
                 break
             case .finish:
                 finish(())
-            case .start(let genericChild):
-                self.navigation.start(genericChild, animated: true) { result in
-                    print("End GenericChild regular start \(result)")
+            case .start(let genericCoordinator):
+                self.navigation.start(genericCoordinator, in: .current, animated: true) { result in
+                    print("End GenericCoordinator regular start \(result)")
                     finish(())
                 }
-            case .startNavigation(let genericChild):
-                self.navigation.start(UINavigationController(), genericChild, animated: true) { result in
-                    print("End GenericChild navigation \(result)")
+            case .startNavigation(let genericCoordinator):
+                self.navigation.start(genericCoordinator, in: .new(UINavigationController()), animated: true) { result in
+                    print("End GenericCoordinator navigation \(result)")
                     finish(())
                 }
-            case .startModal(let genericChild):
-                self.navigation.startModal(genericChild, animated: true) { result in
-                    print("End GenericChild modal \(result)")
+            case .startModal(let genericCoordinator):
+                self.navigation.start(genericCoordinator, in: .newModal, animated: true) { result in
+                    print("End GenericCoordinator modal \(result)")
                     finish(())
                 }
             }

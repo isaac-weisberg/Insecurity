@@ -8,6 +8,7 @@ This implementation of Coordinator pattern provides:
 - Automatic detection of `interactivePopGestureRecognizer` dismissal in `UINavigationController`
 - Propagation of results to the parent
 - Ability to organize custom coordinators that allow for magical modification of `UINavigationController` stack or modal presentation stack
+- Context-independent navigation
 - Automatic management of a `UIWindow`
 
 You can use it alongside any of your existing navigation solutions.
@@ -167,8 +168,8 @@ And here is how you start your instance of `AppCoordinator`:
 
 - Working with a `UINavigationController`
 - Finishing several screens at a time
-- [Forcefully changing navigation methods](./docs/ChangingNavigationMethod.md)
-- Starting over the top of the presentation context
+- Using context-independent navigation with `AdaptiveChild`
+- Starting on the top of the presentation context
 - Writing a custom coordinator that allows for magical navigation
 - Deeplinking
 - [Starting coordinator chain without `WindowCoordinator`](./docs/StartingFromNon-InsecurityContext.md)
@@ -186,6 +187,8 @@ Also, this framework uses the best it can take from functional programming witho
 So, all in all, no `RxSwift` this time around. Though it's very compatible with `RxSwift`, a `Single` wrapper is very easy to write.
 
 # Development
+
+You will need Xcode 13 for the development.
 
 1. Clone the repo
 1. `bundle config --set path vendor/bundle`

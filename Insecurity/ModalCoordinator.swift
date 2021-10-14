@@ -1,13 +1,9 @@
 import UIKit
 
-protocol InsecurityChildAny: AnyObject {
-    var navigation: InsecurityNavigation! { get }
-}
-
-open class InsecurityChild<Result>: InsecurityChildAny {
-    weak var _navigation: InsecurityNavigation?
+open class ModalCoordinator<Result>: CommonModalCoordinator {
+    private weak var _navigation: ModalHostAny?
     
-    public var navigation: InsecurityNavigation! {
+    public var navigation: ModalNavigation! {
         assert(_navigation != nil, "Attempted to use `navigation` before the coordinator was started or after it has finished")
         return _navigation
     }
@@ -27,23 +23,27 @@ open class InsecurityChild<Result>: InsecurityChildAny {
         _finishImplementation(result)
     }
     
+    func _updateHostReference(_ host: ModalHost) {
+        _navigation = host
+    }
+    
     public init() {
         
     }
 }
 
-class InsecurityChildWithNavigationCoordinator<Result>: InsecurityChild<Result> {
-    let navigationCoordinatorChild: NavigationCoordinator?
+class ModalCoordinatorWithNavigationHost<Result>: ModalCoordinator<Result> {
+    let navigationHostChild: NavigationHost?
     weak var _storedViewController: UIViewController?
     
     override var viewController: UIViewController {
         return _storedViewController!
     }
     
-    init(_ navigationCoordinatorChild: NavigationCoordinator,
+    init(_ navigationHostChild: NavigationHost,
          _ _storedViewController: UIViewController?) {
         
-        self.navigationCoordinatorChild = navigationCoordinatorChild
+        self.navigationHostChild = navigationHostChild
         self._storedViewController = _storedViewController
     }
 }
