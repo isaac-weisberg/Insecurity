@@ -44,8 +44,22 @@ class GalleryCoordinator: NavigationCoordinator<Void> {
                                                                         GenericCoordinator(.start(
                                                                             GenericCoordinator(.startNavigation(
                                                                                 GenericCoordinator(.start(
-                                                                                    GenericCoordinator(.nothing)
-                                                                                ))
+                                                                                    GenericCoordinator(.startModal(
+                                                                                            GenericCoordinator(.start(
+                                                                                                GenericCoordinator(.startNavigation(
+                                                                                                    GenericCoordinator(.start(
+                                                                                                        GenericCoordinator(.start(
+                                                                                                            GenericCoordinator(.startNavigation(
+                                                                                                                GenericCoordinator(.start(
+                                                                                                                    GenericCoordinator(.nothing)
+                                                                                                                ))
+                                                                                                            ))
+                                                                                                        ))
+                                                                                                    ))
+                                                                                                ))
+                                                                                            ))
+                                                                                        ), .nothing)
+                                                                                ), .nothing)
                                                                             ))
                                                                         ))
                                                                     ))

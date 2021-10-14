@@ -69,16 +69,6 @@ public class ModalHost: ModalHostAny {
                 if topController.presentedViewController != nil {
                     controllerToDismissFrom = topController
                 } else {
-                    if topController.view.window == nil {
-                        // The modal chain has broken because the UIViewController or its parent has been removed from the window
-                        // This is expected but only when the finish propagation that happens inside this Modatroller
-                        // causes UIWindow to release the modal host AND/OR modal children (assuming they belonged to the same UIWindow)
-                        // somewhere up the coordinator chain.
-                        //
-                        // If presentedViewController is nil for some other reason, then it's a bug
-                    } else {
-                        assertionFailure("Modal child is supposed to dismiss its presentedViewControler content, but it has Jack Nicholson presented, so it's a bug")
-                    }
                     controllerToDismissFrom = nil
                 }
             } else {
@@ -95,16 +85,6 @@ public class ModalHost: ModalHostAny {
             if hostHasPresentedController {
                 controllerToDismissFrom = hostController
             } else {
-                if hostController.view.window == nil {
-                    // The modal chain has broken because the UIViewController or its parent has been removed from the window
-                    // This is expected but only when the finish propagation that happens inside this Modatroller
-                    // causes UIWindow to release the modal host AND/OR modal children (assuming they belonged to the same UIWindow)
-                    // somewhere up the coordinator chain.
-                    //
-                    // If presentedViewController is nil for some other reason, then it's a bug
-                } else {
-                    assertionFailure("Host is supposed to dismiss its presentedViewControler content, but it has Jack Nicholson presented, so it's a bug")
-                }
                 controllerToDismissFrom = nil
             }
         }
@@ -254,7 +234,6 @@ public class ModalHost: ModalHostAny {
                                                                                 animated: Bool,
                                                                                 _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
         child._updateHostReference(self)
-        var weakControllerInitialized = false
         weak var weakController: UIViewController?
         child._finishImplementation = { [weak self, weak child] result in
             guard let self = self else {
@@ -263,13 +242,6 @@ public class ModalHost: ModalHostAny {
             }
             guard let child = child else { return }
             
-#if DEBUG
-            if weakControllerInitialized {
-                assert(weakController != nil, "Finish called but the controller is long dead")
-            } else {
-                assertionFailure("Finish called way before we could start the coordinator")
-            }
-#endif
             weakController?.onDeinit = nil
             self.finalize(child)
             self.finalizationDepth += 1
@@ -279,7 +251,6 @@ public class ModalHost: ModalHostAny {
         }
         let controller = child.viewController
         weakController = controller
-        weakControllerInitialized = true
         
         controller.onDeinit = { [weak self, weak child] in
             guard let self = self, let child = child else { return }

@@ -2,11 +2,11 @@ import Insecurity
 import UIKit
 
 enum GenericEventAction {
+    case nothing
     case finish
     case start(GenericCoordinator)
     case startNavigation(GenericCoordinator)
     case startModal(GenericCoordinator)
-    case nothing
 }
 
 enum GenericFinishAction {

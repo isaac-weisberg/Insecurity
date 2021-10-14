@@ -154,7 +154,6 @@ public class NavigationHost: NavigationHostAny {
         }
         
         child._updateHostReference(self)
-        var weakControllerInitialized = false
         weak var weakController: UIViewController?
         child._finishImplementation = { [weak self, weak child] (result: CoordinatorType.Result) in
             guard let self = self else {
@@ -163,13 +162,6 @@ public class NavigationHost: NavigationHostAny {
             }
             guard let child = child else { return }
             
-#if DEBUG
-            if weakControllerInitialized {
-                assert(weakController != nil, "Finish called but the controller is long dead")
-            } else {
-                assertionFailure("Finish called way before we could start the coordinator")
-            }
-#endif
             weakController?.onDeinit = nil
             self.finalize(child)
             self.finalizationDepth += 1
@@ -179,7 +171,6 @@ public class NavigationHost: NavigationHostAny {
         }
         let controller = child.viewController
         weakController = controller
-        weakControllerInitialized = true
         
         controller.onDeinit = { [weak self, weak child] in
             guard let self = self, let child = child else { return }
