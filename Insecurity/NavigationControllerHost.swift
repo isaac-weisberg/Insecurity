@@ -155,7 +155,7 @@ public class NavigationHost: NavigationHostAny {
         
         child._updateHostReference(self)
         weak var weakController: UIViewController?
-        child._finishImplementation = { [weak self, weak child] (result: CoordinatorType.Result) in
+        child._finishImplementation = { [weak self, weak child] result in
             guard let self = self else {
                 assertionFailure("NavigationHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
                 return
@@ -165,7 +165,7 @@ public class NavigationHost: NavigationHostAny {
             weakController?.onDeinit = nil
             self.finalize(child)
             self.finalizationDepth += 1
-            completion(.normal(result))
+            completion(result)
             self.finalizationDepth -= 1
             self.purge()
         }

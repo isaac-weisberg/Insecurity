@@ -203,7 +203,7 @@ public class ModalHost: ModalHostAny {
         
         initialChild._finishImplementation = { [weak modalCoordinator] result in
             if let modalCoordinator = modalCoordinator {
-                modalCoordinator.finish(result)
+                modalCoordinator.internalFinish(result)
             } else {
                 assertionFailure("ModalHost child has called finish way before we could initialize the coordinator or after it has already completed")
             }
@@ -245,7 +245,7 @@ public class ModalHost: ModalHostAny {
             weakController?.onDeinit = nil
             self.finalize(child)
             self.finalizationDepth += 1
-            completion(.normal(result))
+            completion(result)
             self.finalizationDepth -= 1
             self.purge()
         }

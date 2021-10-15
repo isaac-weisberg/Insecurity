@@ -8,13 +8,13 @@ public protocol WindowHostAny: AnyObject {
     func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                           duration: TimeInterval?,
                           options: UIView.AnimationOptions?,
-                          _ completion: @escaping (NewResult) -> Void)
+                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
     
     func start<NewResult>(_ navigationController: UINavigationController,
                           _ initialChild: NavigationCoordinator<NewResult>,
                           duration: TimeInterval?,
                           options: UIView.AnimationOptions?,
-                          _ completion: @escaping (NewResult) -> Void)
+                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
 }
 
 public class WindowHost: WindowHostAny {
@@ -30,7 +30,7 @@ public class WindowHost: WindowHostAny {
     func _startModal<CoordinatorType: CommonModalCoordinator>(_ child: CoordinatorType,
                                                               duration: TimeInterval? = nil,
                                                               options: UIView.AnimationOptions? = nil,
-                                                              _ completion: @escaping (CoordinatorType.Result) -> Void) {
+                                                              _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
         guard let window = window else {
             assertionFailure("WindowHost attempted to start a child on a dead window")
             return
@@ -61,7 +61,7 @@ public class WindowHost: WindowHostAny {
                                                                         _ initialChild: CoordinatorType,
                                                                         duration: TimeInterval? = nil,
                                                                         options: UIView.AnimationOptions? = nil,
-                                                                        _ completion: @escaping (CoordinatorType.Result) -> Void) {
+                                                                        _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
         guard let window = window else {
             assertionFailure("WindowHost attempted to start a child on a dead window")
             return
@@ -115,14 +115,14 @@ public class WindowHost: WindowHostAny {
             return
         }
         _startModal(child) { result in
-            completion(.normal(result))
+            completion(result)
         }
     }
     
     public func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
-                                 _ completion: @escaping (NewResult) -> Void) {
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         
         _startModal(child, duration: duration, options: options) { result in
             completion(result)
@@ -134,7 +134,7 @@ public class WindowHost: WindowHostAny {
                                  _ initialChild: NavigationCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
-                                 _ completion: @escaping (NewResult) -> Void) {
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         _startNavigation(navigationController, initialChild, duration: duration, options: options) { result in
             completion(result)
         }
@@ -143,7 +143,7 @@ public class WindowHost: WindowHostAny {
     public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
-                                 _ completion: @escaping (NewResult) -> Void) {
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         _startModal(child, duration: duration, options: options) { result in
             completion(result)
         }
@@ -153,7 +153,7 @@ public class WindowHost: WindowHostAny {
                                  _ initialChild: AdaptiveCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
-                                 _ completion: @escaping (NewResult) -> Void) {
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         _startNavigation(navigationController, initialChild, duration: duration, options: options) { result in
             completion(result)
         }

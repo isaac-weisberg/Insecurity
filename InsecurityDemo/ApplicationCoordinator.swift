@@ -26,7 +26,7 @@ class ApplicationCoordinator {
         let loginCoordinator = LoginPhoneCoordinator(di: di)
         self.host.start(UINavigationController(), loginCoordinator, duration: 0.3, options: [.transitionFlipFromRight, .curveEaseInOut]) { [weak self] result in
             switch result {
-            case .loggedIn:
+            case .dismissed, .normal(.loggedIn):
                 print("End Login after logout")
                 
                 self?.startGallery()

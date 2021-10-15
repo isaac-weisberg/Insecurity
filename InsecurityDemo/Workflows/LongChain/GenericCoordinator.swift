@@ -11,6 +11,7 @@ enum GenericEventAction {
 
 enum GenericFinishAction {
     case finish
+    case dismiss
     case nothing
 }
 
@@ -18,7 +19,7 @@ class GenericCoordinator: AdaptiveCoordinator<Void> {
     let action: GenericEventAction
     let finishAction: GenericFinishAction
     
-    init(_ action: GenericEventAction, _ finishAction: GenericFinishAction = .finish) {
+    init(_ action: GenericEventAction, _ finishAction: GenericFinishAction = .dismiss) {
         self.action = action
         self.finishAction = finishAction
     }
@@ -29,6 +30,8 @@ class GenericCoordinator: AdaptiveCoordinator<Void> {
         let finish: (()) -> Void = { [weak self] _ in
             guard let self = self else { return }
             switch self.finishAction {
+            case .dismiss:
+                self.dismiss()
             case .finish:
                 self.finish(())
             case .nothing:
