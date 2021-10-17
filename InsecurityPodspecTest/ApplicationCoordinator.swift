@@ -4,7 +4,7 @@ class ApplicationCoordinator: WindowCoordinator {
     func start() {
         let mainCoordinator = MainCoordinator()
         
-        self.start(mainCoordinator, duration: nil, options: nil) { _ in
+        self.navigation.start(mainCoordinator, duration: nil, options: nil) { _ in
             
         }
     }
