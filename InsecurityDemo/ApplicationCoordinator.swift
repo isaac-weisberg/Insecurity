@@ -1,13 +1,8 @@
 import Insecurity
 import UIKit
 
-class ApplicationCoordinator {
+class ApplicationCoordinator: WindowCoordinator {
     let di = DIContainer()
-    let host: WindowHost
-    
-    init(_ window: UIWindow) {
-        host = WindowHost(window)
-    }
     
     func start() {
         if di.authService.hasCreds {
@@ -24,7 +19,7 @@ class ApplicationCoordinator {
     
     func startLogin() {
         let loginCoordinator = LoginPhoneCoordinator(di: di)
-        self.host.start(UINavigationController(), loginCoordinator, duration: 0.3, options: [.transitionFlipFromRight, .curveEaseInOut]) { [weak self] result in
+        self.navigation.start(UINavigationController(), loginCoordinator, duration: 0.3, options: [.transitionFlipFromRight, .curveEaseInOut]) { [weak self] result in
             switch result {
             case .dismissed, .normal(.loggedIn):
                 print("End Login after logout")
@@ -38,16 +33,16 @@ class ApplicationCoordinator {
         let di = self.di
         let navigationController = UINavigationController()
         let galleryCoordinator = GalleryCoordinator(di: di)
-        self.host.start(navigationController, galleryCoordinator, duration: 0.3, options: [.transitionFlipFromTop, .curveEaseInOut]) { [weak self] result in
+        self.navigation.start(navigationController, galleryCoordinator, duration: 0.3, options: [.transitionFlipFromTop, .curveEaseInOut]) { [weak self] result in
             print("End Gallery \(result)")
             
             let paymentSuccessCoordinator = PaymentCoordinator(di: di)
-            self?.host.start(paymentSuccessCoordinator, duration: 0.3, options: [.transitionCurlUp, .curveEaseInOut]) { [weak self] result in
+            self?.navigation.start(paymentSuccessCoordinator, duration: 0.3, options: [.transitionCurlUp, .curveEaseInOut]) { [weak self] result in
                 print("End PaymentResult after Gallery ended artificially \(result)")
                 
                 let navigationController = UINavigationController()
                 let productCoordinator = ProductCoordinator(di: di)
-                self?.host.start(navigationController, productCoordinator, duration: 0.3, options: [.transitionCrossDissolve, .curveEaseInOut]) { result in
+                self?.navigation.start(navigationController, productCoordinator, duration: 0.3, options: [.transitionCrossDissolve, .curveEaseInOut]) { result in
                     print("End Product after Gallery ended artificially \(result)")
                     // Not actually supposed to happen though
                 }
@@ -70,7 +65,7 @@ class ApplicationCoordinator {
         
         let debugCoordinator = DebugViewCoordinator(di: di)
         
-        self.host.topContext.start(debugCoordinator, animated: true) { [weak self] result in
+        self.navigation.topContext.start(debugCoordinator, animated: true) { [weak self] result in
             self?.startedDebugCoordinator = false
             print("End DebugView \(result)")
         }

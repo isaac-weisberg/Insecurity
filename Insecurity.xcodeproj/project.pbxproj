@@ -61,6 +61,7 @@
 		A38253472700906100FBC6DC /* PaymentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38253462700906100FBC6DC /* PaymentCoordinator.swift */; };
 		A382534A270091A900FBC6DC /* PaymentSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3825349270091A900FBC6DC /* PaymentSuccessViewController.swift */; };
 		A382534C2700924400FBC6DC /* PaymentSuccessCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382534B2700924400FBC6DC /* PaymentSuccessCoordinator.swift */; };
+		A38D67CC271CA9720092BB63 /* WindowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D67CB271CA9720092BB63 /* WindowCoordinator.swift */; };
 		A390C14A271792C900E9C905 /* AdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C149271792C900E9C905 /* AdaptiveCoordinator.swift */; };
 		A390C14C271792F100E9C905 /* AdaptiveNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C14B271792F100E9C905 /* AdaptiveNavigation.swift */; };
 		A390C14E2717965100E9C905 /* CommonNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */; };
@@ -162,6 +163,7 @@
 		A38253462700906100FBC6DC /* PaymentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCoordinator.swift; sourceTree = "<group>"; };
 		A3825349270091A900FBC6DC /* PaymentSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSuccessViewController.swift; sourceTree = "<group>"; };
 		A382534B2700924400FBC6DC /* PaymentSuccessCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSuccessCoordinator.swift; sourceTree = "<group>"; };
+		A38D67CB271CA9720092BB63 /* WindowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowCoordinator.swift; sourceTree = "<group>"; };
 		A390C149271792C900E9C905 /* AdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveCoordinator.swift; sourceTree = "<group>"; };
 		A390C14B271792F100E9C905 /* AdaptiveNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveNavigation.swift; sourceTree = "<group>"; };
 		A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavigationCoordinator.swift; sourceTree = "<group>"; };
@@ -457,6 +459,7 @@
 				A390C149271792C900E9C905 /* AdaptiveCoordinator.swift */,
 				A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */,
 				A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */,
+				A38D67CB271CA9720092BB63 /* WindowCoordinator.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -693,6 +696,7 @@
 			files = (
 				A320333227164E1300ABD197 /* ModalCoordinator.swift in Sources */,
 				A390C14C271792F100E9C905 /* AdaptiveNavigation.swift in Sources */,
+				A38D67CC271CA9720092BB63 /* WindowCoordinator.swift in Sources */,
 				A396900026FF26A700B6A59B /* NavigationControllerHost.swift in Sources */,
 				A390C14A271792C900E9C905 /* AdaptiveCoordinator.swift in Sources */,
 				A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */,
