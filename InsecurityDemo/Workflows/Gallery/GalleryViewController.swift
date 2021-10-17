@@ -47,49 +47,51 @@ class GalleryViewController: UIViewController {
         onAltButton?()
     }
     
-    var customModalCoordinator: ModalCoordinatorAny?
+    var customModalHost: ModalHost?
     
     func startPaymentMethodScreen() {
-        let modalCoordinator = ModalCoordinator(self)
-        self.customModalCoordinator = modalCoordinator
+        let modalHost = ModalHost(self)
+        self.customModalHost = modalHost
 
         let paymentMethodCoordinator = PaymentMethodCoordinator()
 
-        modalCoordinator.start(paymentMethodCoordinator, animated: true) { [weak self] result in
-            self?.customModalCoordinator = nil
+        modalHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+            self?.customModalHost = nil
             // result is PaymentMethodScreenResult
         }
     }
     
-    var customNavigationCoordinator: NavigationCoordinatorAny?
+    var customNavigationHost: NavigationHost?
     
     func startPaymentMethodScreenNavigation() {
         let navigationController = self.navigationController!
         
-        let navigationCoordinator = NavigationCoordinator(navigationController)
-        self.customNavigationCoordinator = navigationCoordinator
+        let navigationHost = NavigationHost(navigationController)
+        self.customNavigationHost = navigationHost
 
         let paymentMethodCoordinator = PaymentMethodCoordinator()
 
-        navigationCoordinator.start(paymentMethodCoordinator, animated: true) { [weak self] result in
-            self?.customNavigationCoordinator = nil
+        navigationHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+            self?.customNavigationHost = nil
             // result is PaymentMethodScreenResult
         }
     }
     
     func startPaymentMethodScreenWithNewNavigation() {
         let navigationController = UINavigationController()
+        
+        // Providing a UINavigationController that doesn't have a root AND only exactly one root with no other view controllers causes a crashs
         navigationController.setViewControllers([UIViewController(), UIViewController(), UIViewController()], animated: false)
         
         self.present(navigationController, animated: true)
         
-        let navigationCoordinator = NavigationCoordinator(navigationController)
-        self.customNavigationCoordinator = navigationCoordinator
+        let navigationHost = NavigationHost(navigationController)
+        self.customNavigationHost = navigationHost
 
         let paymentMethodCoordinator = PaymentMethodCoordinator()
 
-        navigationCoordinator.start(paymentMethodCoordinator, animated: true) { [weak self] result in
-            self?.customNavigationCoordinator = nil
+        navigationHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+            self?.customNavigationHost = nil
             // result is PaymentMethodScreenResult
         }
     }

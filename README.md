@@ -8,6 +8,7 @@ This implementation of Coordinator pattern provides:
 - Automatic detection of `interactivePopGestureRecognizer` dismissal in `UINavigationController`
 - Propagation of results to the parent
 - Ability to organize custom coordinators that allow for magical modification of `UINavigationController` stack or modal presentation stack
+- Context-independent navigation
 - Automatic management of a `UIWindow`
 
 You can use it alongside any of your existing navigation solutions.
@@ -29,14 +30,14 @@ We start with a "Select Payment Method" screen.
 The screen will emit an event when the user presses Done button.  
 Once it happens, we need to close the screen.
 
-We do this by subclassing `InsecurityChild`.
+We do this by subclassing `ModalCoordinator`.
 
 ```swift
 struct PaymentMethodScreenResult {
     let paymentMethodChanged: Bool
 }
 
-class PaymentMethodCoordinator: InsecurityChild<PaymentMethodScreenResult> {
+class PaymentMethodCoordinator: ModalCoordinator<PaymentMethodScreenResult> {
     override var viewController: UIViewController {
         let viewController = PaymentMethodViewController()
         
@@ -51,7 +52,7 @@ class PaymentMethodCoordinator: InsecurityChild<PaymentMethodScreenResult> {
 
 ## Showing a new screen
 
-Then when a user presses "Add Payment Method" button, we need to open a next screen.  
+Now, when the user presses "Add Payment Method" button, we need to open a next screen.  
 This screen will be "Create a new payment method".  
 Once it's finished, we need to notify the "Select Payment Method" screen of its creation.  
 
@@ -62,7 +63,7 @@ struct PaymentMethod {
     let cardNumber: String
 }
 
-class AddPaymentMethodCoordinator: InsecurityChild<PaymentMethod> {
+class AddPaymentMethodCoordinator: ModalCoordinator<PaymentMethod> {
     override var viewController: UIViewController {
         let addPaymentMethodViewController = AddPaymentMethodViewController()
         
@@ -88,7 +89,7 @@ viewController.onNewPaymentMethodRequested = {
 ```
 
 **Important part:** in iOS 13 user can also dismiss the screen by swiping it down using a gesture.  
-Insecurity framework handles this situation automatically.  
+`Insecurity` framework handles this situation automatically.  
 
 The `result` you receive in the code will be:
 - `.dismissed` if the screen is dismissed by gesture
@@ -117,16 +118,16 @@ viewController.onNewPaymentMethodRequested = {
 
 ## Starting a WindowCoordinator
 
-In order to start working with Insecurity, you should use a coordinator that manages your `UIWindow`.  
+In order to start working with `Insecurity` in your app, you should use a coordinator that manages your `UIWindow`.  
 It's called `WindowCoordinator`.  
-Then, you call `start` methods on it in order to start your instances of `InsecurityChild.`
+Then, you call `navigation.start` methods on it in order to start your instances of `ModalCoordinator.`
 
 ```swift
 class AppCoordinator: WindowCoordinator {
     func start() {
         let paymentMethodCoordinator = PaymentMethodCoordinator()
         
-        self.start(paymentMethodCoordinator, duration: 0.5, options: .transitionCrossDissolve) { result in
+        self.navigation.start(paymentMethodCoordinator, duration: 0.5, options: .transitionCrossDissolve) { result in
             // Payment method coordinator result
         }
     }
@@ -161,17 +162,17 @@ And here is how you start your instance of `AppCoordinator`:
 # Important rules:
 
 - ⚠️ Never-ever retain the `UIViewController` that you return from `viewController`
-- ⚠️ One `InsecurityChild` manages strictly one `UIViewController`. New view controller = new `InsecurityChild`
+- ⚠️ One `ModalCoordinator` manages strictly one `UIViewController`. New view controller = new `ModalCoordinator`
 
 # Advanced topics
 
 - Working with a `UINavigationController`
 - Finishing several screens at a time
-- [Forcefully changing navigation methods](./docs/ChangingNavigationMethod.md)
-- Starting over the top of the presentation context
+- Using context-independent navigation with `AdaptiveCoordinator`
+- Starting on the top of the presentation context
 - Writing a custom coordinator that allows for magical navigation
 - Deeplinking
-- [Starting coordinator chain without `WindowCoordinator`](./docs/StartingFromNon-InsecurityContext.md)
+- Starting coordinator chain without `WindowCoordinator`
 
 # Philosophy
 
@@ -186,6 +187,8 @@ Also, this framework uses the best it can take from functional programming witho
 So, all in all, no `RxSwift` this time around. Though it's very compatible with `RxSwift`, a `Single` wrapper is very easy to write.
 
 # Development
+
+You will need Xcode 13 for the development.
 
 1. Clone the repo
 1. `bundle config --set path vendor/bundle`

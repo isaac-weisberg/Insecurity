@@ -7,6 +7,8 @@ class PaymentMethodViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.backgroundColor = .systemBackgroundCompat
+        
         DispatchQueue.main.asyncAfter(0.5) {
             self.onNewPaymentMethodRequested?()
         }

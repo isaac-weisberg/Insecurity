@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class CurrencySelectionCoordinator: InsecurityChild<CurrencySelection> {
+class CurrencySelectionCoordinator: ModalCoordinator<CurrencySelection> {
     override var viewController: UIViewController {
         let viewController = CurrencySelectionViewController()
         
