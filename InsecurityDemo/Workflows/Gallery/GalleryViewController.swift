@@ -1,4 +1,5 @@
 import UIKit
+import Insecurity
 
 class GalleryViewController: UIViewController {
     var onProductRequested: (() -> Void)?
@@ -30,6 +31,12 @@ class GalleryViewController: UIViewController {
             magicEndButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
         magicEndButton.addTarget(self, action: #selector(onMagicEndButtonTap), for: .touchUpInside)
+        
+        DispatchQueue.main.asyncAfter(0.5) {
+//            self.startPaymentMethodScreen()
+//            self.startPaymentMethodScreenNavigation()
+//            self.startPaymentMethodScreenWithNewNavigation()
+        }
     }
     
     @objc func onTap() {
@@ -38,5 +45,54 @@ class GalleryViewController: UIViewController {
     
     @objc func onMagicEndButtonTap() {
         onAltButton?()
+    }
+    
+    var customModalHost: ModalHost?
+    
+    func startPaymentMethodScreen() {
+        let modalHost = ModalHost(self)
+        self.customModalHost = modalHost
+
+        let paymentMethodCoordinator = PaymentMethodCoordinator()
+
+        modalHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+            self?.customModalHost = nil
+            // result is PaymentMethodScreenResult
+        }
+    }
+    
+    var customNavigationHost: NavigationHost?
+    
+    func startPaymentMethodScreenNavigation() {
+        let navigationController = self.navigationController!
+        
+        let navigationHost = NavigationHost(navigationController)
+        self.customNavigationHost = navigationHost
+
+        let paymentMethodCoordinator = PaymentMethodCoordinator()
+
+        navigationHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+            self?.customNavigationHost = nil
+            // result is PaymentMethodScreenResult
+        }
+    }
+    
+    func startPaymentMethodScreenWithNewNavigation() {
+        let navigationController = UINavigationController()
+        
+        // Providing a UINavigationController that doesn't have a root AND only exactly one root with no other view controllers causes a crashs
+        navigationController.setViewControllers([UIViewController(), UIViewController(), UIViewController()], animated: false)
+        
+        self.present(navigationController, animated: true)
+        
+        let navigationHost = NavigationHost(navigationController)
+        self.customNavigationHost = navigationHost
+
+        let paymentMethodCoordinator = PaymentMethodCoordinator()
+
+        navigationHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+            self?.customNavigationHost = nil
+            // result is PaymentMethodScreenResult
+        }
     }
 }

@@ -5,7 +5,7 @@ enum CartCoordinatorResult {
     case purchased
 }
 
-class CartCoordinator: InsecurityChild<CartCoordinatorResult> {
+class CartCoordinator: NavigationCoordinator<CartCoordinatorResult> {
     typealias DI = PaymentCoordinator.DI
         & LoginPhoneCoordinator.DI
         & ScoringCoordinator.DI
@@ -41,7 +41,7 @@ class CartCoordinator: InsecurityChild<CartCoordinatorResult> {
                     case .loggedIn:
                         let paymentCoordinator = PaymentCoordinator(di: di)
                         
-                        navigation.startModal(paymentCoordinator, animated: true) { result in
+                        navigation.start(paymentCoordinator, animated: true) { result in
                             print("End Payment After Login \(result)")
                             switch result {
                             case .normal(let paymentResult):
@@ -63,13 +63,13 @@ class CartCoordinator: InsecurityChild<CartCoordinatorResult> {
         cartViewController.onPayButScoringFirstRequested = { [self] in
             let scoringCoordinator = ScoringCoordinator(di: di)
             
-            navigation.startModal(scoringCoordinator, animated: true) { result in
+            navigation.start(scoringCoordinator, animated: true) { result in
                 print("End Login after payWithScoring requested \(result)")
                 switch result {
                 case .normal:
                     let paymentCoordinator = PaymentCoordinator(di: di)
                     
-                    navigation.startModal(paymentCoordinator, animated: true) { result in
+                    navigation.start(paymentCoordinator, animated: true) { result in
                         print("End Payment After Login \(result)")
                         switch result {
                         case .normal(let paymentResult):

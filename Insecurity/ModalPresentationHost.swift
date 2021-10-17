@@ -1,29 +1,14 @@
 import UIKit
 
-public protocol ModalCoordinatorAny: InsecurityNavigation {
-    func startNavigation<NewResult>(_ navigationController: UINavigationController,
-                                     _ child: InsecurityChild<NewResult>,
-                                     animated: Bool,
-                                     _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+public class ModalHost: ModalNavigation {
+    private weak var hostController: UIViewController?
     
-    func startChild<NewResult>(_ child: InsecurityChild<NewResult>,
-                               animated: Bool,
-                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-    
-    func startOverTop<NewResult>(_ child: InsecurityChild<NewResult>,
-                                 animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-}
-
-public class ModalCoordinator: ModalCoordinatorAny {
-    weak var host: UIViewController?
-    
-    public init(_ host: UIViewController) {
-        self.host = host
+    public init(_ hostController: UIViewController) {
+        self.hostController = hostController
     }
     
-    init(optionalHost host: UIViewController?) {
-        self.host = host
+    init(optionalHostController hostController: UIViewController?) {
+        self.hostController = hostController
     }
     
     struct NavData {
@@ -33,7 +18,7 @@ public class ModalCoordinator: ModalCoordinatorAny {
         }
         
         weak var viewController: UIViewController?
-        let coordinator: InsecurityChildAny
+        let coordinator: CommonModalCoordinatorAny
         let state: State
     }
     
@@ -41,8 +26,8 @@ public class ModalCoordinator: ModalCoordinatorAny {
     var navData: [NavData] = []
     
     func purge() {
-        guard let host = host else {
-            assertionFailure("Modal Coordinator child has finished working, but his presenting parent was long dead, which is bug")
+        guard let hostController = hostController else {
+            assertionFailure("ModalHost child has finished working, but the root of the ModalHost was long dead, which is bug")
             return
         }
         
@@ -78,42 +63,22 @@ public class ModalCoordinator: ModalCoordinatorAny {
                 if topController.presentedViewController != nil {
                     controllerToDismissFrom = topController
                 } else {
-                    if topController.view.window == nil {
-                        // The modal chain has broken because the UIViewController or its parent has been removed from the window
-                        // This is expected but only when the finish propagation that happens inside this Modatroller
-                        // causes UIWindow to release the modal host AND/OR modal children (assuming they belonged to the same UIWindow)
-                        // somewhere up the coordinator chain.
-                        //
-                        // If presentedViewController is nil for some other reason, then it's a bug
-                    } else {
-                        assertionFailure("Modal child is supposed to dismiss its presentedViewControler content, but it has Jack Nicholson presented, so it's a bug")
-                    }
                     controllerToDismissFrom = nil
                 }
             } else {
-                print("ModalCoordinator child is supposed to dismiss his content, but instead turns out he's dead")
+                print("ModalHost child is supposed to dismiss his content, but instead turns out he's dead")
                 controllerToDismissFrom = nil
             }
         } else {
-            let hostHasPresentedController = host.presentedViewController != nil
+            let hostHasPresentedController = hostController.presentedViewController != nil
             // There used to be an assertion that the host has a presentedViewController, but what I found out recently is that if
             // the view controller is removed from window, the modal chain of relationships between view controllers
             // is broken and presented view controller becomes nil
             // This means only one thing - the batching of change applications is inevitable
             // But for this time, this will have to do
             if hostHasPresentedController {
-                controllerToDismissFrom = host
+                controllerToDismissFrom = hostController
             } else {
-                if host.view.window == nil {
-                    // The modal chain has broken because the UIViewController or its parent has been removed from the window
-                    // This is expected but only when the finish propagation that happens inside this Modatroller
-                    // causes UIWindow to release the modal host AND/OR modal children (assuming they belonged to the same UIWindow)
-                    // somewhere up the coordinator chain.
-                    //
-                    // If presentedViewController is nil for some other reason, then it's a bug
-                } else {
-                    assertionFailure("Host is supposed to dismiss its presentedViewControler content, but it has Jack Nicholson presented, so it's a bug")
-                }
                 controllerToDismissFrom = nil
             }
         }
@@ -126,7 +91,7 @@ public class ModalCoordinator: ModalCoordinatorAny {
         }
     }
     
-    func finalize(_ child: InsecurityChildAny) {
+    func finalize(_ child: CommonModalCoordinatorAny) {
         let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
@@ -140,7 +105,7 @@ public class ModalCoordinator: ModalCoordinatorAny {
         navData[index] = NavData(viewController: oldNavData.viewController, coordinator: oldNavData.coordinator, state: .finished)
     }
     
-    func purgeOnDealloc(_ child: InsecurityChildAny) {
+    func purgeOnDealloc(_ child: CommonModalCoordinatorAny) {
         let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
@@ -175,68 +140,78 @@ public class ModalCoordinator: ModalCoordinatorAny {
         assert(enqueuedChildStartRoutine == nil, "Child start couldn't ve been enqueued because dealloc purge is called before the result is propagated to the parent")
     }
     
-    func dispatch(_ controller: UIViewController, _ animated: Bool, _ child: InsecurityChildAny) {
-        let electedHostOpt: UIViewController?
+    func dispatch(_ controller: UIViewController, _ animated: Bool, _ child: CommonModalCoordinatorAny) {
+        let electedHostControllerOpt: UIViewController?
         if let topNavData = navData.last {
             if let hostController = topNavData.viewController {
                 let hostDoesntPresentAnything = hostController.presentedViewController == nil
                 if hostDoesntPresentAnything {
-                    electedHostOpt = hostController
+                    electedHostControllerOpt = hostController
                 } else {
                     assertionFailure("Top controller in the modal stack is already busy presenting something else, which is unexpected...")
-                    electedHostOpt = nil
+                    electedHostControllerOpt = nil
                 }
             } else {
                 assertionFailure("The top controller of modal stack is somehow dead")
-                electedHostOpt = nil
+                electedHostControllerOpt = nil
             }
         } else {
-            electedHostOpt = self.host
+            electedHostControllerOpt = self.hostController
         }
         
-        guard let electedHost = electedHostOpt else {
+        guard let electedHostController = electedHostControllerOpt else {
             assertionFailure("No host was found to start a child")
             return
         }
         
         let navData = NavData(viewController: controller, coordinator: child, state: .running)
         self.navData.append(navData)
-        electedHost.present(controller, animated: true, completion: nil)
+        electedHostController.present(controller, animated: true, completion: nil)
     }
     
-    public func startOverTop<NewResult>(_ child: InsecurityChild<NewResult>,
-                                        animated: Bool,
-                                        _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        startChild(child, animated: animated) { result in
+    func startNavigation<CoordinatorType: CommonNavigationCoordinator>(_ navigationController: UINavigationController,
+                                                                       _ child: CoordinatorType,
+                                                                       animated: Bool,
+                                                                       _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+        self._startNavigation(navigationController, child, animated: animated) { result in
             completion(result)
         }
     }
     
-    public func startNavigation<NewResult>(_ navigationController: UINavigationController,
-                                            _ initialChild: InsecurityChild<NewResult>,
-                                            animated: Bool,
-                                            _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        let navigationCoordinator = NavigationCoordinator(navigationController)
-        let navigationChild = InsecurityChildWithNavigationCoordinator<NewResult>(navigationCoordinator, navigationController)
+    func startModal<CoordinatorType: CommonModalCoordinator>(_ child: CoordinatorType,
+                                                             animated: Bool,
+                                                             _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+        _startChild(child, animated: animated) { result in
+            completion(result)
+        }
+    }
+    
+    private func _startNavigation<CoordinatorType: CommonNavigationCoordinator>(_ navigationController: UINavigationController,
+                                                                                _ initialChild: CoordinatorType,
+                                                                                animated: Bool,
+                                                                                _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+        let navigationHost = NavigationHost(navigationController)
+        let modalCoordinator = ModalCoordinatorWithNavigationHost<CoordinatorType.Result>(navigationHost, navigationController)
         
-        initialChild._navigation = navigationCoordinator
-        initialChild._finishImplementation = { [weak navigationChild] result in
-            if let navigationChild = navigationChild {
-                navigationChild.finish(result)
+        initialChild._updateHostReference(navigationHost)
+        
+        initialChild._finishImplementation = { [weak modalCoordinator] result in
+            if let modalCoordinator = modalCoordinator {
+                modalCoordinator.internalFinish(result)
             } else {
-                assertionFailure("NavigationCoordinator child has called finish way before we could initialize the coordinator or after it has already completed")
+                assertionFailure("ModalHost child has called finish way before we could initialize the coordinator or after it has already completed")
             }
         }
         navigationController.setViewControllers([ initialChild.viewController ], animated: Insecurity.navigationControllerRootIsAssignedWithAnimation)
         
-        self.startChild(navigationChild, animated: animated) { modalCoordinatorResult in
+        self._startChild(modalCoordinator, animated: animated) { modalCoordinatorResult in
             completion(modalCoordinatorResult)
         }
     }
     
     var enqueuedChildStartRoutine: (() -> Void)?
     
-    public func startChild<NewResult>(_ child: InsecurityChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+    private func _startChild<CoordinatorType: CommonModalCoordinator>(_ child: CoordinatorType, animated: Bool, _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
         if finalizationDepth > 0 {
             // Enqueing the start to happen after batch purge
             enqueuedChildStartRoutine = { [weak self] in
@@ -249,35 +224,27 @@ public class ModalCoordinator: ModalCoordinatorAny {
         }
     }
     
-    func startChildImmediately<NewResult>(_ child: InsecurityChild<NewResult>, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        
-        child._navigation = self
-        var weakControllerInitialized = false
+    private func startChildImmediately<CoordinatorType: CommonModalCoordinator>(_ child: CoordinatorType,
+                                                                                animated: Bool,
+                                                                                _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+        child._updateHostReference(self)
         weak var weakController: UIViewController?
         child._finishImplementation = { [weak self, weak child] result in
             guard let self = self else {
-                assertionFailure("ModalCoordinator wasn't properly retained. Make sure you save it somewhere before starting any children.")
+                assertionFailure("ModalHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
                 return
             }
             guard let child = child else { return }
             
-#if DEBUG
-            if weakControllerInitialized {
-                assert(weakController != nil, "Finish called but the controller is long dead")
-            } else {
-                assertionFailure("Finish called way before we could start the coordinator")
-            }
-#endif
             weakController?.onDeinit = nil
             self.finalize(child)
             self.finalizationDepth += 1
-            completion(.normal(result))
+            completion(result)
             self.finalizationDepth -= 1
             self.purge()
         }
         let controller = child.viewController
         weakController = controller
-        weakControllerInitialized = true
         
         controller.onDeinit = { [weak self, weak child] in
             guard let self = self, let child = child else { return }
@@ -290,22 +257,22 @@ public class ModalCoordinator: ModalCoordinatorAny {
     
 #if DEBUG
     deinit {
-        print("Modal Presentation Coordinator deinit \(type(of: self))")
+        print("ModalHost deinit \(type(of: self))")
     }
 #endif
     
-    // MARK: - InsecurityNavigation
+    // MARK: - ModalNavigation
     
-    public func start<NewResult>(_ child: InsecurityChild<NewResult>,
+    public func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                                  animated: Bool,
                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        self.startChild(child, animated: animated) { result in
+        self.startModal(child, animated: animated) { result in
             completion(result)
         }
     }
     
     public func start<NewResult>(_ navigationController: UINavigationController,
-                                 _ child: InsecurityChild<NewResult>,
+                                 _ child: NavigationCoordinator<NewResult>,
                                  animated: Bool,
                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         self.startNavigation(navigationController, child, animated: animated) { result in
@@ -313,11 +280,43 @@ public class ModalCoordinator: ModalCoordinatorAny {
         }
     }
     
-    public func startModal<NewResult>(_ child: InsecurityChild<NewResult>,
-                                      animated: Bool,
-                                      _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        self.startChild(child, animated: animated) { result in
-            completion(result)
+    // MARK: - AdaptiveNavigation
+    
+    public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>, in context: AdaptiveContext, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        switch context {
+        case .current, .newModal:
+            startModal(child, animated: animated) { result in
+                completion(result)
+            }
+        case .new(let navigationController):
+            self.startNavigation(navigationController, child, animated: animated) { result in
+                completion(result)
+            }
         }
+    }
+    
+    var hasChildren: Bool {
+        return !navData.isEmpty
+    }
+    
+    public var topContext: AdaptiveNavigation! {
+        if let lastNavData = self.navData.last?.coordinator as? ModalCoordinatorWithNavigationHostAny {
+            #if DEBUG
+            let indicesOfModalChildrenRetainingNavigationHosts = self.navData.enumerated().compactMap { index, navData -> Int? in
+                if (navData.coordinator as? ModalCoordinatorWithNavigationHostAny) != nil {
+                    return index
+                }
+                
+                return nil
+            }
+            assert(indicesOfModalChildrenRetainingNavigationHosts.count == 1, "How comes ModalNavigation has 2 children with NavigationHosts inside of them?")
+            #endif
+            
+            if let navigationHostChild = lastNavData.navigationHostChild {
+                return navigationHostChild.topContext
+            }
+        }
+        
+        return self
     }
 }

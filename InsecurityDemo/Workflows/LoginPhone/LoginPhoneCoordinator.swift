@@ -5,7 +5,7 @@ enum LoginPhoneCoordinatorResult {
     case loggedIn
 }
 
-class LoginPhoneCoordinator: InsecurityChild<LoginPhoneCoordinatorResult> {
+class LoginPhoneCoordinator: NavigationCoordinator<LoginPhoneCoordinatorResult> {
     typealias DI = HasAuthService
     
     override var viewController: UIViewController {

@@ -1,16 +1,23 @@
 PODS:
+  - Insecurity (1.0.0)
   - SnapKit (5.0.1)
 
 DEPENDENCIES:
+  - Insecurity (from `./Insecurity.podspec`)
   - SnapKit
 
 SPEC REPOS:
   trunk:
     - SnapKit
 
+EXTERNAL SOURCES:
+  Insecurity:
+    :podspec: "./Insecurity.podspec"
+
 SPEC CHECKSUMS:
+  Insecurity: 49eab73cf6272fa9a1b7e85dd22eac064c51796f
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
 
-PODFILE CHECKSUM: c96f1ac4f5f905ba959e7f9d9cc830520ef23c95
+PODFILE CHECKSUM: 087b684e8f10d2dc9bb891cc1e8c27bc6024970b
 
 COCOAPODS: 1.11.2

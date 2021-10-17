@@ -7,41 +7,58 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A37ADE112712F3E40096E75A /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADE092712F3E40096E75A /* DeinitObservable.swift */; };
-		A37ADE122712F3E40096E75A /* CoordinatorResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADE0A2712F3E40096E75A /* CoordinatorResult.swift */; };
-		A37ADE132712F3E40096E75A /* ModalPresentationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADE0B2712F3E40096E75A /* ModalPresentationCoordinator.swift */; };
-		A37ADE142712F3E40096E75A /* WindowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADE0C2712F3E40096E75A /* WindowCoordinator.swift */; };
-		A37ADE152712F3E40096E75A /* Insecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADE0D2712F3E40096E75A /* Insecurity.swift */; };
-		A37ADE162712F3E40096E75A /* NavigationControllerCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADE0E2712F3E40096E75A /* NavigationControllerCoordinator.swift */; };
-		A37ADE172712F3E40096E75A /* InsecurityChild.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADE0F2712F3E40096E75A /* InsecurityChild.swift */; };
-		A37ADE182712F3E40096E75A /* InsecurityNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADE102712F3E40096E75A /* InsecurityNavigation.swift */; };
-		A37ADEFA2712F7000096E75A /* UIColor+system.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEC82712F7000096E75A /* UIColor+system.swift */; };
-		A37ADEFB2712F7000096E75A /* DispatchQueue+asyncAfter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEC92712F7000096E75A /* DispatchQueue+asyncAfter.swift */; };
+		A33986D9271CAFC200B68256 /* ModalNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986CA271CAFC100B68256 /* ModalNavigation.swift */; };
+		A33986DA271CAFC200B68256 /* AdaptiveNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986CB271CAFC100B68256 /* AdaptiveNavigation.swift */; };
+		A33986DB271CAFC200B68256 /* ModalPresentationHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986CC271CAFC100B68256 /* ModalPresentationHost.swift */; };
+		A33986DC271CAFC200B68256 /* NavigationControllerNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986CD271CAFC200B68256 /* NavigationControllerNavigation.swift */; };
+		A33986DD271CAFC200B68256 /* NavigationControllerHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986CE271CAFC200B68256 /* NavigationControllerHost.swift */; };
+		A33986DE271CAFC200B68256 /* AdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986CF271CAFC200B68256 /* AdaptiveCoordinator.swift */; };
+		A33986DF271CAFC200B68256 /* ModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D0271CAFC200B68256 /* ModalCoordinator.swift */; };
+		A33986E0271CAFC200B68256 /* CommonNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D1271CAFC200B68256 /* CommonNavigationCoordinator.swift */; };
+		A33986E1271CAFC200B68256 /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D2271CAFC200B68256 /* NavigationCoordinator.swift */; };
+		A33986E2271CAFC200B68256 /* WindowHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D3271CAFC200B68256 /* WindowHost.swift */; };
+		A33986E3271CAFC200B68256 /* CommonModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D4271CAFC200B68256 /* CommonModalCoordinator.swift */; };
+		A33986E4271CAFC200B68256 /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D5271CAFC200B68256 /* DeinitObservable.swift */; };
+		A33986E5271CAFC200B68256 /* WindowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D6271CAFC200B68256 /* WindowCoordinator.swift */; };
+		A33986E6271CAFC200B68256 /* CoordinatorResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D7271CAFC200B68256 /* CoordinatorResult.swift */; };
+		A33986E7271CAFC200B68256 /* Insecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D8271CAFC200B68256 /* Insecurity.swift */; };
+		A33986F0271CB02F00B68256 /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986EF271CB02F00B68256 /* PaymentMethod.swift */; };
+		A339872C271CB0DA00B68256 /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398700271CB0DA00B68256 /* ProductViewController.swift */; };
+		A339872D271CB0DA00B68256 /* ProductCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398701271CB0DA00B68256 /* ProductCoordinator.swift */; };
+		A339872E271CB0DA00B68256 /* LoginSMSCodeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398703271CB0DA00B68256 /* LoginSMSCodeCoordinator.swift */; };
+		A339872F271CB0DA00B68256 /* LoginSMSCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398704271CB0DA00B68256 /* LoginSMSCodeViewController.swift */; };
+		A3398730271CB0DA00B68256 /* LoginPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398706271CB0DA00B68256 /* LoginPhoneViewController.swift */; };
+		A3398731271CB0DA00B68256 /* LoginPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398707271CB0DA00B68256 /* LoginPhoneCoordinator.swift */; };
+		A3398732271CB0DA00B68256 /* DebugViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398709271CB0DA00B68256 /* DebugViewCoordinator.swift */; };
+		A3398733271CB0DA00B68256 /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339870A271CB0DA00B68256 /* DebugViewController.swift */; };
+		A3398734271CB0DA00B68256 /* PaymentSuccessCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339870C271CB0DA00B68256 /* PaymentSuccessCoordinator.swift */; };
+		A3398735271CB0DA00B68256 /* PaymentSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339870D271CB0DA00B68256 /* PaymentSuccessViewController.swift */; };
+		A3398736271CB0DA00B68256 /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339870F271CB0DA00B68256 /* ParentViewController.swift */; };
+		A3398737271CB0DA00B68256 /* ParentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398710271CB0DA00B68256 /* ParentCoordinator.swift */; };
+		A3398738271CB0DA00B68256 /* SmallAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398711271CB0DA00B68256 /* SmallAppDelegate.swift */; };
+		A3398739271CB0DA00B68256 /* AddPaymentMethodCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398713271CB0DA00B68256 /* AddPaymentMethodCoordinator.swift */; };
+		A339873A271CB0DA00B68256 /* AddPaymentMethodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398714271CB0DA00B68256 /* AddPaymentMethodViewController.swift */; };
+		A339873B271CB0DA00B68256 /* CurrencySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398716271CB0DA00B68256 /* CurrencySelectionViewController.swift */; };
+		A339873C271CB0DA00B68256 /* CurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398717271CB0DA00B68256 /* CurrencyView.swift */; };
+		A339873D271CB0DA00B68256 /* CurrencySelectionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398718271CB0DA00B68256 /* CurrencySelectionCoordinator.swift */; };
+		A339873E271CB0DA00B68256 /* GenericViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339871A271CB0DA00B68256 /* GenericViewController.swift */; };
+		A339873F271CB0DA00B68256 /* GenericCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339871B271CB0DA00B68256 /* GenericCoordinator.swift */; };
+		A3398740271CB0DA00B68256 /* PaymentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339871D271CB0DA00B68256 /* PaymentCoordinator.swift */; };
+		A3398741271CB0DA00B68256 /* PaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339871E271CB0DA00B68256 /* PaymentViewController.swift */; };
+		A3398742271CB0DA00B68256 /* GalleryCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398720271CB0DA00B68256 /* GalleryCoordinator.swift */; };
+		A3398743271CB0DA00B68256 /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398721271CB0DA00B68256 /* GalleryViewController.swift */; };
+		A3398744271CB0DA00B68256 /* ScoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398723271CB0DA00B68256 /* ScoringViewController.swift */; };
+		A3398745271CB0DA00B68256 /* ScoringCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398724271CB0DA00B68256 /* ScoringCoordinator.swift */; };
+		A3398746271CB0DA00B68256 /* PaymentMethodCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398726271CB0DA00B68256 /* PaymentMethodCoordinator.swift */; };
+		A3398747271CB0DA00B68256 /* PaymentMethodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398727271CB0DA00B68256 /* PaymentMethodViewController.swift */; };
+		A3398748271CB0DA00B68256 /* SmallAppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398728271CB0DA00B68256 /* SmallAppCoordinator.swift */; };
+		A3398749271CB0DA00B68256 /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339872A271CB0DA00B68256 /* CartViewController.swift */; };
+		A339874A271CB0DA00B68256 /* CartCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339872B271CB0DA00B68256 /* CartCoordinator.swift */; };
+		A3398750271CB0EC00B68256 /* UIColor+random.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339874D271CB0EC00B68256 /* UIColor+random.swift */; };
+		A3398751271CB0EC00B68256 /* UIColor+system.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339874E271CB0EC00B68256 /* UIColor+system.swift */; };
+		A3398752271CB0EC00B68256 /* DispatchQueue+asyncAfter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339874F271CB0EC00B68256 /* DispatchQueue+asyncAfter.swift */; };
 		A37ADEFC2712F7000096E75A /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADECA2712F7000096E75A /* ApplicationCoordinator.swift */; };
 		A37ADEFD2712F7000096E75A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A37ADECB2712F7000096E75A /* Assets.xcassets */; };
-		A37ADEFE2712F7000096E75A /* LoginSMSCodeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADECE2712F7000096E75A /* LoginSMSCodeCoordinator.swift */; };
-		A37ADEFF2712F7000096E75A /* LoginSMSCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADECF2712F7000096E75A /* LoginSMSCodeViewController.swift */; };
-		A37ADF002712F7000096E75A /* DebugViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADED12712F7000096E75A /* DebugViewCoordinator.swift */; };
-		A37ADF012712F7000096E75A /* DebugViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADED22712F7000096E75A /* DebugViewController.swift */; };
-		A37ADF022712F7000096E75A /* PaymentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADED42712F7000096E75A /* PaymentCoordinator.swift */; };
-		A37ADF032712F7000096E75A /* PaymentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADED52712F7000096E75A /* PaymentViewController.swift */; };
-		A37ADF042712F7000096E75A /* GalleryCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADED72712F7000096E75A /* GalleryCoordinator.swift */; };
-		A37ADF052712F7000096E75A /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADED82712F7000096E75A /* GalleryViewController.swift */; };
-		A37ADF062712F7000096E75A /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEDA2712F7000096E75A /* ProductViewController.swift */; };
-		A37ADF072712F7000096E75A /* ProductCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEDB2712F7000096E75A /* ProductCoordinator.swift */; };
-		A37ADF082712F7000096E75A /* PaymentSuccessCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEDD2712F7000096E75A /* PaymentSuccessCoordinator.swift */; };
-		A37ADF092712F7000096E75A /* PaymentSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEDE2712F7000096E75A /* PaymentSuccessViewController.swift */; };
-		A37ADF0A2712F7000096E75A /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE02712F7000096E75A /* ParentViewController.swift */; };
-		A37ADF0B2712F7000096E75A /* ParentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE12712F7000096E75A /* ParentCoordinator.swift */; };
-		A37ADF0C2712F7000096E75A /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE32712F7000096E75A /* CartViewController.swift */; };
-		A37ADF0D2712F7000096E75A /* CartCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE42712F7000096E75A /* CartCoordinator.swift */; };
-		A37ADF0E2712F7000096E75A /* ScoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE62712F7000096E75A /* ScoringViewController.swift */; };
-		A37ADF0F2712F7000096E75A /* ScoringCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE72712F7000096E75A /* ScoringCoordinator.swift */; };
-		A37ADF102712F7000096E75A /* CurrencySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEE92712F7000096E75A /* CurrencySelectionViewController.swift */; };
-		A37ADF112712F7000096E75A /* CurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEEA2712F7000096E75A /* CurrencyView.swift */; };
-		A37ADF122712F7000096E75A /* CurrencySelectionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEEB2712F7000096E75A /* CurrencySelectionCoordinator.swift */; };
-		A37ADF132712F7000096E75A /* LoginPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEED2712F7000096E75A /* LoginPhoneViewController.swift */; };
-		A37ADF142712F7000096E75A /* LoginPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEEE2712F7000096E75A /* LoginPhoneCoordinator.swift */; };
 		A37ADF152712F7000096E75A /* CurrencySelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEF02712F7000096E75A /* CurrencySelection.swift */; };
 		A37ADF162712F7000096E75A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A37ADEF12712F7000096E75A /* LaunchScreen.storyboard */; };
 		A37ADF172712F7000096E75A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEF32712F7000096E75A /* AppDelegate.swift */; };
@@ -82,45 +99,62 @@
 		0725F7F2AA6BE8626B9A5309 /* Pods-InsecurityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		2617270B664F6C389D67EBB8 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		80DF2A56DADCFECAE4E1D23B /* Pods-InsecurityDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.release.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.release.xcconfig"; sourceTree = "<group>"; };
+		A33986CA271CAFC100B68256 /* ModalNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalNavigation.swift; sourceTree = "<group>"; };
+		A33986CB271CAFC100B68256 /* AdaptiveNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdaptiveNavigation.swift; sourceTree = "<group>"; };
+		A33986CC271CAFC100B68256 /* ModalPresentationHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalPresentationHost.swift; sourceTree = "<group>"; };
+		A33986CD271CAFC200B68256 /* NavigationControllerNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationControllerNavigation.swift; sourceTree = "<group>"; };
+		A33986CE271CAFC200B68256 /* NavigationControllerHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationControllerHost.swift; sourceTree = "<group>"; };
+		A33986CF271CAFC200B68256 /* AdaptiveCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdaptiveCoordinator.swift; sourceTree = "<group>"; };
+		A33986D0271CAFC200B68256 /* ModalCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalCoordinator.swift; sourceTree = "<group>"; };
+		A33986D1271CAFC200B68256 /* CommonNavigationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonNavigationCoordinator.swift; sourceTree = "<group>"; };
+		A33986D2271CAFC200B68256 /* NavigationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationCoordinator.swift; sourceTree = "<group>"; };
+		A33986D3271CAFC200B68256 /* WindowHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowHost.swift; sourceTree = "<group>"; };
+		A33986D4271CAFC200B68256 /* CommonModalCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonModalCoordinator.swift; sourceTree = "<group>"; };
+		A33986D5271CAFC200B68256 /* DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
+		A33986D6271CAFC200B68256 /* WindowCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowCoordinator.swift; sourceTree = "<group>"; };
+		A33986D7271CAFC200B68256 /* CoordinatorResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoordinatorResult.swift; sourceTree = "<group>"; };
+		A33986D8271CAFC200B68256 /* Insecurity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Insecurity.swift; sourceTree = "<group>"; };
+		A33986EF271CB02F00B68256 /* PaymentMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
+		A3398700271CB0DA00B68256 /* ProductViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
+		A3398701271CB0DA00B68256 /* ProductCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductCoordinator.swift; sourceTree = "<group>"; };
+		A3398703271CB0DA00B68256 /* LoginSMSCodeCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeCoordinator.swift; sourceTree = "<group>"; };
+		A3398704271CB0DA00B68256 /* LoginSMSCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeViewController.swift; sourceTree = "<group>"; };
+		A3398706271CB0DA00B68256 /* LoginPhoneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginPhoneViewController.swift; sourceTree = "<group>"; };
+		A3398707271CB0DA00B68256 /* LoginPhoneCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginPhoneCoordinator.swift; sourceTree = "<group>"; };
+		A3398709271CB0DA00B68256 /* DebugViewCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugViewCoordinator.swift; sourceTree = "<group>"; };
+		A339870A271CB0DA00B68256 /* DebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
+		A339870C271CB0DA00B68256 /* PaymentSuccessCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSuccessCoordinator.swift; sourceTree = "<group>"; };
+		A339870D271CB0DA00B68256 /* PaymentSuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSuccessViewController.swift; sourceTree = "<group>"; };
+		A339870F271CB0DA00B68256 /* ParentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
+		A3398710271CB0DA00B68256 /* ParentCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentCoordinator.swift; sourceTree = "<group>"; };
+		A3398711271CB0DA00B68256 /* SmallAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmallAppDelegate.swift; sourceTree = "<group>"; };
+		A3398713271CB0DA00B68256 /* AddPaymentMethodCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodCoordinator.swift; sourceTree = "<group>"; };
+		A3398714271CB0DA00B68256 /* AddPaymentMethodViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodViewController.swift; sourceTree = "<group>"; };
+		A3398716271CB0DA00B68256 /* CurrencySelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectionViewController.swift; sourceTree = "<group>"; };
+		A3398717271CB0DA00B68256 /* CurrencyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyView.swift; sourceTree = "<group>"; };
+		A3398718271CB0DA00B68256 /* CurrencySelectionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectionCoordinator.swift; sourceTree = "<group>"; };
+		A339871A271CB0DA00B68256 /* GenericViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericViewController.swift; sourceTree = "<group>"; };
+		A339871B271CB0DA00B68256 /* GenericCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericCoordinator.swift; sourceTree = "<group>"; };
+		A339871D271CB0DA00B68256 /* PaymentCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentCoordinator.swift; sourceTree = "<group>"; };
+		A339871E271CB0DA00B68256 /* PaymentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentViewController.swift; sourceTree = "<group>"; };
+		A3398720271CB0DA00B68256 /* GalleryCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryCoordinator.swift; sourceTree = "<group>"; };
+		A3398721271CB0DA00B68256 /* GalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
+		A3398723271CB0DA00B68256 /* ScoringViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoringViewController.swift; sourceTree = "<group>"; };
+		A3398724271CB0DA00B68256 /* ScoringCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
+		A3398726271CB0DA00B68256 /* PaymentMethodCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodCoordinator.swift; sourceTree = "<group>"; };
+		A3398727271CB0DA00B68256 /* PaymentMethodViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodViewController.swift; sourceTree = "<group>"; };
+		A3398728271CB0DA00B68256 /* SmallAppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmallAppCoordinator.swift; sourceTree = "<group>"; };
+		A339872A271CB0DA00B68256 /* CartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartViewController.swift; sourceTree = "<group>"; };
+		A339872B271CB0DA00B68256 /* CartCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartCoordinator.swift; sourceTree = "<group>"; };
+		A339874D271CB0EC00B68256 /* UIColor+random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+random.swift"; sourceTree = "<group>"; };
+		A339874E271CB0EC00B68256 /* UIColor+system.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+system.swift"; sourceTree = "<group>"; };
+		A339874F271CB0EC00B68256 /* DispatchQueue+asyncAfter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+asyncAfter.swift"; sourceTree = "<group>"; };
 		A33EDF9C2712F2B50041F32A /* Insecurity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Insecurity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A33EDFA02712F2B50041F32A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A37ADE092712F3E40096E75A /* DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
-		A37ADE0A2712F3E40096E75A /* CoordinatorResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoordinatorResult.swift; sourceTree = "<group>"; };
-		A37ADE0B2712F3E40096E75A /* ModalPresentationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalPresentationCoordinator.swift; sourceTree = "<group>"; };
-		A37ADE0C2712F3E40096E75A /* WindowCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowCoordinator.swift; sourceTree = "<group>"; };
-		A37ADE0D2712F3E40096E75A /* Insecurity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Insecurity.swift; sourceTree = "<group>"; };
-		A37ADE0E2712F3E40096E75A /* NavigationControllerCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationControllerCoordinator.swift; sourceTree = "<group>"; };
-		A37ADE0F2712F3E40096E75A /* InsecurityChild.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsecurityChild.swift; sourceTree = "<group>"; };
-		A37ADE102712F3E40096E75A /* InsecurityNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsecurityNavigation.swift; sourceTree = "<group>"; };
 		A37ADEAE2712F6CB0096E75A /* InsecurityDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A37ADEBE2712F6CC0096E75A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		A37ADEC82712F7000096E75A /* UIColor+system.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+system.swift"; sourceTree = "<group>"; };
-		A37ADEC92712F7000096E75A /* DispatchQueue+asyncAfter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+asyncAfter.swift"; sourceTree = "<group>"; };
 		A37ADECA2712F7000096E75A /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
 		A37ADECB2712F7000096E75A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		A37ADECE2712F7000096E75A /* LoginSMSCodeCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeCoordinator.swift; sourceTree = "<group>"; };
-		A37ADECF2712F7000096E75A /* LoginSMSCodeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeViewController.swift; sourceTree = "<group>"; };
-		A37ADED12712F7000096E75A /* DebugViewCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugViewCoordinator.swift; sourceTree = "<group>"; };
-		A37ADED22712F7000096E75A /* DebugViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebugViewController.swift; sourceTree = "<group>"; };
-		A37ADED42712F7000096E75A /* PaymentCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentCoordinator.swift; sourceTree = "<group>"; };
-		A37ADED52712F7000096E75A /* PaymentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentViewController.swift; sourceTree = "<group>"; };
-		A37ADED72712F7000096E75A /* GalleryCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryCoordinator.swift; sourceTree = "<group>"; };
-		A37ADED82712F7000096E75A /* GalleryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GalleryViewController.swift; sourceTree = "<group>"; };
-		A37ADEDA2712F7000096E75A /* ProductViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
-		A37ADEDB2712F7000096E75A /* ProductCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductCoordinator.swift; sourceTree = "<group>"; };
-		A37ADEDD2712F7000096E75A /* PaymentSuccessCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSuccessCoordinator.swift; sourceTree = "<group>"; };
-		A37ADEDE2712F7000096E75A /* PaymentSuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSuccessViewController.swift; sourceTree = "<group>"; };
-		A37ADEE02712F7000096E75A /* ParentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
-		A37ADEE12712F7000096E75A /* ParentCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentCoordinator.swift; sourceTree = "<group>"; };
-		A37ADEE32712F7000096E75A /* CartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartViewController.swift; sourceTree = "<group>"; };
-		A37ADEE42712F7000096E75A /* CartCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartCoordinator.swift; sourceTree = "<group>"; };
-		A37ADEE62712F7000096E75A /* ScoringViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoringViewController.swift; sourceTree = "<group>"; };
-		A37ADEE72712F7000096E75A /* ScoringCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
-		A37ADEE92712F7000096E75A /* CurrencySelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectionViewController.swift; sourceTree = "<group>"; };
-		A37ADEEA2712F7000096E75A /* CurrencyView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencyView.swift; sourceTree = "<group>"; };
-		A37ADEEB2712F7000096E75A /* CurrencySelectionCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectionCoordinator.swift; sourceTree = "<group>"; };
-		A37ADEED2712F7000096E75A /* LoginPhoneViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginPhoneViewController.swift; sourceTree = "<group>"; };
-		A37ADEEE2712F7000096E75A /* LoginPhoneCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginPhoneCoordinator.swift; sourceTree = "<group>"; };
 		A37ADEF02712F7000096E75A /* CurrencySelection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelection.swift; sourceTree = "<group>"; };
 		A37ADEF22712F7000096E75A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A37ADEF32712F7000096E75A /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -156,8 +190,134 @@
 				0725F7F2AA6BE8626B9A5309 /* Pods-InsecurityDemo.debug.xcconfig */,
 				80DF2A56DADCFECAE4E1D23B /* Pods-InsecurityDemo.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		A33986FF271CB0DA00B68256 /* Product */ = {
+			isa = PBXGroup;
+			children = (
+				A3398700271CB0DA00B68256 /* ProductViewController.swift */,
+				A3398701271CB0DA00B68256 /* ProductCoordinator.swift */,
+			);
+			path = Product;
+			sourceTree = "<group>";
+		};
+		A3398702271CB0DA00B68256 /* LoginSMSCode */ = {
+			isa = PBXGroup;
+			children = (
+				A3398703271CB0DA00B68256 /* LoginSMSCodeCoordinator.swift */,
+				A3398704271CB0DA00B68256 /* LoginSMSCodeViewController.swift */,
+			);
+			path = LoginSMSCode;
+			sourceTree = "<group>";
+		};
+		A3398705271CB0DA00B68256 /* LoginPhone */ = {
+			isa = PBXGroup;
+			children = (
+				A3398706271CB0DA00B68256 /* LoginPhoneViewController.swift */,
+				A3398707271CB0DA00B68256 /* LoginPhoneCoordinator.swift */,
+			);
+			path = LoginPhone;
+			sourceTree = "<group>";
+		};
+		A3398708271CB0DA00B68256 /* DebugViewController */ = {
+			isa = PBXGroup;
+			children = (
+				A3398709271CB0DA00B68256 /* DebugViewCoordinator.swift */,
+				A339870A271CB0DA00B68256 /* DebugViewController.swift */,
+			);
+			path = DebugViewController;
+			sourceTree = "<group>";
+		};
+		A339870B271CB0DA00B68256 /* PaymentSuccess */ = {
+			isa = PBXGroup;
+			children = (
+				A339870C271CB0DA00B68256 /* PaymentSuccessCoordinator.swift */,
+				A339870D271CB0DA00B68256 /* PaymentSuccessViewController.swift */,
+			);
+			path = PaymentSuccess;
+			sourceTree = "<group>";
+		};
+		A339870E271CB0DA00B68256 /* ParentSample */ = {
+			isa = PBXGroup;
+			children = (
+				A339870F271CB0DA00B68256 /* ParentViewController.swift */,
+				A3398710271CB0DA00B68256 /* ParentCoordinator.swift */,
+			);
+			path = ParentSample;
+			sourceTree = "<group>";
+		};
+		A3398712271CB0DA00B68256 /* AddPaymentMethod */ = {
+			isa = PBXGroup;
+			children = (
+				A3398713271CB0DA00B68256 /* AddPaymentMethodCoordinator.swift */,
+				A3398714271CB0DA00B68256 /* AddPaymentMethodViewController.swift */,
+			);
+			path = AddPaymentMethod;
+			sourceTree = "<group>";
+		};
+		A3398715271CB0DA00B68256 /* CurrencySelection */ = {
+			isa = PBXGroup;
+			children = (
+				A3398716271CB0DA00B68256 /* CurrencySelectionViewController.swift */,
+				A3398717271CB0DA00B68256 /* CurrencyView.swift */,
+				A3398718271CB0DA00B68256 /* CurrencySelectionCoordinator.swift */,
+			);
+			path = CurrencySelection;
+			sourceTree = "<group>";
+		};
+		A3398719271CB0DA00B68256 /* LongChain */ = {
+			isa = PBXGroup;
+			children = (
+				A339871A271CB0DA00B68256 /* GenericViewController.swift */,
+				A339871B271CB0DA00B68256 /* GenericCoordinator.swift */,
+			);
+			path = LongChain;
+			sourceTree = "<group>";
+		};
+		A339871C271CB0DA00B68256 /* Payment */ = {
+			isa = PBXGroup;
+			children = (
+				A339871D271CB0DA00B68256 /* PaymentCoordinator.swift */,
+				A339871E271CB0DA00B68256 /* PaymentViewController.swift */,
+			);
+			path = Payment;
+			sourceTree = "<group>";
+		};
+		A339871F271CB0DA00B68256 /* Gallery */ = {
+			isa = PBXGroup;
+			children = (
+				A3398720271CB0DA00B68256 /* GalleryCoordinator.swift */,
+				A3398721271CB0DA00B68256 /* GalleryViewController.swift */,
+			);
+			path = Gallery;
+			sourceTree = "<group>";
+		};
+		A3398722271CB0DA00B68256 /* Scoring */ = {
+			isa = PBXGroup;
+			children = (
+				A3398723271CB0DA00B68256 /* ScoringViewController.swift */,
+				A3398724271CB0DA00B68256 /* ScoringCoordinator.swift */,
+			);
+			path = Scoring;
+			sourceTree = "<group>";
+		};
+		A3398725271CB0DA00B68256 /* PaymentMethod */ = {
+			isa = PBXGroup;
+			children = (
+				A3398726271CB0DA00B68256 /* PaymentMethodCoordinator.swift */,
+				A3398727271CB0DA00B68256 /* PaymentMethodViewController.swift */,
+			);
+			path = PaymentMethod;
+			sourceTree = "<group>";
+		};
+		A3398729271CB0DA00B68256 /* Cart */ = {
+			isa = PBXGroup;
+			children = (
+				A339872A271CB0DA00B68256 /* CartViewController.swift */,
+				A339872B271CB0DA00B68256 /* CartCoordinator.swift */,
+			);
+			path = Cart;
 			sourceTree = "<group>";
 		};
 		A33EDF922712F2B50041F32A = {
@@ -193,14 +353,21 @@
 		A37ADE082712F3E40096E75A /* Insecurity */ = {
 			isa = PBXGroup;
 			children = (
-				A37ADE092712F3E40096E75A /* DeinitObservable.swift */,
-				A37ADE0A2712F3E40096E75A /* CoordinatorResult.swift */,
-				A37ADE0B2712F3E40096E75A /* ModalPresentationCoordinator.swift */,
-				A37ADE0C2712F3E40096E75A /* WindowCoordinator.swift */,
-				A37ADE0D2712F3E40096E75A /* Insecurity.swift */,
-				A37ADE0E2712F3E40096E75A /* NavigationControllerCoordinator.swift */,
-				A37ADE0F2712F3E40096E75A /* InsecurityChild.swift */,
-				A37ADE102712F3E40096E75A /* InsecurityNavigation.swift */,
+				A33986CF271CAFC200B68256 /* AdaptiveCoordinator.swift */,
+				A33986CB271CAFC100B68256 /* AdaptiveNavigation.swift */,
+				A33986D4271CAFC200B68256 /* CommonModalCoordinator.swift */,
+				A33986D1271CAFC200B68256 /* CommonNavigationCoordinator.swift */,
+				A33986D7271CAFC200B68256 /* CoordinatorResult.swift */,
+				A33986D5271CAFC200B68256 /* DeinitObservable.swift */,
+				A33986D8271CAFC200B68256 /* Insecurity.swift */,
+				A33986D0271CAFC200B68256 /* ModalCoordinator.swift */,
+				A33986CA271CAFC100B68256 /* ModalNavigation.swift */,
+				A33986CC271CAFC100B68256 /* ModalPresentationHost.swift */,
+				A33986CE271CAFC200B68256 /* NavigationControllerHost.swift */,
+				A33986CD271CAFC200B68256 /* NavigationControllerNavigation.swift */,
+				A33986D2271CAFC200B68256 /* NavigationCoordinator.swift */,
+				A33986D6271CAFC200B68256 /* WindowCoordinator.swift */,
+				A33986D3271CAFC200B68256 /* WindowHost.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -221,11 +388,11 @@
 				A37ADECB2712F7000096E75A /* Assets.xcassets */,
 				A37ADECC2712F7000096E75A /* Workflows */,
 				A37ADEEF2712F7000096E75A /* Models */,
+				A37ADEF72712F7000096E75A /* Services */,
 				A37ADEF12712F7000096E75A /* LaunchScreen.storyboard */,
 				A37ADEF32712F7000096E75A /* AppDelegate.swift */,
 				A37ADEF42712F7000096E75A /* Application.swift */,
 				A37ADEF52712F7000096E75A /* main.swift */,
-				A37ADEF72712F7000096E75A /* Services */,
 			);
 			path = InsecurityDemo;
 			sourceTree = "<group>";
@@ -233,8 +400,9 @@
 		A37ADEC72712F7000096E75A /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				A37ADEC82712F7000096E75A /* UIColor+system.swift */,
-				A37ADEC92712F7000096E75A /* DispatchQueue+asyncAfter.swift */,
+				A339874F271CB0EC00B68256 /* DispatchQueue+asyncAfter.swift */,
+				A339874D271CB0EC00B68256 /* UIColor+random.swift */,
+				A339874E271CB0EC00B68256 /* UIColor+system.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -242,124 +410,30 @@
 		A37ADECC2712F7000096E75A /* Workflows */ = {
 			isa = PBXGroup;
 			children = (
-				A37ADECD2712F7000096E75A /* LoginSMSCode */,
-				A37ADED02712F7000096E75A /* DebugViewController */,
-				A37ADED32712F7000096E75A /* Payment */,
-				A37ADED62712F7000096E75A /* Gallery */,
-				A37ADED92712F7000096E75A /* Product */,
-				A37ADEDC2712F7000096E75A /* PaymentSuccess */,
-				A37ADEDF2712F7000096E75A /* ParentSample */,
-				A37ADEE22712F7000096E75A /* Cart */,
-				A37ADEE52712F7000096E75A /* Scoring */,
-				A37ADEE82712F7000096E75A /* CurrencySelection */,
-				A37ADEEC2712F7000096E75A /* LoginPhone */,
+				A3398712271CB0DA00B68256 /* AddPaymentMethod */,
+				A3398729271CB0DA00B68256 /* Cart */,
+				A3398715271CB0DA00B68256 /* CurrencySelection */,
+				A3398708271CB0DA00B68256 /* DebugViewController */,
+				A339871F271CB0DA00B68256 /* Gallery */,
+				A3398705271CB0DA00B68256 /* LoginPhone */,
+				A3398702271CB0DA00B68256 /* LoginSMSCode */,
+				A3398719271CB0DA00B68256 /* LongChain */,
+				A339870E271CB0DA00B68256 /* ParentSample */,
+				A339871C271CB0DA00B68256 /* Payment */,
+				A3398725271CB0DA00B68256 /* PaymentMethod */,
+				A339870B271CB0DA00B68256 /* PaymentSuccess */,
+				A33986FF271CB0DA00B68256 /* Product */,
+				A3398722271CB0DA00B68256 /* Scoring */,
+				A3398728271CB0DA00B68256 /* SmallAppCoordinator.swift */,
+				A3398711271CB0DA00B68256 /* SmallAppDelegate.swift */,
 			);
 			path = Workflows;
-			sourceTree = "<group>";
-		};
-		A37ADECD2712F7000096E75A /* LoginSMSCode */ = {
-			isa = PBXGroup;
-			children = (
-				A37ADECE2712F7000096E75A /* LoginSMSCodeCoordinator.swift */,
-				A37ADECF2712F7000096E75A /* LoginSMSCodeViewController.swift */,
-			);
-			path = LoginSMSCode;
-			sourceTree = "<group>";
-		};
-		A37ADED02712F7000096E75A /* DebugViewController */ = {
-			isa = PBXGroup;
-			children = (
-				A37ADED12712F7000096E75A /* DebugViewCoordinator.swift */,
-				A37ADED22712F7000096E75A /* DebugViewController.swift */,
-			);
-			path = DebugViewController;
-			sourceTree = "<group>";
-		};
-		A37ADED32712F7000096E75A /* Payment */ = {
-			isa = PBXGroup;
-			children = (
-				A37ADED42712F7000096E75A /* PaymentCoordinator.swift */,
-				A37ADED52712F7000096E75A /* PaymentViewController.swift */,
-			);
-			path = Payment;
-			sourceTree = "<group>";
-		};
-		A37ADED62712F7000096E75A /* Gallery */ = {
-			isa = PBXGroup;
-			children = (
-				A37ADED72712F7000096E75A /* GalleryCoordinator.swift */,
-				A37ADED82712F7000096E75A /* GalleryViewController.swift */,
-			);
-			path = Gallery;
-			sourceTree = "<group>";
-		};
-		A37ADED92712F7000096E75A /* Product */ = {
-			isa = PBXGroup;
-			children = (
-				A37ADEDA2712F7000096E75A /* ProductViewController.swift */,
-				A37ADEDB2712F7000096E75A /* ProductCoordinator.swift */,
-			);
-			path = Product;
-			sourceTree = "<group>";
-		};
-		A37ADEDC2712F7000096E75A /* PaymentSuccess */ = {
-			isa = PBXGroup;
-			children = (
-				A37ADEDD2712F7000096E75A /* PaymentSuccessCoordinator.swift */,
-				A37ADEDE2712F7000096E75A /* PaymentSuccessViewController.swift */,
-			);
-			path = PaymentSuccess;
-			sourceTree = "<group>";
-		};
-		A37ADEDF2712F7000096E75A /* ParentSample */ = {
-			isa = PBXGroup;
-			children = (
-				A37ADEE02712F7000096E75A /* ParentViewController.swift */,
-				A37ADEE12712F7000096E75A /* ParentCoordinator.swift */,
-			);
-			path = ParentSample;
-			sourceTree = "<group>";
-		};
-		A37ADEE22712F7000096E75A /* Cart */ = {
-			isa = PBXGroup;
-			children = (
-				A37ADEE32712F7000096E75A /* CartViewController.swift */,
-				A37ADEE42712F7000096E75A /* CartCoordinator.swift */,
-			);
-			path = Cart;
-			sourceTree = "<group>";
-		};
-		A37ADEE52712F7000096E75A /* Scoring */ = {
-			isa = PBXGroup;
-			children = (
-				A37ADEE62712F7000096E75A /* ScoringViewController.swift */,
-				A37ADEE72712F7000096E75A /* ScoringCoordinator.swift */,
-			);
-			path = Scoring;
-			sourceTree = "<group>";
-		};
-		A37ADEE82712F7000096E75A /* CurrencySelection */ = {
-			isa = PBXGroup;
-			children = (
-				A37ADEE92712F7000096E75A /* CurrencySelectionViewController.swift */,
-				A37ADEEA2712F7000096E75A /* CurrencyView.swift */,
-				A37ADEEB2712F7000096E75A /* CurrencySelectionCoordinator.swift */,
-			);
-			path = CurrencySelection;
-			sourceTree = "<group>";
-		};
-		A37ADEEC2712F7000096E75A /* LoginPhone */ = {
-			isa = PBXGroup;
-			children = (
-				A37ADEED2712F7000096E75A /* LoginPhoneViewController.swift */,
-				A37ADEEE2712F7000096E75A /* LoginPhoneCoordinator.swift */,
-			);
-			path = LoginPhone;
 			sourceTree = "<group>";
 		};
 		A37ADEEF2712F7000096E75A /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				A33986EF271CB02F00B68256 /* PaymentMethod.swift */,
 				A37ADEF02712F7000096E75A /* CurrencySelection.swift */,
 			);
 			path = Models;
@@ -444,6 +518,7 @@
 				TargetAttributes = {
 					A33EDF9B2712F2B50041F32A = {
 						CreatedOnToolsVersion = 12.0;
+						LastSwiftMigration = 1240;
 					};
 					A37ADEAD2712F6CB0096E75A = {
 						CreatedOnToolsVersion = 12.0;
@@ -518,14 +593,21 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				A37ADE162712F3E40096E75A /* NavigationControllerCoordinator.swift in Sources */,
-				A37ADE112712F3E40096E75A /* DeinitObservable.swift in Sources */,
-				A37ADE132712F3E40096E75A /* ModalPresentationCoordinator.swift in Sources */,
-				A37ADE152712F3E40096E75A /* Insecurity.swift in Sources */,
-				A37ADE182712F3E40096E75A /* InsecurityNavigation.swift in Sources */,
-				A37ADE172712F3E40096E75A /* InsecurityChild.swift in Sources */,
-				A37ADE142712F3E40096E75A /* WindowCoordinator.swift in Sources */,
-				A37ADE122712F3E40096E75A /* CoordinatorResult.swift in Sources */,
+				A33986D9271CAFC200B68256 /* ModalNavigation.swift in Sources */,
+				A33986E6271CAFC200B68256 /* CoordinatorResult.swift in Sources */,
+				A33986E7271CAFC200B68256 /* Insecurity.swift in Sources */,
+				A33986DA271CAFC200B68256 /* AdaptiveNavigation.swift in Sources */,
+				A33986DE271CAFC200B68256 /* AdaptiveCoordinator.swift in Sources */,
+				A33986E4271CAFC200B68256 /* DeinitObservable.swift in Sources */,
+				A33986E0271CAFC200B68256 /* CommonNavigationCoordinator.swift in Sources */,
+				A33986E5271CAFC200B68256 /* WindowCoordinator.swift in Sources */,
+				A33986E1271CAFC200B68256 /* NavigationCoordinator.swift in Sources */,
+				A33986DB271CAFC200B68256 /* ModalPresentationHost.swift in Sources */,
+				A33986DF271CAFC200B68256 /* ModalCoordinator.swift in Sources */,
+				A33986DC271CAFC200B68256 /* NavigationControllerNavigation.swift in Sources */,
+				A33986DD271CAFC200B68256 /* NavigationControllerHost.swift in Sources */,
+				A33986E2271CAFC200B68256 /* WindowHost.swift in Sources */,
+				A33986E3271CAFC200B68256 /* CommonModalCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -533,38 +615,48 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A3398733271CB0DA00B68256 /* DebugViewController.swift in Sources */,
+				A3398743271CB0DA00B68256 /* GalleryViewController.swift in Sources */,
 				A37ADF182712F7000096E75A /* Application.swift in Sources */,
-				A37ADF112712F7000096E75A /* CurrencyView.swift in Sources */,
-				A37ADF0B2712F7000096E75A /* ParentCoordinator.swift in Sources */,
-				A37ADF122712F7000096E75A /* CurrencySelectionCoordinator.swift in Sources */,
-				A37ADF052712F7000096E75A /* GalleryViewController.swift in Sources */,
 				A37ADF172712F7000096E75A /* AppDelegate.swift in Sources */,
+				A3398730271CB0DA00B68256 /* LoginPhoneViewController.swift in Sources */,
+				A3398738271CB0DA00B68256 /* SmallAppDelegate.swift in Sources */,
+				A3398744271CB0DA00B68256 /* ScoringViewController.swift in Sources */,
 				A37ADF152712F7000096E75A /* CurrencySelection.swift in Sources */,
-				A37ADEFA2712F7000096E75A /* UIColor+system.swift in Sources */,
-				A37ADF012712F7000096E75A /* DebugViewController.swift in Sources */,
+				A339873E271CB0DA00B68256 /* GenericViewController.swift in Sources */,
+				A3398746271CB0DA00B68256 /* PaymentMethodCoordinator.swift in Sources */,
+				A339872C271CB0DA00B68256 /* ProductViewController.swift in Sources */,
+				A339873C271CB0DA00B68256 /* CurrencyView.swift in Sources */,
+				A3398749271CB0DA00B68256 /* CartViewController.swift in Sources */,
+				A3398739271CB0DA00B68256 /* AddPaymentMethodCoordinator.swift in Sources */,
 				A37ADF1B2712F7000096E75A /* DI.swift in Sources */,
-				A37ADF002712F7000096E75A /* DebugViewCoordinator.swift in Sources */,
-				A37ADF132712F7000096E75A /* LoginPhoneViewController.swift in Sources */,
-				A37ADF0F2712F7000096E75A /* ScoringCoordinator.swift in Sources */,
-				A37ADEFB2712F7000096E75A /* DispatchQueue+asyncAfter.swift in Sources */,
-				A37ADF0E2712F7000096E75A /* ScoringViewController.swift in Sources */,
+				A339873A271CB0DA00B68256 /* AddPaymentMethodViewController.swift in Sources */,
+				A3398750271CB0EC00B68256 /* UIColor+random.swift in Sources */,
+				A3398751271CB0EC00B68256 /* UIColor+system.swift in Sources */,
+				A339872F271CB0DA00B68256 /* LoginSMSCodeViewController.swift in Sources */,
+				A339873F271CB0DA00B68256 /* GenericCoordinator.swift in Sources */,
+				A339872E271CB0DA00B68256 /* LoginSMSCodeCoordinator.swift in Sources */,
+				A3398734271CB0DA00B68256 /* PaymentSuccessCoordinator.swift in Sources */,
+				A3398742271CB0DA00B68256 /* GalleryCoordinator.swift in Sources */,
+				A3398748271CB0DA00B68256 /* SmallAppCoordinator.swift in Sources */,
+				A3398735271CB0DA00B68256 /* PaymentSuccessViewController.swift in Sources */,
+				A3398752271CB0EC00B68256 /* DispatchQueue+asyncAfter.swift in Sources */,
+				A3398747271CB0DA00B68256 /* PaymentMethodViewController.swift in Sources */,
+				A3398737271CB0DA00B68256 /* ParentCoordinator.swift in Sources */,
+				A3398741271CB0DA00B68256 /* PaymentViewController.swift in Sources */,
 				A37ADF1C2712F7000096E75A /* AuthService.swift in Sources */,
+				A339872D271CB0DA00B68256 /* ProductCoordinator.swift in Sources */,
+				A3398732271CB0DA00B68256 /* DebugViewCoordinator.swift in Sources */,
 				A37ADEFC2712F7000096E75A /* ApplicationCoordinator.swift in Sources */,
-				A37ADF062712F7000096E75A /* ProductViewController.swift in Sources */,
-				A37ADF042712F7000096E75A /* GalleryCoordinator.swift in Sources */,
-				A37ADF022712F7000096E75A /* PaymentCoordinator.swift in Sources */,
-				A37ADEFF2712F7000096E75A /* LoginSMSCodeViewController.swift in Sources */,
-				A37ADF032712F7000096E75A /* PaymentViewController.swift in Sources */,
-				A37ADF142712F7000096E75A /* LoginPhoneCoordinator.swift in Sources */,
-				A37ADF092712F7000096E75A /* PaymentSuccessViewController.swift in Sources */,
-				A37ADF072712F7000096E75A /* ProductCoordinator.swift in Sources */,
-				A37ADEFE2712F7000096E75A /* LoginSMSCodeCoordinator.swift in Sources */,
-				A37ADF0A2712F7000096E75A /* ParentViewController.swift in Sources */,
-				A37ADF0C2712F7000096E75A /* CartViewController.swift in Sources */,
+				A3398736271CB0DA00B68256 /* ParentViewController.swift in Sources */,
+				A3398731271CB0DA00B68256 /* LoginPhoneCoordinator.swift in Sources */,
+				A3398740271CB0DA00B68256 /* PaymentCoordinator.swift in Sources */,
+				A33986F0271CB02F00B68256 /* PaymentMethod.swift in Sources */,
+				A3398745271CB0DA00B68256 /* ScoringCoordinator.swift in Sources */,
+				A339873B271CB0DA00B68256 /* CurrencySelectionViewController.swift in Sources */,
+				A339874A271CB0DA00B68256 /* CartCoordinator.swift in Sources */,
+				A339873D271CB0DA00B68256 /* CurrencySelectionCoordinator.swift in Sources */,
 				A37ADF192712F7000096E75A /* main.swift in Sources */,
-				A37ADF0D2712F7000096E75A /* CartCoordinator.swift in Sources */,
-				A37ADF102712F7000096E75A /* CurrencySelectionViewController.swift in Sources */,
-				A37ADF082712F7000096E75A /* PaymentSuccessCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -715,6 +807,7 @@
 		A33EDFA52712F2B60041F32A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -731,6 +824,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityXcode12;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -739,6 +833,7 @@
 		A33EDFA62712F2B60041F32A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -764,6 +859,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 0725F7F2AA6BE8626B9A5309 /* Pods-InsecurityDemo.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
@@ -785,6 +881,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 80DF2A56DADCFECAE4E1D23B /* Pods-InsecurityDemo.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;

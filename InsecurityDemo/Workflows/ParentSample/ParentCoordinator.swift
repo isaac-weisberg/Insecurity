@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class ParentCoordinator: InsecurityChild<Never> {
+class ParentCoordinator: ModalCoordinator<Never> {
     override var viewController: UIViewController {
         let parentViewController = ParentViewController()
         
