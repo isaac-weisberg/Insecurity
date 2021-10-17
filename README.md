@@ -52,11 +52,11 @@ class PaymentMethodCoordinator: ModalCoordinator<PaymentMethodScreenResult> {
 
 ## Showing a new screen
 
-Now, when the user presses "Add Payment Method" button, we need to open a next screen.  
+Now, when the user presses "Add Payment Method" button, we need to open the next screen.  
 This screen will be "Create a new payment method".  
 Once it's finished, we need to notify the "Select Payment Method" screen of its creation.  
 
-Here is a coordinator for Add Payment Method screen.
+Here is a coordinator for `AddPaymentMethod` screen.
 
 ```swift
 struct PaymentMethod {
@@ -118,7 +118,7 @@ viewController.onNewPaymentMethodRequested = {
 
 ## Starting a WindowCoordinator
 
-In order to start working with `Insecurity` in your app, you should use a coordinator that manages your `UIWindow`.  
+In order to start working with `Insecurity` in your app, you should create a coordinator that manages your `UIWindow`.  
 It's called `WindowCoordinator`.  
 Then, you call `navigation.start` methods on it in order to start your instances of `ModalCoordinator.`
 
@@ -172,6 +172,7 @@ And here is how you start your instance of `AppCoordinator`:
 - Starting on the top of the presentation context
 - Writing a custom coordinator that allows for magical navigation
 - Deeplinking
+- Dismissing artificially
 - [Starting coordinator chain without `WindowCoordinator`](./docs/StartingFromNon-InsecurityContext.md)
 
 # Philosophy
