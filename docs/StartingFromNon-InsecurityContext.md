@@ -6,37 +6,39 @@ For example, if you have an already existing `UIViewController` and want to mana
 
 Or if you already use some implementation of Coordinator Tree pattern and want to interoperate between it and `Insecurity`, you will also find this article useful.
 
-> ⚠️ **This is a low level API. Most of the time you should ignore `ModalCoordinator` and `NavigationCoordinator` and manually manage only `WindowCoordinator`**
+> ⚠️ **This is a low level API. Most of the time you should ignore `ModalHost`, `NavigationHost`, `WindowHost` and manually manage only `WindowCoordinator`**
 
-`Insecurity` support both modal presentation chain (`present`/`dismiss`) and `UINavigationController`.
+`Insecurity` supports both modal presentation chain (`present`/`dismiss`) and `UINavigationController`.
 
-However, in the code we've written so far, you can notice that these semantics are not stated explictly. There is no way to tell if this code is supposed to be running unside a modal presentation or `UINavigationController`.
+Whenever you operate the classes with the word "Coordinator" in their name, you are merely managing the building blocks of the navigation. However, all of the real navigation is managed by the objects which are organized into a tree. 
 
-The answer is that this is decided by the class of the Host Coordinator that you use!
-There are 3 classes of Host Coordinators.
+These objects are usually hidden from you.  
+These objects are called **Hosts** and they all implement different navigation aspects.
 
-Coordinator Type|Manages|Funtionality
+There are 3 types of Hosts.
+
+Host Type|Manages|Funtionality
 ---|---|---
-`ModalCoordinator`|`UIViewController`|Starts its children inside a modal presentation chain of the managed controller
-`NavigationCoordinator`|`UINavigationController`|Starts its children inside a `UINavigationController`
-`WindowCoordinator`|`UIWindow`|Starts its children on the `rootViewController` with overwriting
+`ModalHost`|`UIViewController`|Starts its children inside a modal presentation chain of the managed controller
+`NavigationHost`|`UINavigationController`|Starts its children inside a `UINavigationController`
+`WindowHost`|`UIWindow`|Starts its children on the `rootViewController`, discarding the previous
 
-> ⚠️ All of the Host Coordinators accept `InsecurityChild` instances for starting.
+## Starting from an existing `UIViewController`
 
-You can start a chain of presenting coordinators modally from outside using a `ModalCoordinator`.
+You can start a chain of presenting coordinators modally from outside using a `ModalHost`.
 
 ```swift
 class ExistingViewController: UIViewController {
-    var customModalCoordinator: ModalCoordinatorAny?
+    var customModalHost: ModalHost?
     
     func startPaymentMethodScreen() {
-        let modalCoordinator = ModalCoordinator(self)
-        self.customModalCoordinator = modalCoordinator
+        let modalHost = ModalHost(self)
+        self.customModalHost = modalHost
 
         let paymentMethodCoordinator = PaymentMethodCoordinator()
 
-        modalCoordinator.start(paymentMethodCoordinator, animated: true) { [weak self] result in
-            self?.customModalCoordinator = nil
+        modalHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+            self?.customModalHost = nil
             // result is PaymentMethodScreenResult
         }
     }
@@ -45,32 +47,40 @@ class ExistingViewController: UIViewController {
 
 Don't forget to release the host coordinator after usage.
 
-> ⚠️ **This is a low level API and you have to retain and release ModalCoordinator yourself.**
+> ⚠️ **This is a low level API and you have to retain and release ModalHost yourself.**
+
+## Starting from an existing UINavigationController
 
 Alternatively, if you have `UINavigationController`, you can display children inside it using a similar code:
 
 ```swift
 class ExistingViewController: UIViewController {
-    var customNavigationCoordinator: NavigationCoordinatorAny?
+    var customNavigationHost: NavigationHost?
     
     func startPaymentMethodScreenNavigation() {
         let navigationController = self.navigationController!
         
-        let navigationCoordinator = NavigationCoordinator(navigationController)
-        self.customNavigationCoordinator = navigationCoordinator
+        let navigationHost = NavigationHost(navigationController)
+        self.customNavigationHost = navigationHost
 
         let paymentMethodCoordinator = PaymentMethodCoordinator()
 
-        navigationCoordinator.start(paymentMethodCoordinator, animated: true) { [weak self] result in
-            self?.customNavigationCoordinator = nil
+        navigationHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+            self?.customNavigationHost = nil
             // result is PaymentMethodScreenResult
         }
     }
 }
 ```
 
-Here, we get `navigationController` from `self.navigationController`, but you can get it from wherever.
+Here, we get `navigationController` from `self.navigationController`, but you can get it from wherever you want.
 
 > ⚠️ **The `UINavigationController` that you provide should have a `rootViewController` and it must not be the one that you are trying to start on top!**
 
 > ⚠️ **It also must not have other viewController already pushed to it**
+
+## Starting from an existing UIWindow
+
+We have already shown an example of starting using `WindowCoordinator` in the readme. You should derive from this class to start navigation, as it's made for this specific convenience of being able to derive from it.
+
+There is no reason for you to manage a `WindowHost` manually, but if you really would like to, you should use an example of manual `ModalHost` management and then replace `ModalHost` with `WindowHost` and figure it out from there.

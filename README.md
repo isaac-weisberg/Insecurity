@@ -172,7 +172,7 @@ And here is how you start your instance of `AppCoordinator`:
 - Starting on the top of the presentation context
 - Writing a custom coordinator that allows for magical navigation
 - Deeplinking
-- Starting coordinator chain without `WindowCoordinator`
+- [Starting coordinator chain without `WindowCoordinator`](./docs/StartingFromNon-InsecurityContext.md)
 
 # Philosophy
 
