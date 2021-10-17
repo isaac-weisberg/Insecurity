@@ -1,12 +1,6 @@
 import UIKit
 
-public protocol ModalHostAny: ModalNavigation {
-    func startOverTop<NewResult>(_ child: ModalCoordinator<NewResult>,
-                                 animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-}
-
-public class ModalHost: ModalHostAny {
+public class ModalHost: ModalNavigation {
     private weak var hostController: UIViewController?
     
     public init(_ hostController: UIViewController) {
@@ -286,18 +280,7 @@ public class ModalHost: ModalHostAny {
         }
     }
     
-    // MARK: - ModalHostAny
-    
-    public func startOverTop<NewResult>(_ child: ModalCoordinator<NewResult>,
-                                        animated: Bool,
-                                        _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        startModal(child, animated: animated) { result in
-            completion(result)
-        }
-    }
-    
     // MARK: - AdaptiveNavigation
-    
     
     public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>, in context: AdaptiveContext, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         switch context {
@@ -312,4 +295,28 @@ public class ModalHost: ModalHostAny {
         }
     }
     
+    var hasChildren: Bool {
+        return !navData.isEmpty
+    }
+    
+    public var topContext: AdaptiveNavigation! {
+        if let lastNavData = self.navData.last?.coordinator as? ModalCoordinatorWithNavigationHostAny {
+            #if DEBUG
+            let indicesOfModalChildrenRetainingNavigationHosts = self.navData.enumerated().compactMap { index, navData -> Int? in
+                if (navData.coordinator as? ModalCoordinatorWithNavigationHostAny) != nil {
+                    return index
+                }
+                
+                return nil
+            }
+            assert(indicesOfModalChildrenRetainingNavigationHosts.count == 1, "How comes ModalNavigation has 2 children with NavigationHosts inside of them?")
+            #endif
+            
+            if let navigationHostChild = lastNavData.navigationHostChild {
+                return navigationHostChild.topContext
+            }
+        }
+        
+        return self
+    }
 }

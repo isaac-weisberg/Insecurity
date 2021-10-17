@@ -1,7 +1,7 @@
 import UIKit
 
 open class ModalCoordinator<Result>: CommonModalCoordinator {
-    private weak var _navigation: ModalHostAny?
+    private weak var _navigation: ModalNavigation?
     
     public var navigation: ModalNavigation! {
         assert(_navigation != nil, "Attempted to use `navigation` before the coordinator was started or after it has finished")
@@ -41,7 +41,11 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
     }
 }
 
-class ModalCoordinatorWithNavigationHost<Result>: ModalCoordinator<Result> {
+protocol ModalCoordinatorWithNavigationHostAny {
+    var navigationHostChild: NavigationHost? { get }
+}
+
+class ModalCoordinatorWithNavigationHost<Result>: ModalCoordinator<Result>, ModalCoordinatorWithNavigationHostAny {
     let navigationHostChild: NavigationHost?
     weak var _storedViewController: UIViewController?
     

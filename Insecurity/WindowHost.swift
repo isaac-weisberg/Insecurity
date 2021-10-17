@@ -1,31 +1,14 @@
 import UIKit
 
-public protocol WindowHostAny: AnyObject {
-    func startOverTop<NewResult>(_ child: ModalCoordinator<NewResult>,
-                                 animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-    
-    func start<NewResult>(_ child: ModalCoordinator<NewResult>,
-                          duration: TimeInterval?,
-                          options: UIView.AnimationOptions?,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-    
-    func start<NewResult>(_ navigationController: UINavigationController,
-                          _ initialChild: NavigationCoordinator<NewResult>,
-                          duration: TimeInterval?,
-                          options: UIView.AnimationOptions?,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-}
-
-public class WindowHost: WindowHostAny {
+public class WindowHost: AdaptiveNavigation {
     weak var window: UIWindow?
     
     public init(_ window: UIWindow) {
         self.window = window
     }
     
-    var navigationHostChild: NavigationHostAny?
-    var modalHostChild: ModalHostAny?
+    var navigationHostChild: NavigationHost?
+    var modalHostChild: ModalHost?
     
     func _startModal<CoordinatorType: CommonModalCoordinator>(_ child: CoordinatorType,
                                                               duration: TimeInterval? = nil,
@@ -97,28 +80,6 @@ public class WindowHost: WindowHostAny {
     }
 #endif
     
-    public func startOverTop<NewResult>(_ child: ModalCoordinator<NewResult>,
-                                        animated: Bool,
-                                        _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        if let navigationHostChild = navigationHostChild {
-            assert(modalHostChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
-            navigationHostChild.startOverTop(child, animated: animated) { result in
-                completion(result)
-            }
-            return
-        }
-        if let modalHostChild = modalHostChild {
-            assert(navigationHostChild == nil, "Window is starting over top in the middle of transition between 2 children. Undefined behavior.")
-            modalHostChild.startOverTop(child, animated: animated) { result in
-                completion(result)
-            }
-            return
-        }
-        _startModal(child) { result in
-            completion(result)
-        }
-    }
-    
     public func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
@@ -157,5 +118,83 @@ public class WindowHost: WindowHostAny {
         _startNavigation(navigationController, initialChild, duration: duration, options: options) { result in
             completion(result)
         }
+    }
+    
+    // MARK: - AdaptiveNavigation
+    
+    public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
+                                 in context: AdaptiveContext,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        let duration: TimeInterval?
+        let options: UIView.AnimationOptions?
+        if animated {
+            duration = Insecurity.defaultWindowTransitionDuration
+            options = Insecurity.defaultWindowTransitionOptions
+        } else {
+            duration = nil
+            options = nil
+        }
+        
+        switch context {
+        case .current, .newModal:
+            _startModal(child, duration: duration, options: options) { result in
+                completion(result)
+            }
+        case .new(let navigationController):
+            _startNavigation(navigationController, child, duration: duration, options: options) { result in
+                completion(result)
+            }
+        }
+    }
+    
+    public func start<NewResult>(_ child: ModalCoordinator<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        
+        let duration: TimeInterval?
+        let options: UIView.AnimationOptions?
+        if animated {
+            duration = Insecurity.defaultWindowTransitionDuration
+            options = Insecurity.defaultWindowTransitionOptions
+        } else {
+            duration = nil
+            options = nil
+        }
+    
+        _startModal(child, duration: duration, options: options) { result in
+            completion(result)
+        }
+    }
+    
+    public func start<NewResult>(_ navigationController: UINavigationController,
+                                 _ child: NavigationCoordinator<NewResult>,
+                                 animated: Bool,
+                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+        let duration: TimeInterval?
+        let options: UIView.AnimationOptions?
+        if animated {
+            duration = Insecurity.defaultWindowTransitionDuration
+            options = Insecurity.defaultWindowTransitionOptions
+        } else {
+            duration = nil
+            options = nil
+        }
+        
+        _startNavigation(navigationController, child, duration: duration, options: options) { result in
+            completion(result)
+        }
+    }
+    
+    public var topContext: AdaptiveNavigation! {
+        if let navigationHostChild = navigationHostChild {
+            assert(modalHostChild == nil, "WindowHost is seeking topContext in the middle of transition between 2 children. Undefined behavior.")
+            return navigationHostChild.topContext
+        }
+        if let modalHostChild = modalHostChild {
+            assert(navigationHostChild == nil, "WindowHost is seeking topContext in the middle of transition between 2 children. Undefined behavior.")
+            return modalHostChild.topContext
+        }
+        return self
     }
 }

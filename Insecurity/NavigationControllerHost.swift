@@ -1,12 +1,6 @@
 import UIKit
 
-public protocol NavigationHostAny: NavigationControllerNavigation {
-    func startOverTop<NewResult>(_ child: ModalCoordinator<NewResult>,
-                                 animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-}
-
-public class NavigationHost: NavigationHostAny {
+public class NavigationHost: NavigationControllerNavigation {
     private weak var navigationController: UINavigationController?
     
     public init(_ navigationController: UINavigationController) {
@@ -227,20 +221,7 @@ public class NavigationHost: NavigationHostAny {
         }
     }
     
-    // MARK: - NavigationHostAny
-    
-    public func startOverTop<NewResult>(_ child: ModalCoordinator<NewResult>,
-                                        animated: Bool,
-                                        _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        let modalHost = self.asModalHost()
-        
-        modalHost.startOverTop(child, animated: animated) { result in
-            completion(result)
-        }
-    }
-    
     // MARK: - AdaptiveNavigation
-    
     
     public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
                                  in context: AdaptiveContext,
@@ -260,6 +241,14 @@ public class NavigationHost: NavigationHostAny {
                 completion(result)
             }
         }
+    }
+    
+    public var topContext: AdaptiveNavigation! {
+        if let modalHost = _modalHost, modalHost.hasChildren {
+            return modalHost.topContext
+        }
+        
+        return self
     }
 }
 

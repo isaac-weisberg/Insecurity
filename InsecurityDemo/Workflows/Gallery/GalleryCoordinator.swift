@@ -30,57 +30,57 @@ class GalleryCoordinator: NavigationCoordinator<Void> {
 //            }
 //        }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let genericCoordinator = GenericCoordinator(
-                .start(
-                    GenericCoordinator(.start(
-                            GenericCoordinator(.startNavigation(
-                                    GenericCoordinator(.start(
-                                            GenericCoordinator(.start(
-                                                    GenericCoordinator(.startModal(
-                                                            GenericCoordinator(.start(
-                                                                GenericCoordinator(.startNavigation(
-                                                                    GenericCoordinator(.start(
-                                                                        GenericCoordinator(.start(
-                                                                            GenericCoordinator(.startNavigation(
-                                                                                GenericCoordinator(.start(
-                                                                                    GenericCoordinator(.startModal(
-                                                                                            GenericCoordinator(.start(
-                                                                                                GenericCoordinator(.startNavigation(
-                                                                                                    GenericCoordinator(.start(
-                                                                                                        GenericCoordinator(.start(
-                                                                                                            GenericCoordinator(.startNavigation(
-                                                                                                                GenericCoordinator(.start(
-                                                                                                                    GenericCoordinator(.nothing)
-                                                                                                                ))
-                                                                                                            ))
-                                                                                                        ))
-                                                                                                    ))
-                                                                                                ))
-                                                                                            ))
-                                                                                        ), .nothing)
-                                                                                ), .nothing)
-                                                                            ))
-                                                                        ))
-                                                                    ))
-                                                                ))
-                                                            ), .nothing)
-                                                        ))
-                                                ))
-                                    ))
-                                ))
-                        ))
-                ))
-
-            self.navigation.start(genericCoordinator, animated: true) { result in
-                print("End GenericCoordinator root \(result)")
-            }
-        }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//            let genericCoordinator = GenericCoordinator(
+//                .start(
+//                    GenericCoordinator(.start(
+//                            GenericCoordinator(.startNavigation(
+//                                    GenericCoordinator(.start(
+//                                            GenericCoordinator(.start(
+//                                                    GenericCoordinator(.startModal(
+//                                                            GenericCoordinator(.start(
+//                                                                GenericCoordinator(.startNavigation(
+//                                                                    GenericCoordinator(.start(
+//                                                                        GenericCoordinator(.start(
+//                                                                            GenericCoordinator(.startNavigation(
+//                                                                                GenericCoordinator(.start(
+//                                                                                    GenericCoordinator(.startModal(
+//                                                                                            GenericCoordinator(.start(
+//                                                                                                GenericCoordinator(.startNavigation(
+//                                                                                                    GenericCoordinator(.start(
+//                                                                                                        GenericCoordinator(.start(
+//                                                                                                            GenericCoordinator(.startNavigation(
+//                                                                                                                GenericCoordinator(.start(
+//                                                                                                                    GenericCoordinator(.nothing)
+//                                                                                                                ))
+//                                                                                                            ))
+//                                                                                                        ))
+//                                                                                                    ))
+//                                                                                                ))
+//                                                                                            ))
+//                                                                                        ), .nothing)
+//                                                                                ), .nothing)
+//                                                                            ))
+//                                                                        ))
+//                                                                    ))
+//                                                                ))
+//                                                            ), .nothing)
+//                                                        ))
+//                                                ))
+//                                    ))
+//                                ))
+//                        ))
+//                ))
+//
+//            self.navigation.start(genericCoordinator, animated: true) { result in
+//                print("End GenericCoordinator root \(result)")
+//            }
+//        }
         
         return galleryViewController
     }
     
-    var customModalHost: ModalHostAny?
+    var customModalHost: ModalHost?
     
     let di: DI
     

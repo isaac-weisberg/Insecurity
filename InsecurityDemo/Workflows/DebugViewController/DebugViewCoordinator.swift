@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class DebugViewCoordinator: ModalCoordinator<Void> {
+class DebugViewCoordinator: AdaptiveCoordinator<Void> {
     typealias DI = DebugViewController.DI
     
     let di: DI

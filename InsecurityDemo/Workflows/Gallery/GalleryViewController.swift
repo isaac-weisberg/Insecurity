@@ -47,7 +47,7 @@ class GalleryViewController: UIViewController {
         onAltButton?()
     }
     
-    var customModalHost: ModalHostAny?
+    var customModalHost: ModalHost?
     
     func startPaymentMethodScreen() {
         let modalHost = ModalHost(self)
@@ -61,7 +61,7 @@ class GalleryViewController: UIViewController {
         }
     }
     
-    var customNavigationHost: NavigationHostAny?
+    var customNavigationHost: NavigationHost?
     
     func startPaymentMethodScreenNavigation() {
         let navigationController = self.navigationController!

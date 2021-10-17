@@ -70,7 +70,7 @@ class ApplicationCoordinator {
         
         let debugCoordinator = DebugViewCoordinator(di: di)
         
-        self.host.startOverTop(debugCoordinator, animated: true) { [weak self] result in
+        self.host.topContext.start(debugCoordinator, animated: true) { [weak self] result in
             self?.startedDebugCoordinator = false
             print("End DebugView \(result)")
         }
