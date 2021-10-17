@@ -73,8 +73,8 @@
 		A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A396900326FF26CA00B6A59B /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */; };
-		A39A458B2714DBEF000D36E5 /* SmallAppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458A2714DBEF000D36E5 /* SmallAppCoordinator.swift */; };
-		A39A458D2714DCEB000D36E5 /* SmallAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458C2714DCEB000D36E5 /* SmallAppDelegate.swift */; };
+		A39A458B2714DBEF000D36E5 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458A2714DBEF000D36E5 /* AppCoordinator.swift */; };
+		A39A458D2714DCEB000D36E5 /* ApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458C2714DCEB000D36E5 /* ApplicationDelegate.swift */; };
 		D4BA0B4FA7A6F24D6294ED70 /* libPods-InsecurityDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -176,8 +176,8 @@
 		A3968FFB26FF260200B6A59B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerHost.swift; sourceTree = "<group>"; };
 		A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorResult.swift; sourceTree = "<group>"; };
-		A39A458A2714DBEF000D36E5 /* SmallAppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallAppCoordinator.swift; sourceTree = "<group>"; };
-		A39A458C2714DCEB000D36E5 /* SmallAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SmallAppDelegate.swift; sourceTree = "<group>"; };
+		A39A458A2714DBEF000D36E5 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		A39A458C2714DCEB000D36E5 /* ApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationDelegate.swift; sourceTree = "<group>"; };
 		BB61D608FF8A49075BF920EF /* Pods-InsecurityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -355,6 +355,7 @@
 		A382532D27007E8A00FBC6DC /* Workflows */ = {
 			isa = PBXGroup;
 			children = (
+				A38D67CD271CB6C20092BB63 /* ExampleUIApplicationDelegate */,
 				A377B5A027139C5400A4331B /* AddPaymentMethod */,
 				A377B59927139A1900A4331B /* PaymentMethod */,
 				A377B5712713858300A4331B /* LongChain */,
@@ -369,8 +370,6 @@
 				A382533E27008C7400FBC6DC /* Cart */,
 				A38253352700813E00FBC6DC /* Product */,
 				A382532E27007E9900FBC6DC /* Gallery */,
-				A39A458A2714DBEF000D36E5 /* SmallAppCoordinator.swift */,
-				A39A458C2714DCEB000D36E5 /* SmallAppDelegate.swift */,
 			);
 			path = Workflows;
 			sourceTree = "<group>";
@@ -418,6 +417,15 @@
 				A382534B2700924400FBC6DC /* PaymentSuccessCoordinator.swift */,
 			);
 			path = PaymentSuccess;
+			sourceTree = "<group>";
+		};
+		A38D67CD271CB6C20092BB63 /* ExampleUIApplicationDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				A39A458A2714DBEF000D36E5 /* AppCoordinator.swift */,
+				A39A458C2714DCEB000D36E5 /* ApplicationDelegate.swift */,
+			);
+			path = ExampleUIApplicationDelegate;
 			sourceTree = "<group>";
 		};
 		A3968FD326FF25A800B6A59B = {
@@ -730,7 +738,7 @@
 				A382534227008DEE00FBC6DC /* CartCoordinator.swift in Sources */,
 				A38253472700906100FBC6DC /* PaymentCoordinator.swift in Sources */,
 				A3825339270086CF00FBC6DC /* ProductCoordinator.swift in Sources */,
-				A39A458B2714DBEF000D36E5 /* SmallAppCoordinator.swift in Sources */,
+				A39A458B2714DBEF000D36E5 /* AppCoordinator.swift in Sources */,
 				A3683FC12700FBCC0048B3CF /* LoginSMSCodeViewController.swift in Sources */,
 				A38253372700817C00FBC6DC /* ProductViewController.swift in Sources */,
 				A377B5A427139CB700A4331B /* AddPaymentMethodCoordinator.swift in Sources */,
@@ -756,7 +764,7 @@
 				A3677F44270CE024003AC3E6 /* CurrencySelectionViewController.swift in Sources */,
 				A370FB642706775200D5EF51 /* DebugViewCoordinator.swift in Sources */,
 				A377B59B27139A2800A4331B /* PaymentMethodViewController.swift in Sources */,
-				A39A458D2714DCEB000D36E5 /* SmallAppDelegate.swift in Sources */,
+				A39A458D2714DCEB000D36E5 /* ApplicationDelegate.swift in Sources */,
 				A377B5772713862900A4331B /* GenericCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
