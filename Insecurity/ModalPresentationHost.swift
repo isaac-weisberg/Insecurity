@@ -284,11 +284,11 @@ public class ModalHost: ModalNavigation {
     
     public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>, in context: AdaptiveContext, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
         switch context {
-        case .current, .newModal:
+        case .current, .modal:
             startModal(child, animated: animated) { result in
                 completion(result)
             }
-        case .new(let navigationController):
+        case .navigation(let navigationController):
             self.startNavigation(navigationController, child, animated: animated) { result in
                 completion(result)
             }

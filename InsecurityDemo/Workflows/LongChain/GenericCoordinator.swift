@@ -51,12 +51,12 @@ class GenericCoordinator: AdaptiveCoordinator<Void> {
                     finish(())
                 }
             case .startNavigation(let genericCoordinator):
-                self.navigation.start(genericCoordinator, in: .new(UINavigationController()), animated: true) { result in
+                self.navigation.start(genericCoordinator, in: .navigation(UINavigationController()), animated: true) { result in
                     print("End GenericCoordinator navigation \(result)")
                     finish(())
                 }
             case .startModal(let genericCoordinator):
-                self.navigation.start(genericCoordinator, in: .newModal, animated: true) { result in
+                self.navigation.start(genericCoordinator, in: .modal, animated: true) { result in
                     print("End GenericCoordinator modal \(result)")
                     finish(())
                 }

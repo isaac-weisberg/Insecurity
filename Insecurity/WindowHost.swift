@@ -137,11 +137,11 @@ public class WindowHost: AdaptiveNavigation {
         }
         
         switch context {
-        case .current, .newModal:
+        case .current, .modal:
             _startModal(child, duration: duration, options: options) { result in
                 completion(result)
             }
-        case .new(let navigationController):
+        case .navigation(let navigationController):
             _startNavigation(navigationController, child, duration: duration, options: options) { result in
                 completion(result)
             }

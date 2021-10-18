@@ -1,32 +1,79 @@
 # Changing navigation method
 
-So far, we have learned how to present `UIViewControllers` modally by starting `InsecurityChild` instances. However the framework presents an ability to work with a `UINavigationController` too.
+So far, we have learned how to present `UIViewControllers` modally by starting `ModalChild` and `NavigationChild` instances.  These classes allow you to define the context in which the view controller will be presented. It's guaranteed to be presented in the exact way that you expect.
 
-Let's take a look at an example of a coordinator we've seen before:
+However, there is a way to create a coordinator that adapts to the presentation context of the parent coordinator. You use `AdaptiveCoordinator` to achieve this goal:
 
 ```swift
-class PaymentMethodCoordinator: InsecurityChild<PaymentMethodScreenResult> {
+class PaymentMethodCoordinator: AdaptiveCoordinator<PaymentMethodScreenResult> {
     override var viewController: UIViewController {
         let viewController = PaymentMethodViewController()
-        
-        viewController.onDone = { result in
-            self.finish(result)
-        }
-
-        viewController.onNewPaymentMethodRequested = {
-            let addPaymentMethodCoordinator = AddPaymentMethodCoordinator()
-            
-            self.navigation.start(addPaymentMethodCoordinator, animated: true) { result in
-                // `result` is the PaymentMethod
-            }
-        }
         
         return viewController
     }
 }
 ```
 
-Whenever `PaymentMethodViewController` calls its `onNewPaymentMethodRequested`, we handle this by calling `self.navgationstart(_:animated:_:)`.
+# Being started from other coordinators
+
+`ModalCoordinator` and `NavigationCoordinator` both have `self.navigation`. For both classes, this object provides a very specialized interface to start new instances of both.
+
+For `ModalCoordinator`:
+
+```swift
+public protocol ModalNavigation: AdaptiveNavigation {
+    func start<NewResult>(_ child: ModalCoordinator<NewResult>,
+                          animated: Bool,
+                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+    
+    func start<NewResult>(_ navigationController: UINavigationController,
+                          _ child: NavigationCoordinator<NewResult>,
+                          animated: Bool,
+                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+}
+```
+
+For `NavigationCoordinator`:
+
+```swift
+public protocol NavigationControllerNavigation: AdaptiveNavigation {
+    func start<NewResult>(_ child: NavigationCoordinator<NewResult>,
+                          animated: Bool,
+                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+    
+    func start<NewResult>(_ navigationController: UINavigationController,
+                          _ child: NavigationCoordinator<NewResult>,
+                          animated: Bool,
+                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+    
+    func start<NewResult>(_ child: ModalCoordinator<NewResult>,
+                          animated: Bool,
+                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+}
+```
+
+However, you can notice that both of these `...Navigation` protocols inherit `AdaptiveNavigation`. This `AdaptiveNavigation` is what enables you to enter and leave adaptive navigation context.
+
+Here is the main method available on `AdaptiveNavigation`:
+
+```swift
+public enum AdaptiveContext {
+    case current
+    case modal
+    case navigation(UINavigationController)
+}
+
+public protocol AdaptiveNavigation {
+    func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
+                          in context: AdaptiveContext,
+                          animated: Bool,
+                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+}
+```
+
+# Starting child coordinators
+
+Whenever `PaymentMethodViewController` calls its `onNewPaymentMethodRequested`, we handle this by calling `self.navgation.start(_:animated:_:)`.
 
 As you can see, this presents us with zero information about how exactly the controller of the child coordinator will be displayed. This is by design.
 

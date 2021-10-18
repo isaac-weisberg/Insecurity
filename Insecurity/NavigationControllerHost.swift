@@ -232,11 +232,11 @@ public class NavigationHost: NavigationControllerNavigation {
             self._startChild(child, animated: animated) { result in
                 completion(result)
             }
-        case .newModal:
+        case .modal:
             _startNewModal(child, animated: animated) { result in
                 completion(result)
             }
-        case .new(let navigationController):
+        case .navigation(let navigationController):
             _startNewNavigation(navigationController, child, animated: animated) { result in
                 completion(result)
             }

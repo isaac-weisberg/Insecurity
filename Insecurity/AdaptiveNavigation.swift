@@ -2,8 +2,8 @@ import UIKit
 
 public enum AdaptiveContext {
     case current
-    case newModal
-    case new(UINavigationController)
+    case modal
+    case navigation(UINavigationController)
 }
 
 public protocol AdaptiveNavigation: AnyObject {
@@ -34,7 +34,7 @@ public extension AdaptiveNavigation {
     func startModal<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
                                animated: Bool,
                                _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        start(child, in: .newModal, animated: animated) { result in
+        start(child, in: .modal, animated: animated) { result in
             completion(result)
         }
     }
@@ -43,7 +43,7 @@ public extension AdaptiveNavigation {
                           _ child: AdaptiveCoordinator<NewResult>,
                           animated: Bool,
                           _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        start(child, in: .new(navigationController), animated: animated) { result in
+        start(child, in: .navigation(navigationController), animated: animated) { result in
             completion(result)
         }
     }
