@@ -283,12 +283,18 @@ public class ModalHost: ModalNavigation {
     // MARK: - AdaptiveNavigation
     
     public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>, in context: AdaptiveContext, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        switch context {
+        switch context._internalContext {
         case .current, .modal:
             startModal(child, animated: animated) { result in
                 completion(result)
             }
-        case .navigation(let navigationController):
+        case .newNavigation(let navigationController):
+            self.startNavigation(navigationController, child, animated: animated) { result in
+                completion(result)
+            }
+        case .currentNavigation(let deferredNavigationController):
+            let navigationController = deferredNavigationController.make()
+            
             self.startNavigation(navigationController, child, animated: animated) { result in
                 completion(result)
             }

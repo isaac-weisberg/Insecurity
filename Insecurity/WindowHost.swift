@@ -136,12 +136,18 @@ public class WindowHost: AdaptiveNavigation {
             options = nil
         }
         
-        switch context {
+        switch context._internalContext {
         case .current, .modal:
             _startModal(child, duration: duration, options: options) { result in
                 completion(result)
             }
-        case .navigation(let navigationController):
+        case .newNavigation(let navigationController):
+            _startNavigation(navigationController, child, duration: duration, options: options) { result in
+                completion(result)
+            }
+        case .currentNavigation(let defferredNavigationController):
+            let navigationController = defferredNavigationController.make()
+            
             _startNavigation(navigationController, child, duration: duration, options: options) { result in
                 completion(result)
             }

@@ -166,10 +166,10 @@ And here is how you start your instance of `AppCoordinator`:
 
 # Advanced topics
 
-- Working with a `UINavigationController`
+- [Working with a `UINavigationController`](./docs/WorkingWithUINavigationController.md)
 - Finishing several screens at a time
 - [Using context-independent navigation with `AdaptiveCoordinator`](./docs/AdaptiveNavigationMethod.md)
-- Starting on the top of the presentation context
+- Starting on the top-most presentation context
 - Writing a custom coordinator that allows for magical navigation
 - Deeplinking
 - Dismissing artificially

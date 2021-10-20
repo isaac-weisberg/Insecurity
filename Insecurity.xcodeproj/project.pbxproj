@@ -66,6 +66,7 @@
 		A390C14C271792F100E9C905 /* AdaptiveNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C14B271792F100E9C905 /* AdaptiveNavigation.swift */; };
 		A390C14E2717965100E9C905 /* CommonNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */; };
 		A390C1502717992100E9C905 /* CommonModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */; };
+		A392A1362720A0C200976B7E /* Deferred.swift in Sources */ = {isa = PBXBuildFile; fileRef = A392A1352720A0C200976B7E /* Deferred.swift */; };
 		A3968FEE26FF260000B6A59B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3968FED26FF260000B6A59B /* AppDelegate.swift */; };
 		A3968FF726FF260200B6A59B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3968FF626FF260200B6A59B /* Assets.xcassets */; };
 		A3968FFA26FF260200B6A59B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3968FF826FF260200B6A59B /* LaunchScreen.storyboard */; };
@@ -168,6 +169,7 @@
 		A390C14B271792F100E9C905 /* AdaptiveNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdaptiveNavigation.swift; sourceTree = "<group>"; };
 		A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavigationCoordinator.swift; sourceTree = "<group>"; };
 		A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonModalCoordinator.swift; sourceTree = "<group>"; };
+		A392A1352720A0C200976B7E /* Deferred.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deferred.swift; sourceTree = "<group>"; };
 		A3968FDD26FF25A800B6A59B /* Insecurity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Insecurity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3968FEB26FF260000B6A59B /* InsecurityDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3968FED26FF260000B6A59B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -468,6 +470,7 @@
 				A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */,
 				A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */,
 				A38D67CB271CA9720092BB63 /* WindowCoordinator.swift */,
+				A392A1352720A0C200976B7E /* Deferred.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -707,6 +710,7 @@
 				A38D67CC271CA9720092BB63 /* WindowCoordinator.swift in Sources */,
 				A396900026FF26A700B6A59B /* NavigationControllerHost.swift in Sources */,
 				A390C14A271792C900E9C905 /* AdaptiveCoordinator.swift in Sources */,
+				A392A1362720A0C200976B7E /* Deferred.swift in Sources */,
 				A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */,
 				A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */,
 				A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */,
