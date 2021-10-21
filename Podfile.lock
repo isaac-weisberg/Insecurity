@@ -1,5 +1,5 @@
 PODS:
-  - Insecurity (2.0.0)
+  - Insecurity (2.1.0)
   - SnapKit (5.0.1)
 
 DEPENDENCIES:
@@ -15,7 +15,7 @@ EXTERNAL SOURCES:
     :podspec: "./Insecurity.podspec"
 
 SPEC CHECKSUMS:
-  Insecurity: 19392613b8e1a5aa72fb29e0deccf5fd3ee103ab
+  Insecurity: 8addef44f776a3f0ea19bc4f4aaac5b158876a7e
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
 
 PODFILE CHECKSUM: 0eda79b11884b441daeca44c95cdb899cea978ac
