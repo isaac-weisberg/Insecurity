@@ -1,9 +1,40 @@
 import UIKit
 
-public enum AdaptiveContext {
+enum _AdaptiveContext {
     case current
-    case newModal
-    case new(UINavigationController)
+    case modal
+    case newNavigation(UINavigationController)
+    case currentNavigation(Deferred<UINavigationController>)
+}
+
+public struct AdaptiveContext {
+    public static var current: AdaptiveContext {
+        return AdaptiveContext(.current)
+    }
+    
+    public static var modal: AdaptiveContext {
+        return AdaptiveContext(.modal)
+    }
+    
+    public static func navigation(new navigationController: UINavigationController) -> AdaptiveContext {
+        return AdaptiveContext(.newNavigation(navigationController))
+    }
+    
+    public static func navigation(fallback navigationController: @autoclosure @escaping () -> UINavigationController) -> AdaptiveContext {
+        let defferred = Deferred(navigationController)
+        return AdaptiveContext(.currentNavigation(defferred))
+    }
+    
+    static func navigationFallback(_ navigationController: @escaping () -> UINavigationController) -> AdaptiveContext {
+        let defferred = Deferred(navigationController)
+        return AdaptiveContext(.currentNavigation(defferred))
+    }
+    
+    let _internalContext: _AdaptiveContext
+    
+    init(_ ctx: _AdaptiveContext) {
+        self._internalContext = ctx
+    }
 }
 
 public protocol AdaptiveNavigation: AnyObject {
@@ -20,31 +51,4 @@ public protocol AdaptiveNavigation: AnyObject {
                           _ child: NavigationCoordinator<NewResult>,
                           animated: Bool,
                           _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-}
-
-public extension AdaptiveNavigation {
-    func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
-                          animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        start(child, in: .current, animated: animated) { result in
-            completion(result)
-        }
-    }
-    
-    func startModal<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
-                               animated: Bool,
-                               _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        start(child, in: .newModal, animated: animated) { result in
-            completion(result)
-        }
-    }
-    
-    func start<NewResult>(_ navigationController: UINavigationController,
-                          _ child: AdaptiveCoordinator<NewResult>,
-                          animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        start(child, in: .new(navigationController), animated: animated) { result in
-            completion(result)
-        }
-    }
 }

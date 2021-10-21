@@ -3,6 +3,13 @@ import UIKit
 UIApplicationMain(
     CommandLine.argc,
     CommandLine.unsafeArgv,
-    NSStringFromClass(Application.self),
-    NSStringFromClass(AppDelegate.self)
+    NSStringFromClass(DemoApplication.self),
+    NSStringFromClass(DemoAppDelegate.self)
 )
+
+//UIApplicationMain(
+//    CommandLine.argc,
+//    CommandLine.unsafeArgv,
+//    NSStringFromClass(UIApplication.self),
+//    NSStringFromClass(ApplicationDelegate.self)
+//)

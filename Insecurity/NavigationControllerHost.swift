@@ -227,16 +227,16 @@ public class NavigationHost: NavigationControllerNavigation {
                                  in context: AdaptiveContext,
                                  animated: Bool,
                                  _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        switch context {
-        case .current:
+        switch context._internalContext {
+        case .current, .currentNavigation:
             self._startChild(child, animated: animated) { result in
                 completion(result)
             }
-        case .newModal:
+        case .modal:
             _startNewModal(child, animated: animated) { result in
                 completion(result)
             }
-        case .new(let navigationController):
+        case .newNavigation(let navigationController):
             _startNewNavigation(navigationController, child, animated: animated) { result in
                 completion(result)
             }

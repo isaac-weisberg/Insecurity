@@ -35,7 +35,6 @@ class ScoringViewController: UIViewController {
             sendFormButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
         
-        
         loginUnderAnotherUserButton.setTitle("I am not Steven", for: .normal)
         loginUnderAnotherUserButton.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(loginUnderAnotherUserButton)

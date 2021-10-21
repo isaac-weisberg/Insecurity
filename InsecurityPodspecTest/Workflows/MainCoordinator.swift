@@ -1,6 +1,6 @@
 import Insecurity
 
-class MainCoordinator: InsecurityChild<Never> {
+class MainCoordinator: ModalCoordinator<Never> {
     override var viewController: UIViewController {
         let viewController = MainViewController()
         

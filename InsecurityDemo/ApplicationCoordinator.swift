@@ -65,7 +65,7 @@ class ApplicationCoordinator: WindowCoordinator {
         
         let debugCoordinator = DebugViewCoordinator(di: di)
         
-        self.navigation.topContext.start(debugCoordinator, animated: true) { [weak self] result in
+        self.navigation.topContext.start(debugCoordinator, in: .current, animated: true) { [weak self] result in
             self?.startedDebugCoordinator = false
             print("End DebugView \(result)")
         }
