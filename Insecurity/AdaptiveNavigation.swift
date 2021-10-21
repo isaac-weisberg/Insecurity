@@ -8,7 +8,7 @@ enum _AdaptiveContext {
 }
 
 public struct AdaptiveContext {
-    public static var any: AdaptiveContext {
+    public static var current: AdaptiveContext {
         return AdaptiveContext(.current)
     }
     
@@ -51,14 +51,4 @@ public protocol AdaptiveNavigation: AnyObject {
                           _ child: NavigationCoordinator<NewResult>,
                           animated: Bool,
                           _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
-}
-
-public extension AdaptiveNavigation {
-    func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
-                          animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        start(child, in: .any, animated: animated) { result in
-            completion(result)
-        }
-    }
 }

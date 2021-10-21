@@ -55,7 +55,7 @@ class GalleryViewController: UIViewController {
 
         let paymentMethodCoordinator = PaymentMethodCoordinator()
 
-        modalHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+        modalHost.start(paymentMethodCoordinator, in: .current, animated: true) { [weak self] result in
             self?.customModalHost = nil
             // result is PaymentMethodScreenResult
         }
@@ -71,7 +71,7 @@ class GalleryViewController: UIViewController {
 
         let paymentMethodCoordinator = PaymentMethodCoordinator()
 
-        navigationHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+        navigationHost.start(paymentMethodCoordinator, in: .current, animated: true) { [weak self] result in
             self?.customNavigationHost = nil
             // result is PaymentMethodScreenResult
         }
@@ -90,7 +90,7 @@ class GalleryViewController: UIViewController {
 
         let paymentMethodCoordinator = PaymentMethodCoordinator()
 
-        navigationHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
+        navigationHost.start(paymentMethodCoordinator, in: .current, animated: true) { [weak self] result in
             self?.customNavigationHost = nil
             // result is PaymentMethodScreenResult
         }

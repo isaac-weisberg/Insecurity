@@ -46,7 +46,7 @@ class GenericCoordinator: AdaptiveCoordinator<Void> {
             case .finish:
                 finish(())
             case .start(let genericCoordinator):
-                self.navigation.start(genericCoordinator, in: .any, animated: true) { result in
+                self.navigation.start(genericCoordinator, in: .current, animated: true) { result in
                     print("End GenericCoordinator regular start \(result)")
                     finish(())
                 }

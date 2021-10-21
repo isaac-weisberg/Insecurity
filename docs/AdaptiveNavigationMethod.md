@@ -24,7 +24,7 @@ Here is the `start` method available on `AdaptiveNavigation`:
 
 ```swift
 public struct AdaptiveContext {
-    public static var any: AdaptiveContext
+    public static var current: AdaptiveContext
 
     public static var modal: AdaptiveContext
 
@@ -43,13 +43,15 @@ public protocol AdaptiveNavigation {
 
 Notice the context parameter. This parameter allows to control the way the child will be presented on screen.
 
-## `AdaptiveContext.any`
+## `AdaptiveContext.current`
 
 Starting with this context means that the child will be presented just like its parent:
 Parent is presented|Child will be presented
 ---|---
 Via `present`|Via `present`
 Via `push`|Via `push`
+
+"Current" stands for "current presentation context"
 
 ## `AdaptiveContext.modal`
 
@@ -79,6 +81,20 @@ Current Presentation Context|Outcome
 Already a `UINavigationController`|It pushes the `child` unto the existing `UINavigationController`. `fallback`-autoclosure parameter never gets evaluated.
 Modal presentation|It creates the `UINavigationController` from the `@autoclosure` that you pass as `fallback` parameter. Then, it starts child as the `rootViewController` of the `UINavigationController`.
 
+> ⚠️ **Be careful not to create the UINavigationController ahead of passing it into autoclosure**
+
+Do this:
+```swift
+self.navigation.start(coordinator, in: .navigation(fallback: UINavigationController()), animated: true) { _ in }
+```
+
+Not this:
+```swift
+let navigationController = UINavigationController() // Already created
+
+self.navigation.start(coordinator, in: .navigation(fallback: navigationController), animated: true) { _ in }
+```
+
 # Starting proper coordinators from `AdaptiveCoordinator`
 
 `self.navigation` also provides 2 methods that allow you to return to the realm of `ModalCoordinator` and `NavigationCoordinator`.
@@ -97,19 +113,3 @@ public protocol AdaptiveNavigation {
 ```
 
 Of course, these instances of `ModalCoordinator` and `NavigationCoordinator` will see their proper navigation interfaces in `self.navigation` - the `ModalNavigation` and `NavigationControllerNavigation`.
-
-# Convenience method to `start` in current context faster
-
-If you call `start` without `in context: AdaptiveContext`, it's equivalent to `in: .any`.
-
-```swift
-public extension AdaptiveNavigation {
-    func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
-                          animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
-        start(child, in: .any, animated: animated) { result in
-            completion(result)
-        }
-    }
-}
-```
