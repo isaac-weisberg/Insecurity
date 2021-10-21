@@ -1,5 +1,3 @@
-import UIKit
-
 struct Deferred<Object> {
     let make: () -> Object
     
