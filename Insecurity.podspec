@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "Insecurity"
-  spec.version      = "2.0.0"
+  spec.version      = "2.1.0"
   spec.summary      = "Ultimate iOS Swift Navigation Framework"
 
   spec.description  = <<-DESC
@@ -13,6 +13,7 @@ Pod::Spec.new do |spec|
   - Automatic detection of interactivePopGestureRecognizer dismissal in UINavigationController
   - Propagation of results to the parent
   - Ability to organize custom coordinators that allow for magical modification of UINavigationController stack or modal presentation stack
+  - Context-independent navigation
   - Automatic management of a UIWindow
 
   You can use it alongside any of your existing navigation solutions.
