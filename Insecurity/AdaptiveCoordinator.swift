@@ -12,7 +12,7 @@ open class AdaptiveCoordinator<Result>: CommonNavigationCoordinator, CommonModal
         fatalError("This coordinator didn't define a viewController")
     }
     
-    var _finishImplementation: ((CoordinatorResult<Result>) -> Void)?
+    var _finishImplementation: ((Result?) -> Void)?
     
     public func finish(_ result: Result) {
         guard let _finishImplementation = _finishImplementation else {
@@ -20,7 +20,7 @@ open class AdaptiveCoordinator<Result>: CommonNavigationCoordinator, CommonModal
             return
         }
         
-        _finishImplementation(.normal(result))
+        _finishImplementation(result)
     }
     
     public func dismiss() {
@@ -29,7 +29,7 @@ open class AdaptiveCoordinator<Result>: CommonNavigationCoordinator, CommonModal
             return
         }
         
-        _finishImplementation(.dismissed)
+        _finishImplementation(nil)
     }
     
     func _updateHostReference(_ host: NavigationHost) {

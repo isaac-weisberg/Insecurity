@@ -13,7 +13,7 @@ public class WindowHost: AdaptiveNavigation {
     func _startModal<CoordinatorType: CommonModalCoordinator>(_ child: CoordinatorType,
                                                               duration: TimeInterval? = nil,
                                                               options: UIView.AnimationOptions? = nil,
-                                                              _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+                                                              _ completion: @escaping (CoordinatorType.Result?) -> Void) {
         guard let window = window else {
             assertionFailure("WindowHost attempted to start a child on a dead window")
             return
@@ -44,7 +44,7 @@ public class WindowHost: AdaptiveNavigation {
                                                                         _ initialChild: CoordinatorType,
                                                                         duration: TimeInterval? = nil,
                                                                         options: UIView.AnimationOptions? = nil,
-                                                                        _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+                                                                        _ completion: @escaping (CoordinatorType.Result?) -> Void) {
         guard let window = window else {
             assertionFailure("WindowHost attempted to start a child on a dead window")
             return
@@ -83,7 +83,7 @@ public class WindowHost: AdaptiveNavigation {
     public func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         
         _startModal(child, duration: duration, options: options) { result in
             completion(result)
@@ -95,7 +95,7 @@ public class WindowHost: AdaptiveNavigation {
                                  _ initialChild: NavigationCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         _startNavigation(navigationController, initialChild, duration: duration, options: options) { result in
             completion(result)
         }
@@ -104,7 +104,7 @@ public class WindowHost: AdaptiveNavigation {
     public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         _startModal(child, duration: duration, options: options) { result in
             completion(result)
         }
@@ -114,7 +114,7 @@ public class WindowHost: AdaptiveNavigation {
                                  _ initialChild: AdaptiveCoordinator<NewResult>,
                                  duration: TimeInterval? = nil,
                                  options: UIView.AnimationOptions? = nil,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         _startNavigation(navigationController, initialChild, duration: duration, options: options) { result in
             completion(result)
         }
@@ -125,7 +125,7 @@ public class WindowHost: AdaptiveNavigation {
     public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
                                  in context: AdaptiveContext,
                                  animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         let duration: TimeInterval?
         let options: UIView.AnimationOptions?
         if animated {
@@ -156,7 +156,7 @@ public class WindowHost: AdaptiveNavigation {
     
     public func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                                  animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         
         let duration: TimeInterval?
         let options: UIView.AnimationOptions?
@@ -176,7 +176,7 @@ public class WindowHost: AdaptiveNavigation {
     public func start<NewResult>(_ navigationController: UINavigationController,
                                  _ child: NavigationCoordinator<NewResult>,
                                  animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         let duration: TimeInterval?
         let options: UIView.AnimationOptions?
         if animated {
