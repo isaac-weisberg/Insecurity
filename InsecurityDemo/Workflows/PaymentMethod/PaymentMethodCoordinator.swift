@@ -16,14 +16,12 @@ class PaymentMethodCoordinator: AdaptiveCoordinator<PaymentMethodScreenResult> {
         viewController.onNewPaymentMethodRequested = {
             let addPaymentMethodCoordinator = AddPaymentMethodCoordinator()
             
-            self.navigation.start(addPaymentMethodCoordinator, animated: true) { [weak viewController] result in
-                switch result {
-                case .normal(let paymentMethod):
+            self.navigation.start(addPaymentMethodCoordinator, animated: true) { [weak viewController] paymentMethod in
+                if let paymentMethod = paymentMethod {
                     // User has added a new payment method
                     viewController?.handleNewPaymentMethodAdded(paymentMethod)
-                case .dismissed:
+                } else {
                     // User dismissed the screen, nothing to do
-                    break
                 }
             }
         }

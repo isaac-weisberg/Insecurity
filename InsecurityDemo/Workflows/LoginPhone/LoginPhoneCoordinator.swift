@@ -17,12 +17,9 @@ class LoginPhoneCoordinator: NavigationCoordinator<LoginPhoneCoordinatorResult> 
             navigation.start(loginSMSCodeCoordinator, animated: true) { result in
                 print("End LoginSMSCode \(result)")
                 switch result {
-                case .normal(let smsCodeResult):
-                    switch smsCodeResult {
-                    case .loggedIn:
-                        finish(.loggedIn)
-                    }
-                case .dismissed:
+                case .loggedIn:
+                    finish(.loggedIn)
+                case nil:
                     break
                 }
             }

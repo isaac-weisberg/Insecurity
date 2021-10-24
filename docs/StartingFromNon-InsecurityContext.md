@@ -39,7 +39,7 @@ class ExistingViewController: UIViewController {
 
         modalHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
             self?.customModalHost = nil
-            // result is PaymentMethodScreenResult
+            // result is PaymentMethodScreenResult?
         }
     }
 }
@@ -67,7 +67,7 @@ class ExistingViewController: UIViewController {
 
         navigationHost.start(paymentMethodCoordinator, animated: true) { [weak self] result in
             self?.customNavigationHost = nil
-            // result is PaymentMethodScreenResult
+            // result is PaymentMethodScreenResult?
         }
     }
 }

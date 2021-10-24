@@ -19,12 +19,9 @@ class CartCoordinator: NavigationCoordinator<CartCoordinatorResult> {
             navigation.start(paymentCoordinator, animated: true) { result in
                 print("End Payment Regular \(result)")
                 switch result {
-                case .normal(let paymentResult):
-                    switch paymentResult {
-                    case .success:
-                        finish(.purchased)
-                    }
-                case .dismissed:
+                case .success:
+                    finish(.purchased)
+                case nil:
                     break
                 }
             }
@@ -36,25 +33,19 @@ class CartCoordinator: NavigationCoordinator<CartCoordinatorResult> {
             navigation.start(UINavigationController(), loginPhoneCoordinator, animated: true) { result in
                 print("End Login after payWithLogin requested \(result)")
                 switch result {
-                case .normal(let loginResult):
-                    switch loginResult {
-                    case .loggedIn:
-                        let paymentCoordinator = PaymentCoordinator(di: di)
-                        
-                        navigation.start(paymentCoordinator, animated: true) { result in
-                            print("End Payment After Login \(result)")
-                            switch result {
-                            case .normal(let paymentResult):
-                                switch paymentResult {
-                                case .success:
-                                    finish(.purchased)
-                                }
-                            case .dismissed:
-                                break
-                            }
+                case .loggedIn:
+                    let paymentCoordinator = PaymentCoordinator(di: di)
+                    
+                    navigation.start(paymentCoordinator, animated: true) { result in
+                        print("End Payment After Login \(result)")
+                        switch result {
+                        case .success:
+                            finish(.purchased)
+                        case nil:
+                            break
                         }
                     }
-                case .dismissed:
+                case nil:
                     break
                 }
             }
@@ -66,22 +57,19 @@ class CartCoordinator: NavigationCoordinator<CartCoordinatorResult> {
             navigation.start(scoringCoordinator, animated: true) { result in
                 print("End Login after payWithScoring requested \(result)")
                 switch result {
-                case .normal:
+                case .some:
                     let paymentCoordinator = PaymentCoordinator(di: di)
                     
                     navigation.start(paymentCoordinator, animated: true) { result in
                         print("End Payment After Login \(result)")
                         switch result {
-                        case .normal(let paymentResult):
-                            switch paymentResult {
-                            case .success:
-                                finish(.purchased)
-                            }
-                        case .dismissed:
+                        case .success:
+                            finish(.purchased)
+                        case nil:
                             break
                         }
                     }
-                case .dismissed:
+                case nil:
                     break
                 }
             }

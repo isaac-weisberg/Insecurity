@@ -83,7 +83,7 @@ viewController.onNewPaymentMethodRequested = {
     let addPaymentMethodCoordinator = AddPaymentMethodCoordinator()
     
     self.navigation.start(addPaymentMethodCoordinator, animated: true) { result in
-        // `result` is the PaymentMethod
+        // `result` is the PaymentMethod?
     }
 }
 ```
@@ -92,8 +92,8 @@ viewController.onNewPaymentMethodRequested = {
 `Insecurity` framework handles this situation automatically.  
 
 The `result` you receive in the code will be:
-- `.dismissed` if the screen is dismissed by gesture
-- `.normal(PaymentMethod)` if the coordinator calls `finish`
+- `nil` if the screen is dismissed by gesture
+- `PaymentMethod` if the coordinator calls `finish`
 
 Here is the final code:
 
@@ -101,14 +101,12 @@ Here is the final code:
 viewController.onNewPaymentMethodRequested = {
     let addPaymentMethodCoordinator = AddPaymentMethodCoordinator()
     
-    self.navigation.start(addPaymentMethodCoordinator, animated: true) { [weak viewController] result in
-        switch result {
-        case .normal(let paymentMethod):
+    self.navigation.start(addPaymentMethodCoordinator, animated: true) { [weak viewController] paymentMethod in
+        if let paymentMethod = paymentMethod {
             // User has added a new payment method
             viewController?.handleNewPaymentMethodAdded(paymentMethod)
-        case .dismissed:
+        } else {
             // User dismissed the screen, nothing to do
-            break
         }
     }
 }

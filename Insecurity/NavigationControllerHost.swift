@@ -123,7 +123,7 @@ public class NavigationHost: NavigationControllerNavigation {
     private func _startNewNavigation<CoordinatorType: CommonNavigationCoordinator>(_ navigationController: UINavigationController,
                                                                                    _ initialChild: CoordinatorType,
                                                                                    animated: Bool,
-                                                                                   _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+                                                                                   _ completion: @escaping (CoordinatorType.Result?) -> Void) {
         let modalHost = self.asModalHost()
         
         modalHost.startNavigation(navigationController, initialChild, animated: animated) { result in
@@ -133,7 +133,7 @@ public class NavigationHost: NavigationControllerNavigation {
     
     private func _startNewModal<CoordinatorType: CommonModalCoordinator>(_ child: CoordinatorType,
                                                                          animated: Bool,
-                                                                         _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+                                                                         _ completion: @escaping (CoordinatorType.Result?) -> Void) {
         let modalHost = self.asModalHost()
         
         modalHost.startModal(child, animated: animated) { result in
@@ -141,7 +141,7 @@ public class NavigationHost: NavigationControllerNavigation {
         }
     }
     
-    private func _startChild<CoordinatorType: CommonNavigationCoordinator>(_ child: CoordinatorType, animated: Bool, _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+    private func _startChild<CoordinatorType: CommonNavigationCoordinator>(_ child: CoordinatorType, animated: Bool, _ completion: @escaping (CoordinatorType.Result?) -> Void) {
         guard let navigationController = navigationController else {
             assertionFailure("NavigationHost has attempted to start a child, but the navigation controller has long since died")
             return
@@ -169,7 +169,7 @@ public class NavigationHost: NavigationControllerNavigation {
         controller.onDeinit = { [weak self, weak child] in
             guard let self = self, let child = child else { return }
             self.purgeOnDealloc(child)
-            completion(.dismissed)
+            completion(nil)
         }
         
         dispatch(controller, child: child)
@@ -198,7 +198,7 @@ public class NavigationHost: NavigationControllerNavigation {
     
     public func start<NewResult>(_ child: NavigationCoordinator<NewResult>,
                                  animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         _startChild(child, animated: animated) { result in
             completion(result)
         }
@@ -207,7 +207,7 @@ public class NavigationHost: NavigationControllerNavigation {
     public func start<NewResult>(_ navigationController: UINavigationController,
                                  _ child: NavigationCoordinator<NewResult>,
                                  animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         _startNewNavigation(navigationController, child, animated: animated) { result in
             completion(result)
         }
@@ -215,7 +215,7 @@ public class NavigationHost: NavigationControllerNavigation {
     
     public func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                                  animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         _startNewModal(child, animated: animated) { result in
             completion(result)
         }
@@ -226,7 +226,7 @@ public class NavigationHost: NavigationControllerNavigation {
     public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>,
                                  in context: AdaptiveContext,
                                  animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         switch context._internalContext {
         case .current, .currentNavigation:
             self._startChild(child, animated: animated) { result in

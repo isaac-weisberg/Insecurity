@@ -12,10 +12,10 @@ class ParentCoordinator: ModalCoordinator<Never> {
                                   animated: true) { result in
                 
                 switch result {
-                case .normal(let currencySelection):
+                case .some(let currencySelection):
                     // Good old currencySelection result
                     break
-                case .dismissed:
+                case nil:
                     break
                 }
             }

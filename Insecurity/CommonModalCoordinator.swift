@@ -11,7 +11,7 @@ protocol CommonModalCoordinator: CommonModalCoordinatorAny {
     
     var viewController: UIViewController { get }
     
-    var _finishImplementation: ((CoordinatorResult<Result>) -> Void)? { get set }
+    var _finishImplementation: ((Result?) -> Void)? { get set }
     
     func _updateHostReference(_ host: ModalHost)
 }

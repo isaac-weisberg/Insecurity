@@ -19,9 +19,9 @@ class ParentViewController: UIViewController {
             // Release the modalHost, don't forget to `weak self`
             self?.customModalHost = nil
             switch result {
-            case .normal(let currencySelection):
+            case .some(let currencySelection):
                 break
-            case .dismissed:
+            case nil:
                 break
             }
         }
