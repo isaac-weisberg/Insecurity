@@ -12,7 +12,7 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         fatalError("This coordinator didn't define a viewController")
     }
     
-    var _finishImplementation: ((CoordinatorResult<Result>) -> Void)?
+    var _finishImplementation: ((Result?) -> Void)?
     
     public func finish(_ result: Result) {
         guard let _finishImplementation = _finishImplementation else {
@@ -20,7 +20,7 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
             return
         }
         
-        _finishImplementation(.normal(result))
+        _finishImplementation(result)
     }
     
     public func dismiss() {
@@ -29,7 +29,7 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
             return
         }
         
-        _finishImplementation(.dismissed)
+        _finishImplementation(nil)
     }
     
     func _updateHostReference(_ host: ModalHost) {
@@ -53,11 +53,11 @@ class ModalCoordinatorWithNavigationHost<Result>: ModalCoordinator<Result>, Moda
         return _storedViewController!
     }
     
-    func internalFinish(_ result: CoordinatorResult<Result>) {
+    func internalFinish(_ result: Result?) {
         switch result {
-        case .normal(let result):
+        case .some(let result):
             finish(result)
-        case .dismissed:
+        case .none:
             dismiss()
         }
     }

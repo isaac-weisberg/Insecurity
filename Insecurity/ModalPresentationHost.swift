@@ -172,7 +172,7 @@ public class ModalHost: ModalNavigation {
     func startNavigation<CoordinatorType: CommonNavigationCoordinator>(_ navigationController: UINavigationController,
                                                                        _ child: CoordinatorType,
                                                                        animated: Bool,
-                                                                       _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+                                                                       _ completion: @escaping (CoordinatorType.Result?) -> Void) {
         self._startNavigation(navigationController, child, animated: animated) { result in
             completion(result)
         }
@@ -180,7 +180,7 @@ public class ModalHost: ModalNavigation {
     
     func startModal<CoordinatorType: CommonModalCoordinator>(_ child: CoordinatorType,
                                                              animated: Bool,
-                                                             _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+                                                             _ completion: @escaping (CoordinatorType.Result?) -> Void) {
         _startChild(child, animated: animated) { result in
             completion(result)
         }
@@ -189,7 +189,7 @@ public class ModalHost: ModalNavigation {
     private func _startNavigation<CoordinatorType: CommonNavigationCoordinator>(_ navigationController: UINavigationController,
                                                                                 _ initialChild: CoordinatorType,
                                                                                 animated: Bool,
-                                                                                _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+                                                                                _ completion: @escaping (CoordinatorType.Result?) -> Void) {
         let navigationHost = NavigationHost(navigationController)
         let modalCoordinator = ModalCoordinatorWithNavigationHost<CoordinatorType.Result>(navigationHost, navigationController)
         
@@ -211,7 +211,7 @@ public class ModalHost: ModalNavigation {
     
     var enqueuedChildStartRoutine: (() -> Void)?
     
-    private func _startChild<CoordinatorType: CommonModalCoordinator>(_ child: CoordinatorType, animated: Bool, _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+    private func _startChild<CoordinatorType: CommonModalCoordinator>(_ child: CoordinatorType, animated: Bool, _ completion: @escaping (CoordinatorType.Result?) -> Void) {
         if finalizationDepth > 0 {
             // Enqueing the start to happen after batch purge
             enqueuedChildStartRoutine = { [weak self] in
@@ -226,7 +226,7 @@ public class ModalHost: ModalNavigation {
     
     private func startChildImmediately<CoordinatorType: CommonModalCoordinator>(_ child: CoordinatorType,
                                                                                 animated: Bool,
-                                                                                _ completion: @escaping (CoordinatorResult<CoordinatorType.Result>) -> Void) {
+                                                                                _ completion: @escaping (CoordinatorType.Result?) -> Void) {
         child._updateHostReference(self)
         weak var weakController: UIViewController?
         child._finishImplementation = { [weak self, weak child] result in
@@ -249,7 +249,7 @@ public class ModalHost: ModalNavigation {
         controller.onDeinit = { [weak self, weak child] in
             guard let self = self, let child = child else { return }
             self.purgeOnDealloc(child)
-            completion(.dismissed)
+            completion(nil)
         }
         
         dispatch(controller, animated, child)
@@ -265,7 +265,7 @@ public class ModalHost: ModalNavigation {
     
     public func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                                  animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         self.startModal(child, animated: animated) { result in
             completion(result)
         }
@@ -274,7 +274,7 @@ public class ModalHost: ModalNavigation {
     public func start<NewResult>(_ navigationController: UINavigationController,
                                  _ child: NavigationCoordinator<NewResult>,
                                  animated: Bool,
-                                 _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+                                 _ completion: @escaping (NewResult?) -> Void) {
         self.startNavigation(navigationController, child, animated: animated) { result in
             completion(result)
         }
@@ -282,7 +282,7 @@ public class ModalHost: ModalNavigation {
     
     // MARK: - AdaptiveNavigation
     
-    public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>, in context: AdaptiveContext, animated: Bool, _ completion: @escaping (CoordinatorResult<NewResult>) -> Void) {
+    public func start<NewResult>(_ child: AdaptiveCoordinator<NewResult>, in context: AdaptiveContext, animated: Bool, _ completion: @escaping (NewResult?) -> Void) {
         switch context._internalContext {
         case .current, .modal:
             startModal(child, animated: animated) { result in

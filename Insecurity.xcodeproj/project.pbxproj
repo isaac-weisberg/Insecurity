@@ -18,6 +18,7 @@
 		A34CBF6526FFD796007AF9B8 /* ModalPresentationHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34CBF6426FFD796007AF9B8 /* ModalPresentationHost.swift */; };
 		A35A78232709EF3E00256FBD /* ScoringCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */; };
 		A35A78252709EFFB00256FBD /* ScoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78242709EFFB00256FBD /* ScoringViewController.swift */; };
+		A35E803627258F46003869F7 /* DefaultStringInterpolation+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35E803527258F46003869F7 /* DefaultStringInterpolation+Optional.swift */; };
 		A3677F42270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F41270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift */; };
 		A3677F44270CE024003AC3E6 /* CurrencySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F43270CE024003AC3E6 /* CurrencySelectionViewController.swift */; };
 		A3677F47270CE038003AC3E6 /* CurrencySelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F46270CE038003AC3E6 /* CurrencySelection.swift */; };
@@ -73,7 +74,6 @@
 		A396900026FF26A700B6A59B /* NavigationControllerHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */; };
 		A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A396900326FF26CA00B6A59B /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */; };
 		A39A458B2714DBEF000D36E5 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458A2714DBEF000D36E5 /* AppCoordinator.swift */; };
 		A39A458D2714DCEB000D36E5 /* ApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458C2714DCEB000D36E5 /* ApplicationDelegate.swift */; };
 		D4BA0B4FA7A6F24D6294ED70 /* libPods-InsecurityDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */; };
@@ -119,6 +119,7 @@
 		A34CBF6426FFD796007AF9B8 /* ModalPresentationHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresentationHost.swift; sourceTree = "<group>"; };
 		A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
 		A35A78242709EFFB00256FBD /* ScoringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringViewController.swift; sourceTree = "<group>"; };
+		A35E803527258F46003869F7 /* DefaultStringInterpolation+Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DefaultStringInterpolation+Optional.swift"; sourceTree = "<group>"; };
 		A3677F41270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionCoordinator.swift; sourceTree = "<group>"; };
 		A3677F43270CE024003AC3E6 /* CurrencySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionViewController.swift; sourceTree = "<group>"; };
 		A3677F46270CE038003AC3E6 /* CurrencySelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelection.swift; sourceTree = "<group>"; };
@@ -177,7 +178,6 @@
 		A3968FF926FF260200B6A59B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A3968FFB26FF260200B6A59B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerHost.swift; sourceTree = "<group>"; };
-		A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorResult.swift; sourceTree = "<group>"; };
 		A39A458A2714DBEF000D36E5 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		A39A458C2714DCEB000D36E5 /* ApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationDelegate.swift; sourceTree = "<group>"; };
 		BB61D608FF8A49075BF920EF /* Pods-InsecurityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.debug.xcconfig"; sourceTree = "<group>"; };
@@ -265,6 +265,7 @@
 				A3677F49270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift */,
 				A3677F4D270CEA0E003AC3E6 /* UIColor+system.swift */,
 				A377B574271385BA00A4331B /* UIColor+random.swift */,
+				A35E803527258F46003869F7 /* DefaultStringInterpolation+Optional.swift */,
 			);
 			path = Util;
 			sourceTree = "<group>";
@@ -459,7 +460,6 @@
 				A370767F26FFCED600ED7391 /* DeinitObservable.swift */,
 				A34CBF6426FFD796007AF9B8 /* ModalPresentationHost.swift */,
 				A37991292702659600550B8E /* WindowHost.swift */,
-				A398EB56270BAEFC00D93B1E /* CoordinatorResult.swift */,
 				A3441883270F9CD800CE49E4 /* Insecurity.swift */,
 				A320332F27164E0400ABD197 /* ModalNavigation.swift */,
 				A320333127164E1300ABD197 /* ModalCoordinator.swift */,
@@ -717,7 +717,6 @@
 				A34CBF6526FFD796007AF9B8 /* ModalPresentationHost.swift in Sources */,
 				A320333827164F2800ABD197 /* NavigationCoordinator.swift in Sources */,
 				A379912A2702659600550B8E /* WindowHost.swift in Sources */,
-				A398EB57270BAEFC00D93B1E /* CoordinatorResult.swift in Sources */,
 				A390C1502717992100E9C905 /* CommonModalCoordinator.swift in Sources */,
 				A390C14E2717965100E9C905 /* CommonNavigationCoordinator.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,
@@ -755,6 +754,7 @@
 				A3677F4E270CEA0E003AC3E6 /* UIColor+system.swift in Sources */,
 				A3683FBE2700FB590048B3CF /* LoginPhoneViewController.swift in Sources */,
 				A382534527008FCB00FBC6DC /* PaymentViewController.swift in Sources */,
+				A35E803627258F46003869F7 /* DefaultStringInterpolation+Optional.swift in Sources */,
 				A38253342700804700FBC6DC /* GalleryCoordinator.swift in Sources */,
 				A370FB662706780900D5EF51 /* Application.swift in Sources */,
 				A35A78232709EF3E00256FBD /* ScoringCoordinator.swift in Sources */,
