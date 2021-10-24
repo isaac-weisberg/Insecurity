@@ -33,13 +33,13 @@ public protocol ModalNavigation: AdaptiveNavigation {
     // Starts a new modal screen
     func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                           animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+                          _ completion: @escaping (NewResult?) -> Void)
     
     // Starts a new `UINavigationController`
     func start<NewResult>(_ navigationController: UINavigationController,
                           _ child: NavigationCoordinator<NewResult>,
                           animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+                          _ completion: @escaping (NewResult?) -> Void)
 }
 ```
 
@@ -50,18 +50,18 @@ public protocol NavigationControllerNavigation: AdaptiveNavigation {
     // Pushes to the current `UINavigationController`
     func start<NewResult>(_ child: NavigationCoordinator<NewResult>,
                           animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+                          _ completion: @escaping (NewResult?) -> Void)
     
     // Starts a new `UINavigationController`
     func start<NewResult>(_ navigationController: UINavigationController,
                           _ child: NavigationCoordinator<NewResult>,
                           animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+                          _ completion: @escaping (NewResult?) -> Void)
     
     // Starts a new modal screen
     func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                           animated: Bool,
-                          _ completion: @escaping (CoordinatorResult<NewResult>) -> Void)
+                          _ completion: @escaping (NewResult?) -> Void)
 }
 ```
 
