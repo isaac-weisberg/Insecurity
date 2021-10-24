@@ -29,6 +29,7 @@
 		A3683FC12700FBCC0048B3CF /* LoginSMSCodeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC02700FBCC0048B3CF /* LoginSMSCodeViewController.swift */; };
 		A3683FC32700FC3F0048B3CF /* LoginPhoneCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */; };
 		A3683FC52700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FC42700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift */; };
+		A36E5AA72725C8660000C551 /* InsecurityLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = A36E5AA62725C8660000C551 /* InsecurityLogger.swift */; };
 		A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370767F26FFCED600ED7391 /* DeinitObservable.swift */; };
 		A370FB5D2706689100D5EF51 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370FB5C2706689100D5EF51 /* AuthService.swift */; };
 		A370FB5F270668BD00D5EF51 /* DI.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370FB5E270668BD00D5EF51 /* DI.swift */; };
@@ -130,6 +131,7 @@
 		A3683FC02700FBCC0048B3CF /* LoginSMSCodeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeViewController.swift; sourceTree = "<group>"; };
 		A3683FC22700FC3F0048B3CF /* LoginPhoneCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneCoordinator.swift; sourceTree = "<group>"; };
 		A3683FC42700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginSMSCodeCoordinator.swift; sourceTree = "<group>"; };
+		A36E5AA62725C8660000C551 /* InsecurityLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsecurityLogger.swift; sourceTree = "<group>"; };
 		A370767F26FFCED600ED7391 /* DeinitObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
 		A370FB5C2706689100D5EF51 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		A370FB5E270668BD00D5EF51 /* DI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DI.swift; sourceTree = "<group>"; };
@@ -471,6 +473,7 @@
 				A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */,
 				A38D67CB271CA9720092BB63 /* WindowCoordinator.swift */,
 				A392A1352720A0C200976B7E /* Deferred.swift */,
+				A36E5AA62725C8660000C551 /* InsecurityLogger.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -705,6 +708,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A36E5AA72725C8660000C551 /* InsecurityLogger.swift in Sources */,
 				A320333227164E1300ABD197 /* ModalCoordinator.swift in Sources */,
 				A390C14C271792F100E9C905 /* AdaptiveNavigation.swift in Sources */,
 				A38D67CC271CA9720092BB63 /* WindowCoordinator.swift in Sources */,

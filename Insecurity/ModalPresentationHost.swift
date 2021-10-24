@@ -66,7 +66,7 @@ public class ModalHost: ModalNavigation {
                     controllerToDismissFrom = nil
                 }
             } else {
-                print("ModalHost child is supposed to dismiss his content, but instead turns out he's dead")
+                insecPrint("ModalHost child is supposed to dismiss his content, but instead turns out he's dead")
                 controllerToDismissFrom = nil
             }
         } else {
@@ -257,7 +257,7 @@ public class ModalHost: ModalNavigation {
     
 #if DEBUG
     deinit {
-        print("ModalHost deinit \(type(of: self))")
+        insecPrint("\(type(of: self)) deinit")
     }
 #endif
     

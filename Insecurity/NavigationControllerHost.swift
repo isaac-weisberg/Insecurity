@@ -178,7 +178,7 @@ public class NavigationHost: NavigationControllerNavigation {
     
 #if DEBUG
     deinit {
-        print("NavigationHost deinit \(type(of: self))")
+        insecPrint("\(type(of: self)) deinit")
     }
 #endif
     

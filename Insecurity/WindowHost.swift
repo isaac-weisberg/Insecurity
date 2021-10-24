@@ -76,7 +76,7 @@ public class WindowHost: AdaptiveNavigation {
     
 #if DEBUG
     deinit {
-        print("WindowHost deinit \(type(of: self))")
+        insecPrint("\(type(of: self)) deinit")
     }
 #endif
     

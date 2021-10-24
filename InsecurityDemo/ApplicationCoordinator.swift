@@ -5,6 +5,8 @@ class ApplicationCoordinator: WindowCoordinator {
     let di = DIContainer()
     
     func start() {
+        Insecurity.loggerMode = .full
+        
         if di.authService.hasCreds {
             startGallery()
         } else {
