@@ -20,7 +20,6 @@
 		A33986E3271CAFC200B68256 /* CommonModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D4271CAFC200B68256 /* CommonModalCoordinator.swift */; };
 		A33986E4271CAFC200B68256 /* DeinitObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D5271CAFC200B68256 /* DeinitObservable.swift */; };
 		A33986E5271CAFC200B68256 /* WindowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D6271CAFC200B68256 /* WindowCoordinator.swift */; };
-		A33986E6271CAFC200B68256 /* CoordinatorResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D7271CAFC200B68256 /* CoordinatorResult.swift */; };
 		A33986E7271CAFC200B68256 /* Insecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D8271CAFC200B68256 /* Insecurity.swift */; };
 		A33986F0271CB02F00B68256 /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986EF271CB02F00B68256 /* PaymentMethod.swift */; };
 		A339872C271CB0DA00B68256 /* ProductViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398700271CB0DA00B68256 /* ProductViewController.swift */; };
@@ -35,7 +34,6 @@
 		A3398735271CB0DA00B68256 /* PaymentSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339870D271CB0DA00B68256 /* PaymentSuccessViewController.swift */; };
 		A3398736271CB0DA00B68256 /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339870F271CB0DA00B68256 /* ParentViewController.swift */; };
 		A3398737271CB0DA00B68256 /* ParentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398710271CB0DA00B68256 /* ParentCoordinator.swift */; };
-		A3398738271CB0DA00B68256 /* SmallAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398711271CB0DA00B68256 /* SmallAppDelegate.swift */; };
 		A3398739271CB0DA00B68256 /* AddPaymentMethodCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398713271CB0DA00B68256 /* AddPaymentMethodCoordinator.swift */; };
 		A339873A271CB0DA00B68256 /* AddPaymentMethodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398714271CB0DA00B68256 /* AddPaymentMethodViewController.swift */; };
 		A339873B271CB0DA00B68256 /* CurrencySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398716271CB0DA00B68256 /* CurrencySelectionViewController.swift */; };
@@ -51,7 +49,6 @@
 		A3398745271CB0DA00B68256 /* ScoringCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398724271CB0DA00B68256 /* ScoringCoordinator.swift */; };
 		A3398746271CB0DA00B68256 /* PaymentMethodCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398726271CB0DA00B68256 /* PaymentMethodCoordinator.swift */; };
 		A3398747271CB0DA00B68256 /* PaymentMethodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398727271CB0DA00B68256 /* PaymentMethodViewController.swift */; };
-		A3398748271CB0DA00B68256 /* SmallAppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3398728271CB0DA00B68256 /* SmallAppCoordinator.swift */; };
 		A3398749271CB0DA00B68256 /* CartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339872A271CB0DA00B68256 /* CartViewController.swift */; };
 		A339874A271CB0DA00B68256 /* CartCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339872B271CB0DA00B68256 /* CartCoordinator.swift */; };
 		A3398750271CB0EC00B68256 /* UIColor+random.swift in Sources */ = {isa = PBXBuildFile; fileRef = A339874D271CB0EC00B68256 /* UIColor+random.swift */; };
@@ -68,6 +65,10 @@
 		A37ADF1C2712F7000096E75A /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37ADEF92712F7000096E75A /* AuthService.swift */; };
 		A37ADF222712F7190096E75A /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A33EDF9C2712F2B50041F32A /* Insecurity.framework */; };
 		A37ADF232712F7190096E75A /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A33EDF9C2712F2B50041F32A /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A3E0ED98272599040019BB6D /* Deferred.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0ED97272599040019BB6D /* Deferred.swift */; };
+		A3E0EDA22725993B0019BB6D /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0EDA02725993B0019BB6D /* AppCoordinator.swift */; };
+		A3E0EDA32725993B0019BB6D /* ApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0EDA12725993B0019BB6D /* ApplicationDelegate.swift */; };
+		A3E0EDA7272599610019BB6D /* DefaultStringInterpolation+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0EDA6272599610019BB6D /* DefaultStringInterpolation+Optional.swift */; };
 		AB8096A138E537A011501D41 /* libPods-InsecurityDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2617270B664F6C389D67EBB8 /* libPods-InsecurityDemo.a */; };
 /* End PBXBuildFile section */
 
@@ -112,7 +113,6 @@
 		A33986D4271CAFC200B68256 /* CommonModalCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonModalCoordinator.swift; sourceTree = "<group>"; };
 		A33986D5271CAFC200B68256 /* DeinitObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeinitObservable.swift; sourceTree = "<group>"; };
 		A33986D6271CAFC200B68256 /* WindowCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WindowCoordinator.swift; sourceTree = "<group>"; };
-		A33986D7271CAFC200B68256 /* CoordinatorResult.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CoordinatorResult.swift; sourceTree = "<group>"; };
 		A33986D8271CAFC200B68256 /* Insecurity.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Insecurity.swift; sourceTree = "<group>"; };
 		A33986EF271CB02F00B68256 /* PaymentMethod.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
 		A3398700271CB0DA00B68256 /* ProductViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProductViewController.swift; sourceTree = "<group>"; };
@@ -127,7 +127,6 @@
 		A339870D271CB0DA00B68256 /* PaymentSuccessViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentSuccessViewController.swift; sourceTree = "<group>"; };
 		A339870F271CB0DA00B68256 /* ParentViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
 		A3398710271CB0DA00B68256 /* ParentCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParentCoordinator.swift; sourceTree = "<group>"; };
-		A3398711271CB0DA00B68256 /* SmallAppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmallAppDelegate.swift; sourceTree = "<group>"; };
 		A3398713271CB0DA00B68256 /* AddPaymentMethodCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodCoordinator.swift; sourceTree = "<group>"; };
 		A3398714271CB0DA00B68256 /* AddPaymentMethodViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodViewController.swift; sourceTree = "<group>"; };
 		A3398716271CB0DA00B68256 /* CurrencySelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CurrencySelectionViewController.swift; sourceTree = "<group>"; };
@@ -143,7 +142,6 @@
 		A3398724271CB0DA00B68256 /* ScoringCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
 		A3398726271CB0DA00B68256 /* PaymentMethodCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodCoordinator.swift; sourceTree = "<group>"; };
 		A3398727271CB0DA00B68256 /* PaymentMethodViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentMethodViewController.swift; sourceTree = "<group>"; };
-		A3398728271CB0DA00B68256 /* SmallAppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SmallAppCoordinator.swift; sourceTree = "<group>"; };
 		A339872A271CB0DA00B68256 /* CartViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartViewController.swift; sourceTree = "<group>"; };
 		A339872B271CB0DA00B68256 /* CartCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CartCoordinator.swift; sourceTree = "<group>"; };
 		A339874D271CB0EC00B68256 /* UIColor+random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+random.swift"; sourceTree = "<group>"; };
@@ -162,6 +160,10 @@
 		A37ADEF52712F7000096E75A /* main.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		A37ADEF82712F7000096E75A /* DI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DI.swift; sourceTree = "<group>"; };
 		A37ADEF92712F7000096E75A /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
+		A3E0ED97272599040019BB6D /* Deferred.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deferred.swift; sourceTree = "<group>"; };
+		A3E0EDA02725993B0019BB6D /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		A3E0EDA12725993B0019BB6D /* ApplicationDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationDelegate.swift; sourceTree = "<group>"; };
+		A3E0EDA6272599610019BB6D /* DefaultStringInterpolation+Optional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DefaultStringInterpolation+Optional.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -353,11 +355,11 @@
 		A37ADE082712F3E40096E75A /* Insecurity */ = {
 			isa = PBXGroup;
 			children = (
+				A3E0ED97272599040019BB6D /* Deferred.swift */,
 				A33986CF271CAFC200B68256 /* AdaptiveCoordinator.swift */,
 				A33986CB271CAFC100B68256 /* AdaptiveNavigation.swift */,
 				A33986D4271CAFC200B68256 /* CommonModalCoordinator.swift */,
 				A33986D1271CAFC200B68256 /* CommonNavigationCoordinator.swift */,
-				A33986D7271CAFC200B68256 /* CoordinatorResult.swift */,
 				A33986D5271CAFC200B68256 /* DeinitObservable.swift */,
 				A33986D8271CAFC200B68256 /* Insecurity.swift */,
 				A33986D0271CAFC200B68256 /* ModalCoordinator.swift */,
@@ -383,6 +385,7 @@
 		A37ADEC62712F7000096E75A /* InsecurityDemo */ = {
 			isa = PBXGroup;
 			children = (
+				A3E0ED9F2725993B0019BB6D /* ExampleUIApplicationDelegate */,
 				A37ADEC72712F7000096E75A /* Util */,
 				A37ADECA2712F7000096E75A /* ApplicationCoordinator.swift */,
 				A37ADECB2712F7000096E75A /* Assets.xcassets */,
@@ -400,6 +403,7 @@
 		A37ADEC72712F7000096E75A /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				A3E0EDA6272599610019BB6D /* DefaultStringInterpolation+Optional.swift */,
 				A339874F271CB0EC00B68256 /* DispatchQueue+asyncAfter.swift */,
 				A339874D271CB0EC00B68256 /* UIColor+random.swift */,
 				A339874E271CB0EC00B68256 /* UIColor+system.swift */,
@@ -424,8 +428,6 @@
 				A339870B271CB0DA00B68256 /* PaymentSuccess */,
 				A33986FF271CB0DA00B68256 /* Product */,
 				A3398722271CB0DA00B68256 /* Scoring */,
-				A3398728271CB0DA00B68256 /* SmallAppCoordinator.swift */,
-				A3398711271CB0DA00B68256 /* SmallAppDelegate.swift */,
 			);
 			path = Workflows;
 			sourceTree = "<group>";
@@ -454,6 +456,16 @@
 				2617270B664F6C389D67EBB8 /* libPods-InsecurityDemo.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		A3E0ED9F2725993B0019BB6D /* ExampleUIApplicationDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				A3E0EDA02725993B0019BB6D /* AppCoordinator.swift */,
+				A3E0EDA12725993B0019BB6D /* ApplicationDelegate.swift */,
+			);
+			name = ExampleUIApplicationDelegate;
+			path = Workflows/ExampleUIApplicationDelegate;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -594,7 +606,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				A33986D9271CAFC200B68256 /* ModalNavigation.swift in Sources */,
-				A33986E6271CAFC200B68256 /* CoordinatorResult.swift in Sources */,
 				A33986E7271CAFC200B68256 /* Insecurity.swift in Sources */,
 				A33986DA271CAFC200B68256 /* AdaptiveNavigation.swift in Sources */,
 				A33986DE271CAFC200B68256 /* AdaptiveCoordinator.swift in Sources */,
@@ -607,6 +618,7 @@
 				A33986DC271CAFC200B68256 /* NavigationControllerNavigation.swift in Sources */,
 				A33986DD271CAFC200B68256 /* NavigationControllerHost.swift in Sources */,
 				A33986E2271CAFC200B68256 /* WindowHost.swift in Sources */,
+				A3E0ED98272599040019BB6D /* Deferred.swift in Sources */,
 				A33986E3271CAFC200B68256 /* CommonModalCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -620,7 +632,7 @@
 				A37ADF182712F7000096E75A /* Application.swift in Sources */,
 				A37ADF172712F7000096E75A /* AppDelegate.swift in Sources */,
 				A3398730271CB0DA00B68256 /* LoginPhoneViewController.swift in Sources */,
-				A3398738271CB0DA00B68256 /* SmallAppDelegate.swift in Sources */,
+				A3E0EDA22725993B0019BB6D /* AppCoordinator.swift in Sources */,
 				A3398744271CB0DA00B68256 /* ScoringViewController.swift in Sources */,
 				A37ADF152712F7000096E75A /* CurrencySelection.swift in Sources */,
 				A339873E271CB0DA00B68256 /* GenericViewController.swift in Sources */,
@@ -637,8 +649,9 @@
 				A339873F271CB0DA00B68256 /* GenericCoordinator.swift in Sources */,
 				A339872E271CB0DA00B68256 /* LoginSMSCodeCoordinator.swift in Sources */,
 				A3398734271CB0DA00B68256 /* PaymentSuccessCoordinator.swift in Sources */,
+				A3E0EDA32725993B0019BB6D /* ApplicationDelegate.swift in Sources */,
 				A3398742271CB0DA00B68256 /* GalleryCoordinator.swift in Sources */,
-				A3398748271CB0DA00B68256 /* SmallAppCoordinator.swift in Sources */,
+				A3E0EDA7272599610019BB6D /* DefaultStringInterpolation+Optional.swift in Sources */,
 				A3398735271CB0DA00B68256 /* PaymentSuccessViewController.swift in Sources */,
 				A3398752271CB0EC00B68256 /* DispatchQueue+asyncAfter.swift in Sources */,
 				A3398747271CB0DA00B68256 /* PaymentMethodViewController.swift in Sources */,
