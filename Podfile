@@ -4,6 +4,10 @@ target 'InsecurityPlayground' do
   pod 'SnapKit'
 end
 
+target 'InsecurityDemo' do
+  pod 'SnapKit'
+end
+
 target 'InsecurityPodspecTest' do
   pod 'SnapKit'
   pod 'Insecurity', :podspec => './Insecurity.podspec'

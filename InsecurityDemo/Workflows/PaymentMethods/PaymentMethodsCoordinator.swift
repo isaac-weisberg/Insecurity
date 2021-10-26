@@ -1,13 +1,13 @@
 import Insecurity
 import UIKit
 
-struct PaymentMethodScreenResult {
+struct PaymentMethodsScreenResult {
     let paymentMethodChanged: Bool
 }
 
-class PaymentMethodCoordinator: AdaptiveCoordinator<PaymentMethodScreenResult> {
+class PaymentMethodsCoordinator: AdaptiveCoordinator<PaymentMethodsScreenResult> {
     override var viewController: UIViewController {
-        let viewController = PaymentMethodViewController()
+        let viewController = PaymentMethodsViewController()
         
         viewController.onDone = { result in
             self.finish(result)

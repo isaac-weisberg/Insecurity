@@ -1,7 +1,7 @@
 import UIKit
 import Insecurity
 
-class DemoAppDelegate: UIResponder, UIApplicationDelegate {
+class PlaygroundAppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     var coordinator: ApplicationCoordinator?

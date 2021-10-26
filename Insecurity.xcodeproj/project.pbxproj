@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4419276DCD15C0D4FB64CC47 /* libPods-InsecurityPlayground.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */; };
 		6039A8D0C53204A35B9478F6 /* libPods-InsecurityPodspecTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */; };
+		6BA2676A691705959F4C475A /* libPods-InsecurityDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */; };
 		A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320332F27164E0400ABD197 /* ModalNavigation.swift */; };
 		A320333227164E1300ABD197 /* ModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333127164E1300ABD197 /* ModalCoordinator.swift */; };
 		A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */; };
@@ -23,7 +24,6 @@
 		A3677F42270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F41270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift */; };
 		A3677F44270CE024003AC3E6 /* CurrencySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F43270CE024003AC3E6 /* CurrencySelectionViewController.swift */; };
 		A3677F47270CE038003AC3E6 /* CurrencySelection.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F46270CE038003AC3E6 /* CurrencySelection.swift */; };
-		A3677F4A270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F49270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift */; };
 		A3677F4C270CE796003AC3E6 /* CurrencyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F4B270CE796003AC3E6 /* CurrencyView.swift */; };
 		A3677F4E270CEA0E003AC3E6 /* UIColor+system.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F4D270CEA0E003AC3E6 /* UIColor+system.swift */; };
 		A3683FBE2700FB590048B3CF /* LoginPhoneViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3683FBD2700FB590048B3CF /* LoginPhoneViewController.swift */; };
@@ -47,11 +47,7 @@
 		A377B593271391A200A4331B /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B592271391A200A4331B /* ApplicationCoordinator.swift */; };
 		A377B596271391DA00A4331B /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B595271391DA00A4331B /* MainViewController.swift */; };
 		A377B5982713922400A4331B /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5972713922400A4331B /* MainCoordinator.swift */; };
-		A377B59B27139A2800A4331B /* PaymentMethodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B59A27139A2800A4331B /* PaymentMethodViewController.swift */; };
-		A377B59D27139A4200A4331B /* PaymentMethodCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B59C27139A4200A4331B /* PaymentMethodCoordinator.swift */; };
 		A377B59F27139A6600A4331B /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B59E27139A6600A4331B /* PaymentMethod.swift */; };
-		A377B5A227139C6000A4331B /* AddPaymentMethodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5A127139C6000A4331B /* AddPaymentMethodViewController.swift */; };
-		A377B5A427139CB700A4331B /* AddPaymentMethodCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5A327139CB700A4331B /* AddPaymentMethodCoordinator.swift */; };
 		A379912A2702659600550B8E /* WindowHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A37991292702659600550B8E /* WindowHost.swift */; };
 		A379912C27026E3A00550B8E /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A379912B27026E3A00550B8E /* ApplicationCoordinator.swift */; };
 		A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382532F27007EA900FBC6DC /* GalleryViewController.swift */; };
@@ -70,17 +66,45 @@
 		A390C14E2717965100E9C905 /* CommonNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */; };
 		A390C1502717992100E9C905 /* CommonModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */; };
 		A392A1362720A0C200976B7E /* Deferred.swift in Sources */ = {isa = PBXBuildFile; fileRef = A392A1352720A0C200976B7E /* Deferred.swift */; };
+		A393F2EC27289F53006CD54C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F2EB27289F53006CD54C /* AppDelegate.swift */; };
+		A393F2F527289F54006CD54C /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A393F2F427289F54006CD54C /* Assets.xcassets */; };
+		A393F2F827289F54006CD54C /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A393F2F627289F54006CD54C /* LaunchScreen.storyboard */; };
+		A393F2FE2728A445006CD54C /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
+		A393F2FF2728A445006CD54C /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A393F3042728A4E8006CD54C /* ApplicationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3032728A4E8006CD54C /* ApplicationCoordinator.swift */; };
+		A393F3072728A6CF006CD54C /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3062728A6CF006CD54C /* ProfileViewController.swift */; };
+		A393F30A2728A70C006CD54C /* DispatchQueue+asyncAfter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3092728A70C006CD54C /* DispatchQueue+asyncAfter.swift */; };
+		A393F30D2728A766006CD54C /* ProfileCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F30C2728A766006CD54C /* ProfileCoordinator.swift */; };
+		A393F30E2728A7B1006CD54C /* AddPaymentMethodCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5A327139CB700A4331B /* AddPaymentMethodCoordinator.swift */; };
+		A393F30F2728A7B1006CD54C /* AddPaymentMethodViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5A127139C6000A4331B /* AddPaymentMethodViewController.swift */; };
+		A393F3102728A7B5006CD54C /* PaymentMethodsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B59C27139A4200A4331B /* PaymentMethodsCoordinator.swift */; };
+		A393F3112728A7B5006CD54C /* PaymentMethodsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B59A27139A2800A4331B /* PaymentMethodsViewController.swift */; };
+		A393F3172728A7F2006CD54C /* UIColor+random.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3132728A7F2006CD54C /* UIColor+random.swift */; };
+		A393F3182728A7F2006CD54C /* UIColor+system.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3142728A7F2006CD54C /* UIColor+system.swift */; };
+		A393F3192728A7F2006CD54C /* DefaultStringInterpolation+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3152728A7F2006CD54C /* DefaultStringInterpolation+Optional.swift */; };
+		A393F31A2728A7F2006CD54C /* DispatchQueue+asyncAfter.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3162728A7F2006CD54C /* DispatchQueue+asyncAfter.swift */; };
+		A393F31D2728AA0B006CD54C /* PaymentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F31C2728AA0B006CD54C /* PaymentMethod.swift */; };
+		A393F31F2728AF36006CD54C /* PaymentMethodTableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F31E2728AF36006CD54C /* PaymentMethodTableCell.swift */; };
+		A393F3212728B09F006CD54C /* UITableView+register.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3202728B09F006CD54C /* UITableView+register.swift */; };
+		A393F3232728B49C006CD54C /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3222728B49C006CD54C /* NavigationController.swift */; };
+		A393F3262728B653006CD54C /* NavigationBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3252728B653006CD54C /* NavigationBarButton.swift */; };
+		A393F3282728BBAC006CD54C /* AutoscaleImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3272728BBAC006CD54C /* AutoscaleImageView.swift */; };
 		A3968FEE26FF260000B6A59B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3968FED26FF260000B6A59B /* AppDelegate.swift */; };
 		A3968FF726FF260200B6A59B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3968FF626FF260200B6A59B /* Assets.xcassets */; };
 		A3968FFA26FF260200B6A59B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3968FF826FF260200B6A59B /* LaunchScreen.storyboard */; };
 		A396900026FF26A700B6A59B /* NavigationControllerHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */; };
 		A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A396900326FF26CA00B6A59B /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A39A458B2714DBEF000D36E5 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458A2714DBEF000D36E5 /* AppCoordinator.swift */; };
-		A39A458D2714DCEB000D36E5 /* ApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458C2714DCEB000D36E5 /* ApplicationDelegate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		A393F3002728A445006CD54C /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A3968FD426FF25A800B6A59B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A3968FDC26FF25A800B6A59B;
+			remoteInfo = Insecurity;
+		};
 		A396900426FF26CA00B6A59B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A3968FD426FF25A800B6A59B /* Project object */;
@@ -91,6 +115,17 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
+		A393F3022728A445006CD54C /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				A393F2FF2728A445006CD54C /* Insecurity.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		A396900626FF26CA00B6A59B /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -106,8 +141,10 @@
 
 /* Begin PBXFileReference section */
 		07F1A30A8467E9454829BA91 /* Pods-InsecurityPodspecTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPodspecTest.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityPodspecTest/Pods-InsecurityPodspecTest.debug.xcconfig"; sourceTree = "<group>"; };
+		0F11C1516A14E4898598B79F /* Pods-InsecurityDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.release.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.release.xcconfig"; sourceTree = "<group>"; };
 		10BA6F3779CD79C33A65C619 /* Pods-InsecurityPlayground.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPlayground.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityPlayground/Pods-InsecurityPlayground.debug.xcconfig"; sourceTree = "<group>"; };
 		27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPodspecTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		6C9E60E5EBFC027AD77BE703 /* Pods-InsecurityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.debug.xcconfig"; sourceTree = "<group>"; };
 		7ED2D0086C3E5EABF27BE1C5 /* Pods-InsecurityPlayground.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPlayground.release.xcconfig"; path = "Target Support Files/Pods-InsecurityPlayground/Pods-InsecurityPlayground.release.xcconfig"; sourceTree = "<group>"; };
 		9630C86ACEA183BA279A7CFE /* Pods-InsecurityPodspecTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPodspecTest.release.xcconfig"; path = "Target Support Files/Pods-InsecurityPodspecTest/Pods-InsecurityPodspecTest.release.xcconfig"; sourceTree = "<group>"; };
 		A320332F27164E0400ABD197 /* ModalNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNavigation.swift; sourceTree = "<group>"; };
@@ -124,7 +161,6 @@
 		A3677F41270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionCoordinator.swift; sourceTree = "<group>"; };
 		A3677F43270CE024003AC3E6 /* CurrencySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionViewController.swift; sourceTree = "<group>"; };
 		A3677F46270CE038003AC3E6 /* CurrencySelection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelection.swift; sourceTree = "<group>"; };
-		A3677F49270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+asyncAfter.swift"; sourceTree = "<group>"; };
 		A3677F4B270CE796003AC3E6 /* CurrencyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencyView.swift; sourceTree = "<group>"; };
 		A3677F4D270CEA0E003AC3E6 /* UIColor+system.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+system.swift"; sourceTree = "<group>"; };
 		A3683FBD2700FB590048B3CF /* LoginPhoneViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginPhoneViewController.swift; sourceTree = "<group>"; };
@@ -150,8 +186,8 @@
 		A377B592271391A200A4331B /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
 		A377B595271391DA00A4331B /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		A377B5972713922400A4331B /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
-		A377B59A27139A2800A4331B /* PaymentMethodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodViewController.swift; sourceTree = "<group>"; };
-		A377B59C27139A4200A4331B /* PaymentMethodCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodCoordinator.swift; sourceTree = "<group>"; };
+		A377B59A27139A2800A4331B /* PaymentMethodsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsViewController.swift; sourceTree = "<group>"; };
+		A377B59C27139A4200A4331B /* PaymentMethodsCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsCoordinator.swift; sourceTree = "<group>"; };
 		A377B59E27139A6600A4331B /* PaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
 		A377B5A127139C6000A4331B /* AddPaymentMethodViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodViewController.swift; sourceTree = "<group>"; };
 		A377B5A327139CB700A4331B /* AddPaymentMethodCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodCoordinator.swift; sourceTree = "<group>"; };
@@ -173,6 +209,25 @@
 		A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavigationCoordinator.swift; sourceTree = "<group>"; };
 		A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonModalCoordinator.swift; sourceTree = "<group>"; };
 		A392A1352720A0C200976B7E /* Deferred.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deferred.swift; sourceTree = "<group>"; };
+		A393F2E927289F53006CD54C /* InsecurityDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A393F2EB27289F53006CD54C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		A393F2F427289F54006CD54C /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A393F2F727289F54006CD54C /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		A393F2F927289F54006CD54C /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A393F3032728A4E8006CD54C /* ApplicationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationCoordinator.swift; sourceTree = "<group>"; };
+		A393F3062728A6CF006CD54C /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		A393F3092728A70C006CD54C /* DispatchQueue+asyncAfter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DispatchQueue+asyncAfter.swift"; sourceTree = "<group>"; };
+		A393F30C2728A766006CD54C /* ProfileCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileCoordinator.swift; sourceTree = "<group>"; };
+		A393F3132728A7F2006CD54C /* UIColor+random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+random.swift"; sourceTree = "<group>"; };
+		A393F3142728A7F2006CD54C /* UIColor+system.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+system.swift"; sourceTree = "<group>"; };
+		A393F3152728A7F2006CD54C /* DefaultStringInterpolation+Optional.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DefaultStringInterpolation+Optional.swift"; sourceTree = "<group>"; };
+		A393F3162728A7F2006CD54C /* DispatchQueue+asyncAfter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "DispatchQueue+asyncAfter.swift"; path = "../../InsecurityPlayground/Util/DispatchQueue+asyncAfter.swift"; sourceTree = "<group>"; };
+		A393F31C2728AA0B006CD54C /* PaymentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethod.swift; sourceTree = "<group>"; };
+		A393F31E2728AF36006CD54C /* PaymentMethodTableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodTableCell.swift; sourceTree = "<group>"; };
+		A393F3202728B09F006CD54C /* UITableView+register.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITableView+register.swift"; sourceTree = "<group>"; };
+		A393F3222728B49C006CD54C /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
+		A393F3252728B653006CD54C /* NavigationBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarButton.swift; sourceTree = "<group>"; };
+		A393F3272728BBAC006CD54C /* AutoscaleImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoscaleImageView.swift; sourceTree = "<group>"; };
 		A3968FDD26FF25A800B6A59B /* Insecurity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Insecurity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3968FEB26FF260000B6A59B /* InsecurityPlayground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityPlayground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3968FED26FF260000B6A59B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -180,9 +235,8 @@
 		A3968FF926FF260200B6A59B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A3968FFB26FF260200B6A59B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerHost.swift; sourceTree = "<group>"; };
-		A39A458A2714DBEF000D36E5 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
-		A39A458C2714DCEB000D36E5 /* ApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationDelegate.swift; sourceTree = "<group>"; };
 		C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPlayground.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +245,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				6039A8D0C53204A35B9478F6 /* libPods-InsecurityPodspecTest.a in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A393F2E627289F53006CD54C /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A393F2FE2728A445006CD54C /* Insecurity.framework in Frameworks */,
+				6BA2676A691705959F4C475A /* libPods-InsecurityDemo.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +283,8 @@
 				9630C86ACEA183BA279A7CFE /* Pods-InsecurityPodspecTest.release.xcconfig */,
 				10BA6F3779CD79C33A65C619 /* Pods-InsecurityPlayground.debug.xcconfig */,
 				7ED2D0086C3E5EABF27BE1C5 /* Pods-InsecurityPlayground.release.xcconfig */,
+				6C9E60E5EBFC027AD77BE703 /* Pods-InsecurityDemo.debug.xcconfig */,
+				0F11C1516A14E4898598B79F /* Pods-InsecurityDemo.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -264,7 +329,7 @@
 		A3677F48270CE1A2003AC3E6 /* Util */ = {
 			isa = PBXGroup;
 			children = (
-				A3677F49270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift */,
+				A393F3092728A70C006CD54C /* DispatchQueue+asyncAfter.swift */,
 				A3677F4D270CEA0E003AC3E6 /* UIColor+system.swift */,
 				A377B574271385BA00A4331B /* UIColor+random.swift */,
 				A35E803527258F46003869F7 /* DefaultStringInterpolation+Optional.swift */,
@@ -339,13 +404,14 @@
 			path = Workflows;
 			sourceTree = "<group>";
 		};
-		A377B59927139A1900A4331B /* PaymentMethod */ = {
+		A377B59927139A1900A4331B /* PaymentMethods */ = {
 			isa = PBXGroup;
 			children = (
-				A377B59A27139A2800A4331B /* PaymentMethodViewController.swift */,
-				A377B59C27139A4200A4331B /* PaymentMethodCoordinator.swift */,
+				A377B59A27139A2800A4331B /* PaymentMethodsViewController.swift */,
+				A377B59C27139A4200A4331B /* PaymentMethodsCoordinator.swift */,
+				A393F31E2728AF36006CD54C /* PaymentMethodTableCell.swift */,
 			);
-			path = PaymentMethod;
+			path = PaymentMethods;
 			sourceTree = "<group>";
 		};
 		A377B5A027139C5400A4331B /* AddPaymentMethod */ = {
@@ -360,9 +426,6 @@
 		A382532D27007E8A00FBC6DC /* Workflows */ = {
 			isa = PBXGroup;
 			children = (
-				A38D67CD271CB6C20092BB63 /* ExampleUIApplicationDelegate */,
-				A377B5A027139C5400A4331B /* AddPaymentMethod */,
-				A377B59927139A1900A4331B /* PaymentMethod */,
 				A377B5712713858300A4331B /* LongChain */,
 				A3383BC4270E42FE006982B1 /* ParentSample */,
 				A3677F40270CDFDB003AC3E6 /* CurrencySelection */,
@@ -424,13 +487,69 @@
 			path = PaymentSuccess;
 			sourceTree = "<group>";
 		};
-		A38D67CD271CB6C20092BB63 /* ExampleUIApplicationDelegate */ = {
+		A393F2EA27289F53006CD54C /* InsecurityDemo */ = {
 			isa = PBXGroup;
 			children = (
-				A39A458A2714DBEF000D36E5 /* AppCoordinator.swift */,
-				A39A458C2714DCEB000D36E5 /* ApplicationDelegate.swift */,
+				A393F31B2728A9F1006CD54C /* Models */,
+				A393F3082728A6FC006CD54C /* Util */,
+				A393F2FD2728A431006CD54C /* Workflows */,
+				A393F2EB27289F53006CD54C /* AppDelegate.swift */,
+				A393F2F427289F54006CD54C /* Assets.xcassets */,
+				A393F2F627289F54006CD54C /* LaunchScreen.storyboard */,
+				A393F2F927289F54006CD54C /* Info.plist */,
 			);
-			path = ExampleUIApplicationDelegate;
+			path = InsecurityDemo;
+			sourceTree = "<group>";
+		};
+		A393F2FD2728A431006CD54C /* Workflows */ = {
+			isa = PBXGroup;
+			children = (
+				A393F3242728B63B006CD54C /* GlobalNavigation */,
+				A393F3052728A6C1006CD54C /* Profile */,
+				A377B59927139A1900A4331B /* PaymentMethods */,
+				A377B5A027139C5400A4331B /* AddPaymentMethod */,
+				A393F3032728A4E8006CD54C /* ApplicationCoordinator.swift */,
+			);
+			path = Workflows;
+			sourceTree = "<group>";
+		};
+		A393F3052728A6C1006CD54C /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				A393F3062728A6CF006CD54C /* ProfileViewController.swift */,
+				A393F30C2728A766006CD54C /* ProfileCoordinator.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		A393F3082728A6FC006CD54C /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				A393F3132728A7F2006CD54C /* UIColor+random.swift */,
+				A393F3142728A7F2006CD54C /* UIColor+system.swift */,
+				A393F3152728A7F2006CD54C /* DefaultStringInterpolation+Optional.swift */,
+				A393F3162728A7F2006CD54C /* DispatchQueue+asyncAfter.swift */,
+				A393F3202728B09F006CD54C /* UITableView+register.swift */,
+				A393F3272728BBAC006CD54C /* AutoscaleImageView.swift */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		A393F31B2728A9F1006CD54C /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				A393F31C2728AA0B006CD54C /* PaymentMethod.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		A393F3242728B63B006CD54C /* GlobalNavigation */ = {
+			isa = PBXGroup;
+			children = (
+				A393F3222728B49C006CD54C /* NavigationController.swift */,
+				A393F3252728B653006CD54C /* NavigationBarButton.swift */,
+			);
+			path = GlobalNavigation;
 			sourceTree = "<group>";
 		};
 		A3968FD326FF25A800B6A59B = {
@@ -439,6 +558,7 @@
 				A3968FDF26FF25A800B6A59B /* Insecurity */,
 				A3968FEC26FF260000B6A59B /* InsecurityPlayground */,
 				A377B57D27138FD800A4331B /* InsecurityPodspecTest */,
+				A393F2EA27289F53006CD54C /* InsecurityDemo */,
 				A3968FDE26FF25A800B6A59B /* Products */,
 				A396900126FF26CA00B6A59B /* Frameworks */,
 				3B9DCFDC184B14695D924E6C /* Pods */,
@@ -451,6 +571,7 @@
 				A3968FDD26FF25A800B6A59B /* Insecurity.framework */,
 				A3968FEB26FF260000B6A59B /* InsecurityPlayground.app */,
 				A377B57C27138FD800A4331B /* InsecurityPodspecTest.app */,
+				A393F2E927289F53006CD54C /* InsecurityDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -501,6 +622,7 @@
 			children = (
 				27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */,
 				C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */,
+				D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -534,6 +656,26 @@
 			name = InsecurityPodspecTest;
 			productName = InsecurityPodspecTest;
 			productReference = A377B57C27138FD800A4331B /* InsecurityPodspecTest.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A393F2E827289F53006CD54C /* InsecurityDemo */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A393F2FC27289F54006CD54C /* Build configuration list for PBXNativeTarget "InsecurityDemo" */;
+			buildPhases = (
+				895AA54209304FCADA5A68BA /* [CP] Check Pods Manifest.lock */,
+				A393F2E527289F53006CD54C /* Sources */,
+				A393F2E627289F53006CD54C /* Frameworks */,
+				A393F2E727289F53006CD54C /* Resources */,
+				A393F3022728A445006CD54C /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A393F3012728A445006CD54C /* PBXTargetDependency */,
+			);
+			name = InsecurityDemo;
+			productName = InsecurityDemo;
+			productReference = A393F2E927289F53006CD54C /* InsecurityDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
 		A3968FDC26FF25A800B6A59B /* Insecurity */ = {
@@ -588,6 +730,9 @@
 						CreatedOnToolsVersion = 13.0;
 						LastSwiftMigration = 1300;
 					};
+					A393F2E827289F53006CD54C = {
+						CreatedOnToolsVersion = 13.0;
+					};
 					A3968FDC26FF25A800B6A59B = {
 						CreatedOnToolsVersion = 13.0;
 						LastSwiftMigration = 1300;
@@ -612,6 +757,7 @@
 			targets = (
 				A3968FDC26FF25A800B6A59B /* Insecurity */,
 				A3968FEA26FF260000B6A59B /* InsecurityPlayground */,
+				A393F2E827289F53006CD54C /* InsecurityDemo */,
 				A377B57B27138FD800A4331B /* InsecurityPodspecTest */,
 			);
 		};
@@ -624,6 +770,15 @@
 			files = (
 				A377B58B27138FD900A4331B /* LaunchScreen.storyboard in Resources */,
 				A377B58827138FD900A4331B /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A393F2E727289F53006CD54C /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A393F2F827289F54006CD54C /* LaunchScreen.storyboard in Resources */,
+				A393F2F527289F54006CD54C /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -668,6 +823,28 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
+		895AA54209304FCADA5A68BA /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-InsecurityDemo-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		BA687BA968070F59FE71DDC4 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -701,6 +878,31 @@
 				A377B5982713922400A4331B /* MainCoordinator.swift in Sources */,
 				A377B59127138FFC00A4331B /* AppDelegate.swift in Sources */,
 				A377B593271391A200A4331B /* ApplicationCoordinator.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A393F2E527289F53006CD54C /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A393F3262728B653006CD54C /* NavigationBarButton.swift in Sources */,
+				A393F3102728A7B5006CD54C /* PaymentMethodsCoordinator.swift in Sources */,
+				A393F3112728A7B5006CD54C /* PaymentMethodsViewController.swift in Sources */,
+				A393F3072728A6CF006CD54C /* ProfileViewController.swift in Sources */,
+				A393F30E2728A7B1006CD54C /* AddPaymentMethodCoordinator.swift in Sources */,
+				A393F31A2728A7F2006CD54C /* DispatchQueue+asyncAfter.swift in Sources */,
+				A393F3192728A7F2006CD54C /* DefaultStringInterpolation+Optional.swift in Sources */,
+				A393F2EC27289F53006CD54C /* AppDelegate.swift in Sources */,
+				A393F3172728A7F2006CD54C /* UIColor+random.swift in Sources */,
+				A393F31F2728AF36006CD54C /* PaymentMethodTableCell.swift in Sources */,
+				A393F3232728B49C006CD54C /* NavigationController.swift in Sources */,
+				A393F30F2728A7B1006CD54C /* AddPaymentMethodViewController.swift in Sources */,
+				A393F30D2728A766006CD54C /* ProfileCoordinator.swift in Sources */,
+				A393F3042728A4E8006CD54C /* ApplicationCoordinator.swift in Sources */,
+				A393F3282728BBAC006CD54C /* AutoscaleImageView.swift in Sources */,
+				A393F3182728A7F2006CD54C /* UIColor+system.swift in Sources */,
+				A393F31D2728AA0B006CD54C /* PaymentMethod.swift in Sources */,
+				A393F3212728B09F006CD54C /* UITableView+register.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -740,15 +942,11 @@
 				A377B5732713859300A4331B /* GenericViewController.swift in Sources */,
 				A3677F47270CE038003AC3E6 /* CurrencySelection.swift in Sources */,
 				A3683FC52700FCDB0048B3CF /* LoginSMSCodeCoordinator.swift in Sources */,
-				A377B59D27139A4200A4331B /* PaymentMethodCoordinator.swift in Sources */,
-				A377B5A227139C6000A4331B /* AddPaymentMethodViewController.swift in Sources */,
 				A382534227008DEE00FBC6DC /* CartCoordinator.swift in Sources */,
 				A38253472700906100FBC6DC /* PaymentCoordinator.swift in Sources */,
 				A3825339270086CF00FBC6DC /* ProductCoordinator.swift in Sources */,
-				A39A458B2714DBEF000D36E5 /* AppCoordinator.swift in Sources */,
 				A3683FC12700FBCC0048B3CF /* LoginSMSCodeViewController.swift in Sources */,
 				A38253372700817C00FBC6DC /* ProductViewController.swift in Sources */,
-				A377B5A427139CB700A4331B /* AddPaymentMethodCoordinator.swift in Sources */,
 				A35A78252709EFFB00256FBD /* ScoringViewController.swift in Sources */,
 				A3683FC32700FC3F0048B3CF /* LoginPhoneCoordinator.swift in Sources */,
 				A377B59F27139A6600A4331B /* PaymentMethod.swift in Sources */,
@@ -757,6 +955,7 @@
 				A3677F4C270CE796003AC3E6 /* CurrencyView.swift in Sources */,
 				A3677F4E270CEA0E003AC3E6 /* UIColor+system.swift in Sources */,
 				A3683FBE2700FB590048B3CF /* LoginPhoneViewController.swift in Sources */,
+				A393F30A2728A70C006CD54C /* DispatchQueue+asyncAfter.swift in Sources */,
 				A382534527008FCB00FBC6DC /* PaymentViewController.swift in Sources */,
 				A35E803627258F46003869F7 /* DefaultStringInterpolation+Optional.swift in Sources */,
 				A38253342700804700FBC6DC /* GalleryCoordinator.swift in Sources */,
@@ -768,11 +967,8 @@
 				A377B575271385BA00A4331B /* UIColor+random.swift in Sources */,
 				A370FB622706760600D5EF51 /* DebugViewController.swift in Sources */,
 				A379912C27026E3A00550B8E /* ApplicationCoordinator.swift in Sources */,
-				A3677F4A270CE1AF003AC3E6 /* DispatchQueue+asyncAfter.swift in Sources */,
 				A3677F44270CE024003AC3E6 /* CurrencySelectionViewController.swift in Sources */,
 				A370FB642706775200D5EF51 /* DebugViewCoordinator.swift in Sources */,
-				A377B59B27139A2800A4331B /* PaymentMethodViewController.swift in Sources */,
-				A39A458D2714DCEB000D36E5 /* ApplicationDelegate.swift in Sources */,
 				A377B5772713862900A4331B /* GenericCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -780,6 +976,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		A393F3012728A445006CD54C /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A3968FDC26FF25A800B6A59B /* Insecurity */;
+			targetProxy = A393F3002728A445006CD54C /* PBXContainerItemProxy */;
+		};
 		A396900526FF26CA00B6A59B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = A3968FDC26FF25A800B6A59B /* Insecurity */;
@@ -792,6 +993,14 @@
 			isa = PBXVariantGroup;
 			children = (
 				A377B58A27138FD900A4331B /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+		A393F2F627289F54006CD54C /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A393F2F727289F54006CD54C /* Base */,
 			);
 			name = LaunchScreen.storyboard;
 			sourceTree = "<group>";
@@ -861,6 +1070,64 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityPodspecTest;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A393F2FA27289F54006CD54C /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 6C9E60E5EBFC027AD77BE703 /* Pods-InsecurityDemo.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QZRPL4EC5L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InsecurityDemo/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityDemo;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A393F2FB27289F54006CD54C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0F11C1516A14E4898598B79F /* Pods-InsecurityDemo.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = QZRPL4EC5L;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = InsecurityDemo/Info.plist;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1115,6 +1382,15 @@
 			buildConfigurations = (
 				A377B58D27138FD900A4331B /* Debug */,
 				A377B58E27138FD900A4331B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A393F2FC27289F54006CD54C /* Build configuration list for PBXNativeTarget "InsecurityDemo" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A393F2FA27289F54006CD54C /* Debug */,
+				A393F2FB27289F54006CD54C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

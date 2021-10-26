@@ -1,8 +1,8 @@
 import UIKit
 
-class DemoApplication: UIApplication {
-    var theDelegate: DemoAppDelegate! {
-        return delegate as? DemoAppDelegate
+class PlaygroundApplication: UIApplication {
+    var theDelegate: PlaygroundAppDelegate! {
+        return delegate as? PlaygroundAppDelegate
     }
     
     override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {

@@ -22,11 +22,11 @@ class GalleryCoordinator: NavigationCoordinator<Void> {
 //            let modalHost = ModalHost(galleryViewController)
 //            self.customModalHost = modalHost
 //
-//            let paymentMethodCoordinator = PaymentMethodCoordinator()
+//            let paymentMethodCoordinator = PaymentMethodsCoordinator()
 //
 //            modalHost.start(paymentMethodCoordinator, animated: true) { result in
 //                self.customModalHost = nil
-//                // result is PaymentMethodScreenResult
+//                // result is PaymentMethodsScreenResult
 //            }
 //        }
         

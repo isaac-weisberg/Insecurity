@@ -1,19 +1,19 @@
 import UIKit
 
-// @main
-class ApplicationDelegate: UIResponder, UIApplicationDelegate {
+@main class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
-    var appCoordinator: AppCoordinator?
+    var coordinator: ApplicationCoordinator?
     
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        
         let window = UIWindow(frame: UIScreen.main.bounds)
         self.window = window
         
-        let appCoordinator = AppCoordinator(window)
-        self.appCoordinator = appCoordinator
+        let coordinator = ApplicationCoordinator(window)
+        self.coordinator = coordinator
         
-        appCoordinator.start()
+        coordinator.start()
         
         window.makeKeyAndVisible()
         
