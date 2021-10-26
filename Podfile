@@ -1,6 +1,6 @@
 platform :ios, '12.0'
 
-target 'InsecurityDemo' do
+target 'InsecurityPlayground' do
   pod 'SnapKit'
 end
 

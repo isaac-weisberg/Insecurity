@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4419276DCD15C0D4FB64CC47 /* libPods-InsecurityPlayground.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */; };
 		6039A8D0C53204A35B9478F6 /* libPods-InsecurityPodspecTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */; };
 		A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320332F27164E0400ABD197 /* ModalNavigation.swift */; };
 		A320333227164E1300ABD197 /* ModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333127164E1300ABD197 /* ModalCoordinator.swift */; };
@@ -77,7 +78,6 @@
 		A396900326FF26CA00B6A59B /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A39A458B2714DBEF000D36E5 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458A2714DBEF000D36E5 /* AppCoordinator.swift */; };
 		A39A458D2714DCEB000D36E5 /* ApplicationDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39A458C2714DCEB000D36E5 /* ApplicationDelegate.swift */; };
-		D4BA0B4FA7A6F24D6294ED70 /* libPods-InsecurityDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -106,9 +106,9 @@
 
 /* Begin PBXFileReference section */
 		07F1A30A8467E9454829BA91 /* Pods-InsecurityPodspecTest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPodspecTest.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityPodspecTest/Pods-InsecurityPodspecTest.debug.xcconfig"; sourceTree = "<group>"; };
+		10BA6F3779CD79C33A65C619 /* Pods-InsecurityPlayground.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPlayground.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityPlayground/Pods-InsecurityPlayground.debug.xcconfig"; sourceTree = "<group>"; };
 		27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPodspecTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		54B8E663025AD7F0FACA2B0B /* Pods-InsecurityDemo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.release.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.release.xcconfig"; sourceTree = "<group>"; };
-		5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		7ED2D0086C3E5EABF27BE1C5 /* Pods-InsecurityPlayground.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPlayground.release.xcconfig"; path = "Target Support Files/Pods-InsecurityPlayground/Pods-InsecurityPlayground.release.xcconfig"; sourceTree = "<group>"; };
 		9630C86ACEA183BA279A7CFE /* Pods-InsecurityPodspecTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPodspecTest.release.xcconfig"; path = "Target Support Files/Pods-InsecurityPodspecTest/Pods-InsecurityPodspecTest.release.xcconfig"; sourceTree = "<group>"; };
 		A320332F27164E0400ABD197 /* ModalNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNavigation.swift; sourceTree = "<group>"; };
 		A320333127164E1300ABD197 /* ModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalCoordinator.swift; sourceTree = "<group>"; };
@@ -174,7 +174,7 @@
 		A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonModalCoordinator.swift; sourceTree = "<group>"; };
 		A392A1352720A0C200976B7E /* Deferred.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Deferred.swift; sourceTree = "<group>"; };
 		A3968FDD26FF25A800B6A59B /* Insecurity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Insecurity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		A3968FEB26FF260000B6A59B /* InsecurityDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		A3968FEB26FF260000B6A59B /* InsecurityPlayground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityPlayground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3968FED26FF260000B6A59B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A3968FF626FF260200B6A59B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A3968FF926FF260200B6A59B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -182,7 +182,7 @@
 		A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerHost.swift; sourceTree = "<group>"; };
 		A39A458A2714DBEF000D36E5 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		A39A458C2714DCEB000D36E5 /* ApplicationDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationDelegate.swift; sourceTree = "<group>"; };
-		BB61D608FF8A49075BF920EF /* Pods-InsecurityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPlayground.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,7 +206,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */,
-				D4BA0B4FA7A6F24D6294ED70 /* libPods-InsecurityDemo.a in Frameworks */,
+				4419276DCD15C0D4FB64CC47 /* libPods-InsecurityPlayground.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -216,10 +216,10 @@
 		3B9DCFDC184B14695D924E6C /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				BB61D608FF8A49075BF920EF /* Pods-InsecurityDemo.debug.xcconfig */,
-				54B8E663025AD7F0FACA2B0B /* Pods-InsecurityDemo.release.xcconfig */,
 				07F1A30A8467E9454829BA91 /* Pods-InsecurityPodspecTest.debug.xcconfig */,
 				9630C86ACEA183BA279A7CFE /* Pods-InsecurityPodspecTest.release.xcconfig */,
+				10BA6F3779CD79C33A65C619 /* Pods-InsecurityPlayground.debug.xcconfig */,
+				7ED2D0086C3E5EABF27BE1C5 /* Pods-InsecurityPlayground.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -437,7 +437,7 @@
 			isa = PBXGroup;
 			children = (
 				A3968FDF26FF25A800B6A59B /* Insecurity */,
-				A3968FEC26FF260000B6A59B /* InsecurityDemo */,
+				A3968FEC26FF260000B6A59B /* InsecurityPlayground */,
 				A377B57D27138FD800A4331B /* InsecurityPodspecTest */,
 				A3968FDE26FF25A800B6A59B /* Products */,
 				A396900126FF26CA00B6A59B /* Frameworks */,
@@ -449,7 +449,7 @@
 			isa = PBXGroup;
 			children = (
 				A3968FDD26FF25A800B6A59B /* Insecurity.framework */,
-				A3968FEB26FF260000B6A59B /* InsecurityDemo.app */,
+				A3968FEB26FF260000B6A59B /* InsecurityPlayground.app */,
 				A377B57C27138FD800A4331B /* InsecurityPodspecTest.app */,
 			);
 			name = Products;
@@ -478,7 +478,7 @@
 			path = Insecurity;
 			sourceTree = "<group>";
 		};
-		A3968FEC26FF260000B6A59B /* InsecurityDemo */ = {
+		A3968FEC26FF260000B6A59B /* InsecurityPlayground */ = {
 			isa = PBXGroup;
 			children = (
 				A3677F48270CE1A2003AC3E6 /* Util */,
@@ -493,14 +493,14 @@
 				A3968FF826FF260200B6A59B /* LaunchScreen.storyboard */,
 				A3968FFB26FF260200B6A59B /* Info.plist */,
 			);
-			path = InsecurityDemo;
+			path = InsecurityPlayground;
 			sourceTree = "<group>";
 		};
 		A396900126FF26CA00B6A59B /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				5CC88B9363F179D9A0563625 /* libPods-InsecurityDemo.a */,
 				27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */,
+				C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -554,9 +554,9 @@
 			productReference = A3968FDD26FF25A800B6A59B /* Insecurity.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		A3968FEA26FF260000B6A59B /* InsecurityDemo */ = {
+		A3968FEA26FF260000B6A59B /* InsecurityPlayground */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = A3968FFC26FF260200B6A59B /* Build configuration list for PBXNativeTarget "InsecurityDemo" */;
+			buildConfigurationList = A3968FFC26FF260200B6A59B /* Build configuration list for PBXNativeTarget "InsecurityPlayground" */;
 			buildPhases = (
 				6285E1EA0307A5D157EF79C1 /* [CP] Check Pods Manifest.lock */,
 				A3968FE726FF260000B6A59B /* Sources */,
@@ -569,9 +569,9 @@
 			dependencies = (
 				A396900526FF26CA00B6A59B /* PBXTargetDependency */,
 			);
-			name = InsecurityDemo;
-			productName = InsecurityDemo;
-			productReference = A3968FEB26FF260000B6A59B /* InsecurityDemo.app */;
+			name = InsecurityPlayground;
+			productName = InsecurityPlayground;
+			productReference = A3968FEB26FF260000B6A59B /* InsecurityPlayground.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -611,7 +611,7 @@
 			projectRoot = "";
 			targets = (
 				A3968FDC26FF25A800B6A59B /* Insecurity */,
-				A3968FEA26FF260000B6A59B /* InsecurityDemo */,
+				A3968FEA26FF260000B6A59B /* InsecurityPlayground */,
 				A377B57B27138FD800A4331B /* InsecurityPodspecTest */,
 			);
 		};
@@ -661,7 +661,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-InsecurityDemo-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-InsecurityPlayground-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -1051,7 +1051,7 @@
 		};
 		A3968FFD26FF260200B6A59B /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BB61D608FF8A49075BF920EF /* Pods-InsecurityDemo.debug.xcconfig */;
+			baseConfigurationReference = 10BA6F3779CD79C33A65C619 /* Pods-InsecurityPlayground.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1059,7 +1059,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = QZRPL4EC5L;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = InsecurityDemo/Info.plist;
+				INFOPLIST_FILE = InsecurityPlayground/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1070,7 +1070,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityPlayground;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1080,7 +1080,7 @@
 		};
 		A3968FFE26FF260200B6A59B /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 54B8E663025AD7F0FACA2B0B /* Pods-InsecurityDemo.release.xcconfig */;
+			baseConfigurationReference = 7ED2D0086C3E5EABF27BE1C5 /* Pods-InsecurityPlayground.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1088,7 +1088,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = QZRPL4EC5L;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = InsecurityDemo/Info.plist;
+				INFOPLIST_FILE = InsecurityPlayground/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -1099,7 +1099,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityPlayground;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -1137,7 +1137,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		A3968FFC26FF260200B6A59B /* Build configuration list for PBXNativeTarget "InsecurityDemo" */ = {
+		A3968FFC26FF260200B6A59B /* Build configuration list for PBXNativeTarget "InsecurityPlayground" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				A3968FFD26FF260200B6A59B /* Debug */,

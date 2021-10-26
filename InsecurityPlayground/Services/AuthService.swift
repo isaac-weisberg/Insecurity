@@ -1,10 +1,3 @@
-//
-//  AuthService.swift
-//  InsecurityDemo
-//
-//  Created by a.vaysberg on 10/1/21.
-//
-
 import Foundation
 
 struct Creds {
