@@ -295,7 +295,7 @@ public class ModalHost: ModalNavigation {
         
         controller.deinitObservable.onDeinit = { [weak self, weak child] in
             guard let self = self, let child = child else { return }
-        
+            
             // Actual work
             self.purgeWithoutDismissing(child)
             if self.notKilled {
