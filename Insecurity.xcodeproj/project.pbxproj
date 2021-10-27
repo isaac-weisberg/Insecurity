@@ -91,12 +91,15 @@
 		A393F3232728B49C006CD54C /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3222728B49C006CD54C /* NavigationController.swift */; };
 		A393F3262728B653006CD54C /* NavigationBarButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3252728B653006CD54C /* NavigationBarButton.swift */; };
 		A393F3282728BBAC006CD54C /* AutoscaleImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F3272728BBAC006CD54C /* AutoscaleImageView.swift */; };
+		A393F32B2728C15A006CD54C /* KVOVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F32A2728C15A006CD54C /* KVOVC.swift */; };
+		A393F32D2728C263006CD54C /* KVOCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A393F32C2728C263006CD54C /* KVOCoordinator.swift */; };
 		A3968FEE26FF260000B6A59B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3968FED26FF260000B6A59B /* AppDelegate.swift */; };
 		A3968FF726FF260200B6A59B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A3968FF626FF260200B6A59B /* Assets.xcassets */; };
 		A3968FFA26FF260200B6A59B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3968FF826FF260200B6A59B /* LaunchScreen.storyboard */; };
 		A396900026FF26A700B6A59B /* NavigationControllerHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */; };
 		A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A396900326FF26CA00B6A59B /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A3C44FEA2729E71500A05C44 /* KVOObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C44FE92729E71500A05C44 /* KVOObservable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -232,6 +235,8 @@
 		A393F3222728B49C006CD54C /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		A393F3252728B653006CD54C /* NavigationBarButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationBarButton.swift; sourceTree = "<group>"; };
 		A393F3272728BBAC006CD54C /* AutoscaleImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoscaleImageView.swift; sourceTree = "<group>"; };
+		A393F32A2728C15A006CD54C /* KVOVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVOVC.swift; sourceTree = "<group>"; };
+		A393F32C2728C263006CD54C /* KVOCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVOCoordinator.swift; sourceTree = "<group>"; };
 		A3968FDD26FF25A800B6A59B /* Insecurity.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Insecurity.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3968FEB26FF260000B6A59B /* InsecurityPlayground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityPlayground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3968FED26FF260000B6A59B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -239,6 +244,7 @@
 		A3968FF926FF260200B6A59B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A3968FFB26FF260200B6A59B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerHost.swift; sourceTree = "<group>"; };
+		A3C44FE92729E71500A05C44 /* KVOObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVOObservable.swift; sourceTree = "<group>"; };
 		C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPlayground.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -566,6 +572,15 @@
 			path = GlobalNavigation;
 			sourceTree = "<group>";
 		};
+		A393F3292728C14D006CD54C /* KVOExperiment */ = {
+			isa = PBXGroup;
+			children = (
+				A393F32A2728C15A006CD54C /* KVOVC.swift */,
+				A393F32C2728C263006CD54C /* KVOCoordinator.swift */,
+			);
+			path = KVOExperiment;
+			sourceTree = "<group>";
+		};
 		A3968FD326FF25A800B6A59B = {
 			isa = PBXGroup;
 			children = (
@@ -609,6 +624,7 @@
 				A38D67CB271CA9720092BB63 /* WindowCoordinator.swift */,
 				A392A1352720A0C200976B7E /* Deferred.swift */,
 				A36E5AA62725C8660000C551 /* InsecurityLogger.swift */,
+				A3C44FE92729E71500A05C44 /* KVOObservable.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -936,6 +952,7 @@
 				A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */,
 				A34CBF6526FFD796007AF9B8 /* ModalPresentationHost.swift in Sources */,
 				A320333827164F2800ABD197 /* NavigationCoordinator.swift in Sources */,
+				A3C44FEA2729E71500A05C44 /* KVOObservable.swift in Sources */,
 				A379912A2702659600550B8E /* WindowHost.swift in Sources */,
 				A390C1502717992100E9C905 /* CommonModalCoordinator.swift in Sources */,
 				A390C14E2717965100E9C905 /* CommonNavigationCoordinator.swift in Sources */,

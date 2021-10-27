@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class KVOCoordinator: NavigationCoordinator<Void> {
+class KVOCoordinator: ModalCoordinator<Void> {
     override var viewController: UIViewController {
         let vc = KVOVC()
         
