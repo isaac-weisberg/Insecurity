@@ -100,6 +100,7 @@
 		A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A396900326FF26CA00B6A59B /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A3C44FEA2729E71500A05C44 /* KVOObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C44FE92729E71500A05C44 /* KVOObservable.swift */; };
+		A3E7F8FD272B448800881641 /* DankSpeak.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E7F8FC272B448800881641 /* DankSpeak.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -245,6 +246,7 @@
 		A3968FFB26FF260200B6A59B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerHost.swift; sourceTree = "<group>"; };
 		A3C44FE92729E71500A05C44 /* KVOObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVOObservable.swift; sourceTree = "<group>"; };
+		A3E7F8FC272B448800881641 /* DankSpeak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DankSpeak.swift; sourceTree = "<group>"; };
 		C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPlayground.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -625,6 +627,7 @@
 				A392A1352720A0C200976B7E /* Deferred.swift */,
 				A36E5AA62725C8660000C551 /* InsecurityLogger.swift */,
 				A3C44FE92729E71500A05C44 /* KVOObservable.swift */,
+				A3E7F8FC272B448800881641 /* DankSpeak.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -956,6 +959,7 @@
 				A379912A2702659600550B8E /* WindowHost.swift in Sources */,
 				A390C1502717992100E9C905 /* CommonModalCoordinator.swift in Sources */,
 				A390C14E2717965100E9C905 /* CommonNavigationCoordinator.swift in Sources */,
+				A3E7F8FD272B448800881641 /* DankSpeak.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

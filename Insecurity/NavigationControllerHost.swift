@@ -73,7 +73,7 @@ public class NavigationHost: NavigationControllerNavigation {
         }
     }
     
-    func purgeWithoutDismissing(_ child: CommonNavigationCoordinatorAny) {
+    func purgeWithoutPopping(_ child: CommonNavigationCoordinatorAny) {
         let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
@@ -156,6 +156,8 @@ public class NavigationHost: NavigationControllerNavigation {
         }
         
         child._updateHostReference(self)
+        
+        weak var kvoContext: InsecurityKVOContext?
         weak var weakController: UIViewController?
         child._finishImplementation = { [weak self, weak child] result in
             guard let self = self else {
@@ -165,6 +167,9 @@ public class NavigationHost: NavigationControllerNavigation {
             guard let child = child else { return }
             
             // Clean up
+            if let kvoContext = kvoContext {
+                weakController?.insecurityKvo.removeObserver(kvoContext)
+            }
             weakController?.deinitObservable.onDeinit = nil
             
             // Actual work
@@ -179,11 +184,32 @@ public class NavigationHost: NavigationControllerNavigation {
         let controller = child.viewController
         weakController = controller
         
+        kvoContext = controller.insecurityKvo.addHandler(
+            UIViewController.self,
+            parentObservationKeypath
+        ) { [weak self, weak child] oldController, newController in
+            guard let self = self else {
+                assertionFailure("ModalHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
+                return
+            }
+            guard let child = child else { return }
+
+            if oldController != nil, oldController is UINavigationController, newController == nil {
+                if let kvoContext = kvoContext {
+                    weakController?.insecurityKvo.removeObserver(kvoContext)
+                }
+
+                weakController?.deinitObservable.onDeinit = nil
+                self.purgeWithoutPopping(child)
+                completion(nil)
+            }
+        }
+        
         controller.deinitObservable.onDeinit = { [weak self, weak child] in
             guard let self = self, let child = child else { return }
             
             // Actual work
-            self.purgeWithoutDismissing(child)
+            self.purgeWithoutPopping(child)
             if self.notKilled {
                 completion(nil)
             }

@@ -1,12 +1,5 @@
 import UIKit
 
-// I loooove private APIs
-private let parento = "parent"
-private let modale = "Modal"
-private let voio = "View"
-private let controllero = "Controller"
-private let modalParentObservationKeypath = "\(parento)\(modale)\(voio)\(controllero)"
-
 public class ModalHost: ModalNavigation {
     private weak var hostController: UIViewController?
     
@@ -275,14 +268,14 @@ public class ModalHost: ModalNavigation {
         kvoContext = controller.insecurityKvo.addHandler(
             UIViewController.self,
             modalParentObservationKeypath
-        ) { [weak self, weak child] viewController in
+        ) { [weak self, weak child] oldController, newController in
             guard let self = self else {
                 assertionFailure("ModalHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
                 return
             }
             guard let child = child else { return }
 
-            if viewController == nil {
+            if oldController != nil, newController == nil {
                 if let kvoContext = kvoContext {
                     weakController?.insecurityKvo.removeObserver(kvoContext)
                 }

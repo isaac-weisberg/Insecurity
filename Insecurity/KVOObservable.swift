@@ -10,29 +10,51 @@ private protocol SubscriptionAny: AnyObject {
     
     var keypath: String { get }
     
-    var type: Any.Type { get }
-    
-    var handler: (Any?) -> Void { get }
+    var handler: (Any?, Any?) -> Void { get }
+}
+
+struct Nope: Error {}
+
+func cast<Target>(_ any: Any?, to: Target.Type = Target.self) throws -> Target? {
+    if any == nil || any is NSNull {
+        return nil
+    } else {
+        if let value = any as? Target {
+            return value
+        } else {
+            throw Nope()
+        }
+    }
 }
 
 private class Subscription<Value>: SubscriptionAny {
     var ctx = InsecurityKVOContext()
     let keypath: String
-    let handler: (Any?) -> Void
-    let type: Any.Type = Value.self
+    let handler: (Any?, Any?) -> Void
     
     init(_ keypath: String,
-         _ handler: @escaping (Value?) -> Void) {
+         _ handler: @escaping (Value?, Value?) -> Void) {
         self.keypath = keypath
-        self.handler = { any in
-            if any == nil || any is NSNull {
-                handler(nil)
-            } else {
-                if let value = any as? Value {
-                    handler(value)
-                } else {
-                    assertionFailure("KVO value didn't convert into expected type")
-                }
+        self.handler = { old, new in
+            var thrown = false
+            let oldee: Value?
+            do {
+                oldee = try cast(old)
+            } catch {
+                assertionFailure("KVO value didn't convert into expected type")
+                oldee = nil
+                thrown = true
+            }
+            let newee: Value?
+            do {
+                newee = try cast(new)
+            } catch {
+                assertionFailure("KVO value didn't convert into expected type")
+                newee = nil
+                thrown = true
+            }
+            if !thrown {
+                handler(oldee, newee)
             }
         }
     }
@@ -62,10 +84,10 @@ class KVOObservable: NSObject {
     
     func addHandler<Value>(_ type: Value.Type,
                            _ keyPath: String,
-                           _ handler: @escaping (Value?) -> Void) -> InsecurityKVOContext {
+                           _ handler: @escaping (Value?, Value?) -> Void) -> InsecurityKVOContext {
         let subscription = Subscription<Value>(keyPath, handler)
         if let host = host {
-            host.addObserver(self, forKeyPath: keyPath, options: .new, context: &subscription.ctx)
+            host.addObserver(self, forKeyPath: keyPath, options: [.new, .old], context: &subscription.ctx)
             
             self.subscriptions.append(subscription)
         }
@@ -81,9 +103,10 @@ class KVOObservable: NSObject {
                 && keyPath == subscription.keypath
         }) {
             if let change = change {
+                let oldValue = change[.oldKey]
                 let newValue = change[.newKey]
                 
-                subscription.handler(newValue)
+                subscription.handler(oldValue, newValue)
             }
         }
     }

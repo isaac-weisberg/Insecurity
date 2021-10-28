@@ -6,4 +6,8 @@ class KVOVC: UIViewController {
         
         view.backgroundColor = .systemBackgroundCompat
     }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
 }
