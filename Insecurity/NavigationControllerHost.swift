@@ -20,6 +20,12 @@ public class NavigationHost: NavigationControllerNavigation {
     
     var finalizationDepth: Int = 0
     var navData: [NavData] = []
+    private var notKilled: Bool = true
+    
+    func kill() {
+        notKilled = false
+        nextHostChild?.kill()
+    }
     
     func purge() {
         guard let navigationController = navigationController else {
@@ -62,10 +68,12 @@ public class NavigationHost: NavigationControllerNavigation {
         }
         
         self.navData = newNavData
-        navigationController.setViewControllers(realViewControllers, animated: true)
+        if self.notKilled {
+            navigationController.setViewControllers(realViewControllers, animated: true)
+        }
     }
     
-    func purgeOnDealloc(_ child: CommonNavigationCoordinatorAny) {
+    func purgeWithoutDismissing(_ child: CommonNavigationCoordinatorAny) {
         let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
@@ -156,10 +164,15 @@ public class NavigationHost: NavigationControllerNavigation {
             }
             guard let child = child else { return }
             
+            // Clean up
             weakController?.deinitObservable.onDeinit = nil
+            
+            // Actual work
             self.finalize(child)
             self.finalizationDepth += 1
-            completion(result)
+            if self.notKilled {
+                completion(result)
+            }
             self.finalizationDepth -= 1
             self.purge()
         }
@@ -168,8 +181,12 @@ public class NavigationHost: NavigationControllerNavigation {
         
         controller.deinitObservable.onDeinit = { [weak self, weak child] in
             guard let self = self, let child = child else { return }
-            self.purgeOnDealloc(child)
-            completion(nil)
+            
+            // Actual work
+            self.purgeWithoutDismissing(child)
+            if self.notKilled {
+                completion(nil)
+            }
         }
         
         dispatch(controller, child: child)
@@ -249,6 +266,10 @@ public class NavigationHost: NavigationControllerNavigation {
         }
         
         return self
+    }
+    
+    private var nextHostChild: ModalHost? {
+        return _modalHost
     }
 }
 

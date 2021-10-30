@@ -23,9 +23,13 @@ public class WindowHost: AdaptiveNavigation {
         let modalHost = ModalHost(controller)
         child._updateHostReference(modalHost)
         child._finishImplementation = { [weak self] result in
+            self?.navigationHostChild?.kill()
+            self?.modalHostChild?.kill()
             self?.modalHostChild = nil
             completion(result)
         }
+        self.modalHostChild?.kill()
+        self.navigationHostChild?.kill()
         self.navigationHostChild = nil // Just in case...
         self.modalHostChild = modalHost
         
@@ -54,12 +58,16 @@ public class WindowHost: AdaptiveNavigation {
         
         initialChild._updateHostReference(navigationHost)
         initialChild._finishImplementation = { [weak self] result in
+            self?.modalHostChild?.kill()
+            self?.navigationHostChild?.kill()
             self?.navigationHostChild = nil
             completion(result)
         }
         
         navigationController.setViewControllers([ initialChild.viewController ], animated: Insecurity.navigationControllerRootIsAssignedWithAnimation)
         
+        self.navigationHostChild?.kill()
+        self.modalHostChild?.kill()
         self.modalHostChild = nil // Just in case...
         self.navigationHostChild = navigationHost
         

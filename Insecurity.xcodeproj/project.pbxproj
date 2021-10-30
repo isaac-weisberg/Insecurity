@@ -20,6 +20,8 @@
 		A34CBF6526FFD796007AF9B8 /* ModalPresentationHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A34CBF6426FFD796007AF9B8 /* ModalPresentationHost.swift */; };
 		A35A78232709EF3E00256FBD /* ScoringCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */; };
 		A35A78252709EFFB00256FBD /* ScoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78242709EFFB00256FBD /* ScoringViewController.swift */; };
+		A35ACB0D272DD33300733630 /* KVOVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35ACB0B272DD33300733630 /* KVOVC.swift */; };
+		A35ACB0E272DD33300733630 /* KVOCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35ACB0C272DD33300733630 /* KVOCoordinator.swift */; };
 		A35E803627258F46003869F7 /* DefaultStringInterpolation+Optional.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35E803527258F46003869F7 /* DefaultStringInterpolation+Optional.swift */; };
 		A3677F42270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F41270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift */; };
 		A3677F44270CE024003AC3E6 /* CurrencySelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3677F43270CE024003AC3E6 /* CurrencySelectionViewController.swift */; };
@@ -157,6 +159,8 @@
 		A34CBF6426FFD796007AF9B8 /* ModalPresentationHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalPresentationHost.swift; sourceTree = "<group>"; };
 		A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
 		A35A78242709EFFB00256FBD /* ScoringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringViewController.swift; sourceTree = "<group>"; };
+		A35ACB0B272DD33300733630 /* KVOVC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KVOVC.swift; sourceTree = "<group>"; };
+		A35ACB0C272DD33300733630 /* KVOCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KVOCoordinator.swift; sourceTree = "<group>"; };
 		A35E803527258F46003869F7 /* DefaultStringInterpolation+Optional.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DefaultStringInterpolation+Optional.swift"; sourceTree = "<group>"; };
 		A3677F41270CDFED003AC3E6 /* CurrencySelectionCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionCoordinator.swift; sourceTree = "<group>"; };
 		A3677F43270CE024003AC3E6 /* CurrencySelectionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrencySelectionViewController.swift; sourceTree = "<group>"; };
@@ -307,6 +311,15 @@
 			path = Scoring;
 			sourceTree = "<group>";
 		};
+		A35ACB0A272DD33300733630 /* KVOExperiment */ = {
+			isa = PBXGroup;
+			children = (
+				A35ACB0B272DD33300733630 /* KVOVC.swift */,
+				A35ACB0C272DD33300733630 /* KVOCoordinator.swift */,
+			);
+			path = KVOExperiment;
+			sourceTree = "<group>";
+		};
 		A3677F40270CDFDB003AC3E6 /* CurrencySelection */ = {
 			isa = PBXGroup;
 			children = (
@@ -426,6 +439,7 @@
 		A382532D27007E8A00FBC6DC /* Workflows */ = {
 			isa = PBXGroup;
 			children = (
+				A35ACB0A272DD33300733630 /* KVOExperiment */,
 				A377B5712713858300A4331B /* LongChain */,
 				A3383BC4270E42FE006982B1 /* ParentSample */,
 				A3677F40270CDFDB003AC3E6 /* CurrencySelection */,
@@ -936,6 +950,7 @@
 				A3383BC8270E43B4006982B1 /* ParentCoordinator.swift in Sources */,
 				A3968FEE26FF260000B6A59B /* AppDelegate.swift in Sources */,
 				A382534C2700924400FBC6DC /* PaymentSuccessCoordinator.swift in Sources */,
+				A35ACB0E272DD33300733630 /* KVOCoordinator.swift in Sources */,
 				A370FB5F270668BD00D5EF51 /* DI.swift in Sources */,
 				A3383BC6270E430D006982B1 /* ParentViewController.swift in Sources */,
 				A382533027007EA900FBC6DC /* GalleryViewController.swift in Sources */,
@@ -954,6 +969,7 @@
 				A382534027008C7F00FBC6DC /* CartViewController.swift in Sources */,
 				A3677F4C270CE796003AC3E6 /* CurrencyView.swift in Sources */,
 				A3677F4E270CEA0E003AC3E6 /* UIColor+system.swift in Sources */,
+				A35ACB0D272DD33300733630 /* KVOVC.swift in Sources */,
 				A3683FBE2700FB590048B3CF /* LoginPhoneViewController.swift in Sources */,
 				A393F30A2728A70C006CD54C /* DispatchQueue+asyncAfter.swift in Sources */,
 				A382534527008FCB00FBC6DC /* PaymentViewController.swift in Sources */,
