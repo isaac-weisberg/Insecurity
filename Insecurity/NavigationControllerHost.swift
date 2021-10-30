@@ -20,10 +20,11 @@ public class NavigationHost: NavigationControllerNavigation {
     
     var finalizationDepth: Int = 0
     var navData: [NavData] = []
-    var notKilled: Bool = true
+    private var notKilled: Bool = true
     
     func kill() {
         notKilled = false
+        nextHostChild?.kill()
     }
     
     func purge() {
@@ -67,7 +68,9 @@ public class NavigationHost: NavigationControllerNavigation {
         }
         
         self.navData = newNavData
-        navigationController.setViewControllers(realViewControllers, animated: true)
+        if self.notKilled {
+            navigationController.setViewControllers(realViewControllers, animated: true)
+        }
     }
     
     func purgeWithoutDismissing(_ child: CommonNavigationCoordinatorAny) {
@@ -165,13 +168,13 @@ public class NavigationHost: NavigationControllerNavigation {
             weakController?.deinitObservable.onDeinit = nil
             
             // Actual work
+            self.finalize(child)
+            self.finalizationDepth += 1
             if self.notKilled {
-                self.finalize(child)
-                self.finalizationDepth += 1
                 completion(result)
-                self.finalizationDepth -= 1
-                self.purge()
             }
+            self.finalizationDepth -= 1
+            self.purge()
         }
         let controller = child.viewController
         weakController = controller
@@ -180,8 +183,8 @@ public class NavigationHost: NavigationControllerNavigation {
             guard let self = self, let child = child else { return }
             
             // Actual work
+            self.purgeWithoutDismissing(child)
             if self.notKilled {
-                self.purgeWithoutDismissing(child)
                 completion(nil)
             }
         }
@@ -263,6 +266,10 @@ public class NavigationHost: NavigationControllerNavigation {
         }
         
         return self
+    }
+    
+    private var nextHostChild: ModalHost? {
+        return _modalHost
     }
 }
 
