@@ -23,9 +23,9 @@ class GenericCoordinator: AdaptiveCoordinator<Void> {
         self.action = action
         self.finishAction = finishAction
     }
+    let genericViewController = GenericViewController()
     
     override var viewController: UIViewController {
-        let genericViewController = GenericViewController()
         
         let finish: (()) -> Void = { [weak self] _ in
             guard let self = self else { return }
@@ -39,7 +39,8 @@ class GenericCoordinator: AdaptiveCoordinator<Void> {
             }
         }
         
-        genericViewController.onEvent = {
+        genericViewController.onEvent = { [weak self] in
+            guard let self = self else { return }
             switch self.action {
             case .nothing:
                 break
