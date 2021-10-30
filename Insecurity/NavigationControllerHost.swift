@@ -156,7 +156,7 @@ public class NavigationHost: NavigationControllerNavigation {
             }
             guard let child = child else { return }
             
-            weakController?.onDeinit = nil
+            weakController?.deinitObservable.onDeinit = nil
             self.finalize(child)
             self.finalizationDepth += 1
             completion(result)
@@ -166,7 +166,7 @@ public class NavigationHost: NavigationControllerNavigation {
         let controller = child.viewController
         weakController = controller
         
-        controller.onDeinit = { [weak self, weak child] in
+        controller.deinitObservable.onDeinit = { [weak self, weak child] in
             guard let self = self, let child = child else { return }
             self.purgeOnDealloc(child)
             completion(nil)

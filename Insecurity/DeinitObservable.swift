@@ -24,7 +24,8 @@ class DeinitObservable {
     var onDeinit: (() -> Void)?
     
     deinit {
-        self.onDeinit?()
+        onDeinit?()
+        onDeinit = nil
     }
 }
 
@@ -34,7 +35,7 @@ extension NSObject {
     ///
     /// Blatantly ripped off from RxSwift 5.0.0 implementation
     ///
-    private var deinitObservable: DeinitObservable {
+    var deinitObservable: DeinitObservable {
         objc_sync_enter(self)
         
         if let deinitObservable = objc_getAssociatedObject(self, &deinitObservableContext) as? DeinitObservable {
@@ -48,14 +49,5 @@ extension NSObject {
         objc_sync_exit(self)
         
         return deinitObservable
-    }
-    
-    var onDeinit: (() -> Void)? {
-        get {
-            deinitObservable.onDeinit
-        }
-        set {
-            deinitObservable.onDeinit = newValue
-        }
     }
 }
