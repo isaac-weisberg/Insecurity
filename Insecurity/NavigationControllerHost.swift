@@ -68,8 +68,13 @@ public class NavigationHost: NavigationControllerNavigation {
         }
         
         self.navData = newNavData
+        
         if self.notKilled {
-            navigationController.setViewControllers(realViewControllers, animated: true)
+            if let lastController = realViewControllers.last {
+                navigationController.popToViewController(lastController, animated: Insecurity.navigationControllerDismissalAnimated)
+            } else {
+                assertionFailure("There must never be empty viewControllers array, so this is a bug")
+            }
         }
     }
     
