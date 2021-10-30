@@ -20,6 +20,12 @@ public class NavigationHost: NavigationControllerNavigation {
     
     var finalizationDepth: Int = 0
     var navData: [NavData] = []
+    private var notKilled: Bool = true
+    
+    func kill() {
+        notKilled = false
+        nextHostChild?.kill()
+    }
     
     func purge() {
         guard let navigationController = navigationController else {
@@ -62,10 +68,17 @@ public class NavigationHost: NavigationControllerNavigation {
         }
         
         self.navData = newNavData
-        navigationController.setViewControllers(realViewControllers, animated: true)
+        
+        if self.notKilled {
+            if let lastController = realViewControllers.last {
+                navigationController.popToViewController(lastController, animated: Insecurity.navigationControllerDismissalAnimated)
+            } else {
+                assertionFailure("There must never be empty viewControllers array, so this is a bug")
+            }
+        }
     }
     
-    func purgeOnDealloc(_ child: CommonNavigationCoordinatorAny) {
+    func purgeWithoutPopping(_ child: CommonNavigationCoordinatorAny) {
         let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
@@ -148,6 +161,8 @@ public class NavigationHost: NavigationControllerNavigation {
         }
         
         child._updateHostReference(self)
+        
+        weak var kvoContext: InsecurityKVOContext?
         weak var weakController: UIViewController?
         child._finishImplementation = { [weak self, weak child] result in
             guard let self = self else {
@@ -156,20 +171,55 @@ public class NavigationHost: NavigationControllerNavigation {
             }
             guard let child = child else { return }
             
-            weakController?.onDeinit = nil
+            // Clean up
+            if let kvoContext = kvoContext {
+                weakController?.insecurityKvo.removeObserver(kvoContext)
+            }
+            weakController?.deinitObservable.onDeinit = nil
+            
+            // Actual work
             self.finalize(child)
             self.finalizationDepth += 1
-            completion(result)
+            if self.notKilled {
+                completion(result)
+            }
             self.finalizationDepth -= 1
             self.purge()
         }
         let controller = child.viewController
         weakController = controller
         
-        controller.onDeinit = { [weak self, weak child] in
+        kvoContext = controller.insecurityKvo.addHandler(
+            UIViewController.self,
+            parentObservationKeypath
+        ) { [weak self, weak child] oldController, newController in
+            guard let self = self else {
+                assertionFailure("ModalHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
+                return
+            }
+            guard let child = child else { return }
+
+            if oldController != nil, oldController is UINavigationController, newController == nil {
+                if let kvoContext = kvoContext {
+                    weakController?.insecurityKvo.removeObserver(kvoContext)
+                }
+                weakController?.deinitObservable.onDeinit = nil
+                
+                self.purgeWithoutPopping(child)
+                if self.notKilled {
+                    completion(nil)
+                }
+            }
+        }
+        
+        controller.deinitObservable.onDeinit = { [weak self, weak child] in
             guard let self = self, let child = child else { return }
-            self.purgeOnDealloc(child)
-            completion(nil)
+            
+            // Actual work
+            self.purgeWithoutPopping(child)
+            if self.notKilled {
+                completion(nil)
+            }
         }
         
         dispatch(controller, child: child)
@@ -178,7 +228,7 @@ public class NavigationHost: NavigationControllerNavigation {
     
 #if DEBUG
     deinit {
-        print("NavigationHost deinit \(type(of: self))")
+        insecPrint("\(type(of: self)) deinit")
     }
 #endif
     
@@ -249,6 +299,10 @@ public class NavigationHost: NavigationControllerNavigation {
         }
         
         return self
+    }
+    
+    private var nextHostChild: ModalHost? {
+        return _modalHost
     }
 }
 

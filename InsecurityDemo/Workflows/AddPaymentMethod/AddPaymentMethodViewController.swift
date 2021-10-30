@@ -6,8 +6,10 @@ class AddPaymentMethodViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        DispatchQueue.main.asyncAfter(0.5) {
-            self.onPaymentMethodAdded?(PaymentMethod(cardNumber: "4300123412341234"))
+        view.backgroundColor = .systemBackgroundCompat
+        
+        DispatchQueue.main.asyncAfter(2) { [weak self] in
+            self?.onPaymentMethodAdded?(PaymentMethod(cardNumber: "4300123412341234", name: "GABE ITCHES"))
         }
     }
 }

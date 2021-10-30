@@ -1,5 +1,12 @@
 platform :ios, '12.0'
 
+target 'InsecurityPlayground' do
+  project 'Insecurity.xcodeproj'
+  workspace 'Insecurity.xcworkspace'
+
+  pod 'SnapKit'
+end
+
 target 'InsecurityDemo' do
   project 'Insecurity.xcodeproj'
   workspace 'Insecurity.xcworkspace'

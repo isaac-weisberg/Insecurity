@@ -24,6 +24,12 @@ public class ModalHost: ModalNavigation {
     
     var finalizationDepth: Int = 0
     var navData: [NavData] = []
+    private var notKilled: Bool = true
+    
+    func kill() {
+        notKilled = false
+        nextHostChild?.kill()
+    }
     
     func purge() {
         guard let hostController = hostController else {
@@ -57,37 +63,40 @@ public class ModalHost: ModalNavigation {
         }
             .reversed()
         
-        let controllerToDismissFrom: UIViewController?
-        if let topNavData = prunedNavData.last {
-            if let topController = topNavData.viewController {
-                if topController.presentedViewController != nil {
-                    controllerToDismissFrom = topController
-                } else {
-                    controllerToDismissFrom = nil
-                }
-            } else {
-                print("ModalHost child is supposed to dismiss his content, but instead turns out he's dead")
-                controllerToDismissFrom = nil
-            }
-        } else {
-            let hostHasPresentedController = hostController.presentedViewController != nil
-            // There used to be an assertion that the host has a presentedViewController, but what I found out recently is that if
-            // the view controller is removed from window, the modal chain of relationships between view controllers
-            // is broken and presented view controller becomes nil
-            // This means only one thing - the batching of change applications is inevitable
-            // But for this time, this will have to do
-            if hostHasPresentedController {
-                controllerToDismissFrom = hostController
-            } else {
-                controllerToDismissFrom = nil
-            }
-        }
         
         self.navData = Array(prunedNavData)
         
-        controllerToDismissFrom?.dismiss(animated: true) { [weak self] in
-            guard let self = self else { return }
-            self.enqueuedChildStartRoutine?()
+        if notKilled {
+            let controllerToDismissFrom: UIViewController?
+            if let topNavData = prunedNavData.last {
+                if let topController = topNavData.viewController {
+                    if topController.presentedViewController != nil {
+                        controllerToDismissFrom = topController
+                    } else {
+                        controllerToDismissFrom = nil
+                    }
+                } else {
+                    insecPrint("ModalHost child is supposed to dismiss his content, but instead turns out he's dead")
+                    controllerToDismissFrom = nil
+                }
+            } else {
+                let hostHasPresentedController = hostController.presentedViewController != nil
+                // There used to be an assertion that the host has a presentedViewController, but what I found out recently is that if
+                // the view controller is removed from window, the modal chain of relationships between view controllers
+                // is broken and presented view controller becomes nil
+                // This means only one thing - the batching of change applications is inevitable
+                // But for this time, this will have to do
+                if hostHasPresentedController {
+                    controllerToDismissFrom = hostController
+                } else {
+                    controllerToDismissFrom = nil
+                }
+            }
+            
+            controllerToDismissFrom?.dismiss(animated: true) { [weak self] in
+                guard let self = self else { return }
+                self.enqueuedChildStartRoutine?()
+            }
         }
     }
     
@@ -105,7 +114,7 @@ public class ModalHost: ModalNavigation {
         navData[index] = NavData(viewController: oldNavData.viewController, coordinator: oldNavData.coordinator, state: .finished)
     }
     
-    func purgeOnDealloc(_ child: CommonModalCoordinatorAny) {
+    func purgeWithoutDismissing(_ child: CommonModalCoordinatorAny) {
         let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
@@ -228,6 +237,8 @@ public class ModalHost: ModalNavigation {
                                                                                 animated: Bool,
                                                                                 _ completion: @escaping (CoordinatorType.Result?) -> Void) {
         child._updateHostReference(self)
+        
+        weak var kvoContext: InsecurityKVOContext?
         weak var weakController: UIViewController?
         child._finishImplementation = { [weak self, weak child] result in
             guard let self = self else {
@@ -236,20 +247,55 @@ public class ModalHost: ModalNavigation {
             }
             guard let child = child else { return }
             
-            weakController?.onDeinit = nil
+            // Clean up
+            if let kvoContext = kvoContext {
+                weakController?.insecurityKvo.removeObserver(kvoContext)
+            }
+            weakController?.deinitObservable.onDeinit = nil
+            
+            // Actual work
             self.finalize(child)
             self.finalizationDepth += 1
-            completion(result)
+            if self.notKilled {
+                completion(result)
+            }
             self.finalizationDepth -= 1
             self.purge()
         }
         let controller = child.viewController
         weakController = controller
         
-        controller.onDeinit = { [weak self, weak child] in
+        kvoContext = controller.insecurityKvo.addHandler(
+            UIViewController.self,
+            modalParentObservationKeypath
+        ) { [weak self, weak child] oldController, newController in
+            guard let self = self else {
+                assertionFailure("ModalHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
+                return
+            }
+            guard let child = child else { return }
+
+            if oldController != nil, newController == nil {
+                if let kvoContext = kvoContext {
+                    weakController?.insecurityKvo.removeObserver(kvoContext)
+                }
+                weakController?.deinitObservable.onDeinit = nil
+                
+                self.purgeWithoutDismissing(child)
+                if self.notKilled {
+                    completion(nil)
+                }
+            }
+        }
+        
+        controller.deinitObservable.onDeinit = { [weak self, weak child] in
             guard let self = self, let child = child else { return }
-            self.purgeOnDealloc(child)
-            completion(nil)
+            
+            // Actual work
+            self.purgeWithoutDismissing(child)
+            if self.notKilled {
+                completion(nil)
+            }
         }
         
         dispatch(controller, animated, child)
@@ -257,7 +303,7 @@ public class ModalHost: ModalNavigation {
     
 #if DEBUG
     deinit {
-        print("ModalHost deinit \(type(of: self))")
+        insecPrint("\(type(of: self)) deinit")
     }
 #endif
     
@@ -306,6 +352,10 @@ public class ModalHost: ModalNavigation {
     }
     
     public var topContext: AdaptiveNavigation! {
+        return nextHostChild?.topContext ?? self
+    }
+    
+    private var nextHostChild: NavigationHost? {
         if let lastNavData = self.navData.last?.coordinator as? ModalCoordinatorWithNavigationHostAny {
             #if DEBUG
             let indicesOfModalChildrenRetainingNavigationHosts = self.navData.enumerated().compactMap { index, navData -> Int? in
@@ -319,10 +369,10 @@ public class ModalHost: ModalNavigation {
             #endif
             
             if let navigationHostChild = lastNavData.navigationHostChild {
-                return navigationHostChild.topContext
+                return navigationHostChild
             }
         }
         
-        return self
+        return nil
     }
 }
