@@ -24,6 +24,11 @@ public class ModalHost: ModalNavigation {
     
     var finalizationDepth: Int = 0
     var navData: [NavData] = []
+    var notKilled: Bool = true
+    
+    func kill() {
+        notKilled = false
+    }
     
     func purge() {
         guard let hostController = hostController else {
@@ -105,7 +110,7 @@ public class ModalHost: ModalNavigation {
         navData[index] = NavData(viewController: oldNavData.viewController, coordinator: oldNavData.coordinator, state: .finished)
     }
     
-    func purgeOnDealloc(_ child: CommonModalCoordinatorAny) {
+    func purgeWithoutDismissing(_ child: CommonModalCoordinatorAny) {
         let indexOpt = navData.firstIndex { navData in
             navData.coordinator === child
         }
@@ -236,20 +241,29 @@ public class ModalHost: ModalNavigation {
             }
             guard let child = child else { return }
             
+            // Clean up
             weakController?.deinitObservable.onDeinit = nil
-            self.finalize(child)
-            self.finalizationDepth += 1
-            completion(result)
-            self.finalizationDepth -= 1
-            self.purge()
+            
+            // Actual work
+            if self.notKilled {
+                self.finalize(child)
+                self.finalizationDepth += 1
+                completion(result)
+                self.finalizationDepth -= 1
+                self.purge()
+            }
         }
         let controller = child.viewController
         weakController = controller
         
         controller.deinitObservable.onDeinit = { [weak self, weak child] in
             guard let self = self, let child = child else { return }
-            self.purgeOnDealloc(child)
-            completion(nil)
+        
+            // Actual work
+            if self.notKilled {
+                self.purgeWithoutDismissing(child)
+                completion(nil)
+            }
         }
         
         dispatch(controller, animated, child)
