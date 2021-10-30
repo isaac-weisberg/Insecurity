@@ -279,10 +279,12 @@ public class ModalHost: ModalNavigation {
                 if let kvoContext = kvoContext {
                     weakController?.insecurityKvo.removeObserver(kvoContext)
                 }
-
                 weakController?.deinitObservable.onDeinit = nil
+                
                 self.purgeWithoutDismissing(child)
-                completion(nil)
+                if self.notKilled {
+                    completion(nil)
+                }
             }
         }
         

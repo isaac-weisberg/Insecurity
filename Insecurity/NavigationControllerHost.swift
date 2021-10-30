@@ -203,10 +203,12 @@ public class NavigationHost: NavigationControllerNavigation {
                 if let kvoContext = kvoContext {
                     weakController?.insecurityKvo.removeObserver(kvoContext)
                 }
-
                 weakController?.deinitObservable.onDeinit = nil
+                
                 self.purgeWithoutPopping(child)
-                completion(nil)
+                if self.notKilled {
+                    completion(nil)
+                }
             }
         }
         
