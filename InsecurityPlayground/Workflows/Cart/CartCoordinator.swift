@@ -13,11 +13,11 @@ class CartCoordinator: NavigationCoordinator<CartCoordinatorResult> {
     override var viewController: UIViewController {
         let cartViewController = CartViewController()
         
-        DispatchQueue.main.asyncAfter(0.5) {
-            self.navigation.start(KVOCoordinator(), animated: true) { _ in
-                print("End KVO Coordinator")
-            }
-        }
+//        DispatchQueue.main.asyncAfter(0.5) {
+//            self.navigation.start(KVOCoordinator(), animated: true) { _ in
+//                print("End KVO Coordinator")
+//            }
+//        }
         
         cartViewController.onPayRequested = { [self] in
             let paymentCoordinator = PaymentCoordinator(di: di)

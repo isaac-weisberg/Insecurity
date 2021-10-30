@@ -19,18 +19,6 @@ class GalleryCoordinator: NavigationCoordinator<Void> {
         }
         
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-//            let modalHost = ModalHost(galleryViewController)
-//            self.customModalHost = modalHost
-//
-//            let paymentMethodCoordinator = PaymentMethodsCoordinator()
-//
-//            modalHost.start(paymentMethodCoordinator, animated: true) { result in
-//                self.customModalHost = nil
-//                // result is PaymentMethodsScreenResult
-//            }
-//        }
-        
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
 //            let genericCoordinator = GenericCoordinator(
 //                .start(
 //                    GenericCoordinator(.start(
@@ -72,7 +60,7 @@ class GalleryCoordinator: NavigationCoordinator<Void> {
 //                        ))
 //                ))
 //
-//            self.navigation.start(genericCoordinator, animated: true) { result in
+//            self.navigation.start(genericCoordinator, in: .current, animated: true) { result in
 //                print("End GenericCoordinator root \(result)")
 //            }
 //        }
