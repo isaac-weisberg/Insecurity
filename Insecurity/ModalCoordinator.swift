@@ -1,9 +1,9 @@
 import UIKit
 
 open class ModalCoordinator<Result>: CommonModalCoordinator {
-    private weak var _navigation: ModalNavigation?
+    private weak var _navigation: (ModalNavigation & AdaptiveNavigation)?
     
-    public var navigation: ModalNavigation! {
+    public var navigation: (ModalNavigation & AdaptiveNavigation)! {
         assert(_navigation != nil, "Attempted to use `navigation` before the coordinator was started or after it has finished")
         return _navigation
     }
@@ -32,7 +32,7 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         _finishImplementation(nil)
     }
     
-    func _updateHostReference(_ host: ModalHost) {
+    func _updateHostReference(_ host: ModalNavigation & AdaptiveNavigation) {
         _navigation = host
     }
     

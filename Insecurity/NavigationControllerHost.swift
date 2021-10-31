@@ -1,6 +1,6 @@
 import UIKit
 
-public class NavigationHost: NavigationControllerNavigation {
+public class NavigationHost: NavigationControllerNavigation, AdaptiveNavigation {
     private weak var navigationController: UINavigationController?
     
     public init(_ navigationController: UINavigationController) {

@@ -32,11 +32,11 @@ open class AdaptiveCoordinator<Result>: CommonNavigationCoordinator, CommonModal
         _finishImplementation(nil)
     }
     
-    func _updateHostReference(_ host: NavigationHost) {
+    func _updateHostReference(_ host: NavigationControllerNavigation & AdaptiveNavigation) {
         _navigation = host
     }
     
-    func _updateHostReference(_ host: ModalHost) {
+    func _updateHostReference(_ host: ModalNavigation & AdaptiveNavigation) {
         _navigation = host
     }
     

@@ -1,6 +1,6 @@
 import UIKit
 
-public class ModalHost: ModalNavigation {
+public class ModalHost: ModalNavigation, AdaptiveNavigation {
     private weak var hostController: UIViewController?
     
     public init(_ hostController: UIViewController) {

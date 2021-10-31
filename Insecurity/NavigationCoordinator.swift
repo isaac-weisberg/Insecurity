@@ -1,9 +1,9 @@
 import UIKit
 
 open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
-    private var _navigation: NavigationControllerNavigation?
+    private var _navigation: (NavigationControllerNavigation & AdaptiveNavigation)?
     
-    public var navigation: NavigationControllerNavigation! {
+    public var navigation: (NavigationControllerNavigation & AdaptiveNavigation)! {
         assert(_navigation != nil, "Attempted to use `navigation` before the coordinator was started or after it has finished")
         return _navigation
     }
@@ -32,7 +32,7 @@ open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
         _finishImplementation(nil)
     }
     
-    func _updateHostReference(_ host: NavigationHost) {
+    func _updateHostReference(_ host: NavigationControllerNavigation & AdaptiveNavigation) {
         _navigation = host
     }
     
