@@ -340,7 +340,7 @@ public class InsecurityHost {
             weakController?.deinitObservable.onDeinit = nil
             weakChild?._finishImplementation = nil
             
-            if oldController != nil, newController == nil {
+            if oldController != nil, oldController is UINavigationController, newController == nil {
                 guard let self = self else {
                     assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
                     return
@@ -492,7 +492,103 @@ public class InsecurityHost {
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
+        guard state.notDead else { return }
         
+        switch state.stage {
+        case .ready:
+            immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
+                completion(result)
+            }
+        case .batching:
+            if scheduledStartRoutine != nil {
+                assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
+                return
+            }
+            
+            scheduledStartRoutine = { [weak self] in
+                guard let self = self else { return }
+                
+                self.scheduledStartRoutine = nil
+                self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
+                    completion(result)
+                }
+            }
+        case .purging:
+            assertionFailure("Please don't start during purges")
+        }
+    }
+    
+    func immediateDispatchNewNavigation<Coordinator: CommonNavigationCoordinator>(
+        _ navigationController: UINavigationController,
+        _ child: Coordinator,
+        animated: Bool,
+        _ completion: @escaping (Coordinator.Result?) -> Void
+    ) {
+        guard state.notDead else { return }
+        
+        assert(state.stage == .ready)
+        
+        child._updateHostReference(self)
+        
+        weak var weakChild = child
+        weak var kvoContext: InsecurityKVOContext?
+        weak var weakController: UIViewController?
+
+        child._finishImplementation = { [weak self] result in
+            if let kvoContext = kvoContext {
+                weakController?.insecurityKvo.removeObserver(kvoContext)
+            }
+            weakController?.deinitObservable.onDeinit = nil
+            weakChild?._finishImplementation = nil
+
+            guard let self = self else {
+                assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
+                return
+            }
+            guard let child = weakChild else { return }
+
+            self.finalizeNavigation(child, .callback) {
+                completion(result)
+            }
+        }
+
+        let controller = child.viewController
+        weakController = controller
+
+        kvoContext = navigationController.insecurityKvo.addHandler(
+            UIViewController.self,
+            modalParentObservationKeypath
+        ) { [weak self, weak child] oldController, newController in
+            if let kvoContext = kvoContext {
+                weakController?.insecurityKvo.removeObserver(kvoContext)
+            }
+            weakController?.deinitObservable.onDeinit = nil
+            weakChild?._finishImplementation = nil
+
+            if oldController != nil, newController == nil {
+                guard let self = self else {
+                    assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
+                    return
+                }
+                guard let child = child else { return }
+
+                self.finalizeNavigation(child, .kvo) {
+                    completion(nil)
+                }
+            }
+        }
+
+        controller.deinitObservable.onDeinit = { [weak self, weak child] in
+            weakChild?._finishImplementation = nil
+
+            guard let self = self, let child = child else { return }
+
+            self.finalizeNavigation(child, .deinitialization) {
+                completion(nil)
+            }
+        }
+
+        sendOffNewNavigation(navigationController, controller, animated, child)
     }
     
     private func sendOffNewNavigation(
