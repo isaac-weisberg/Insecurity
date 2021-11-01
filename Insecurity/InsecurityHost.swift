@@ -23,6 +23,17 @@ private enum FinalizationKind {
     case callback
     case kvo
     case deinitialization
+    
+    func toFrameState() -> InsecurityHost.Frame.State {
+        switch self {
+        case .callback:
+            return .finishedByCompletion
+        case .kvo:
+            return .finishedByKVO
+        case .deinitialization:
+            return .finishedByDeinit
+        }
+    }
 }
 
 public class InsecurityHost {
@@ -199,20 +210,9 @@ public class InsecurityHost {
         if let indexOfChild = indexOfChildOpt {
             switch frames[indexOfChild] {
             case .regular(let regular):
-                let newState: Frame.State
-                
-                switch kind {
-                case .callback:
-                    newState = .finishedByCompletion
-                case .kvo:
-                    newState = .finishedByKVO
-                case .deinitialization:
-                    newState = .finishedByDeinit
-                }
-                
                 frames[indexOfChild] = .regular(
                     Frame.Regular(
-                        state: newState,
+                        state: kind.toFrameState(),
                         coordinator: regular.coordinator,
                         viewController: regular.viewController
                     )
@@ -371,48 +371,60 @@ public class InsecurityHost {
         _ kind: FinalizationKind,
         _ callback: () -> Void
     ) {
-//        let indexOfChildOpt = frames.firstIndex(where: { frame in
-//            switch frame {
-//            case .regular(let regular):
-//                return regular.coordinator === child
-//            case .navigation:
-//                return false
-//            }
-//        })
-//
-//        if let indexOfChild = indexOfChildOpt {
-//            switch frames[indexOfChild] {
-//            case .regular(let regular):
-//                let newState: Frame.State
-//
-//                switch kind {
-//                case .callback:
-//                    newState = .finishedByCompletion
-//                case .kvo:
-//                    newState = .finishedByKVO
-//                case .deinitialization:
-//                    newState = .finishedByDeinit
-//                }
-//
-//                frames[indexOfChild] = .regular(
-//                    Frame.Regular(
-//                        state: newState,
-//                        coordinator: regular.coordinator,
-//                        viewController: regular.viewController
-//                    )
-//                )
-//            case .navigation:
-//                fatalError()
-//            }
-//        }
-//
-//        self.state.stage = .batching
-//        if self.state.notDead {
-//            callback()
-//        }
-//        self.state.stage = .purging
-//        self.purge()
-//        self.state.stage = .ready
+        // Very questionable code ahead
+        var indexInsideNavigation: Int!
+        let indexOfFrameOpt = frames.firstIndex(where: { frame -> Bool in
+            switch frame {
+            case .regular:
+                return false
+            case .navigation(let navigation):
+                let indexInsideNavigationOpt = navigation.children.firstIndex(where: { navigationChild in
+                    if navigationChild.coordinator === child {
+                        return true
+                    }
+                    return false
+                })
+                
+                if let indexInsideNavigationUnwrapped = indexInsideNavigationOpt {
+                    indexInsideNavigation = indexInsideNavigationUnwrapped
+                    return true
+                } else {
+                    return false
+                }
+            }
+        })
+        
+        if let indexOfFrame = indexOfFrameOpt {
+            switch frames[indexOfFrame] {
+            case .navigation(let navigationFrame):
+                let childInNavigation = navigationFrame.children[indexInsideNavigation]
+                
+                frames[indexOfFrame] = .navigation(
+                    Frame.Navigation(
+                        children: navigationFrame.children
+                            .replacing(
+                                indexInsideNavigation,
+                                with: Frame.Navigation.Child(
+                                    state: kind.toFrameState(),
+                                    coordinator: childInNavigation.coordinator,
+                                    viewController: childInNavigation.viewController
+                                )
+                            ),
+                        navigationController: navigationFrame.navigationController
+                    )
+                )
+            case .regular:
+                fatalError()
+            }
+        }
+        
+        self.state.stage = .batching
+        if self.state.notDead {
+            callback()
+        }
+        self.state.stage = .purging
+        self.purge()
+        self.state.stage = .ready
     }
     
     func sendOffNavigation(
@@ -420,7 +432,56 @@ public class InsecurityHost {
         _ animated: Bool,
         _ child: CommonNavigationCoordinatorAny
     ) {
-            
+        let frameChild = Frame.Navigation.Child(
+            state: .live,
+            coordinator: child,
+            viewController: controller
+        )
+        
+        if let lastFrame = frames.last {
+            switch lastFrame {
+            case .navigation(let navigationLastFrame):
+                guard let navigationController = navigationLastFrame.navigationController else {
+                    assertionFailure("NavigationHost wanted to start NavigationChild, but the UINavigationController was found dead")
+                    return
+                }
+                
+                self.frames = self.frames.replacing(
+                    self.frames.count - 1,
+                    with: .navigation(
+                        .init(
+                            children: navigationLastFrame.children.appending(frameChild),
+                            navigationController: navigationController
+                        )
+                    )
+                )
+                
+                navigationController.pushViewController(controller, animated: animated)
+            case .regular:
+                assertionFailure("Can not start navigation child when the top context is not UINavigationController")
+                return
+            }
+        } else {
+            switch root {
+            case .modal:
+                assertionFailure("Can not start navigation child when the top context is not UINavigationController")
+                return
+            case .navigation(let weak):
+                guard let navigationController = weak.value else {
+                    assertionFailure("NavigationHost wanted to start NavigationChild, but the UINavigationController was found dead")
+                    return
+                }
+                
+                self.frames = [
+                    .navigation(
+                        Frame.Navigation(
+                            children: [ frameChild ],
+                            navigationController: navigationController
+                        )
+                    )
+                ]
+            }
+        }
     }
     
     // MARK: - Navigation New
@@ -469,7 +530,6 @@ public class InsecurityHost {
         let frame = Frame.navigation(Frame.Navigation(children: [navigatioFrameChild],
                                                       navigationController: navigationController))
         self.frames.append(frame)
-        
         
         navigationController.setViewControllers([ controller ], animated: false)
         electedHostController.present(navigationController, animated: animated, completion: nil)
@@ -541,5 +601,21 @@ private extension InsecurityHost.Frame {
         case .navigation(let navigation):
             return navigation.navigationController
         }
+    }
+}
+
+private extension Array {
+    func replacing(_ index: Index, with element: Element) -> Array {
+        var array = self
+        array[index] = element
+        return array
+    }
+}
+
+private extension Array {
+    func appending(_ element: Element) -> Array {
+        var array = self
+        array.append(element)
+        return array
     }
 }
