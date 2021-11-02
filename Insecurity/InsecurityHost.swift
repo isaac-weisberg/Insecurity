@@ -13,6 +13,15 @@ struct InsecurityHostState {
         case ready
         case batching
         case purging
+        
+        var allowsPresentation: Bool {
+            switch self {
+            case .batching:
+                return false
+            case .ready, .purging:
+                return true
+            }
+        }
     }
     
     var stage: Stage
@@ -38,6 +47,25 @@ private enum FinalizationKind {
 
 public class InsecurityHost {
     enum Frame {
+        struct NavigationChild {
+            let state: State
+            let coordinator: CommonNavigationCoordinatorAny
+            weak var viewController: UIViewController?
+            weak var popToViewController: UIViewController?
+            
+            init(
+                state: State,
+                coordinator: CommonNavigationCoordinatorAny,
+                viewController: UIViewController?,
+                popToViewController: UIViewController?
+            ) {
+                self.state = state
+                self.coordinator = coordinator
+                self.viewController = viewController
+                self.popToViewController = popToViewController
+            }
+        }
+        
         enum State {
             case live
             case finishedByCompletion
@@ -49,22 +77,55 @@ public class InsecurityHost {
             let state: State
             let coordinator: CommonModalCoordinatorAny
             weak var viewController: UIViewController?
+            weak var presentingViewController: UIViewController?
+            
+            init(
+                state: State,
+                coordinator: CommonModalCoordinatorAny,
+                viewController: UIViewController?,
+                presentingViewController: UIViewController?
+            ) {
+                self.state = state
+                self.coordinator = coordinator
+                self.viewController = viewController
+                self.presentingViewController = presentingViewController
+            }
         }
         
         case regular(Regular)
         
         struct Navigation {
-            struct Child {
-                let state: State
-                let coordinator: CommonNavigationCoordinatorAny
-                weak var viewController: UIViewController?
-            }
-            
-            let children: [Child]
+            let children: [NavigationChild]
             weak var navigationController: UINavigationController?
+            weak var presentingViewController: UIViewController?
+            
+            init(
+                children: [NavigationChild],
+                navigationController: UINavigationController?,
+                presentingViewController: UIViewController?
+            ) {
+                self.children = children
+                self.navigationController = navigationController
+                self.presentingViewController = presentingViewController
+            }
         }
         
         case navigation(Navigation)
+        
+        struct RootNavigation {
+            let children: [NavigationChild]
+            weak var navigationController: UINavigationController?
+            
+            init(
+                children: [NavigationChild],
+                navigationController: UINavigationController?
+            ) {
+                self.children = children
+                self.navigationController = navigationController
+            }
+        }
+        
+        case rootNavigation(RootNavigation)
     }
     
     var frames: [Frame] = []
@@ -86,7 +147,18 @@ public class InsecurityHost {
         self.root = .navigation(Weak<UINavigationController>(viewController))
     }
     
-    var scheduledStartRoutine: (() -> Void)?
+    var _scheduledStartRoutine: (() -> Void)?
+    
+    func executeScheduledStartRoutine() {
+        _scheduledStartRoutine?()
+        _scheduledStartRoutine = nil
+    }
+    
+    func executeScheduledStartRoutineWithDelay() {
+        DispatchQueue.main.asyncAfter(Insecurity.navigationPopBatchedStartDelay) { [weak self] in
+            self?.executeScheduledStartRoutine()
+        }
+    }
     
     // MARK: - Modal
     
@@ -103,15 +175,15 @@ public class InsecurityHost {
                 completion(result)
             }
         case .batching:
-            if scheduledStartRoutine != nil {
+            if _scheduledStartRoutine != nil {
                 assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
                 return
             }
             
-            scheduledStartRoutine = { [weak self] in
+            _scheduledStartRoutine = { [weak self] in
                 guard let self = self else { return }
                 
-                self.scheduledStartRoutine = nil
+                self._scheduledStartRoutine = nil
                 self.immediateDispatchModal(child, animated: animated) { result in
                     completion(result)
                 }
@@ -128,7 +200,7 @@ public class InsecurityHost {
     ) {
         guard state.notDead else { return }
         
-        assert(state.stage == .ready)
+        assert(state.stage.allowsPresentation)
         
         child._updateHostReference(self)
         
@@ -202,7 +274,7 @@ public class InsecurityHost {
             switch frame {
             case .regular(let regular):
                 return regular.coordinator === child
-            case .navigation:
+            case .navigation, .rootNavigation:
                 return false
             }
         })
@@ -214,10 +286,11 @@ public class InsecurityHost {
                     Frame.Regular(
                         state: kind.toFrameState(),
                         coordinator: regular.coordinator,
-                        viewController: regular.viewController
+                        viewController: regular.viewController,
+                        presentingViewController: regular.presentingViewController
                     )
                 )
-            case .navigation:
+            case .navigation, .rootNavigation:
                 fatalError()
             }
         }
@@ -255,7 +328,14 @@ public class InsecurityHost {
             return
         }
         
-        let frame = Frame.regular(Frame.Regular(state: .live, coordinator: child, viewController: controller))
+        let frame = Frame.regular(
+            Frame.Regular(
+                state: .live,
+                coordinator: child,
+                viewController: controller,
+                presentingViewController: electedHostController
+            )
+        )
         self.frames.append(frame)
         
         electedHostController.present(controller, animated: animated, completion: nil)
@@ -276,15 +356,15 @@ public class InsecurityHost {
                 completion(result)
             }
         case .batching:
-            if scheduledStartRoutine != nil {
+            if _scheduledStartRoutine != nil {
                 assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
                 return
             }
             
-            scheduledStartRoutine = { [weak self] in
+            _scheduledStartRoutine = { [weak self] in
                 guard let self = self else { return }
                 
-                self.scheduledStartRoutine = nil
+                self._scheduledStartRoutine = nil
                 self.immediateDispatchNavigation(child, animated: animated) { result in
                     completion(result)
                 }
@@ -294,14 +374,14 @@ public class InsecurityHost {
         }
     }
     
-    func immediateDispatchNavigation<Coordinator: CommonNavigationCoordinator>(
+    private func immediateDispatchNavigation<Coordinator: CommonNavigationCoordinator>(
         _ child: Coordinator,
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
         guard state.notDead else { return }
         
-        assert(state.stage == .ready)
+        assert(state.stage.allowsPresentation)
         
         child._updateHostReference(self)
         
@@ -391,6 +471,21 @@ public class InsecurityHost {
                 } else {
                     return false
                 }
+                
+            case .rootNavigation(let navigation):
+                let indexInsideNavigationOpt = navigation.children.firstIndex(where: { navigationChild in
+                    if navigationChild.coordinator === child {
+                        return true
+                    }
+                    return false
+                })
+                
+                if let indexInsideNavigationUnwrapped = indexInsideNavigationOpt {
+                    indexInsideNavigation = indexInsideNavigationUnwrapped
+                    return true
+                } else {
+                    return false
+                }
             }
         })
         
@@ -404,10 +499,30 @@ public class InsecurityHost {
                         children: navigationFrame.children
                             .replacing(
                                 indexInsideNavigation,
-                                with: Frame.Navigation.Child(
+                                with: Frame.NavigationChild(
                                     state: kind.toFrameState(),
                                     coordinator: childInNavigation.coordinator,
-                                    viewController: childInNavigation.viewController
+                                    viewController: childInNavigation.viewController,
+                                    popToViewController: childInNavigation.popToViewController
+                                )
+                            ),
+                        navigationController: navigationFrame.navigationController,
+                        presentingViewController: navigationFrame.presentingViewController
+                    )
+                )
+            case .rootNavigation(let navigationFrame):
+                let childInNavigation = navigationFrame.children[indexInsideNavigation]
+                
+                frames[indexOfFrame] = .rootNavigation(
+                    Frame.RootNavigation(
+                        children: navigationFrame.children
+                            .replacing(
+                                indexInsideNavigation,
+                                with: Frame.NavigationChild(
+                                    state: kind.toFrameState(),
+                                    coordinator: childInNavigation.coordinator,
+                                    viewController: childInNavigation.viewController,
+                                    popToViewController: childInNavigation.viewController
                                 )
                             ),
                         navigationController: navigationFrame.navigationController
@@ -432,12 +547,6 @@ public class InsecurityHost {
         _ animated: Bool,
         _ child: CommonNavigationCoordinatorAny
     ) {
-        let frameChild = Frame.Navigation.Child(
-            state: .live,
-            coordinator: child,
-            viewController: controller
-        )
-        
         if let lastFrame = frames.last {
             switch lastFrame {
             case .navigation(let navigationLastFrame):
@@ -446,9 +555,41 @@ public class InsecurityHost {
                     return
                 }
                 
+                let frameChild = Frame.NavigationChild(
+                    state: .live,
+                    coordinator: child,
+                    viewController: controller,
+                    popToViewController: navigationLastFrame.children.last?.viewController
+                )
+                
                 self.frames = self.frames.replacing(
                     self.frames.count - 1,
                     with: .navigation(
+                        .init(
+                            children: navigationLastFrame.children.appending(frameChild),
+                            navigationController: navigationController,
+                            presentingViewController: navigationLastFrame.presentingViewController
+                        )
+                    )
+                )
+                
+                navigationController.pushViewController(controller, animated: animated)
+            case .rootNavigation(let navigationLastFrame):
+                guard let navigationController = navigationLastFrame.navigationController else {
+                    assertionFailure("NavigationHost wanted to start NavigationChild, but the UINavigationController was found dead")
+                    return
+                }
+                
+                let frameChild = Frame.NavigationChild(
+                    state: .live,
+                    coordinator: child,
+                    viewController: controller,
+                    popToViewController: navigationLastFrame.children.last?.viewController
+                )
+                
+                self.frames = self.frames.replacing(
+                    self.frames.count - 1,
+                    with: .rootNavigation(
                         .init(
                             children: navigationLastFrame.children.appending(frameChild),
                             navigationController: navigationController
@@ -472,14 +613,23 @@ public class InsecurityHost {
                     return
                 }
                 
+                let frameChild = Frame.NavigationChild(
+                    state: .live,
+                    coordinator: child,
+                    viewController: controller,
+                    popToViewController: navigationController.viewControllers[0]
+                )
+                
                 self.frames = [
-                    .navigation(
-                        Frame.Navigation(
+                    .rootNavigation(
+                        Frame.RootNavigation(
                             children: [ frameChild ],
                             navigationController: navigationController
                         )
                     )
                 ]
+                
+                navigationController.pushViewController(controller, animated: true)
             }
         }
     }
@@ -500,15 +650,15 @@ public class InsecurityHost {
                 completion(result)
             }
         case .batching:
-            if scheduledStartRoutine != nil {
+            if _scheduledStartRoutine != nil {
                 assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
                 return
             }
             
-            scheduledStartRoutine = { [weak self] in
+            _scheduledStartRoutine = { [weak self] in
                 guard let self = self else { return }
                 
-                self.scheduledStartRoutine = nil
+                self._scheduledStartRoutine = nil
                 self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
                     completion(result)
                 }
@@ -518,7 +668,7 @@ public class InsecurityHost {
         }
     }
     
-    func immediateDispatchNewNavigation<Coordinator: CommonNavigationCoordinator>(
+    private func immediateDispatchNewNavigation<Coordinator: CommonNavigationCoordinator>(
         _ navigationController: UINavigationController,
         _ child: Coordinator,
         animated: Bool,
@@ -526,7 +676,7 @@ public class InsecurityHost {
     ) {
         guard state.notDead else { return }
         
-        assert(state.stage == .ready)
+        assert(state.stage.allowsPresentation)
         
         child._updateHostReference(self)
         
@@ -620,11 +770,13 @@ public class InsecurityHost {
             return
         }
         
-        let navigatioFrameChild = Frame.Navigation.Child(state: .live,
-                                                         coordinator: child,
-                                                         viewController: controller)
-        let frame = Frame.navigation(Frame.Navigation(children: [navigatioFrameChild],
-                                                      navigationController: navigationController))
+        let navigationFrameChild = Frame.NavigationChild(state: .live,
+                                                          coordinator: child,
+                                                          viewController: controller,
+                                                          popToViewController: nil)
+        let frame = Frame.navigation(Frame.Navigation(children: [navigationFrameChild],
+                                                      navigationController: navigationController,
+                                                      presentingViewController: electedHostController))
         self.frames.append(frame)
         
         navigationController.setViewControllers([ controller ], animated: false)
@@ -634,7 +786,186 @@ public class InsecurityHost {
     // MARK: - Purge
     
     private func purge() {
+        let prepurgeFrames = self.frames
         
+        var firstDeadNavigationChildIndex: Int!
+        let firstDeadChildIndexOpt = prepurgeFrames.firstIndex(where: { frame in
+            switch frame {
+            case .regular(let regular):
+                switch regular.state {
+                case .finishedByDeinit, .finishedByKVO, .finishedByCompletion:
+                    return true
+                case .live:
+                    return false
+                }
+            case .navigation(let navigation):
+                let firstDeadNavigationIndexOpt = navigation.children.firstIndex(where: { child in
+                    switch child.state {
+                    case .finishedByDeinit, .finishedByKVO, .finishedByCompletion:
+                        return true
+                    case .live:
+                        return false
+                    }
+                })
+                
+                if let firstDeadNavigationIndex = firstDeadNavigationIndexOpt {
+                    firstDeadNavigationChildIndex = firstDeadNavigationIndex
+                    return true
+                }
+                return false
+            case .rootNavigation(let navigation):
+                let firstDeadNavigationIndexOpt = navigation.children.firstIndex(where: { child in
+                    switch child.state {
+                    case .finishedByDeinit, .finishedByKVO, .finishedByCompletion:
+                        return true
+                    case .live:
+                        return false
+                    }
+                })
+                
+                if let firstDeadNavigationIndex = firstDeadNavigationIndexOpt {
+                    firstDeadNavigationChildIndex = firstDeadNavigationIndex
+                    return true
+                }
+                return false
+            }
+        })
+        
+        let postPurgeFrames: [Frame]
+        
+        if let firstDeadChildIndex = firstDeadChildIndexOpt {
+            let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
+            
+            switch firstDeadChild {
+            case .regular:
+                postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex))
+            case .rootNavigation(let rootNavigation):
+                let newRootNavigation = Frame.rootNavigation(
+                    Frame.RootNavigation(
+                        children: Array(rootNavigation.children.prefix(firstDeadNavigationChildIndex)),
+                        navigationController: rootNavigation.navigationController
+                    )
+                )
+                
+                postPurgeFrames = [ newRootNavigation ]
+            case .navigation(let navigation):
+                if firstDeadNavigationChildIndex == 0 {
+                    postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex))
+                } else {
+                    postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex + 1))
+                        .replacing(
+                            firstDeadChildIndex,
+                            with: .navigation(
+                                Frame.Navigation(
+                                    children: Array(navigation.children.prefix(firstDeadNavigationChildIndex)),
+                                    navigationController: navigation.navigationController,
+                                    presentingViewController: navigation.presentingViewController
+                                )
+                            )
+                        )
+                }
+            }
+        } else {
+            assertionFailure("Noone died?")
+            postPurgeFrames = prepurgeFrames
+        }
+        
+        self.frames = postPurgeFrames
+        
+        if let firstDeadChildIndex = firstDeadChildIndexOpt {
+            let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
+            
+            switch firstDeadChild {
+            case .rootNavigation(let navigation):
+                if state.notDead, let navigationController = navigation.navigationController {
+                    let deadNavigationChild = navigation.children[firstDeadNavigationChildIndex]
+                    
+                    let frameAboveOpt = prepurgeFrames.at(firstDeadChildIndex + 1)
+                    
+                    switch deadNavigationChild.state {
+                    case .live:
+                        fatalError()
+                    case .finishedByCompletion:
+                        if let popToController = deadNavigationChild.popToViewController {
+                            if let frameAbovePresentingController = frameAboveOpt?.presentingViewController {
+                                navigationController.popToViewController(popToController, animated: false)
+                                frameAbovePresentingController.dismiss(animated: true) { [weak self] in
+                                    self?.executeScheduledStartRoutine()
+                                }
+                            } else {
+                                navigationController.popToViewController(popToController, animated: true)
+                                executeScheduledStartRoutineWithDelay()
+                            }
+                        } else {
+                            if let frameAbovePresentingController = frameAboveOpt?.presentingViewController {
+                                frameAbovePresentingController.dismiss(animated: true) { [weak self] in
+                                    self?.executeScheduledStartRoutine()
+                                }
+                            } else {
+                                executeScheduledStartRoutine()
+                            }
+                        }
+                    case .finishedByKVO, .finishedByDeinit:
+                        if let frameAbovePresentingController = frameAboveOpt?.presentingViewController {
+                            frameAbovePresentingController.dismiss(animated: true) { [weak self] in
+                                self?.executeScheduledStartRoutine()
+                            }
+                        } else {
+                            executeScheduledStartRoutine()
+                        }
+                    }
+                } else {
+                    executeScheduledStartRoutine()
+                }
+            case .navigation(let navigation):
+                let deadNavigationFrameChild = navigation.children[firstDeadChildIndex]
+                
+                if let popToController = deadNavigationFrameChild.popToViewController {
+                    if let navigationController = navigation.navigationController {
+                        let frameAboveOpt = prepurgeFrames.at(firstDeadChildIndex + 1)
+                        
+                        if let frameAbovePresetingController = frameAboveOpt?.presentingViewController {
+                            frameAbovePresetingController.dismiss(animated: true) { [weak self] in
+                                self?.executeScheduledStartRoutine()
+                            }
+                        } else {
+                            navigationController.popToViewController(popToController, animated: true)
+                            executeScheduledStartRoutineWithDelay()
+                        }
+                    } else {
+                        executeScheduledStartRoutine()
+                    }
+                } else {
+                    if let presentingController = navigation.presentingViewController {
+                        presentingController.dismiss(animated: true) { [weak self] in
+                            self?.executeScheduledStartRoutine()
+                        }
+                    } else {
+                        executeScheduledStartRoutine()
+                    }
+                }
+            case .regular(let regular):
+                switch regular.state {
+                case .live:
+                    fatalError()
+                case .finishedByDeinit:
+                    self.executeScheduledStartRoutine()
+                case .finishedByKVO:
+                    self.executeScheduledStartRoutine()
+                case .finishedByCompletion:
+                    if
+                        state.notDead,
+                        let presentingController = regular.presentingViewController
+                    {
+                        presentingController.dismiss(animated: true) { [weak self] in
+                            self?.executeScheduledStartRoutine()
+                        }
+                    } else {
+                        self.executeScheduledStartRoutine()
+                    }
+                }
+            }
+        }
     }
 }
 
@@ -696,6 +1027,19 @@ private extension InsecurityHost.Frame {
             return regular.viewController
         case .navigation(let navigation):
             return navigation.navigationController
+        case .rootNavigation(let rootNavigation):
+            return rootNavigation.navigationController
+        }
+    }
+    
+    var presentingViewController: UIViewController? {
+        switch self {
+        case .rootNavigation:
+            return nil
+        case .navigation(let navigation):
+            return navigation.presentingViewController
+        case .regular(let regular):
+            return regular.presentingViewController
         }
     }
 }

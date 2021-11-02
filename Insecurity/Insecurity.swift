@@ -7,4 +7,5 @@ public struct Insecurity {
     public static var navigationControllerRootIsAssignedWithAnimation: Bool = true
     public static var loggerMode: InsecurityLoggerMode = .none
     public static var navigationControllerDismissalAnimated: Bool = true
+    public static var navigationPopBatchedStartDelay: TimeInterval = 0.25
 }
