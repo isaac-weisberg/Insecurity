@@ -162,7 +162,7 @@ public class InsecurityHost {
     
     // MARK: - Modal
     
-    func start<Coordinator: CommonModalCoordinator>(
+    func startModal<Coordinator: CommonModalCoordinator>(
         _ child: Coordinator,
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
@@ -343,7 +343,7 @@ public class InsecurityHost {
     
     // MARK: - Navigation Current
     
-    func start<Coordinator: CommonNavigationCoordinator>(
+    func startNavigation<Coordinator: CommonNavigationCoordinator>(
         _ child: Coordinator,
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
@@ -636,7 +636,7 @@ public class InsecurityHost {
     
     // MARK: - Navigation New
     
-    func start<Coordinator: CommonNavigationCoordinator>(
+    func startNavigationNew<Coordinator: CommonNavigationCoordinator>(
         _ navigationController: UINavigationController,
         _ child: Coordinator,
         animated: Bool,
@@ -872,12 +872,12 @@ public class InsecurityHost {
         
         self.frames = postPurgeFrames
         
-        if let firstDeadChildIndex = firstDeadChildIndexOpt {
+        if state.notDead, let firstDeadChildIndex = firstDeadChildIndexOpt {
             let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
             
             switch firstDeadChild {
             case .rootNavigation(let navigation):
-                if state.notDead, let navigationController = navigation.navigationController {
+                if let navigationController = navigation.navigationController {
                     let deadNavigationChild = navigation.children[firstDeadNavigationChildIndex]
                     
                     let frameAboveOpt = prepurgeFrames.at(firstDeadChildIndex + 1)
@@ -953,10 +953,7 @@ public class InsecurityHost {
                 case .finishedByKVO:
                     self.executeScheduledStartRoutine()
                 case .finishedByCompletion:
-                    if
-                        state.notDead,
-                        let presentingController = regular.presentingViewController
-                    {
+                    if let presentingController = regular.presentingViewController {
                         presentingController.dismiss(animated: true) { [weak self] in
                             self?.executeScheduledStartRoutine()
                         }
@@ -965,6 +962,8 @@ public class InsecurityHost {
                     }
                 }
             }
+        } else {
+            executeScheduledStartRoutine()
         }
     }
 }
@@ -975,7 +974,9 @@ extension InsecurityHost: ModalNavigation {
         animated: Bool,
         _ completion: @escaping (NewResult?) -> Void
     ) {
-        
+        startModal(child, animated: animated) { result in
+            completion(result)
+        }
     }
     
     public func start<NewResult>(
@@ -984,7 +985,9 @@ extension InsecurityHost: ModalNavigation {
         animated: Bool,
         _ completion: @escaping (NewResult?) -> Void
     ) {
-        
+        startNavigationNew(navigationController, child, animated: animated) { result in
+            completion(result)
+        }
     }
 }
 
@@ -994,7 +997,9 @@ extension InsecurityHost: NavigationControllerNavigation {
         animated: Bool,
         _ completion: @escaping (NewResult?) -> Void
     ) {
-        
+        startNavigation(child, animated: animated) { result in
+            completion(result)
+        }
     }
 }
 
@@ -1005,7 +1010,7 @@ extension InsecurityHost: AdaptiveNavigation {
         animated: Bool,
         _ completion: @escaping (NewResult?) -> Void
     ) {
-        
+        fatalError()
     }
 }
 
