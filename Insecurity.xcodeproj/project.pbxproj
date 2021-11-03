@@ -100,6 +100,8 @@
 		A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A396900326FF26CA00B6A59B /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A3C44FEA2729E71500A05C44 /* KVOObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C44FE92729E71500A05C44 /* KVOObservable.swift */; };
+		A3DD891E2732EB2800C07EBD /* NewWindowHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DD891D2732EB2800C07EBD /* NewWindowHost.swift */; };
+		A3DD89202732F29E00C07EBD /* NewWindowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DD891F2732F29E00C07EBD /* NewWindowCoordinator.swift */; };
 		A3E7F8FD272B448800881641 /* DankSpeak.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E7F8FC272B448800881641 /* DankSpeak.swift */; };
 /* End PBXBuildFile section */
 
@@ -246,6 +248,8 @@
 		A3968FFB26FF260200B6A59B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A3968FFF26FF26A700B6A59B /* NavigationControllerHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerHost.swift; sourceTree = "<group>"; };
 		A3C44FE92729E71500A05C44 /* KVOObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVOObservable.swift; sourceTree = "<group>"; };
+		A3DD891D2732EB2800C07EBD /* NewWindowHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWindowHost.swift; sourceTree = "<group>"; };
+		A3DD891F2732F29E00C07EBD /* NewWindowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewWindowCoordinator.swift; sourceTree = "<group>"; };
 		A3E7F8FC272B448800881641 /* DankSpeak.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DankSpeak.swift; sourceTree = "<group>"; };
 		C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPlayground.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -621,6 +625,8 @@
 				A3E7F8FC272B448800881641 /* DankSpeak.swift */,
 				A38CBDD8272F205100560B65 /* InsecurityHost.swift */,
 				A36B058B2731E81000E67488 /* Util.swift */,
+				A3DD891D2732EB2800C07EBD /* NewWindowHost.swift */,
+				A3DD891F2732F29E00C07EBD /* NewWindowCoordinator.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -947,9 +953,11 @@
 				A392A1362720A0C200976B7E /* Deferred.swift in Sources */,
 				A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */,
 				A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */,
+				A3DD89202732F29E00C07EBD /* NewWindowCoordinator.swift in Sources */,
 				A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */,
 				A34CBF6526FFD796007AF9B8 /* ModalPresentationHost.swift in Sources */,
 				A320333827164F2800ABD197 /* NavigationCoordinator.swift in Sources */,
+				A3DD891E2732EB2800C07EBD /* NewWindowHost.swift in Sources */,
 				A3C44FEA2729E71500A05C44 /* KVOObservable.swift in Sources */,
 				A379912A2702659600550B8E /* WindowHost.swift in Sources */,
 				A390C1502717992100E9C905 /* CommonModalCoordinator.swift in Sources */,

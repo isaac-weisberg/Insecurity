@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class ApplicationCoordinator: WindowCoordinator {
+class ApplicationCoordinator: NewWindowCoordinator {
     let di = DIContainer()
     
     func start() {

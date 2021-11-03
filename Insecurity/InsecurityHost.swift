@@ -128,7 +128,11 @@ public class InsecurityHost {
         case rootNavigation(RootNavigation)
     }
     
-    var frames: [Frame] = []
+    var frames: [Frame] = [] {
+        didSet {
+            insecPrint("frames")
+        }
+    }
     
     enum Root {
         case modal(Weak<UIViewController>)
@@ -138,6 +142,10 @@ public class InsecurityHost {
     let root: Root
     
     var state = InsecurityHostState(stage: .ready, notDead: true)
+    
+    func kill() {
+        state.notDead = false
+    }
     
     public init(modal viewController: UIViewController) {
         self.root = .modal(Weak<UIViewController>(viewController))
@@ -233,13 +241,13 @@ public class InsecurityHost {
             UIViewController.self,
             modalParentObservationKeypath
         ) { [weak self, weak child] oldController, newController in
-            if let kvoContext = kvoContext {
-                weakController?.insecurityKvo.removeObserver(kvoContext)
-            }
-            weakController?.deinitObservable.onDeinit = nil
-            weakChild?._finishImplementation = nil
-            
             if oldController != nil, newController == nil {
+                if let kvoContext = kvoContext {
+                    weakController?.insecurityKvo.removeObserver(kvoContext)
+                }
+                weakController?.deinitObservable.onDeinit = nil
+                weakChild?._finishImplementation = nil
+                
                 guard let self = self else {
                     assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
                     return
@@ -295,13 +303,22 @@ public class InsecurityHost {
             }
         }
         
-        self.state.stage = .batching
-        if self.state.notDead {
-            callback()
+        switch state.stage {
+        case .batching:
+            if self.state.notDead {
+                callback()
+            }
+        case .purging:
+            fatalError()
+        case .ready:
+            self.state.stage = .batching
+            if self.state.notDead {
+                callback()
+            }
+            self.state.stage = .purging
+            self.purge()
+            self.state.stage = .ready
         }
-        self.state.stage = .purging
-        self.purge()
-        self.state.stage = .ready
     }
     
     private func sendOffModal(_ controller: UIViewController, _ animated: Bool, _ child: CommonModalCoordinatorAny) {
@@ -414,13 +431,13 @@ public class InsecurityHost {
             UIViewController.self,
             parentObservationKeypath
         ) { [weak self, weak child] oldController, newController in
-            if let kvoContext = kvoContext {
-                weakController?.insecurityKvo.removeObserver(kvoContext)
-            }
-            weakController?.deinitObservable.onDeinit = nil
-            weakChild?._finishImplementation = nil
-            
             if oldController != nil, oldController is UINavigationController, newController == nil {
+                if let kvoContext = kvoContext {
+                    weakController?.insecurityKvo.removeObserver(kvoContext)
+                }
+                weakController?.deinitObservable.onDeinit = nil
+                weakChild?._finishImplementation = nil
+                
                 guard let self = self else {
                     assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
                     return
@@ -522,7 +539,7 @@ public class InsecurityHost {
                                     state: kind.toFrameState(),
                                     coordinator: childInNavigation.coordinator,
                                     viewController: childInNavigation.viewController,
-                                    popToViewController: childInNavigation.viewController
+                                    popToViewController: childInNavigation.popToViewController
                                 )
                             ),
                         navigationController: navigationFrame.navigationController
@@ -533,13 +550,22 @@ public class InsecurityHost {
             }
         }
         
-        self.state.stage = .batching
-        if self.state.notDead {
-            callback()
+        switch state.stage {
+        case .batching:
+            if self.state.notDead {
+                callback()
+            }
+        case .purging:
+            fatalError()
+        case .ready:
+            self.state.stage = .batching
+            if self.state.notDead {
+                callback()
+            }
+            self.state.stage = .purging
+            self.purge()
+            self.state.stage = .ready
         }
-        self.state.stage = .purging
-        self.purge()
-        self.state.stage = .ready
     }
     
     func sendOffNavigation(
@@ -709,13 +735,13 @@ public class InsecurityHost {
             UIViewController.self,
             modalParentObservationKeypath
         ) { [weak self, weak child] oldController, newController in
-            if let kvoContext = kvoContext {
-                weakController?.insecurityKvo.removeObserver(kvoContext)
-            }
-            weakController?.deinitObservable.onDeinit = nil
-            weakChild?._finishImplementation = nil
-
             if oldController != nil, newController == nil {
+                if let kvoContext = kvoContext {
+                    weakController?.insecurityKvo.removeObserver(kvoContext)
+                }
+                weakController?.deinitObservable.onDeinit = nil
+                weakChild?._finishImplementation = nil
+                
                 guard let self = self else {
                     assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
                     return
@@ -966,6 +992,12 @@ public class InsecurityHost {
             executeScheduledStartRoutine()
         }
     }
+    
+#if DEBUG
+    deinit {
+        insecPrint("\(type(of: self)) deinit")
+    }
+#endif
 }
 
 extension InsecurityHost: ModalNavigation {

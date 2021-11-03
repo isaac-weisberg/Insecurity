@@ -12,7 +12,11 @@ open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
         fatalError("This coordinator didn't define a viewController")
     }
     
-    var _finishImplementation: ((Result?) -> Void)?
+    var _finishImplementation: ((Result?) -> Void)? {
+        didSet {
+            insecPrint("_finish delete")
+        }
+    }
     
     public func finish(_ result: Result) {
         guard let _finishImplementation = _finishImplementation else {
