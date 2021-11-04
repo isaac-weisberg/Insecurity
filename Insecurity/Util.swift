@@ -7,3 +7,9 @@ extension DispatchQueue {
         }
     }
 }
+
+func insecDelay(_ timeInterval: TimeInterval, _ work: @escaping () -> Void) {
+    DispatchQueue.main.asyncAfter(timeInterval) {
+        work()
+    }
+}

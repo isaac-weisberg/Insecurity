@@ -128,11 +128,7 @@ public class InsecurityHost {
         case rootNavigation(RootNavigation)
     }
     
-    var frames: [Frame] = [] {
-        didSet {
-            insecPrint("frames")
-        }
-    }
+    var frames: [Frame] = []
     
     enum Root {
         case modal(Weak<UIViewController>)
@@ -163,7 +159,7 @@ public class InsecurityHost {
     }
     
     func executeScheduledStartRoutineWithDelay() {
-        DispatchQueue.main.asyncAfter(Insecurity.navigationPopBatchedStartDelay) { [weak self] in
+        insecDelay(Insecurity.navigationPopBatchedStartDelay) { [weak self] in
             self?.executeScheduledStartRoutine()
         }
     }
@@ -944,7 +940,7 @@ public class InsecurityHost {
                     executeScheduledStartRoutine()
                 }
             case .navigation(let navigation):
-                let deadNavigationFrameChild = navigation.children[firstDeadChildIndex]
+                let deadNavigationFrameChild = navigation.children[firstDeadNavigationChildIndex]
                 
                 if let popToController = deadNavigationFrameChild.popToViewController {
                     if let navigationController = navigation.navigationController {
