@@ -1042,7 +1042,100 @@ extension InsecurityHost: AdaptiveNavigation {
         animated: Bool,
         _ completion: @escaping (NewResult?) -> Void
     ) {
-        fatalError()
+        guard state.notDead else { return }
+        
+        switch state.stage {
+        case .ready:
+            self.immediateDispatchAdaptive(child, in: context, animated: animated) { result in
+                completion(result)
+            }
+        case .batching:
+            if _scheduledStartRoutine != nil {
+                assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
+                return
+            }
+            
+            _scheduledStartRoutine = { [weak self] in
+                guard let self = self else { return }
+                
+                self._scheduledStartRoutine = nil
+                self.immediateDispatchAdaptive(child, in: context, animated: animated) { result in
+                    completion(result)
+                }
+            }
+        case .purging:
+            assertionFailure("Please don't start during purges")
+        }
+    }
+    
+    func immediateDispatchAdaptive<NewResult>(
+        _ child: AdaptiveCoordinator<NewResult>,
+        in context: AdaptiveContext,
+        animated: Bool,
+        _ completion: @escaping (NewResult?) -> Void
+    ) {
+        switch context._internalContext {
+        case .current:
+            if let lastFrame = self.frames.last {
+                switch lastFrame {
+                case .navigation, .rootNavigation:
+                    self.immediateDispatchNavigation(child, animated: animated) { result in
+                        completion(result)
+                    }
+                case .regular:
+                    self.immediateDispatchModal(child, animated: animated) { result in
+                        completion(result)
+                    }
+                }
+            } else {
+                switch self.root {
+                case .navigation:
+                    self.immediateDispatchNavigation(child, animated: animated) { result in
+                        completion(result)
+                    }
+                case .modal:
+                    self.immediateDispatchModal(child, animated: animated) { result in
+                        completion(result)
+                    }
+                }
+            }
+        case .modal:
+            self.immediateDispatchModal(child, animated: animated) { result in
+                completion(result)
+            }
+        case .currentNavigation(let deferredNavigationController):
+            if let lastFrame = self.frames.last {
+                switch lastFrame {
+                case .navigation, .rootNavigation:
+                    self.immediateDispatchNavigation(child, animated: animated) { result in
+                        completion(result)
+                    }
+                case .regular:
+                    let navigationController = deferredNavigationController.make()
+                    
+                    self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
+                        completion(result)
+                    }
+                }
+            } else {
+                switch self.root {
+                case .navigation:
+                    self.immediateDispatchNavigation(child, animated: animated) { result in
+                        completion(result)
+                    }
+                case .modal:
+                    let navigationController = deferredNavigationController.make()
+                    
+                    self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
+                        completion(result)
+                    }
+                }
+            }
+        case .newNavigation(let navigationController):
+            self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
+                completion(result)
+            }
+        }
     }
 }
 
