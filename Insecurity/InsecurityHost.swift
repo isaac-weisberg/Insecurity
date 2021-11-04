@@ -1184,3 +1184,12 @@ private extension Array {
         return array
     }
 }
+
+private extension Array {
+    func at(_ index: Index) -> Element? {
+        if index >= 0, index < count {
+            return self[index]
+        }
+        return nil
+    }
+}

@@ -40,32 +40,3 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         
     }
 }
-
-protocol ModalCoordinatorWithNavigationHostAny {
-    var navigationHostChild: NavigationHost? { get }
-}
-
-class ModalCoordinatorWithNavigationHost<Result>: ModalCoordinator<Result>, ModalCoordinatorWithNavigationHostAny {
-    let navigationHostChild: NavigationHost?
-    weak var _storedViewController: UIViewController?
-    
-    override var viewController: UIViewController {
-        return _storedViewController!
-    }
-    
-    func internalFinish(_ result: Result?) {
-        switch result {
-        case .some(let result):
-            finish(result)
-        case .none:
-            dismiss()
-        }
-    }
-    
-    init(_ navigationHostChild: NavigationHost,
-         _ _storedViewController: UIViewController?) {
-        
-        self.navigationHostChild = navigationHostChild
-        self._storedViewController = _storedViewController
-    }
-}

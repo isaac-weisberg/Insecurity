@@ -6,6 +6,5 @@ public struct Insecurity {
     public static var defaultWindowTransitionOptions: UIView.AnimationOptions = [.transitionCrossDissolve]
     public static var navigationControllerRootIsAssignedWithAnimation: Bool = true
     public static var loggerMode: InsecurityLoggerMode = .none
-    public static var navigationControllerDismissalAnimated: Bool = true
     public static var navigationPopBatchedStartDelay: TimeInterval = 0.25
 }

@@ -18,10 +18,10 @@ class ProfileViewController: UIViewController {
         
     }
     
-    var customModalHost: ModalHost?
+    var customModalHost: InsecurityHost?
     
     func startPaymentMethodScreen() {
-        let modalHost = ModalHost(self)
+        let modalHost = InsecurityHost(modal: self)
         self.customModalHost = modalHost
 
         let paymentMethodCoordinator = PaymentMethodsCoordinator()
@@ -32,12 +32,12 @@ class ProfileViewController: UIViewController {
         }
     }
     
-    var customNavigationHost: NavigationHost?
+    var customNavigationHost: InsecurityHost?
     
     func startPaymentMethodScreenNavigation() {
         let navigationController = self.navigationController!
         
-        let navigationHost = NavigationHost(navigationController)
+        let navigationHost = InsecurityHost(navigation: navigationController)
         self.customNavigationHost = navigationHost
 
         let paymentMethodCoordinator = PaymentMethodsCoordinator()
@@ -56,7 +56,7 @@ class ProfileViewController: UIViewController {
         
         self.present(navigationController, animated: true)
         
-        let navigationHost = NavigationHost(navigationController)
+        let navigationHost = InsecurityHost(navigation: navigationController)
         self.customNavigationHost = navigationHost
 
         let paymentMethodCoordinator = PaymentMethodsCoordinator()
