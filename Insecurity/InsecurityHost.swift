@@ -249,7 +249,7 @@ public class InsecurityHost {
                     return
                 }
                 guard let child = child else { return }
-            
+                
                 self.finalizeModal(child, .kvo) {
                     completion(nil)
                 }
@@ -439,7 +439,7 @@ public class InsecurityHost {
                     return
                 }
                 guard let child = child else { return }
-            
+                
                 self.finalizeNavigation(child, .kvo) {
                     completion(nil)
                 }
@@ -704,29 +704,28 @@ public class InsecurityHost {
         
         weak var weakChild = child
         weak var kvoContext: InsecurityKVOContext?
-        weak var weakController: UIViewController?
-
+        weak var weakController: UIViewController? = navigationController
+        
         child._finishImplementation = { [weak self] result in
             if let kvoContext = kvoContext {
                 weakController?.insecurityKvo.removeObserver(kvoContext)
             }
             weakController?.deinitObservable.onDeinit = nil
             weakChild?._finishImplementation = nil
-
+            
             guard let self = self else {
                 assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
                 return
             }
             guard let child = weakChild else { return }
-
+            
             self.finalizeNavigation(child, .callback) {
                 completion(result)
             }
         }
-
+        
         let controller = child.viewController
-        weakController = controller
-
+        
         kvoContext = navigationController.insecurityKvo.addHandler(
             UIViewController.self,
             modalParentObservationKeypath
@@ -743,23 +742,23 @@ public class InsecurityHost {
                     return
                 }
                 guard let child = child else { return }
-
+                
                 self.finalizeNavigation(child, .kvo) {
                     completion(nil)
                 }
             }
         }
-
-        controller.deinitObservable.onDeinit = { [weak self, weak child] in
+        
+        navigationController.deinitObservable.onDeinit = { [weak self, weak child] in
             weakChild?._finishImplementation = nil
-
+            
             guard let self = self, let child = child else { return }
-
+            
             self.finalizeNavigation(child, .deinitialization) {
                 completion(nil)
             }
         }
-
+        
         sendOffNewNavigation(navigationController, controller, animated, child)
     }
     
@@ -793,9 +792,9 @@ public class InsecurityHost {
         }
         
         let navigationFrameChild = Frame.NavigationChild(state: .live,
-                                                          coordinator: child,
-                                                          viewController: controller,
-                                                          popToViewController: nil)
+                                                         coordinator: child,
+                                                         viewController: controller,
+                                                         popToViewController: nil)
         let frame = Frame.navigation(Frame.Navigation(children: [navigationFrameChild],
                                                       navigationController: navigationController,
                                                       presentingViewController: electedHostController))
