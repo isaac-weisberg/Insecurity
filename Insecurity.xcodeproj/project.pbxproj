@@ -95,6 +95,7 @@
 		A3968FFA26FF260200B6A59B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3968FF826FF260200B6A59B /* LaunchScreen.storyboard */; };
 		A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A396900326FF26CA00B6A59B /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A3A5C3EA273497BC00689F0B /* CommonCoordinatorAny.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A5C3E9273497BC00689F0B /* CommonCoordinatorAny.swift */; };
 		A3C44FEA2729E71500A05C44 /* KVOObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C44FE92729E71500A05C44 /* KVOObservable.swift */; };
 		A3DD891E2732EB2800C07EBD /* WindowHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DD891D2732EB2800C07EBD /* WindowHost.swift */; };
 		A3DD89202732F29E00C07EBD /* WindowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DD891F2732F29E00C07EBD /* WindowCoordinator.swift */; };
@@ -239,6 +240,7 @@
 		A3968FF626FF260200B6A59B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A3968FF926FF260200B6A59B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A3968FFB26FF260200B6A59B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A3A5C3E9273497BC00689F0B /* CommonCoordinatorAny.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonCoordinatorAny.swift; sourceTree = "<group>"; };
 		A3C44FE92729E71500A05C44 /* KVOObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVOObservable.swift; sourceTree = "<group>"; };
 		A3DD891D2732EB2800C07EBD /* WindowHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowHost.swift; sourceTree = "<group>"; };
 		A3DD891F2732F29E00C07EBD /* WindowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowCoordinator.swift; sourceTree = "<group>"; };
@@ -615,6 +617,7 @@
 				A36B058B2731E81000E67488 /* Util.swift */,
 				A3DD891D2732EB2800C07EBD /* WindowHost.swift */,
 				A3DD891F2732F29E00C07EBD /* WindowCoordinator.swift */,
+				A3A5C3E9273497BC00689F0B /* CommonCoordinatorAny.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -942,6 +945,7 @@
 				A3DD89202732F29E00C07EBD /* WindowCoordinator.swift in Sources */,
 				A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */,
 				A320333827164F2800ABD197 /* NavigationCoordinator.swift in Sources */,
+				A3A5C3EA273497BC00689F0B /* CommonCoordinatorAny.swift in Sources */,
 				A3DD891E2732EB2800C07EBD /* WindowHost.swift in Sources */,
 				A3C44FEA2729E71500A05C44 /* KVOObservable.swift in Sources */,
 				A390C1502717992100E9C905 /* CommonModalCoordinator.swift in Sources */,
