@@ -22,7 +22,7 @@ class CartCoordinator: NavigationCoordinator<CartCoordinatorResult> {
         cartViewController.onPayRequested = { [self] in
             let paymentCoordinator = PaymentCoordinator(di: di)
             
-            navigation.start(paymentCoordinator, in: .modal, animated: true) { result in
+            navigation.start(paymentCoordinator, in: .navigation(new: UINavigationController()), animated: true) { result in
                 print("End Payment Regular \(result)")
                 switch result {
                 case .success:

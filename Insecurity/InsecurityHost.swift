@@ -908,16 +908,29 @@ public class InsecurityHost {
                         fatalError()
                     case .finishedByCompletion:
                         if let popToController = deadNavigationChild.popToViewController {
-                            if let frameAbovePresentingController = frameAboveOpt?.presentingViewController {
-                                navigationController.popToViewController(popToController, animated: false)
-                                frameAbovePresentingController.dismiss(animated: true) { [weak self] in
-                                    self?.executeScheduledStartRoutine()
+                            if let frameAbove = frameAboveOpt {
+                                if let frameAbovePresentingController = frameAbove.presentingViewController {
+                                    let frameAboveNeedsDismissal = frameAbove.needsDismissalInADeadChain
+                                    
+                                    if frameAboveNeedsDismissal {
+                                        navigationController.popToViewController(popToController, animated: false)
+                                        frameAbovePresentingController.dismiss(animated: true) { [weak self] in
+                                            self?.executeScheduledStartRoutine()
+                                        }
+                                    } else {
+                                        navigationController.popToViewController(popToController, animated: true)
+                                        executeScheduledStartRoutineWithDelay()
+                                    }
+                                } else {
+                                    navigationController.popToViewController(popToController, animated: true)
+                                    executeScheduledStartRoutineWithDelay()
                                 }
                             } else {
                                 navigationController.popToViewController(popToController, animated: true)
                                 executeScheduledStartRoutineWithDelay()
                             }
                         } else {
+                            assertionFailure("Huh?")
                             if let frameAbovePresentingController = frameAboveOpt?.presentingViewController {
                                 frameAbovePresentingController.dismiss(animated: true) { [weak self] in
                                     self?.executeScheduledStartRoutine()
@@ -945,18 +958,33 @@ public class InsecurityHost {
                     if let navigationController = navigation.navigationController {
                         let frameAboveOpt = prepurgeFrames.at(firstDeadChildIndex + 1)
                         
-                        if let frameAbovePresetingController = frameAboveOpt?.presentingViewController {
-                            frameAbovePresetingController.dismiss(animated: true) { [weak self] in
-                                self?.executeScheduledStartRoutine()
+                        if let frameAbove = frameAboveOpt {
+                            if let frameAbovePresentingController = frameAboveOpt?.presentingViewController {
+                                let frameAboveNeedsDismissal = frameAbove.needsDismissalInADeadChain
+                                
+                                if frameAboveNeedsDismissal {
+                                    navigationController.popToViewController(popToController, animated: false)
+                                    frameAbovePresentingController.dismiss(animated: true) { [weak self] in
+                                        self?.executeScheduledStartRoutine()
+                                    }
+                                } else {
+                                    navigationController.popToViewController(popToController, animated: true)
+                                    executeScheduledStartRoutineWithDelay()
+                                }
+                            } else {
+                                navigationController.popToViewController(popToController, animated: true)
+                                executeScheduledStartRoutineWithDelay()
                             }
                         } else {
                             navigationController.popToViewController(popToController, animated: true)
                             executeScheduledStartRoutineWithDelay()
                         }
+                        
                     } else {
                         executeScheduledStartRoutine()
                     }
                 } else {
+                    assertionFailure("thats wrong")
                     if let presentingController = navigation.presentingViewController {
                         presentingController.dismiss(animated: true) { [weak self] in
                             self?.executeScheduledStartRoutine()
@@ -1165,6 +1193,37 @@ private extension InsecurityHost.Frame {
             return navigation.presentingViewController
         case .regular(let regular):
             return regular.presentingViewController
+        }
+    }
+    
+    var needsDismissalInADeadChain: Bool {
+        switch self {
+        case .rootNavigation:
+            return false
+        case .regular(let regular):
+            switch regular.state {
+            case .live:
+                assertionFailure("Not supposed to be live, it's dead chain")
+                return false
+            case .finishedByDeinit, .finishedByKVO:
+                return false
+            case .finishedByCompletion:
+                return true
+            }
+        case .navigation(let navigation):
+            if let firstChild = navigation.children.first {
+                switch firstChild.state {
+                case .live:
+                    assertionFailure("Not supposed to be live, it's dead chain")
+                    return false
+                case .finishedByCompletion:
+                    return true
+                case .finishedByKVO, .finishedByDeinit:
+                    return false
+                }
+            } else {
+                return false
+            }
         }
     }
 }
