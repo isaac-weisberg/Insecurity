@@ -130,8 +130,9 @@ public class InsecurityHost {
         self.root = .modal(Weak<UIViewController>(viewController))
     }
     
-    public init(navigation viewController: UINavigationController) {
-        self.root = .navigation(Weak<UINavigationController>(viewController))
+    public init(navigation navigationController: UINavigationController) {
+        assert(navigationController.viewControllers.count == 1)
+        self.root = .navigation(Weak<UINavigationController>(navigationController))
     }
     
     fileprivate var _scheduledStartRoutine: (() -> Void)?

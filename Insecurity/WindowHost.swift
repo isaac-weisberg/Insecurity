@@ -52,6 +52,8 @@ public class WindowHost {
             return
         }
         
+        navigationController.setViewControllers([ initialChild.viewController ], animated: Insecurity.navigationControllerRootIsAssignedWithAnimation)
+        
         let host = InsecurityHost(navigation: navigationController)
         
         initialChild._updateHostReference(host)
@@ -60,8 +62,7 @@ public class WindowHost {
             self?.insecurityHost = nil
             completion(result)
         }
-        
-        navigationController.setViewControllers([ initialChild.viewController ], animated: Insecurity.navigationControllerRootIsAssignedWithAnimation)
+
         
         insecurityHost?.kill()
         insecurityHost = nil
