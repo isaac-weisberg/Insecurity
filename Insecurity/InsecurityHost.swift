@@ -77,11 +77,6 @@ private struct FrameNavigationData {
     }
 }
 
-private enum FrameKind {
-    case modal
-    case navigation(FrameNavigationData)
-}
-
 private enum FrameState {
     case live
     case finishedByCompletion
@@ -112,15 +107,6 @@ private struct Frame {
         self.viewController = viewController
         self.previousViewController = previousViewController
         self.navigationData = navigationData
-    }
-}
-
-private extension Frame {
-    var frameKind: FrameKind {
-        if let navigationData = navigationData {
-            return .navigation(navigationData)
-        }
-        return .modal
     }
 }
 
@@ -514,7 +500,8 @@ public class InsecurityHost {
                 )
                 
                 var updatedFrame = lastFrame
-                updatedFrame.navigationData!.children.append(navigationFrame)
+                assert(lastFrame.navigationData != nil)
+                updatedFrame.navigationData?.children.append(navigationFrame)
                 
                 frames = frames.replacingLast(with: updatedFrame)
             } else {
@@ -697,14 +684,17 @@ public class InsecurityHost {
             assertionFailure("No parent was found to start a child")
             return
         }
+        let frame = Frame(
+            state: .live,
+            coordinator: child,
+            viewController: controller,
+            previousViewController: electedHostController,
+            navigationData: FrameNavigationData(
+                children: [],
+                navigationController: navigationController
+            )
+        )
         
-        let navigationFrameChild = Frame.NavigationChildFrame(state: .live,
-                                                         coordinator: child,
-                                                         viewController: controller,
-                                                         popToViewController: nil)
-        let frame = Frame.navigation(Frame.Navigation(children: [navigationFrameChild],
-                                                      navigationController: navigationController,
-                                                      presentingViewController: electedHostController))
         self.frames.append(frame)
         
         navigationController.setViewControllers([ controller ], animated: false)
@@ -1022,12 +1012,11 @@ extension InsecurityHost: AdaptiveNavigation {
         switch context._internalContext {
         case .current:
             if let lastFrame = self.frames.last {
-                switch lastFrame {
-                case .navigation, .rootNavigation:
+                if lastFrame.navigationData != nil {
                     self.immediateDispatchNavigation(child, animated: animated) { result in
                         completion(result)
                     }
-                case .modal:
+                } else {
                     self.immediateDispatchModal(child, animated: animated) { result in
                         completion(result)
                     }
@@ -1050,12 +1039,11 @@ extension InsecurityHost: AdaptiveNavigation {
             }
         case .currentNavigation(let deferredNavigationController):
             if let lastFrame = self.frames.last {
-                switch lastFrame {
-                case .navigation, .rootNavigation:
+                if lastFrame.navigationData != nil {
                     self.immediateDispatchNavigation(child, animated: animated) { result in
                         completion(result)
                     }
-                case .modal:
+                } else {
                     let navigationController = deferredNavigationController.make()
                     
                     self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
@@ -1095,60 +1083,60 @@ private extension InsecurityHost.Root {
     }
 }
 
-private extension InsecurityHost.Frame {
-    var viewController: UIViewController? {
-        switch self {
-        case .modal(let modal):
-            return modal.viewController
-        case .navigation(let navigation):
-            return navigation.navigationController
-        case .rootNavigation(let rootNavigation):
-            return rootNavigation.navigationController
-        }
-    }
-    
-    var presentingViewController: UIViewController? {
-        switch self {
-        case .rootNavigation:
-            return nil
-        case .navigation(let navigation):
-            return navigation.presentingViewController
-        case .modal(let modal):
-            return modal.presentingViewController
-        }
-    }
-    
-    var needsDismissalInADeadChain: Bool {
-        switch self {
-        case .rootNavigation:
-            return false
-        case .modal(let modal):
-            switch modal.state {
-            case .live:
-                assertionFailure("Not supposed to be live, it's dead chain")
-                return false
-            case .finishedByDeinit, .finishedByKVO:
-                return false
-            case .finishedByCompletion:
-                return true
-            }
-        case .navigation(let navigation):
-            if let firstChild = navigation.children.first {
-                switch firstChild.state {
-                case .live:
-                    assertionFailure("Not supposed to be live, it's dead chain")
-                    return false
-                case .finishedByCompletion:
-                    return true
-                case .finishedByKVO, .finishedByDeinit:
-                    return false
-                }
-            } else {
-                return false
-            }
-        }
-    }
-}
+//private extension InsecurityHost.Frame {
+//    var viewController: UIViewController? {
+//        switch self {
+//        case .modal(let modal):
+//            return modal.viewController
+//        case .navigation(let navigation):
+//            return navigation.navigationController
+//        case .rootNavigation(let rootNavigation):
+//            return rootNavigation.navigationController
+//        }
+//    }
+//
+//    var presentingViewController: UIViewController? {
+//        switch self {
+//        case .rootNavigation:
+//            return nil
+//        case .navigation(let navigation):
+//            return navigation.presentingViewController
+//        case .modal(let modal):
+//            return modal.presentingViewController
+//        }
+//    }
+//
+//    var needsDismissalInADeadChain: Bool {
+//        switch self {
+//        case .rootNavigation:
+//            return false
+//        case .modal(let modal):
+//            switch modal.state {
+//            case .live:
+//                assertionFailure("Not supposed to be live, it's dead chain")
+//                return false
+//            case .finishedByDeinit, .finishedByKVO:
+//                return false
+//            case .finishedByCompletion:
+//                return true
+//            }
+//        case .navigation(let navigation):
+//            if let firstChild = navigation.children.first {
+//                switch firstChild.state {
+//                case .live:
+//                    assertionFailure("Not supposed to be live, it's dead chain")
+//                    return false
+//                case .finishedByCompletion:
+//                    return true
+//                case .finishedByKVO, .finishedByDeinit:
+//                    return false
+//                }
+//            } else {
+//                return false
+//            }
+//        }
+//    }
+//}
 
 private extension Array {
     func replacing(_ index: Index, with element: Element) -> Array {
