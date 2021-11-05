@@ -504,6 +504,9 @@ public class InsecurityHost {
                 updatedFrame.navigationData?.children.append(navigationFrame)
                 
                 frames = frames.replacingLast(with: updatedFrame)
+                
+                navigationData.navigationController.assertNotNil()
+                navigationData.navigationController?.pushViewController(controller, animated: true)
             } else {
                 assertionFailure("Can not start navigation child when the top context is not UINavigationController")
                 return
