@@ -690,7 +690,7 @@ public class InsecurityHost {
         let frame = Frame(
             state: .live,
             coordinator: child,
-            viewController: controller,
+            viewController: navigationController,
             previousViewController: electedHostController,
             navigationData: FrameNavigationData(
                 children: [],
