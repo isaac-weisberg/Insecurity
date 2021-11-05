@@ -432,21 +432,21 @@ public class InsecurityHost {
         // Very questionable code ahead
         var indexInsideNavigationOpt: Int?
         let indexOfFrameOpt = frames.firstIndex(where: { frame -> Bool in
-            if let navigationData = frame.navigationData {
-                if frame.coordinator === child {
+            if frame.coordinator === child {
+                return true
+            } else if let navigationData = frame.navigationData {
+                let firstIndexInsideNavigationOpt = navigationData.children.firstIndex(where: { navigationChild in
+                    return navigationChild.coordinator === child
+                })
+                
+                if let firstIndexInsideNavigation = firstIndexInsideNavigationOpt {
+                    indexInsideNavigationOpt = firstIndexInsideNavigation
                     return true
                 } else {
-                    let firstIndexInsideNavigationOpt = navigationData.children.firstIndex(where: { navigationChild in
-                        return navigationChild.coordinator === child
-                    })
-                    
-                    if let firstIndexInsideNavigation = firstIndexInsideNavigationOpt {
-                        indexInsideNavigationOpt = firstIndexInsideNavigation
-                        return true
-                    } else {
-                        return false
-                    }
+                    return false
                 }
+            } else {
+                return false
             }
         })
         
@@ -706,46 +706,30 @@ public class InsecurityHost {
     private func purge() {
         let prepurgeFrames = self.frames
         
-        var firstDeadNavigationChildIndex: Int!
+        var firstDeadNavigationChildIndexOpt: Int?
         let firstDeadChildIndexOpt = prepurgeFrames.firstIndex(where: { frame in
-            switch frame {
-            case .modal(let modal):
-                switch modal.state {
-                case .finishedByDeinit, .finishedByKVO, .finishedByCompletion:
-                    return true
-                case .live:
+            switch frame.state {
+            case .finishedByCompletion, .finishedByKVO, .finishedByDeinit:
+                return true
+            case .live:
+                if let navigationData = frame.navigationData {
+                    let firstDeadNavigationIndexOpt = navigationData.children.firstIndex(where: { child in
+                        switch child.state {
+                        case .finishedByDeinit, .finishedByKVO, .finishedByCompletion:
+                            return true
+                        case .live:
+                            return false
+                        }
+                    })
+                    
+                    if let firstDeadNavigationIndex = firstDeadNavigationIndexOpt {
+                        firstDeadNavigationChildIndexOpt = firstDeadNavigationIndex
+                        return true
+                    }
+                    return false
+                } else {
                     return false
                 }
-            case .navigation(let navigation):
-                let firstDeadNavigationIndexOpt = navigation.children.firstIndex(where: { child in
-                    switch child.state {
-                    case .finishedByDeinit, .finishedByKVO, .finishedByCompletion:
-                        return true
-                    case .live:
-                        return false
-                    }
-                })
-                
-                if let firstDeadNavigationIndex = firstDeadNavigationIndexOpt {
-                    firstDeadNavigationChildIndex = firstDeadNavigationIndex
-                    return true
-                }
-                return false
-            case .rootNavigation(let navigation):
-                let firstDeadNavigationIndexOpt = navigation.children.firstIndex(where: { child in
-                    switch child.state {
-                    case .finishedByDeinit, .finishedByKVO, .finishedByCompletion:
-                        return true
-                    case .live:
-                        return false
-                    }
-                })
-                
-                if let firstDeadNavigationIndex = firstDeadNavigationIndexOpt {
-                    firstDeadNavigationChildIndex = firstDeadNavigationIndex
-                    return true
-                }
-                return false
             }
         })
         
@@ -754,34 +738,26 @@ public class InsecurityHost {
         if let firstDeadChildIndex = firstDeadChildIndexOpt {
             let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
             
-            switch firstDeadChild {
-            case .modal:
-                postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex))
-            case .rootNavigation(let rootNavigation):
-                let newRootNavigation = Frame.rootNavigation(
-                    Frame.RootNavigation(
-                        children: Array(rootNavigation.children.prefix(firstDeadNavigationChildIndex)),
-                        navigationController: rootNavigation.navigationController
-                    )
-                )
+            if
+                let navigationChildIndex = firstDeadNavigationChildIndexOpt,
+                let navigationData = firstDeadChild.navigationData
+            {
+                var newFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex + 1))
                 
-                postPurgeFrames = [ newRootNavigation ]
-            case .navigation(let navigation):
-                if firstDeadNavigationChildIndex == 0 {
-                    postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex))
+                let newNavigationChildren = Array(navigationData.children.prefix(navigationChildIndex))
+                
+                if var lastFrame = newFrames.last {
+                    assert(lastFrame.navigationData != nil)
+                    lastFrame.navigationData?.children = newNavigationChildren
+                    
+                    newFrames = newFrames.replacingLast(with: lastFrame)
                 } else {
-                    postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex + 1))
-                        .replacing(
-                            firstDeadChildIndex,
-                            with: .navigation(
-                                Frame.Navigation(
-                                    children: Array(navigation.children.prefix(firstDeadNavigationChildIndex)),
-                                    navigationController: navigation.navigationController,
-                                    presentingViewController: navigation.presentingViewController
-                                )
-                            )
-                        )
+                    assertionFailure()
                 }
+                
+                postPurgeFrames = newFrames
+            } else {
+                postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex))
             }
         } else {
             assertionFailure("Noone died?")
@@ -792,134 +768,53 @@ public class InsecurityHost {
         
         if state.notDead, let firstDeadChildIndex = firstDeadChildIndexOpt {
             let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
+            let frameAboveOpt = prepurgeFrames.at(firstDeadChildIndex + 1)
             
-            switch firstDeadChild {
-            case .rootNavigation(let navigation):
-                if let navigationController = navigation.navigationController {
-                    let deadNavigationChild = navigation.children[firstDeadNavigationChildIndex]
-                    
-                    let frameAboveOpt = prepurgeFrames.at(firstDeadChildIndex + 1)
-                    
-                    switch deadNavigationChild.state {
-                    case .live:
-                        fatalError()
-                    case .finishedByCompletion:
-                        if let popToController = deadNavigationChild.popToViewController {
-                            if let frameAbove = frameAboveOpt {
-                                if let frameAbovePresentingController = frameAbove.presentingViewController {
-                                    let frameAboveNeedsDismissal = frameAbove.needsDismissalInADeadChain
-                                    
-                                    if frameAboveNeedsDismissal {
-                                        navigationController.popToViewController(popToController, animated: false)
-                                        frameAbovePresentingController.dismiss(animated: true) { [weak self] in
-                                            self?.executeScheduledStartRoutine()
-                                        }
-                                    } else {
-                                        navigationController.popToViewController(popToController, animated: true)
-                                        executeScheduledStartRoutineWithDelay()
-                                    }
-                                } else {
-                                    navigationController.popToViewController(popToController, animated: true)
-                                    executeScheduledStartRoutineWithDelay()
-                                }
-                            } else {
-                                navigationController.popToViewController(popToController, animated: true)
-                                executeScheduledStartRoutineWithDelay()
-                            }
-                        } else {
-                            assertionFailure("Huh?")
-                            if let frameAbovePresentingController = frameAboveOpt?.presentingViewController {
-                                frameAbovePresentingController.dismiss(animated: true) { [weak self] in
+            if
+                let firstDeadNavigationChildIndex = firstDeadNavigationChildIndexOpt,
+                let navigationData = firstDeadChild.navigationData
+            {
+                let navigationDeadChild = navigationData.children[firstDeadNavigationChildIndex]
+                
+                switch navigationDeadChild.state {
+                case .live:
+                    assertionFailure()
+                case .finishedByCompletion:
+                    navigationDeadChild.previousViewController.assertNotNil()
+                    navigationData.navigationController.assertNotNil()
+                    if
+                        let navigationController = navigationData.navigationController,
+                        let popToController = navigationDeadChild.previousViewController
+                    {
+                        if let frameAbove = frameAboveOpt {
+                            frameAbove.previousViewController.assertNotNil()
+                            
+                            navigationController.popToViewController(popToController, animated: false)
+                            if let presentingViewController = frameAbove.previousViewController {
+                                presentingViewController.dismiss(animated: true) { [weak self] in
                                     self?.executeScheduledStartRoutine()
                                 }
-                            } else {
-                                executeScheduledStartRoutine()
-                            }
-                        }
-                    case .finishedByKVO, .finishedByDeinit:
-                        if let frameAbovePresentingController = frameAboveOpt?.presentingViewController {
-                            frameAbovePresentingController.dismiss(animated: true) { [weak self] in
-                                self?.executeScheduledStartRoutine()
-                            }
-                        } else {
-                            executeScheduledStartRoutine()
-                        }
-                    }
-                } else {
-                    executeScheduledStartRoutine()
-                }
-            case .navigation(let navigation):
-                let deadNavigationFrameChild = navigation.children[firstDeadNavigationChildIndex]
-                let frameAboveOpt = prepurgeFrames.at(firstDeadChildIndex + 1)
-                
-                switch deadNavigationFrameChild.state {
-                case .live:
-                    fatalError()
-                case .finishedByDeinit, .finishedByKVO:
-                    if let frameAbove = frameAboveOpt, let presetingController = frameAbove.presentingViewController {
-                        presetingController.dismiss(animated: true) { [weak self] in
-                            self?.executeScheduledStartRoutine()
-                        }
-                    } else {
-                        // Well, we're cleaned up
-                        executeScheduledStartRoutine()
-                    }
-                case .finishedByCompletion:
-                    
-                }
-                
-                if let popToController = deadNavigationFrameChild.popToViewController {
-                    if let navigationController = navigation.navigationController {
-                        let frameAboveOpt = prepurgeFrames.at(firstDeadChildIndex + 1)
-                        
-                        if let frameAbove = frameAboveOpt {
-                            if let frameAbovePresentingController = frameAboveOpt?.presentingViewController {
-                                let frameAboveNeedsDismissal = frameAbove.needsDismissalInADeadChain
-                                
-                                if frameAboveNeedsDismissal {
-                                    navigationController.popToViewController(popToController, animated: false)
-                                    frameAbovePresentingController.dismiss(animated: true) { [weak self] in
-                                        self?.executeScheduledStartRoutine()
-                                    }
-                                } else {
-                                    navigationController.popToViewController(popToController, animated: true)
-                                    executeScheduledStartRoutineWithDelay()
-                                }
-                            } else {
-                                navigationController.popToViewController(popToController, animated: true)
-                                executeScheduledStartRoutineWithDelay()
                             }
                         } else {
                             navigationController.popToViewController(popToController, animated: true)
                             executeScheduledStartRoutineWithDelay()
                         }
-                        
-                    } else {
-                        executeScheduledStartRoutine()
                     }
-                } else {
-                    assertionFailure("thats wrong")
-                    if let presentingController = navigation.presentingViewController {
-                        presentingController.dismiss(animated: true) { [weak self] in
-                            self?.executeScheduledStartRoutine()
-                        }
-                    } else {
-                        executeScheduledStartRoutine()
-                    }
+                    
+                case .finishedByKVO, .finishedByDeinit:
+                    assert(frameAboveOpt == nil, "Not supposed to have a controller modally on top while controller in the navigation controller has been killed by popping")
+                    executeScheduledStartRoutine()
                 }
-            case .modal(let modal):
-                switch modal.state {
+            } else {
+                switch firstDeadChild.state {
                 case .live:
-                    fatalError()
+                    assertionFailure()
                 case .finishedByDeinit, .finishedByKVO:
-                    self.executeScheduledStartRoutine()
+                    executeScheduledStartRoutine()
                 case .finishedByCompletion:
-                    if let presentingController = modal.presentingViewController {
-                        presentingController.dismiss(animated: true) { [weak self] in
-                            self?.executeScheduledStartRoutine()
-                        }
-                    } else {
-                        self.executeScheduledStartRoutine()
+                    assert(firstDeadChild.previousViewController != nil)
+                    firstDeadChild.previousViewController?.dismiss(animated: true) { [weak self] in
+                        self?.executeScheduledStartRoutine()
                     }
                 }
             }
@@ -1176,6 +1071,16 @@ private extension Optional {
     #else
     @inline(__always) func assertingNotNil() -> Optional {
         return self
+    }
+    #endif
+    
+    #if DEBUG
+    func assertNotNil(_ file: StaticString = #file, _ line: UInt = #line) {
+        assert(self != nil, "\(type(of: Wrapped.self)) died too early")
+    }
+    #else
+    @inline(__always) func assertNotNil() {
+        
     }
     #endif
 }
