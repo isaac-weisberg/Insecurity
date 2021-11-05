@@ -789,7 +789,7 @@ public class InsecurityHost {
                         let navigationController = navigationData.navigationController,
                         let popToController = navigationDeadChild.previousViewController
                     {
-                        if let frameAbove = frameAboveOpt {
+                        if let frameAbove = frameAboveOpt, frameAbove.state.needsDismissalInADeadChain {
                             frameAbove.previousViewController.assertNotNil()
                             
                             navigationController.popToViewController(popToController, animated: false)
@@ -981,60 +981,16 @@ private extension InsecurityHost.Root {
     }
 }
 
-//private extension InsecurityHost.Frame {
-//    var viewController: UIViewController? {
-//        switch self {
-//        case .modal(let modal):
-//            return modal.viewController
-//        case .navigation(let navigation):
-//            return navigation.navigationController
-//        case .rootNavigation(let rootNavigation):
-//            return rootNavigation.navigationController
-//        }
-//    }
-//
-//    var presentingViewController: UIViewController? {
-//        switch self {
-//        case .rootNavigation:
-//            return nil
-//        case .navigation(let navigation):
-//            return navigation.presentingViewController
-//        case .modal(let modal):
-//            return modal.presentingViewController
-//        }
-//    }
-//
-//    var needsDismissalInADeadChain: Bool {
-//        switch self {
-//        case .rootNavigation:
-//            return false
-//        case .modal(let modal):
-//            switch modal.state {
-//            case .live:
-//                assertionFailure("Not supposed to be live, it's dead chain")
-//                return false
-//            case .finishedByDeinit, .finishedByKVO:
-//                return false
-//            case .finishedByCompletion:
-//                return true
-//            }
-//        case .navigation(let navigation):
-//            if let firstChild = navigation.children.first {
-//                switch firstChild.state {
-//                case .live:
-//                    assertionFailure("Not supposed to be live, it's dead chain")
-//                    return false
-//                case .finishedByCompletion:
-//                    return true
-//                case .finishedByKVO, .finishedByDeinit:
-//                    return false
-//                }
-//            } else {
-//                return false
-//            }
-//        }
-//    }
-//}
+private extension FrameState {
+    var needsDismissalInADeadChain: Bool {
+        switch self {
+        case .finishedByDeinit, .finishedByKVO:
+            return false
+        case .finishedByCompletion, .live:
+            return true
+        }
+    }
+}
 
 private extension Array {
     func replacing(_ index: Index, with element: Element) -> Array {
