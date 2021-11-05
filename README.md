@@ -15,10 +15,10 @@ You can use it alongside any of your existing navigation solutions.
 
 # Installation
 
-Currently, only CocoaPods is supported.
-Minimum iOS version: 12.0
-Minimum Xcode version: 12.0
-This framework has no dependencies.
+Currently, only CocoaPods is supported.  
+Minimum iOS version: 12.0  
+Minimum Xcode version: 12.0  
+This framework has no dependencies.  
 
 ```ruby
 pod 'Insecurity'
