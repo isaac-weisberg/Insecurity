@@ -499,57 +499,25 @@ public class InsecurityHost {
         _ child: CommonNavigationCoordinatorAny
     ) {
         if let lastFrame = frames.last {
-            switch lastFrame {
-            case .navigation(let navigationLastFrame):
-                guard let navigationController = navigationLastFrame.navigationController else {
-                    assertionFailure("NavigationHost wanted to start NavigationChild, but the UINavigationController was found dead")
-                    return
+            if let navigationData = lastFrame.navigationData {
+                let previousViewController: UIViewController?
+                if let lastNavigationChild = navigationData.children.last {
+                    previousViewController = lastNavigationChild.viewController.assertingNotNil()
+                } else {
+                    previousViewController = lastFrame.viewController.assertingNotNil()
                 }
-                
-                let frameChild = Frame.NavigationChildFrame(
+                let navigationFrame = FrameNavigationChild(
                     state: .live,
                     coordinator: child,
                     viewController: controller,
-                    popToViewController: navigationLastFrame.children.last?.viewController
+                    previousViewController: previousViewController.assertingNotNil()
                 )
                 
-                self.frames = self.frames.replacing(
-                    self.frames.count - 1,
-                    with: .navigation(
-                        .init(
-                            children: navigationLastFrame.children.appending(frameChild),
-                            navigationController: navigationController,
-                            presentingViewController: navigationLastFrame.presentingViewController
-                        )
-                    )
-                )
+                var updatedFrame = lastFrame
+                updatedFrame.navigationData!.children.append(navigationFrame)
                 
-                navigationController.pushViewController(controller, animated: animated)
-            case .rootNavigation(let navigationLastFrame):
-                guard let navigationController = navigationLastFrame.navigationController else {
-                    assertionFailure("NavigationHost wanted to start NavigationChild, but the UINavigationController was found dead")
-                    return
-                }
-                
-                let frameChild = Frame.NavigationChildFrame(
-                    state: .live,
-                    coordinator: child,
-                    viewController: controller,
-                    popToViewController: navigationLastFrame.children.last?.viewController
-                )
-                
-                self.frames = self.frames.replacing(
-                    self.frames.count - 1,
-                    with: .rootNavigation(
-                        .init(
-                            children: navigationLastFrame.children.appending(frameChild),
-                            navigationController: navigationController
-                        )
-                    )
-                )
-                
-                navigationController.pushViewController(controller, animated: animated)
-            case .modal:
+                frames = frames.replacingLast(with: updatedFrame)
+            } else {
                 assertionFailure("Can not start navigation child when the top context is not UINavigationController")
                 return
             }
@@ -564,20 +532,30 @@ public class InsecurityHost {
                     return
                 }
                 
-                let frameChild = Frame.NavigationChildFrame(
+                
+                let frameChild = FrameNavigationChild(
                     state: .live,
                     coordinator: child,
                     viewController: controller,
-                    popToViewController: navigationController.viewControllers[0]
+                    previousViewController: navigationController.viewControllers[0]
+                )
+                
+                let navigationData = FrameNavigationData(
+                    children: [ frameChild ],
+                    navigationController: navigationController
+                )
+                
+                // This is ass, this is really-really bad
+                let frame = Frame(
+                    state: .live,
+                    coordinator: RootNavigationCrutchCoordinator(),
+                    viewController: navigationController,
+                    previousViewController: nil,
+                    navigationData: navigationData
                 )
                 
                 self.frames = [
-                    .rootNavigation(
-                        Frame.RootNavigation(
-                            children: [ frameChild ],
-                            navigationController: navigationController
-                        )
-                    )
+                    frame
                 ]
                 
                 navigationController.pushViewController(controller, animated: true)
@@ -1178,6 +1156,10 @@ private extension Array {
         array[index] = element
         return array
     }
+    
+    func replacingLast(with element: Element) -> Array {
+        return self.replacing(self.count - 1, with: element)
+    }
 }
 
 private extension Array {
@@ -1195,4 +1177,17 @@ private extension Array {
         }
         return nil
     }
+}
+
+private extension Optional {
+    #if DEBUG
+    func assertingNotNil(_ file: StaticString = #file, _ line: UInt = #line) -> Optional {
+        assert(self != nil, "\(type(of: Wrapped.self)) died too early")
+        return self
+    }
+    #else
+    @inline(__always) func assertingNotNil() -> Optional {
+        return self
+    }
+    #endif
 }
