@@ -365,13 +365,9 @@ public class InsecurityHost {
         child._updateHostReference(self)
         
         weak var weakChild = child
-        weak var kvoContext: InsecurityKVOContext?
         weak var weakController: UIViewController?
         
         child._finishImplementation = { [weak self] result in
-            if let kvoContext = kvoContext {
-                weakController?.insecurityKvo.removeObserver(kvoContext)
-            }
             weakController?.deinitObservable.onDeinit = nil
             weakChild?._finishImplementation = nil
             
@@ -388,29 +384,6 @@ public class InsecurityHost {
         
         let controller = child.viewController
         weakController = controller
-        
-        kvoContext = controller.insecurityKvo.addHandler(
-            UIViewController.self,
-            parentObservationKeypath
-        ) { [weak self, weak child] oldController, newController in
-            if oldController != nil, oldController is UINavigationController, newController == nil {
-                if let kvoContext = kvoContext {
-                    weakController?.insecurityKvo.removeObserver(kvoContext)
-                }
-                weakController?.deinitObservable.onDeinit = nil
-                weakChild?._finishImplementation = nil
-                
-                guard let self = self else {
-                    assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
-                    return
-                }
-                guard let child = child else { return }
-                
-                self.finalizeNavigation(child, .kvo) {
-                    completion(nil)
-                }
-            }
-        }
         
         controller.deinitObservable.onDeinit = { [weak self, weak child] in
             weakChild?._finishImplementation = nil
