@@ -13,7 +13,7 @@ class ParentViewController: UIViewController {
             
         let currencySelectionCoordinator = CurrencySelectionCoordinator()
 
-        self.customInsecurityHost = insecurityHost // Save the modalHost
+        self.customInsecurityHost = insecurityHost // Save the InsecurityHost
         
         insecurityHost.start(currencySelectionCoordinator, animated: true) { [weak self] result in
             // Release the insecurityHost, don't forget to `weak self`

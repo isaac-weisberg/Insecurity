@@ -496,10 +496,9 @@ public class InsecurityHost {
                 return
             case .navigation(let weak):
                 guard let navigationController = weak.value else {
-                    assertionFailure("NavigationHost wanted to start NavigationChild, but the UINavigationController was found dead")
+                    assertionFailure("InsecurityHost wanted to start NavigationChild, but the UINavigationController was found dead")
                     return
                 }
-                
                 
                 let frameChild = FrameNavigationChild(
                     state: .live,

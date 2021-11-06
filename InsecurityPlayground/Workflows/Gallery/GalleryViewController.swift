@@ -31,12 +31,6 @@ class GalleryViewController: UIViewController {
             magicEndButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
         ])
         magicEndButton.addTarget(self, action: #selector(onMagicEndButtonTap), for: .touchUpInside)
-        
-        DispatchQueue.main.asyncAfter(0.5) {
-//            self.startPaymentMethodScreen()
-//            self.startPaymentMethodScreenNavigation()
-//            self.startPaymentMethodScreenWithNewNavigation()
-        }
     }
     
     @objc func onTap() {
