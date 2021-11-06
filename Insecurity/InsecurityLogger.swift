@@ -26,10 +26,12 @@ func insecPrint(_ message: @autoclosure () -> String,
 #endif
 }
 
-extension StaticString {
+#if DEBUG
+private extension StaticString {
     var string: String {
         self.withUTF8Buffer { buffer in
             String(decoding: buffer, as: UTF8.self)
         }
     }
 }
+#endif
