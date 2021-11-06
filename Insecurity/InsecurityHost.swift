@@ -258,29 +258,31 @@ public class InsecurityHost {
         _ kind: FinalizationKind,
         _ callback: () -> Void
     ) {
-        let indexOfChildOpt = frames.firstIndex(where: { frame in
+        let indexOfFrameOpt = frames.firstIndex(where: { frame in
             return frame.coordinator === child
         })
         
-        if let indexOfChild = indexOfChildOpt {
-            frames[indexOfChild].state = kind.toFrameState()
+        if let indexOfFrame = indexOfFrameOpt {
+            frames[indexOfFrame].state = kind.toFrameState()
         }
         
-        switch state.stage {
-        case .batching:
-            if self.state.notDead {
-                callback()
+        if indexOfFrameOpt != nil {
+            switch state.stage {
+            case .batching:
+                if self.state.notDead {
+                    callback()
+                }
+            case .purging:
+                fatalError()
+            case .ready:
+                self.state.stage = .batching
+                if self.state.notDead {
+                    callback()
+                }
+                self.state.stage = .purging
+                self.purge()
+                self.state.stage = .ready
             }
-        case .purging:
-            fatalError()
-        case .ready:
-            self.state.stage = .batching
-            if self.state.notDead {
-                callback()
-            }
-            self.state.stage = .purging
-            self.purge()
-            self.state.stage = .ready
         }
     }
     
@@ -435,21 +437,23 @@ public class InsecurityHost {
             }
         }
         
-        switch state.stage {
-        case .batching:
-            if self.state.notDead {
-                callback()
+        if indexOfFrameOpt != nil {
+            switch state.stage {
+            case .batching:
+                if self.state.notDead {
+                    callback()
+                }
+            case .purging:
+                fatalError()
+            case .ready:
+                self.state.stage = .batching
+                if self.state.notDead {
+                    callback()
+                }
+                self.state.stage = .purging
+                self.purge()
+                self.state.stage = .ready
             }
-        case .purging:
-            fatalError()
-        case .ready:
-            self.state.stage = .batching
-            if self.state.notDead {
-                callback()
-            }
-            self.state.stage = .purging
-            self.purge()
-            self.state.stage = .ready
         }
     }
     
