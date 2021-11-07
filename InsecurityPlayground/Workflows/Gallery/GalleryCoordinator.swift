@@ -68,7 +68,7 @@ class GalleryCoordinator: NavigationCoordinator<Void> {
         return galleryViewController
     }
     
-    var customModalHost: ModalHost?
+    var customIndecurityHost: InsecurityHost?
     
     let di: DI
     

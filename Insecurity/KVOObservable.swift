@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 
 class InsecurityKVOContext {
-
+    
 }
 
 private protocol SubscriptionAny: AnyObject {
@@ -100,7 +100,7 @@ class KVOObservable: NSObject {
                                context: UnsafeMutableRawPointer?) {
         if let subscription = subscriptions.first(where: { subscription in
             context?.assumingMemoryBound(to: InsecurityKVOContext.self).pointee === subscription.ctx
-                && keyPath == subscription.keypath
+            && keyPath == subscription.keypath
         }) {
             if let change = change {
                 let oldValue = change[.oldKey]
