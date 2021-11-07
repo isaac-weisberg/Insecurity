@@ -8,7 +8,7 @@ public enum InsecurityLoggerMode {
 func insecPrint(_ message: @autoclosure () -> String,
                 file: StaticString = #file,
                 line: UInt = #line) {
-    #if DEBUG
+#if DEBUG
     switch Insecurity.loggerMode {
     case .full:
         let fileString: String
@@ -23,13 +23,15 @@ func insecPrint(_ message: @autoclosure () -> String,
     case .none:
         break
     }
-    #endif
+#endif
 }
 
-extension StaticString {
+#if DEBUG
+private extension StaticString {
     var string: String {
         self.withUTF8Buffer { buffer in
             String(decoding: buffer, as: UTF8.self)
         }
     }
 }
+#endif
