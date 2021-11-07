@@ -2,7 +2,7 @@ import UIKit
 
 // This protocol exists purely for AnyObject
 // and is not supposed to declare any members
-protocol CommonNavigationCoordinatorAny: AnyObject {
+protocol CommonNavigationCoordinatorAny: CommonCoordinatorAny {
     
 }
 
@@ -13,5 +13,5 @@ protocol CommonNavigationCoordinator: CommonNavigationCoordinatorAny {
     
     var _finishImplementation: ((Result?) -> Void)? { get set }
     
-    func _updateHostReference(_ host: NavigationHost)
+    func _updateHostReference(_ host: NavigationControllerNavigation & AdaptiveNavigation)
 }

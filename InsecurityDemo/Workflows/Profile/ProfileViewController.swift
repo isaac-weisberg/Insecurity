@@ -9,8 +9,13 @@ class ProfileViewController: UIViewController {
         
         view.backgroundColor = .systemBackgroundCompat
         
-        DispatchQueue.main.asyncAfter(0.25) {
+        DispatchQueue.main.asyncAfter(0.25) { [weak self] in
+            guard let self = self else { return }
+            
             self.onPaymentMethodsRequested?()
+//            self.startPaymentMethodScreen()
+//            self.startPaymentMethodScreenNavigation()
+//            self.startPaymentMethodScreenWithNewNavigation()
         }
     }
     
@@ -18,51 +23,49 @@ class ProfileViewController: UIViewController {
         
     }
     
-    var customModalHost: ModalHost?
-    
     func startPaymentMethodScreen() {
-        let modalHost = ModalHost(self)
-        self.customModalHost = modalHost
+        let insecurityHost = InsecurityHost(modal: self)
+        self.customInsecurityHost = insecurityHost
 
         let paymentMethodCoordinator = PaymentMethodsCoordinator()
 
-        modalHost.start(paymentMethodCoordinator, in: .current, animated: true) { [weak self] result in
-            self?.customModalHost = nil
-            // result is PaymentMethodsScreenResult
+        insecurityHost.start(paymentMethodCoordinator, in: .current, animated: true) { [weak self] result in
+            self?.customInsecurityHost = nil
+            // result is PaymentMethodsScreenResult?
         }
     }
     
-    var customNavigationHost: NavigationHost?
+    var customInsecurityHost: InsecurityHost?
     
     func startPaymentMethodScreenNavigation() {
         let navigationController = self.navigationController!
         
-        let navigationHost = NavigationHost(navigationController)
-        self.customNavigationHost = navigationHost
+        let insecurityHost = InsecurityHost(navigation: navigationController)
+        self.customInsecurityHost = insecurityHost
 
         let paymentMethodCoordinator = PaymentMethodsCoordinator()
 
-        navigationHost.start(paymentMethodCoordinator, in: .current, animated: true) { [weak self] result in
-            self?.customNavigationHost = nil
-            // result is PaymentMethodsScreenResult
+        insecurityHost.start(paymentMethodCoordinator, in: .current, animated: true) { [weak self] result in
+            self?.customInsecurityHost = nil
+            // result is PaymentMethodsScreenResult?
         }
     }
     
     func startPaymentMethodScreenWithNewNavigation() {
         let navigationController = UINavigationController()
         
-        // Providing a UINavigationController that doesn't have a root AND only exactly one root with no other view controllers causes a crashs
+        // Providing a UINavigationController that doesn't have only exactly one viewController causes an assertion failure
         navigationController.setViewControllers([UIViewController(), UIViewController(), UIViewController()], animated: false)
         
         self.present(navigationController, animated: true)
         
-        let navigationHost = NavigationHost(navigationController)
-        self.customNavigationHost = navigationHost
+        let insecurityHost = InsecurityHost(navigation: navigationController)
+        self.customInsecurityHost = insecurityHost
 
         let paymentMethodCoordinator = PaymentMethodsCoordinator()
 
-        navigationHost.start(paymentMethodCoordinator, in: .current, animated: true) { [weak self] result in
-            self?.customNavigationHost = nil
+        insecurityHost.start(paymentMethodCoordinator, in: .current, animated: true) { [weak self] result in
+            self?.customInsecurityHost = nil
             // result is PaymentMethodsScreenResult
         }
     }

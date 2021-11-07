@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol ModalNavigation: AdaptiveNavigation {
+public protocol ModalNavigation: AnyObject {
     func start<NewResult>(_ child: ModalCoordinator<NewResult>,
                           animated: Bool,
                           _ completion: @escaping (NewResult?) -> Void)

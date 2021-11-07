@@ -1,6 +1,6 @@
 import UIKit
 
-public protocol NavigationControllerNavigation: AdaptiveNavigation {
+public protocol NavigationControllerNavigation: AnyObject {
     func start<NewResult>(_ child: NavigationCoordinator<NewResult>,
                           animated: Bool,
                           _ completion: @escaping (NewResult?) -> Void)

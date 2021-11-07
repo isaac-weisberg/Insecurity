@@ -12,6 +12,11 @@ class ProductCoordinator: NavigationCoordinator<Void> {
             
             navigation.start(contentsCoordinator, animated: true) { result in
                 print("End Cart \(result)")
+                
+                let paymentCoordinator = PaymentCoordinator(di: self.di)
+                self.navigation.start(paymentCoordinator, in: .current, animated: true) { result in
+                    print("End Payment after cart \(result)")
+                }
             }
         }
         

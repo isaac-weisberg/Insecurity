@@ -13,16 +13,16 @@ class CartCoordinator: NavigationCoordinator<CartCoordinatorResult> {
     override var viewController: UIViewController {
         let cartViewController = CartViewController()
         
-        DispatchQueue.main.asyncAfter(0.5) {
-            self.navigation.start(KVOCoordinator(), animated: true) { _ in
-                print("End KVO Coordinator")
-            }
-        }
+//        DispatchQueue.main.asyncAfter(0.5) {
+//            self.navigation.start(KVOCoordinator(), animated: true) { _ in
+//                print("End KVO Coordinator")
+//            }
+//        }
         
         cartViewController.onPayRequested = { [self] in
             let paymentCoordinator = PaymentCoordinator(di: di)
             
-            navigation.start(paymentCoordinator, animated: true) { result in
+            navigation.start(paymentCoordinator, in: .navigation(new: UINavigationController()), animated: true) { result in
                 print("End Payment Regular \(result)")
                 switch result {
                 case .success:
@@ -42,7 +42,7 @@ class CartCoordinator: NavigationCoordinator<CartCoordinatorResult> {
                 case .loggedIn:
                     let paymentCoordinator = PaymentCoordinator(di: di)
                     
-                    navigation.start(paymentCoordinator, animated: true) { result in
+                    navigation.start(paymentCoordinator, in: .modal, animated: true) { result in
                         print("End Payment After Login \(result)")
                         switch result {
                         case .success:
@@ -66,7 +66,7 @@ class CartCoordinator: NavigationCoordinator<CartCoordinatorResult> {
                 case .some:
                     let paymentCoordinator = PaymentCoordinator(di: di)
                     
-                    navigation.start(paymentCoordinator, animated: true) { result in
+                    navigation.start(paymentCoordinator, in: .modal, animated: true) { result in
                         print("End Payment After Login \(result)")
                         switch result {
                         case .success:

@@ -2,7 +2,7 @@ import UIKit
 
 // This protocol exists purely for AnyObject
 // and is not supposed to declare any members
-protocol CommonModalCoordinatorAny: AnyObject {
+protocol CommonModalCoordinatorAny: CommonCoordinatorAny {
     
 }
 
@@ -13,5 +13,5 @@ protocol CommonModalCoordinator: CommonModalCoordinatorAny {
     
     var _finishImplementation: ((Result?) -> Void)? { get set }
     
-    func _updateHostReference(_ host: ModalHost)
+    func _updateHostReference(_ host: ModalNavigation & AdaptiveNavigation)
 }
