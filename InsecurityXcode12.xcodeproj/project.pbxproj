@@ -53,9 +53,7 @@
 		A313CA24272DD78A004CB793 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = A313C9FA272DD78A004CB793 /* AuthService.swift */; };
 		A33986D9271CAFC200B68256 /* ModalNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986CA271CAFC100B68256 /* ModalNavigation.swift */; };
 		A33986DA271CAFC200B68256 /* AdaptiveNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986CB271CAFC100B68256 /* AdaptiveNavigation.swift */; };
-		A33986DB271CAFC200B68256 /* ModalPresentationHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986CC271CAFC100B68256 /* ModalPresentationHost.swift */; };
 		A33986DC271CAFC200B68256 /* NavigationControllerNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986CD271CAFC200B68256 /* NavigationControllerNavigation.swift */; };
-		A33986DD271CAFC200B68256 /* NavigationControllerHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986CE271CAFC200B68256 /* NavigationControllerHost.swift */; };
 		A33986DE271CAFC200B68256 /* AdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986CF271CAFC200B68256 /* AdaptiveCoordinator.swift */; };
 		A33986DF271CAFC200B68256 /* ModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D0271CAFC200B68256 /* ModalCoordinator.swift */; };
 		A33986E0271CAFC200B68256 /* CommonNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D1271CAFC200B68256 /* CommonNavigationCoordinator.swift */; };
@@ -67,6 +65,9 @@
 		A33986E7271CAFC200B68256 /* Insecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33986D8271CAFC200B68256 /* Insecurity.swift */; };
 		A37ADF222712F7190096E75A /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A33EDF9C2712F2B50041F32A /* Insecurity.framework */; };
 		A37ADF232712F7190096E75A /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A33EDF9C2712F2B50041F32A /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A390EB6C2737E911006934DC /* InsecurityHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390EB692737E911006934DC /* InsecurityHost.swift */; };
+		A390EB6D2737E911006934DC /* CommonCoordinatorAny.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390EB6A2737E911006934DC /* CommonCoordinatorAny.swift */; };
+		A390EB6E2737E911006934DC /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = A390EB6B2737E911006934DC /* Util.swift */; };
 		A3E0ED98272599040019BB6D /* Deferred.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3E0ED97272599040019BB6D /* Deferred.swift */; };
 		AB8096A138E537A011501D41 /* libPods-InsecurityDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2617270B664F6C389D67EBB8 /* libPods-InsecurityDemo.a */; };
 /* End PBXBuildFile section */
@@ -145,9 +146,7 @@
 		A313C9FA272DD78A004CB793 /* AuthService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		A33986CA271CAFC100B68256 /* ModalNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalNavigation.swift; sourceTree = "<group>"; };
 		A33986CB271CAFC100B68256 /* AdaptiveNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdaptiveNavigation.swift; sourceTree = "<group>"; };
-		A33986CC271CAFC100B68256 /* ModalPresentationHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalPresentationHost.swift; sourceTree = "<group>"; };
 		A33986CD271CAFC200B68256 /* NavigationControllerNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationControllerNavigation.swift; sourceTree = "<group>"; };
-		A33986CE271CAFC200B68256 /* NavigationControllerHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationControllerHost.swift; sourceTree = "<group>"; };
 		A33986CF271CAFC200B68256 /* AdaptiveCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AdaptiveCoordinator.swift; sourceTree = "<group>"; };
 		A33986D0271CAFC200B68256 /* ModalCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModalCoordinator.swift; sourceTree = "<group>"; };
 		A33986D1271CAFC200B68256 /* CommonNavigationCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonNavigationCoordinator.swift; sourceTree = "<group>"; };
@@ -161,6 +160,9 @@
 		A33EDFA02712F2B50041F32A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A37ADEAE2712F6CB0096E75A /* InsecurityDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A37ADEBE2712F6CC0096E75A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A390EB692737E911006934DC /* InsecurityHost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InsecurityHost.swift; sourceTree = "<group>"; };
+		A390EB6A2737E911006934DC /* CommonCoordinatorAny.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommonCoordinatorAny.swift; sourceTree = "<group>"; };
+		A390EB6B2737E911006934DC /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		A3E0ED97272599040019BB6D /* Deferred.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Deferred.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -410,6 +412,9 @@
 		A37ADE082712F3E40096E75A /* Insecurity */ = {
 			isa = PBXGroup;
 			children = (
+				A390EB6A2737E911006934DC /* CommonCoordinatorAny.swift */,
+				A390EB692737E911006934DC /* InsecurityHost.swift */,
+				A390EB6B2737E911006934DC /* Util.swift */,
 				A313C9B7272DD752004CB793 /* DankSpeak.swift */,
 				A313C9B6272DD752004CB793 /* InsecurityLogger.swift */,
 				A313C9B8272DD752004CB793 /* KVOObservable.swift */,
@@ -422,8 +427,6 @@
 				A33986D8271CAFC200B68256 /* Insecurity.swift */,
 				A33986D0271CAFC200B68256 /* ModalCoordinator.swift */,
 				A33986CA271CAFC100B68256 /* ModalNavigation.swift */,
-				A33986CC271CAFC100B68256 /* ModalPresentationHost.swift */,
-				A33986CE271CAFC200B68256 /* NavigationControllerHost.swift */,
 				A33986CD271CAFC200B68256 /* NavigationControllerNavigation.swift */,
 				A33986D2271CAFC200B68256 /* NavigationCoordinator.swift */,
 				A33986D6271CAFC200B68256 /* WindowCoordinator.swift */,
@@ -591,14 +594,15 @@
 				A33986DA271CAFC200B68256 /* AdaptiveNavigation.swift in Sources */,
 				A33986DE271CAFC200B68256 /* AdaptiveCoordinator.swift in Sources */,
 				A33986E4271CAFC200B68256 /* DeinitObservable.swift in Sources */,
+				A390EB6D2737E911006934DC /* CommonCoordinatorAny.swift in Sources */,
 				A33986E0271CAFC200B68256 /* CommonNavigationCoordinator.swift in Sources */,
 				A33986E5271CAFC200B68256 /* WindowCoordinator.swift in Sources */,
 				A33986E1271CAFC200B68256 /* NavigationCoordinator.swift in Sources */,
 				A313C9BB272DD752004CB793 /* KVOObservable.swift in Sources */,
-				A33986DB271CAFC200B68256 /* ModalPresentationHost.swift in Sources */,
 				A33986DF271CAFC200B68256 /* ModalCoordinator.swift in Sources */,
+				A390EB6E2737E911006934DC /* Util.swift in Sources */,
 				A33986DC271CAFC200B68256 /* NavigationControllerNavigation.swift in Sources */,
-				A33986DD271CAFC200B68256 /* NavigationControllerHost.swift in Sources */,
+				A390EB6C2737E911006934DC /* InsecurityHost.swift in Sources */,
 				A33986E2271CAFC200B68256 /* WindowHost.swift in Sources */,
 				A3E0ED98272599040019BB6D /* Deferred.swift in Sources */,
 				A33986E3271CAFC200B68256 /* CommonModalCoordinator.swift in Sources */,
