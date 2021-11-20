@@ -95,6 +95,11 @@
 		A3968FFA26FF260200B6A59B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A3968FF826FF260200B6A59B /* LaunchScreen.storyboard */; };
 		A396900226FF26CA00B6A59B /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A396900326FF26CA00B6A59B /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A3986FDE2748F86F002AA98B /* InsetTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3986FDD2748F86F002AA98B /* InsetTextField.swift */; };
+		A3986FE02748FCA9002AA98B /* CardNumberTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3986FDF2748FCA9002AA98B /* CardNumberTextField.swift */; };
+		A3986FE22748FD69002AA98B /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3986FE12748FD69002AA98B /* SeparatorView.swift */; };
+		A3986FE42748FE43002AA98B /* CVVTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3986FE32748FE43002AA98B /* CVVTextField.swift */; };
+		A3986FE6274901D1002AA98B /* CardHolderTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3986FE5274901D1002AA98B /* CardHolderTextField.swift */; };
 		A3A5C3EA273497BC00689F0B /* CommonCoordinatorAny.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A5C3E9273497BC00689F0B /* CommonCoordinatorAny.swift */; };
 		A3C44FEA2729E71500A05C44 /* KVOObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3C44FE92729E71500A05C44 /* KVOObservable.swift */; };
 		A3DD891E2732EB2800C07EBD /* WindowHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3DD891D2732EB2800C07EBD /* WindowHost.swift */; };
@@ -240,6 +245,11 @@
 		A3968FF626FF260200B6A59B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A3968FF926FF260200B6A59B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A3968FFB26FF260200B6A59B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		A3986FDD2748F86F002AA98B /* InsetTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsetTextField.swift; sourceTree = "<group>"; };
+		A3986FDF2748FCA9002AA98B /* CardNumberTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardNumberTextField.swift; sourceTree = "<group>"; };
+		A3986FE12748FD69002AA98B /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
+		A3986FE32748FE43002AA98B /* CVVTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVTextField.swift; sourceTree = "<group>"; };
+		A3986FE5274901D1002AA98B /* CardHolderTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHolderTextField.swift; sourceTree = "<group>"; };
 		A3A5C3E9273497BC00689F0B /* CommonCoordinatorAny.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonCoordinatorAny.swift; sourceTree = "<group>"; };
 		A3C44FE92729E71500A05C44 /* KVOObservable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KVOObservable.swift; sourceTree = "<group>"; };
 		A3DD891D2732EB2800C07EBD /* WindowHost.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowHost.swift; sourceTree = "<group>"; };
@@ -438,6 +448,11 @@
 			children = (
 				A377B5A127139C6000A4331B /* AddPaymentMethodViewController.swift */,
 				A377B5A327139CB700A4331B /* AddPaymentMethodCoordinator.swift */,
+				A3986FDD2748F86F002AA98B /* InsetTextField.swift */,
+				A3986FDF2748FCA9002AA98B /* CardNumberTextField.swift */,
+				A3986FE12748FD69002AA98B /* SeparatorView.swift */,
+				A3986FE32748FE43002AA98B /* CVVTextField.swift */,
+				A3986FE5274901D1002AA98B /* CardHolderTextField.swift */,
 			);
 			path = AddPaymentMethod;
 			sourceTree = "<group>";
@@ -911,13 +926,17 @@
 				A393F3262728B653006CD54C /* NavigationBarButton.swift in Sources */,
 				A393F3102728A7B5006CD54C /* PaymentMethodsCoordinator.swift in Sources */,
 				A393F3112728A7B5006CD54C /* PaymentMethodsViewController.swift in Sources */,
+				A3986FE22748FD69002AA98B /* SeparatorView.swift in Sources */,
 				A393F3072728A6CF006CD54C /* ProfileViewController.swift in Sources */,
 				A393F30E2728A7B1006CD54C /* AddPaymentMethodCoordinator.swift in Sources */,
 				A393F31A2728A7F2006CD54C /* DispatchQueue+asyncAfter.swift in Sources */,
 				A393F3192728A7F2006CD54C /* DefaultStringInterpolation+Optional.swift in Sources */,
 				A393F2EC27289F53006CD54C /* AppDelegate.swift in Sources */,
+				A3986FE02748FCA9002AA98B /* CardNumberTextField.swift in Sources */,
+				A3986FDE2748F86F002AA98B /* InsetTextField.swift in Sources */,
 				A393F3172728A7F2006CD54C /* UIColor+random.swift in Sources */,
 				A393F31F2728AF36006CD54C /* PaymentMethodTableCell.swift in Sources */,
+				A3986FE6274901D1002AA98B /* CardHolderTextField.swift in Sources */,
 				A393F3232728B49C006CD54C /* NavigationController.swift in Sources */,
 				A393F30F2728A7B1006CD54C /* AddPaymentMethodViewController.swift in Sources */,
 				A393F30D2728A766006CD54C /* ProfileCoordinator.swift in Sources */,
@@ -926,6 +945,7 @@
 				A393F3182728A7F2006CD54C /* UIColor+system.swift in Sources */,
 				A393F31D2728AA0B006CD54C /* PaymentMethod.swift in Sources */,
 				A393F3212728B09F006CD54C /* UITableView+register.swift in Sources */,
+				A3986FE42748FE43002AA98B /* CVVTextField.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
