@@ -1,11 +1,11 @@
 import Insecurity
 import UIKit
 
-struct PaymentMethodsScreenResult {
+struct PaymentMethodsAdaptiveScreenResult {
     let paymentMethodChanged: Bool
 }
 
-class PaymentMethodsCoordinator: NavigationCoordinator<PaymentMethodsScreenResult> {
+class PaymentMethodsAdaptiveCoordinator: AdaptiveCoordinator<PaymentMethodsScreenResult> {
     override var viewController: UIViewController {
         let viewController = PaymentMethodsViewController()
         
@@ -14,9 +14,9 @@ class PaymentMethodsCoordinator: NavigationCoordinator<PaymentMethodsScreenResul
         }
         
         viewController.onNewPaymentMethodRequested = {
-            let addPaymentMethodCoordinator = AddPaymentMethodCoordinator()
+            let addPaymentMethodCoordinator = AddPaymentMethodAdaptiveCoordinator()
             
-            self.navigation.start(addPaymentMethodCoordinator, animated: true) { [weak viewController] paymentMethod in
+            self.navigation.start(addPaymentMethodCoordinator, in: .current, animated: true) { [weak viewController] paymentMethod in
                 if let paymentMethod = paymentMethod {
                     // User has added a new payment method
                     viewController?.handleNewPaymentMethodAdded(paymentMethod)

@@ -8,7 +8,7 @@ class ProfileCoordinator: NavigationCoordinator<Never> {
         profileViewController.onPaymentMethodsRequested = { [weak profileViewController] in
             let paymentMethodsCoordinator = PaymentMethodsCoordinator()
             
-            self.navigation.start(paymentMethodsCoordinator, in: .navigation(new: NavigationController()), animated: true) { result in
+            self.navigation.start(paymentMethodsCoordinator, animated: true) { result in
                 if result?.paymentMethodChanged == true {
                     profileViewController?.handleDefaultPaymentMethodChanged()
                 }
