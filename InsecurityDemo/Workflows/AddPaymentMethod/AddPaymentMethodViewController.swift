@@ -3,6 +3,8 @@ import UIKit
 class AddPaymentMethodViewController: UIViewController {
     var onPaymentMethodAdded: ((PaymentMethod) -> Void)?
     
+    let scrollView = UIScrollView()
+    let scrollContentView = UIView()
     let titleLabel = UILabel()
     let cardNumberField = CardNumberTextField()
     let separator1 = SeparatorView()
@@ -16,35 +18,48 @@ class AddPaymentMethodViewController: UIViewController {
         
         view.backgroundColor = .systemBackgroundCompat
         
+        navigationItem.largeTitleDisplayMode = .never
+        
+        scrollView.alwaysBounceVertical = true
+        view.addSubview(scrollView)
+        scrollView.snp.makeConstraints { make in
+            make.edges.equalToSuperview()
+        }
+        
+        scrollView.addSubview(scrollContentView)
+        scrollContentView.snp.makeConstraints { make in
+            make.width.edges.equalToSuperview()
+        }
+        
         titleLabel.text = "Add Card"
         titleLabel.numberOfLines = 0
         titleLabel.font = .systemFont(ofSize: 32, weight: .semibold)
-        view.addSubview(titleLabel)
+        scrollContentView.addSubview(titleLabel)
         titleLabel.snp.makeConstraints { make in
-            make.top.equalTo(view.safeAreaLayoutGuide.snp.top).offset(8)
+            make.top.equalTo(scrollContentView.snp.top).offset(8)
             make.left.right.equalToSuperview().inset(16)
         }
         
-        view.addSubview(cardNumberField)
+        scrollContentView.addSubview(cardNumberField)
         cardNumberField.snp.makeConstraints { make in
             make.top.equalTo(titleLabel.snp.bottom).offset(12)
             make.left.right.equalToSuperview()
         }
         
-        view.addSubview(separator1)
+        scrollContentView.addSubview(separator1)
         separator1.snp.makeConstraints { make in
             make.top.equalTo(cardNumberField.snp.bottom).offset(8)
             make.height.equalTo(1)
             make.leading.trailing.equalToSuperview().inset(16)
         }
         
-        view.addSubview(cardholderField)
+        scrollContentView.addSubview(cardholderField)
         cardholderField.snp.makeConstraints { make in
             make.top.equalTo(separator1.snp.bottom).offset(12)
             make.leading.equalToSuperview()
         }
         
-        view.addSubview(cvvField)
+        scrollContentView.addSubview(cvvField)
         cvvField.snp.makeConstraints { make in
             make.top.equalTo(separator1.snp.bottom).offset(12)
             make.leading.equalTo(cardholderField.snp.trailing).offset(16)
@@ -52,7 +67,7 @@ class AddPaymentMethodViewController: UIViewController {
             make.width.equalTo(160)
         }
         
-        view.addSubview(separator2)
+        scrollContentView.addSubview(separator2)
         separator2.snp.makeConstraints { make in
             make.top.equalTo(cvvField.snp.bottom).offset(8)
             make.height.equalTo(1)
@@ -60,12 +75,13 @@ class AddPaymentMethodViewController: UIViewController {
         }
         
         button.setTitle("Submit", for: .normal)
-        view.addSubview(button)
+        scrollContentView.addSubview(button)
         button.snp.makeConstraints { make in
             make.top.equalTo(separator2.snp.bottom).offset(16)
             make.leading.greaterThanOrEqualToSuperview().offset(16)
             make.trailing.lessThanOrEqualToSuperview().offset(-16)
             make.centerX.equalToSuperview()
+            make.bottom.equalToSuperview().offset(-16)
         }
         button.addTarget(self, action: #selector(submitTap), for: .touchUpInside)
         
@@ -74,7 +90,7 @@ class AddPaymentMethodViewController: UIViewController {
     }
     
     @objc func outsideTap() {
-        view.endEditing(true)
+        scrollContentView.endEditing(true)
     }
     
     @objc func submitTap() {

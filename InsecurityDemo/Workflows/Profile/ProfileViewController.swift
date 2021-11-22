@@ -94,7 +94,7 @@ class ProfileViewController: UIViewController {
         let insecurityHost = InsecurityHost(modal: self)
         self.customInsecurityHost = insecurityHost
 
-        let paymentMethodCoordinator = PaymentMethodsCoordinator()
+        let paymentMethodCoordinator = PaymentMethodsAdaptiveCoordinator()
 
         insecurityHost.start(paymentMethodCoordinator, in: .current, animated: true) { [weak self] result in
             self?.customInsecurityHost = nil
@@ -110,7 +110,7 @@ class ProfileViewController: UIViewController {
         let insecurityHost = InsecurityHost(navigation: navigationController)
         self.customInsecurityHost = insecurityHost
 
-        let paymentMethodCoordinator = PaymentMethodsCoordinator()
+        let paymentMethodCoordinator = PaymentMethodsAdaptiveCoordinator()
 
         insecurityHost.start(paymentMethodCoordinator, in: .current, animated: true) { [weak self] result in
             self?.customInsecurityHost = nil
@@ -129,7 +129,7 @@ class ProfileViewController: UIViewController {
         let insecurityHost = InsecurityHost(navigation: navigationController)
         self.customInsecurityHost = insecurityHost
 
-        let paymentMethodCoordinator = PaymentMethodsCoordinator()
+        let paymentMethodCoordinator = PaymentMethodsAdaptiveCoordinator()
 
         insecurityHost.start(paymentMethodCoordinator, in: .current, animated: true) { [weak self] result in
             self?.customInsecurityHost = nil

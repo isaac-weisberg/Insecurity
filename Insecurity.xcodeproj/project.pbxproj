@@ -11,6 +11,9 @@
 		6039A8D0C53204A35B9478F6 /* libPods-InsecurityPodspecTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */; };
 		6BA2676A691705959F4C475A /* libPods-InsecurityDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */; };
 		A3097429274C1CD2003EB063 /* ProfileOrdersButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3097428274C1CD2003EB063 /* ProfileOrdersButton.swift */; };
+		A309742B274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */; };
+		A309742D274C2B3D003EB063 /* PaymentMethodAddCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */; };
+		A309742F274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */; };
 		A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320332F27164E0400ABD197 /* ModalNavigation.swift */; };
 		A320333227164E1300ABD197 /* ModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333127164E1300ABD197 /* ModalCoordinator.swift */; };
 		A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */; };
@@ -159,6 +162,9 @@
 		7ED2D0086C3E5EABF27BE1C5 /* Pods-InsecurityPlayground.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPlayground.release.xcconfig"; path = "Target Support Files/Pods-InsecurityPlayground/Pods-InsecurityPlayground.release.xcconfig"; sourceTree = "<group>"; };
 		9630C86ACEA183BA279A7CFE /* Pods-InsecurityPodspecTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPodspecTest.release.xcconfig"; path = "Target Support Files/Pods-InsecurityPodspecTest/Pods-InsecurityPodspecTest.release.xcconfig"; sourceTree = "<group>"; };
 		A3097428274C1CD2003EB063 /* ProfileOrdersButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOrdersButton.swift; sourceTree = "<group>"; };
+		A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsAdaptiveCoordinator.swift; sourceTree = "<group>"; };
+		A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodAddCell.swift; sourceTree = "<group>"; };
+		A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodAdaptiveCoordinator.swift; sourceTree = "<group>"; };
 		A320332F27164E0400ABD197 /* ModalNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNavigation.swift; sourceTree = "<group>"; };
 		A320333127164E1300ABD197 /* ModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalCoordinator.swift; sourceTree = "<group>"; };
 		A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerNavigation.swift; sourceTree = "<group>"; };
@@ -441,6 +447,8 @@
 				A377B59A27139A2800A4331B /* PaymentMethodsViewController.swift */,
 				A377B59C27139A4200A4331B /* PaymentMethodsCoordinator.swift */,
 				A393F31E2728AF36006CD54C /* PaymentMethodTableCell.swift */,
+				A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */,
+				A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */,
 			);
 			path = PaymentMethods;
 			sourceTree = "<group>";
@@ -455,6 +463,7 @@
 				A3986FE12748FD69002AA98B /* SeparatorView.swift */,
 				A3986FE32748FE43002AA98B /* CVVTextField.swift */,
 				A3986FE5274901D1002AA98B /* CardHolderTextField.swift */,
+				A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */,
 			);
 			path = AddPaymentMethod;
 			sourceTree = "<group>";
@@ -929,12 +938,14 @@
 				A393F3262728B653006CD54C /* NavigationBarButton.swift in Sources */,
 				A393F3102728A7B5006CD54C /* PaymentMethodsCoordinator.swift in Sources */,
 				A393F3112728A7B5006CD54C /* PaymentMethodsViewController.swift in Sources */,
+				A309742D274C2B3D003EB063 /* PaymentMethodAddCell.swift in Sources */,
 				A3986FE22748FD69002AA98B /* SeparatorView.swift in Sources */,
 				A393F3072728A6CF006CD54C /* ProfileViewController.swift in Sources */,
 				A393F30E2728A7B1006CD54C /* AddPaymentMethodCoordinator.swift in Sources */,
 				A393F31A2728A7F2006CD54C /* DispatchQueue+asyncAfter.swift in Sources */,
 				A393F3192728A7F2006CD54C /* DefaultStringInterpolation+Optional.swift in Sources */,
 				A3097429274C1CD2003EB063 /* ProfileOrdersButton.swift in Sources */,
+				A309742B274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift in Sources */,
 				A393F2EC27289F53006CD54C /* AppDelegate.swift in Sources */,
 				A3986FE02748FCA9002AA98B /* CardNumberTextField.swift in Sources */,
 				A3986FDE2748F86F002AA98B /* InsetTextField.swift in Sources */,
@@ -942,6 +953,7 @@
 				A393F31F2728AF36006CD54C /* PaymentMethodTableCell.swift in Sources */,
 				A3986FE6274901D1002AA98B /* CardHolderTextField.swift in Sources */,
 				A393F3232728B49C006CD54C /* NavigationController.swift in Sources */,
+				A309742F274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift in Sources */,
 				A393F30F2728A7B1006CD54C /* AddPaymentMethodViewController.swift in Sources */,
 				A393F30D2728A766006CD54C /* ProfileCoordinator.swift in Sources */,
 				A393F3042728A4E8006CD54C /* ApplicationCoordinator.swift in Sources */,
