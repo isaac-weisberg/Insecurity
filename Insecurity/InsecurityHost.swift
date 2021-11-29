@@ -67,13 +67,16 @@ private struct FrameNavigationChild {
 private struct FrameNavigationData {
     var children: [FrameNavigationChild]
     weak var navigationController: UINavigationController?
+    weak var rootController: UIViewController?
     
     init(
         children: [FrameNavigationChild],
-        navigationController: UINavigationController?
+        navigationController: UINavigationController?,
+        rootController: UIViewController?
     ) {
         self.children = children
         self.navigationController = navigationController
+        self.rootController = rootController
     }
 }
 
@@ -468,7 +471,7 @@ public class InsecurityHost {
                 if let lastNavigationChild = navigationData.children.last {
                     previousViewController = lastNavigationChild.viewController.assertingNotNil()
                 } else {
-                    previousViewController = lastFrame.viewController.assertingNotNil()
+                    previousViewController = navigationData.rootController.assertingNotNil()
                 }
                 let navigationFrame = FrameNavigationChild(
                     state: .live,
@@ -509,7 +512,8 @@ public class InsecurityHost {
                 
                 let navigationData = FrameNavigationData(
                     children: [ frameChild ],
-                    navigationController: navigationController
+                    navigationController: navigationController,
+                    rootController: navigationController.viewControllers[0]
                 )
                 
                 // This is ass, this is really-really bad
@@ -671,7 +675,8 @@ public class InsecurityHost {
             previousViewController: electedHostController,
             navigationData: FrameNavigationData(
                 children: [],
-                navigationController: navigationController
+                navigationController: navigationController,
+                rootController: controller
             )
         )
         

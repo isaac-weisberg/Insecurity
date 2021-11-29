@@ -17,6 +17,16 @@ class GalleryCoordinator: NavigationCoordinator<Void> {
         galleryViewController.onAltButton = { [self] in
             finish(())
         }
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+//            let genericCoordinator = GenericCoordinator(.startNavigation(
+//                GenericCoordinator(.start(
+//                    GenericCoordinator(.startModal(
+//                        GenericCoordinator(.finish, .finish)), .finish)), .nothing)), .nothing)
+//            
+//            self.navigation.start(genericCoordinator, in: .modal, animated: true) { _ in
+//                
+//            }
+//        }
         
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
 //            let genericCoordinator = GenericCoordinator(
