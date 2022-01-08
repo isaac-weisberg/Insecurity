@@ -13,7 +13,7 @@ open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
     }
     
     var _finishImplementation: ((Result?) -> Void)?
-    var _abortChildrenImplementation: (() -> Void)?
+    var _abortChildrenImplementation: (((() -> Void)?) -> Void)?
     
     public func finish(_ result: Result) {
         guard let _finishImplementation = _finishImplementation else {
@@ -41,12 +41,14 @@ open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
         
     }
     
-    public func abortChildren() {
+    public func abortChildren(_ completion: (() -> Void)?) {
         guard let _abortChildrenImplementation = _abortChildrenImplementation else {
             assertionFailure("`abortChildren` called before the coordinator was started")
             return
         }
             
-        _abortChildrenImplementation()
+        _abortChildrenImplementation {
+            completion?()
+        }
     }
 }

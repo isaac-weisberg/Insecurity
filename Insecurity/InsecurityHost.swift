@@ -365,6 +365,13 @@ public class InsecurityHost {
             }
         }
         
+        child._abortChildrenImplementation = { [weak self, weak child] completion in
+            guard let child = child else { return }
+            self?.abortChildrenAfter(child) {
+                completion?()
+            }
+        }
+        
         let controller = child.viewController
         weakController = controller
         
@@ -577,6 +584,13 @@ public class InsecurityHost {
             
             self.finalizeAny(child, .callback) {
                 completion(result)
+            }
+        }
+        
+        child._abortChildrenImplementation = { [weak self, weak child] completion in
+            guard let child = child else { return }
+            self?.abortChildrenAfter(child) {
+                completion?()
             }
         }
         
@@ -802,10 +816,10 @@ public class InsecurityHost {
                 break
             }
             
-            var prepurgeFrames = self.frames
+            let framesAsTheyAre = self.frames
             
             var lastAliveNavigationChildIndexOpt: Int?
-            let lastAliveChildIndexOpt: Int? = prepurgeFrames.firstIndex(where: { frame in
+            let lastAliveChildIndexOpt: Int? = framesAsTheyAre.firstIndex(where: { frame in
                 if let navigationData = frame.navigationData {
                     let navigationChildIndexOpt = navigationData.children.firstIndex(where: { navigationChild in
                         return navigationChild.coordinator === coordinator
@@ -823,19 +837,23 @@ public class InsecurityHost {
             })
             
             if let lastAliveChildIndex = lastAliveChildIndexOpt {
-                if let lastAliveNavigationChildIndex = lastAliveNavigationChildIndexOpt {
-                    
+                if
+                    let lastAliveNavigationChildIndex = lastAliveNavigationChildIndexOpt,
+                    let firstDeadNavigationFrame = framesAsTheyAre[lastAliveChildIndex].navigationData!.children.at(lastAliveNavigationChildIndex + 1)
+                {
+                    finalizeAny(firstDeadNavigationFrame.coordinator, .abortion) { }
+                    completion()
                 } else {
                     let firstDeadChildIndex = lastAliveChildIndex + 1
-                    let firstDeadFrameOpt = prepurgeFrames.at(firstDeadChildIndex)
+                    let firstDeadFrameOpt = framesAsTheyAre.at(firstDeadChildIndex)
                     if let firstDeadCoordinator = firstDeadFrameOpt?.coordinator {
                         finalizeAny(firstDeadCoordinator, .abortion) { }
+                        completion()
                     }
                 }
             } else {
                 completion()
             }
-            
         }
     
 #if DEBUG

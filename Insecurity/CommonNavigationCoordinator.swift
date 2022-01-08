@@ -13,5 +13,7 @@ protocol CommonNavigationCoordinator: CommonNavigationCoordinatorAny {
     
     var _finishImplementation: ((Result?) -> Void)? { get set }
     
+    var _abortChildrenImplementation: (((() -> Void)?) -> Void)? { get set }
+    
     func _updateHostReference(_ host: NavigationControllerNavigation & AdaptiveNavigation)
 }
