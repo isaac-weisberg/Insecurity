@@ -32,6 +32,7 @@ private enum FinalizationKind {
     case callback
     case kvo
     case deinitialization
+    case abortion
     
     func toFrameState() -> FrameState {
         switch self {
@@ -41,6 +42,8 @@ private enum FinalizationKind {
             return .finishedByKVO
         case .deinitialization:
             return .finishedByDeinit
+        case .abortion:
+            return .finishedByAbortion
         }
     }
 }
@@ -85,6 +88,7 @@ private enum FrameState {
     case finishedByCompletion
     case finishedByKVO
     case finishedByDeinit
+    case finishedByAbortion
 }
 
 private class RootNavigationCrutchCoordinator: CommonCoordinatorAny {
@@ -212,8 +216,15 @@ public class InsecurityHost {
             }
             guard let child = weakChild else { return }
             
-            self.finalizeModal(child, .callback) {
+            self.finalizeAny(child, .callback) {
                 completion(result)
+            }
+        }
+        
+        child._abortChildrenImplementation = { [weak self, weak child] completion in
+            guard let child = child else { return }
+            self?.abortChildrenAfter(child) {
+                completion?()
             }
         }
         
@@ -237,7 +248,7 @@ public class InsecurityHost {
                 }
                 guard let child = child else { return }
                 
-                self.finalizeModal(child, .kvo) {
+                self.finalizeAny(child, .kvo) {
                     completion(nil)
                 }
             }
@@ -248,45 +259,12 @@ public class InsecurityHost {
             
             guard let self = self, let child = child else { return }
             
-            self.finalizeModal(child, .deinitialization) {
+            self.finalizeAny(child, .deinitialization) {
                 completion(nil)
             }
         }
         
         sendOffModal(controller, animated, child)
-    }
-    
-    private func finalizeModal(
-        _ child: CommonModalCoordinatorAny,
-        _ kind: FinalizationKind,
-        _ callback: () -> Void
-    ) {
-        let indexOfFrameOpt = frames.firstIndex(where: { frame in
-            return frame.coordinator === child
-        })
-        
-        if let indexOfFrame = indexOfFrameOpt {
-            frames[indexOfFrame].state = kind.toFrameState()
-        }
-        
-        if indexOfFrameOpt != nil {
-            switch state.stage {
-            case .batching:
-                if self.state.notDead {
-                    callback()
-                }
-            case .purging:
-                fatalError()
-            case .ready:
-                self.state.stage = .batching
-                if self.state.notDead {
-                    callback()
-                }
-                self.state.stage = .purging
-                self.purge()
-                self.state.stage = .ready
-            }
-        }
     }
     
     private func sendOffModal(_ controller: UIViewController, _ animated: Bool, _ child: CommonModalCoordinatorAny) {
@@ -382,7 +360,7 @@ public class InsecurityHost {
             }
             guard let child = weakChild else { return }
             
-            self.finalizeNavigation(child, .callback) {
+            self.finalizeAny(child, .callback) {
                 completion(result)
             }
         }
@@ -395,7 +373,7 @@ public class InsecurityHost {
             
             guard let self = self, let child = child else { return }
             
-            self.finalizeNavigation(child, .deinitialization) {
+            self.finalizeAny(child, .deinitialization) {
                 completion(nil)
             }
         }
@@ -403,10 +381,10 @@ public class InsecurityHost {
         sendOffNavigation(controller, animated, child)
     }
     
-    private func finalizeNavigation(
-        _ child: CommonNavigationCoordinatorAny,
+    private func finalizeAny(
+        _ child: CommonCoordinatorAny,
         _ kind: FinalizationKind,
-        _ callback: () -> Void
+        _ propagateResult: () -> Void
     ) {
         // Very questionable code ahead
         var indexInsideNavigationOpt: Int?
@@ -444,14 +422,14 @@ public class InsecurityHost {
             switch state.stage {
             case .batching:
                 if self.state.notDead {
-                    callback()
+                    propagateResult()
                 }
             case .purging:
                 fatalError()
             case .ready:
                 self.state.stage = .batching
                 if self.state.notDead {
-                    callback()
+                    propagateResult()
                 }
                 self.state.stage = .purging
                 self.purge()
@@ -597,7 +575,7 @@ public class InsecurityHost {
             }
             guard let child = weakChild else { return }
             
-            self.finalizeNavigation(child, .callback) {
+            self.finalizeAny(child, .callback) {
                 completion(result)
             }
         }
@@ -621,7 +599,7 @@ public class InsecurityHost {
                 }
                 guard let child = child else { return }
                 
-                self.finalizeNavigation(child, .kvo) {
+                self.finalizeAny(child, .kvo) {
                     completion(nil)
                 }
             }
@@ -632,7 +610,7 @@ public class InsecurityHost {
             
             guard let self = self, let child = child else { return }
             
-            self.finalizeNavigation(child, .deinitialization) {
+            self.finalizeAny(child, .deinitialization) {
                 completion(nil)
             }
         }
@@ -694,13 +672,13 @@ public class InsecurityHost {
         var firstDeadNavigationChildIndexOpt: Int?
         let firstDeadChildIndexOpt = prepurgeFrames.firstIndex(where: { frame in
             switch frame.state {
-            case .finishedByCompletion, .finishedByKVO, .finishedByDeinit:
+            case .finishedByCompletion, .finishedByKVO, .finishedByDeinit, .finishedByAbortion:
                 return true
             case .live:
                 if let navigationData = frame.navigationData {
                     let firstDeadNavigationIndexOpt = navigationData.children.firstIndex(where: { child in
                         switch child.state {
-                        case .finishedByDeinit, .finishedByKVO, .finishedByCompletion:
+                        case .finishedByDeinit, .finishedByKVO, .finishedByCompletion, .finishedByAbortion:
                             return true
                         case .live:
                             return false
@@ -764,7 +742,7 @@ public class InsecurityHost {
                 switch navigationDeadChild.state {
                 case .live:
                     assertionFailure()
-                case .finishedByCompletion:
+                case .finishedByCompletion, .finishedByAbortion:
                     navigationDeadChild.previousViewController.assertNotNil()
                     navigationData.navigationController.assertNotNil()
                     if
@@ -796,7 +774,7 @@ public class InsecurityHost {
                     assertionFailure()
                 case .finishedByDeinit, .finishedByKVO:
                     executeScheduledStartRoutine()
-                case .finishedByCompletion:
+                case .finishedByCompletion, .finishedByAbortion:
                     assert(firstDeadChild.previousViewController != nil)
                     firstDeadChild.previousViewController?.dismiss(animated: true) { [weak self] in
                         self?.executeScheduledStartRoutine()
@@ -807,6 +785,58 @@ public class InsecurityHost {
             executeScheduledStartRoutine()
         }
     }
+    
+    // MARK: - Abort Children
+    
+    func abortChildrenAfter(_ coordinator: CommonCoordinatorAny, _ completion: @escaping () -> Void) {
+            guard state.notDead else {
+                completion()
+                return
+            }
+            
+            switch state.stage {
+            case .batching, .purging:
+                assertionFailure("Can't `abort` children while a `finish` chain is being called")
+                return
+            case .ready:
+                break
+            }
+            
+            var prepurgeFrames = self.frames
+            
+            var lastAliveNavigationChildIndexOpt: Int?
+            let lastAliveChildIndexOpt: Int? = prepurgeFrames.firstIndex(where: { frame in
+                if let navigationData = frame.navigationData {
+                    let navigationChildIndexOpt = navigationData.children.firstIndex(where: { navigationChild in
+                        return navigationChild.coordinator === coordinator
+                    })
+                    
+                    if let navigationChildIndex = navigationChildIndexOpt {
+                        lastAliveNavigationChildIndexOpt = navigationChildIndex
+                        return true
+                    } else {
+                        return false
+                    }
+                } else {
+                    return frame.coordinator === coordinator
+                }
+            })
+            
+            if let lastAliveChildIndex = lastAliveChildIndexOpt {
+                if let lastAliveNavigationChildIndex = lastAliveNavigationChildIndexOpt {
+                    
+                } else {
+                    let firstDeadChildIndex = lastAliveChildIndex + 1
+                    let firstDeadFrameOpt = prepurgeFrames.at(firstDeadChildIndex)
+                    if let firstDeadCoordinator = firstDeadFrameOpt?.coordinator {
+                        finalizeAny(firstDeadCoordinator, .abortion) { }
+                    }
+                }
+            } else {
+                completion()
+            }
+            
+        }
     
 #if DEBUG
     deinit {
@@ -968,7 +998,7 @@ private extension FrameState {
         switch self {
         case .finishedByDeinit, .finishedByKVO:
             return false
-        case .finishedByCompletion, .live:
+        case .finishedByCompletion, .live, .finishedByAbortion:
             return true
         }
     }
