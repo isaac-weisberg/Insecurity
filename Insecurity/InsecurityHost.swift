@@ -92,7 +92,9 @@ private enum FrameState {
 }
 
 private class RootNavigationCrutchCoordinator: CommonCoordinatorAny {
-    
+    func removeObservers() {
+        // yeah :D
+    }
 }
 
 private struct Frame {
@@ -199,22 +201,12 @@ public class InsecurityHost {
         
         child._updateHostReference(self)
         
-        weak var weakChild = child
-        weak var kvoContext: InsecurityKVOContext?
-        weak var weakController: UIViewController?
-        
-        child._finishImplementation = { [weak self] result in
-            if let kvoContext = kvoContext {
-                weakController?.insecurityKvo.removeObserver(kvoContext)
-            }
-            weakController?.deinitObservable.onDeinit = nil
-            weakChild?._finishImplementation = nil
-            
+        child._finishImplementation = { [weak self, weak child] result in
             guard let self = self else {
                 assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
                 return
             }
-            guard let child = weakChild else { return }
+            guard let child = child else { return }
             
             self.finalizeAny(child, .callback) {
                 completion(result)
@@ -229,19 +221,13 @@ public class InsecurityHost {
         }
         
         let controller = child.viewController
-        weakController = controller
+        child.assignedController = controller
         
-        kvoContext = controller.insecurityKvo.addHandler(
+        child.kvoContext = controller.insecurityKvo.addHandler(
             UIViewController.self,
             modalParentObservationKeypath
         ) { [weak self, weak child] oldController, newController in
             if oldController != nil, newController == nil {
-                if let kvoContext = kvoContext {
-                    weakController?.insecurityKvo.removeObserver(kvoContext)
-                }
-                weakController?.deinitObservable.onDeinit = nil
-                weakChild?._finishImplementation = nil
-                
                 guard let self = self else {
                     assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
                     return
@@ -255,7 +241,7 @@ public class InsecurityHost {
         }
         
         controller.deinitObservable.onDeinit = { [weak self, weak child] in
-            weakChild?._finishImplementation = nil
+            child?._finishImplementation = nil
             
             guard let self = self, let child = child else { return }
             
@@ -347,18 +333,12 @@ public class InsecurityHost {
         
         child._updateHostReference(self)
         
-        weak var weakChild = child
-        weak var weakController: UIViewController?
-        
-        child._finishImplementation = { [weak self] result in
-            weakController?.deinitObservable.onDeinit = nil
-            weakChild?._finishImplementation = nil
-            
+        child._finishImplementation = { [weak self, weak child] result in
             guard let self = self else {
                 assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
                 return
             }
-            guard let child = weakChild else { return }
+            guard let child = child else { return }
             
             self.finalizeAny(child, .callback) {
                 completion(result)
@@ -373,10 +353,10 @@ public class InsecurityHost {
         }
         
         let controller = child.viewController
-        weakController = controller
+        child.assignedController = controller
         
         controller.deinitObservable.onDeinit = { [weak self, weak child] in
-            weakChild?._finishImplementation = nil
+            child?._finishImplementation = nil
             
             guard let self = self, let child = child else { return }
             
@@ -419,8 +399,11 @@ public class InsecurityHost {
             
             if let indexInsideNavigation = indexInsideNavigationOpt {
                 assert(frames[indexOfFrame].navigationData != nil)
+                
+                frames[indexOfFrame].navigationData?.children[indexInsideNavigation].coordinator.removeObservers()
                 frames[indexOfFrame].navigationData?.children[indexInsideNavigation].state = kind.toFrameState()
             } else {
+                frames[indexOfFrame].coordinator.removeObservers()
                 frames[indexOfFrame].state = kind.toFrameState()
             }
         }
@@ -565,22 +548,21 @@ public class InsecurityHost {
         
         child._updateHostReference(self)
         
-        weak var weakChild = child
         weak var kvoContext: InsecurityKVOContext?
         weak var weakController: UIViewController? = navigationController
         
-        child._finishImplementation = { [weak self] result in
+        child._finishImplementation = { [weak self, weak child] result in
             if let kvoContext = kvoContext {
                 weakController?.insecurityKvo.removeObserver(kvoContext)
             }
             weakController?.deinitObservable.onDeinit = nil
-            weakChild?._finishImplementation = nil
+            child?._finishImplementation = nil
             
             guard let self = self else {
                 assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
                 return
             }
-            guard let child = weakChild else { return }
+            guard let child = child else { return }
             
             self.finalizeAny(child, .callback) {
                 completion(result)
@@ -605,7 +587,7 @@ public class InsecurityHost {
                     weakController?.insecurityKvo.removeObserver(kvoContext)
                 }
                 weakController?.deinitObservable.onDeinit = nil
-                weakChild?._finishImplementation = nil
+                child?._finishImplementation = nil
                 
                 guard let self = self else {
                     assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
@@ -620,7 +602,7 @@ public class InsecurityHost {
         }
         
         navigationController.deinitObservable.onDeinit = { [weak self, weak child] in
-            weakChild?._finishImplementation = nil
+            child?._finishImplementation = nil
             
             guard let self = self, let child = child else { return }
             

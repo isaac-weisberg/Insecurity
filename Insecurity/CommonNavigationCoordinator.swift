@@ -16,4 +16,8 @@ protocol CommonNavigationCoordinator: CommonNavigationCoordinatorAny {
     var _abortChildrenImplementation: (((() -> Void)?) -> Void)? { get set }
     
     func _updateHostReference(_ host: NavigationControllerNavigation & AdaptiveNavigation)
+    
+    var kvoContext: InsecurityKVOContext? { get set }
+    
+    var assignedController: UIViewController? { get set }
 }

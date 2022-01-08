@@ -16,4 +16,8 @@ protocol CommonModalCoordinator: CommonModalCoordinatorAny {
     var _abortChildrenImplementation: (((() -> Void)?) -> Void)? { get set }
     
     func _updateHostReference(_ host: ModalNavigation & AdaptiveNavigation)
+    
+    var kvoContext: InsecurityKVOContext? { get set }
+    
+    var assignedController: UIViewController? { get set }
 }

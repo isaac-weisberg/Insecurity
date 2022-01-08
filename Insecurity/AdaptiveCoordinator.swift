@@ -14,6 +14,8 @@ open class AdaptiveCoordinator<Result>: CommonNavigationCoordinator, CommonModal
     
     var _finishImplementation: ((Result?) -> Void)?
     var _abortChildrenImplementation: (((() -> Void)?) -> Void)?
+    weak var kvoContext: InsecurityKVOContext?
+    weak var assignedController: UIViewController?
     
     public func finish(_ result: Result) {
         guard let _finishImplementation = _finishImplementation else {
@@ -54,5 +56,16 @@ open class AdaptiveCoordinator<Result>: CommonNavigationCoordinator, CommonModal
         _abortChildrenImplementation {
             completion?()
         }
+    }
+    
+    func removeObservers() {
+        if let kvoContext = kvoContext {
+            assignedController?.insecurityKvo.removeObserver(kvoContext)
+        }
+        assignedController?.deinitObservable.onDeinit = nil
+        _finishImplementation = nil
+        _abortChildrenImplementation = nil
+        assignedController = nil
+        kvoContext = nil
     }
 }
