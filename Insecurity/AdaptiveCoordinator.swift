@@ -13,7 +13,7 @@ open class AdaptiveCoordinator<Result>: CommonNavigationCoordinator, CommonModal
     }
     
     var _finishImplementation: ((Result?) -> Void)?
-    var _abortChildrenImplementation: (((() -> Void)?) -> Void)?
+    var _abortChildrenImplementation: (() -> Void)?
     weak var kvoContext: InsecurityKVOContext?
     weak var assignedController: UIViewController?
     
@@ -47,15 +47,13 @@ open class AdaptiveCoordinator<Result>: CommonNavigationCoordinator, CommonModal
         
     }
     
-    public func abortChildren(_ completion: (() -> Void)?) {
+    public func abortChildren() {
         guard let _abortChildrenImplementation = _abortChildrenImplementation else {
             assertionFailure("`abortChildren` called before the coordinator was started")
             return
         }
             
-        _abortChildrenImplementation {
-            completion?()
-        }
+        _abortChildrenImplementation()
     }
     
     func removeObservers() {

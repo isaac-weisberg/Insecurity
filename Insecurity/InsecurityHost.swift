@@ -213,11 +213,9 @@ public class InsecurityHost {
             }
         }
         
-        child._abortChildrenImplementation = { [weak self, weak child] completion in
+        child._abortChildrenImplementation = { [weak self, weak child] in
             guard let child = child else { return }
-            self?.abortChildrenAfter(child) {
-                completion?()
-            }
+            self?.abortChildrenAfter(child)
         }
         
         let controller = child.viewController
@@ -345,11 +343,9 @@ public class InsecurityHost {
             }
         }
         
-        child._abortChildrenImplementation = { [weak self, weak child] completion in
+        child._abortChildrenImplementation = { [weak self, weak child] in
             guard let child = child else { return }
-            self?.abortChildrenAfter(child) {
-                completion?()
-            }
+            self?.abortChildrenAfter(child)
         }
         
         let controller = child.viewController
@@ -569,11 +565,9 @@ public class InsecurityHost {
             }
         }
         
-        child._abortChildrenImplementation = { [weak self, weak child] completion in
+        child._abortChildrenImplementation = { [weak self, weak child] in
             guard let child = child else { return }
-            self?.abortChildrenAfter(child) {
-                completion?()
-            }
+            self?.abortChildrenAfter(child)
         }
         
         let controller = child.viewController
@@ -784,9 +778,8 @@ public class InsecurityHost {
     
     // MARK: - Abort Children
     
-    func abortChildrenAfter(_ coordinator: CommonCoordinatorAny, _ completion: @escaping () -> Void) {
+    func abortChildrenAfter(_ coordinator: CommonCoordinatorAny) {
             guard state.notDead else {
-                completion()
                 return
             }
             
@@ -824,17 +817,13 @@ public class InsecurityHost {
                     let firstDeadNavigationFrame = framesAsTheyAre[lastAliveChildIndex].navigationData!.children.at(lastAliveNavigationChildIndex + 1)
                 {
                     finalizeAny(firstDeadNavigationFrame.coordinator, .abortion) { }
-                    completion()
                 } else {
                     let firstDeadChildIndex = lastAliveChildIndex + 1
                     let firstDeadFrameOpt = framesAsTheyAre.at(firstDeadChildIndex)
                     if let firstDeadCoordinator = firstDeadFrameOpt?.coordinator {
                         finalizeAny(firstDeadCoordinator, .abortion) { }
-                        completion()
                     }
                 }
-            } else {
-                completion()
             }
         }
     
