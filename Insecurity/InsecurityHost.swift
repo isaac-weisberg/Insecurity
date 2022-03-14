@@ -293,12 +293,16 @@ public class InsecurityHost {
         let electedHostControllerOpt: UIViewController?
         if let topFrame = frames.last {
             if let hostController = topFrame.viewController {
-                let hostDoesntPresentAnything = hostController.presentedViewController == nil
-                if hostDoesntPresentAnything {
-                    electedHostControllerOpt = hostController
+                if #available(iOS 13, *) {
+                    let hostDoesntPresentAnything = hostController.presentedViewController == nil
+                    if hostDoesntPresentAnything {
+                        electedHostControllerOpt = hostController
+                    } else {
+                        assertionFailure("Top controller in the modal stack is already busy presenting something else")
+                        electedHostControllerOpt = nil
+                    }
                 } else {
-                    assertionFailure("Top controller in the modal stack is already busy presenting something else")
-                    electedHostControllerOpt = nil
+                    electedHostControllerOpt = hostController
                 }
             } else {
                 assertionFailure("Top controller of modal stack is somehow dead")
