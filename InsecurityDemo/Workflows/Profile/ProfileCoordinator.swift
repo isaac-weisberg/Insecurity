@@ -1,7 +1,7 @@
 import UIKit
 import Insecurity
 
-class ProfileCoordinator: NavigationCoordinator<Never> {
+class ProfileCoordinator: ModalCoordinator<Never> {
     override var viewController: UIViewController {
         let profileViewController = ProfileViewController()
         

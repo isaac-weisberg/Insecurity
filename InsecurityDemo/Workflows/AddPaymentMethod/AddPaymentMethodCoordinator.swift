@@ -1,7 +1,7 @@
 import Insecurity
 import UIKit
 
-class AddPaymentMethodCoordinator: NavigationCoordinator<PaymentMethod> {
+class AddPaymentMethodCoordinator: ModalCoordinator<PaymentMethod> {
     override var viewController: UIViewController {
         let addPaymentMethodViewController = AddPaymentMethodViewController()
         

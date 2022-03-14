@@ -27,6 +27,10 @@ public class WindowHost {
             completion(result)
         }
         
+        child._abortChildrenImplementation = { [weak self] in
+            self?.insecurityHost?.abortChildrenAfterRoot()
+        }
+        
         insecurityHost?.kill()
         insecurityHost = nil
         
@@ -62,7 +66,10 @@ public class WindowHost {
             self?.insecurityHost = nil
             completion(result)
         }
-
+        
+        initialChild._abortChildrenImplementation = { [weak self] in
+            self?.insecurityHost?.abortChildrenAfterRoot()
+        }
         
         insecurityHost?.kill()
         insecurityHost = nil

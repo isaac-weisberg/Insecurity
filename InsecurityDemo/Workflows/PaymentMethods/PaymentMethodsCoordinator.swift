@@ -5,7 +5,7 @@ struct PaymentMethodsScreenResult {
     let paymentMethodChanged: Bool
 }
 
-class PaymentMethodsCoordinator: NavigationCoordinator<PaymentMethodsScreenResult> {
+class PaymentMethodsCoordinator: ModalCoordinator<PaymentMethodsScreenResult> {
     override var viewController: UIViewController {
         let viewController = PaymentMethodsViewController()
         

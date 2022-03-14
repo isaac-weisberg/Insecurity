@@ -367,7 +367,7 @@ public class InsecurityHost {
     private func finalizeAny(
         _ child: CommonCoordinatorAny,
         _ kind: FinalizationKind,
-        _ propagateResult: () -> Void
+        _ propagateResult: (() -> Void)?
     ) {
         // Very questionable code ahead
         var indexInsideNavigationOpt: Int?
@@ -408,14 +408,14 @@ public class InsecurityHost {
             switch state.stage {
             case .batching:
                 if self.state.notDead {
-                    propagateResult()
+                    propagateResult?()
                 }
             case .purging:
                 fatalError()
             case .ready:
                 self.state.stage = .batching
                 if self.state.notDead {
-                    propagateResult()
+                    propagateResult?()
                 }
                 self.state.stage = .purging
                 self.purge()
@@ -778,54 +778,78 @@ public class InsecurityHost {
     
     // MARK: - Abort Children
     
-    func abortChildrenAfter(_ coordinator: CommonCoordinatorAny) {
-            guard state.notDead else {
-                return
-            }
-            
-            switch state.stage {
-            case .batching, .purging:
-                assertionFailure("Can't `abort` children while a `finish` chain is being called")
-                return
-            case .ready:
-                break
-            }
-            
-            let framesAsTheyAre = self.frames
-            
-            var lastAliveNavigationChildIndexOpt: Int?
-            let lastAliveChildIndexOpt: Int? = framesAsTheyAre.firstIndex(where: { frame in
-                if let navigationData = frame.navigationData {
-                    let navigationChildIndexOpt = navigationData.children.firstIndex(where: { navigationChild in
-                        return navigationChild.coordinator === coordinator
-                    })
-                    
-                    if let navigationChildIndex = navigationChildIndexOpt {
-                        lastAliveNavigationChildIndexOpt = navigationChildIndex
-                        return true
-                    } else {
-                        return false
-                    }
-                } else {
-                    return frame.coordinator === coordinator
+    func abortChildrenAfterRoot() {
+        guard state.notDead else {
+            return
+        }
+        
+        switch state.stage {
+        case .batching, .purging:
+            assertionFailure("Can't `abort` children while a `finish` chain is being called")
+            return
+        case .ready:
+            break
+        }
+        
+        if let firstFrame = frames.first {
+            if let navigationData = firstFrame.navigationData {
+                if let coordinator = navigationData.children.first?.coordinator {
+                    finalizeAny(coordinator, .abortion, nil)
                 }
-            })
-            
-            if let lastAliveChildIndex = lastAliveChildIndexOpt {
-                if
-                    let lastAliveNavigationChildIndex = lastAliveNavigationChildIndexOpt,
-                    let firstDeadNavigationFrame = framesAsTheyAre[lastAliveChildIndex].navigationData!.children.at(lastAliveNavigationChildIndex + 1)
-                {
-                    finalizeAny(firstDeadNavigationFrame.coordinator, .abortion) { }
+            } else {
+                finalizeAny(firstFrame.coordinator, .abortion, nil)
+            }
+        }
+    }
+    
+    func abortChildrenAfter(_ coordinator: CommonCoordinatorAny) {
+        guard state.notDead else {
+            return
+        }
+        
+        switch state.stage {
+        case .batching, .purging:
+            assertionFailure("Can't `abort` children while a `finish` chain is being called")
+            return
+        case .ready:
+            break
+        }
+        
+        let framesAsTheyAre = self.frames
+        
+        var lastAliveNavigationChildIndexOpt: Int?
+        let lastAliveChildIndexOpt: Int? = framesAsTheyAre.firstIndex(where: { frame in
+            if let navigationData = frame.navigationData {
+                let navigationChildIndexOpt = navigationData.children.firstIndex(where: { navigationChild in
+                    return navigationChild.coordinator === coordinator
+                })
+                
+                if let navigationChildIndex = navigationChildIndexOpt {
+                    lastAliveNavigationChildIndexOpt = navigationChildIndex
+                    return true
                 } else {
-                    let firstDeadChildIndex = lastAliveChildIndex + 1
-                    let firstDeadFrameOpt = framesAsTheyAre.at(firstDeadChildIndex)
-                    if let firstDeadCoordinator = firstDeadFrameOpt?.coordinator {
-                        finalizeAny(firstDeadCoordinator, .abortion) { }
-                    }
+                    return false
+                }
+            } else {
+                return frame.coordinator === coordinator
+            }
+        })
+        
+        if let lastAliveChildIndex = lastAliveChildIndexOpt {
+            if
+                let lastAliveNavigationChildIndex = lastAliveNavigationChildIndexOpt,
+                let firstDeadNavigationFrame = framesAsTheyAre[lastAliveChildIndex].navigationData!.children.at(lastAliveNavigationChildIndex + 1)
+            {
+                finalizeAny(firstDeadNavigationFrame.coordinator, .abortion) { }
+            } else {
+                let firstDeadChildIndex = lastAliveChildIndex + 1
+                let firstDeadFrameOpt = framesAsTheyAre.at(firstDeadChildIndex)
+                if let firstDeadCoordinator = firstDeadFrameOpt?.coordinator {
+                    finalizeAny(firstDeadCoordinator, .abortion) { }
                 }
             }
         }
+    }
     
 #if DEBUG
     deinit {
