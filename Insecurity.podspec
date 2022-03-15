@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = "Insecurity"
-  spec.version      = "3.0.2"
+  spec.version      = "3.0.3"
   spec.summary      = "Ultimate iOS Swift Navigation Framework"
 
   spec.description  = <<-DESC
