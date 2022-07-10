@@ -730,9 +730,11 @@ public class InsecurityHost {
             {
                 return CoordinatorLocation(frameIndex: firstDeadChildIndex,
                                            navigationFrameIndex: firstDeadNavigationChildIndex - 1)
-            } else {
+            } else if firstDeadChildIndex > 0 {
                 return CoordinatorLocation(frameIndex: firstDeadChildIndex - 1,
                                            navigationFrameIndex: nil)
+            } else {
+                return nil
             }
         } else {
              return nil
