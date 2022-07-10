@@ -683,10 +683,21 @@ public class InsecurityHost {
     // MARK: - Purge
     
     private func purge() {
-        let prepurgeFrames = self.frames
+        guard let lastNonDeadLocation = findLocationForLastNonDeadCoordinator() else { return }
         
+        resetAtLocation(lastNonDeadLocation)
+    }
+    
+    // MARK: - Reset
+    
+    struct CoordinatorLocation {
+        let frameIndex: Int
+        let navigationFrameIndex: Int?
+    }
+    
+    private func findLocationForLastNonDeadCoordinator() -> CoordinatorLocation? {
         var firstDeadNavigationChildIndexOpt: Int?
-        let firstDeadChildIndexOpt = prepurgeFrames.firstIndex(where: { frame in
+        let firstDeadChildIndexOpt = self.frames.firstIndex(where: { frame in
             switch frame.state {
             case .finishedByCompletion, .finishedByKVO, .finishedByDeinit:
                 return true
@@ -712,101 +723,20 @@ public class InsecurityHost {
             }
         })
         
-        let postPurgeFrames: [Frame]
-        
         if let firstDeadChildIndex = firstDeadChildIndexOpt {
-            let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
-            
-            if
-                let navigationChildIndex = firstDeadNavigationChildIndexOpt,
-                let navigationData = firstDeadChild.navigationData
-            {
-                var newFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex + 1))
-                
-                let newNavigationChildren = Array(navigationData.children.prefix(navigationChildIndex))
-                
-                if var lastFrame = newFrames.last {
-                    assert(lastFrame.navigationData != nil)
-                    lastFrame.navigationData?.children = newNavigationChildren
-                    
-                    newFrames = newFrames.replacingLast(with: lastFrame)
-                } else {
-                    assertionFailure()
-                }
-                
-                postPurgeFrames = newFrames
-            } else {
-                postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex))
-            }
-        } else {
-            assertionFailure("Noone died?")
-            postPurgeFrames = prepurgeFrames
-        }
-        
-        self.frames = postPurgeFrames
-        
-        if state.notDead, let firstDeadChildIndex = firstDeadChildIndexOpt {
-            let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
-            let frameAboveOpt = prepurgeFrames.at(firstDeadChildIndex + 1)
-            
             if
                 let firstDeadNavigationChildIndex = firstDeadNavigationChildIndexOpt,
-                let navigationData = firstDeadChild.navigationData
+                firstDeadNavigationChildIndex > 0
             {
-                let navigationDeadChild = navigationData.children[firstDeadNavigationChildIndex]
-                
-                switch navigationDeadChild.state {
-                case .live:
-                    assertionFailure()
-                case .finishedByCompletion:
-                    navigationDeadChild.previousViewController.assertNotNil()
-                    navigationData.navigationController.assertNotNil()
-                    if
-                        let navigationController = navigationData.navigationController,
-                        let popToController = navigationDeadChild.previousViewController
-                    {
-                        if let frameAbove = frameAboveOpt, frameAbove.state.needsDismissalInADeadChain {
-                            frameAbove.previousViewController.assertNotNil()
-                            
-                            navigationController.popToViewController(popToController, animated: false)
-                            if let presentingViewController = frameAbove.previousViewController {
-                                presentingViewController.dismiss(animated: true) { [weak self] in
-                                    self?.executeScheduledStartRoutine()
-                                }
-                            }
-                        } else {
-                            navigationController.popToViewController(popToController, animated: true)
-                            executeScheduledStartRoutineWithDelay()
-                        }
-                    }
-                    
-                case .finishedByKVO, .finishedByDeinit:
-                    assert(frameAboveOpt == nil, "Not supposed to have a controller modally on top while controller in the navigation controller has been killed by popping")
-                    executeScheduledStartRoutine()
-                }
+                return CoordinatorLocation(frameIndex: firstDeadChildIndex,
+                                           navigationFrameIndex: firstDeadNavigationChildIndex - 1)
             } else {
-                switch firstDeadChild.state {
-                case .live:
-                    assertionFailure()
-                case .finishedByDeinit, .finishedByKVO:
-                    executeScheduledStartRoutine()
-                case .finishedByCompletion:
-                    assert(firstDeadChild.previousViewController != nil)
-                    firstDeadChild.previousViewController?.dismiss(animated: true) { [weak self] in
-                        self?.executeScheduledStartRoutine()
-                    }
-                }
+                return CoordinatorLocation(frameIndex: firstDeadChildIndex - 1,
+                                           navigationFrameIndex: nil)
             }
         } else {
-            executeScheduledStartRoutine()
+             return nil
         }
-    }
-    
-    // MARK: - Reset
-    
-    struct CoordinatorLocation {
-        let frameIndex: Int
-        let navigationFrameIndex: Int?
     }
     
     private func findCoordinatorLocation(_ coordinator: CommonCoordinatorAny) -> CoordinatorLocation? {
@@ -978,16 +908,11 @@ public class InsecurityHost {
     }
     
     func resetAtLocation(_ location: CoordinatorLocation) {
-        
         let action = findAppropriateActionForReset(at: location)
         
         let culledFrames = cullFramesAfterLocation(location)
         
         self.frames = culledFrames
-        
-        guard let action = action else {
-            return
-        }
         
         if state.notDead {
             switch action {
@@ -1003,6 +928,8 @@ public class InsecurityHost {
                 dismiss.controller.dismiss(animated: true) { [weak self] in
                     self?.executeScheduledStartRoutine()
                 }
+            case nil:
+                executeScheduledStartRoutine()
             }
         }
     }
@@ -1013,6 +940,8 @@ public class InsecurityHost {
     }
 #endif
 }
+
+// MARK: - Extensions
 
 extension InsecurityHost: ModalNavigation {
     public func start<NewResult>(
