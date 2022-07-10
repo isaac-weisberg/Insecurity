@@ -837,59 +837,92 @@ public class InsecurityHost {
     }
     
     enum CullingAction {
-        case popAndDismiss
-        case dismiss
-        case pop
+        struct Dismiss {
+            let controller: UIViewController
+        }
+        
+        struct Pop {
+            let navigationController: UINavigationController
+            let popToController: UIViewController
+        }
+        
+        case dismiss(Dismiss)
+        case pop(Pop)
+        case popAndThenDismiss(Pop, Dismiss)
     }
     
     private func findAppropriateActionForReset(at location: CoordinatorLocation) -> CullingAction? {
         let frameIndex = location.frameIndex
         let frame = frames[frameIndex]
         
+        // Now, let's see if popping will also be necessary
+        let popAction: CullingAction.Pop?
+        
+        if
+            let navigationFrameIndex = location.navigationFrameIndex,
+            let navigationData = frame.navigationData
+        {
+            let navigationFrame = navigationData.children[navigationFrameIndex]
+            
+            let nextNavigationFrameIndex = navigationFrameIndex + 1
+            if
+                let nextNavigationFrame = navigationData.children.at(nextNavigationFrameIndex),
+                nextNavigationFrame.state.needsDismissalInADeadChain
+            {
+                // Yep, will need to pop
+                
+                if let navigationController = navigationData.navigationController {
+                    if let popToController = navigationFrame.viewController {
+                        popAction = CullingAction.Pop(navigationController: navigationController,
+                                                      popToController: popToController)
+                    } else {
+                        insecPrint("Can't find a popToController during pop")
+                        popAction = nil
+                    }
+                } else {
+                    insecPrint("Can't find a navigationController during pop")
+                    popAction = nil
+                }
+            } else {
+                popAction = nil
+            }
+        } else {
+            // No navigation frames in this frame, which means, that dismissing will be completely enough
+            
+            popAction = nil
+        }
+        
+        let dismissAction: CullingAction.Dismiss?
+        
         // Is there a next frame that will require modal dismissal?
         let nextFrameIndex = frameIndex + 1
         
-        if self.frames.at(nextFrameIndex) != nil {
+        if
+            let nextFrame = frames.at(nextFrameIndex),
+            nextFrame.state.needsDismissalInADeadChain
+        {
             // Alright, there is a next frame which will need to be dismissed
-            // Now, let's see if popping will also be necessary
-            if
-                let navigationFrameIndex = location.navigationFrameIndex,
-                let navigationData = frame.navigationData
-            {
-                let nextNavigationFrameIndex = navigationFrameIndex + 1
-                if navigationData.children.at(nextNavigationFrameIndex) != nil {
-                    // Yep, will need to pop
-                    return .popAndDismiss
-                } else {
-                    return .dismiss
-                }
+            if let dismissController = frame.viewController {
+                dismissAction = CullingAction.Dismiss(controller: dismissController)
             } else {
-                // No navigation frames in this frame, which means, that dismissing will be completely enough
-                
-                return .dismiss
+                dismissAction = nil
+                insecPrint("Can't find a controller to dismiss during culling")
             }
-            
         } else {
             // No nextFrame, good, nothing to dismiss
             
-            if
-                let navigationFrameIndex = location.navigationFrameIndex,
-                let navigationData = frames[frameIndex].navigationData
-            {
-                let nextNavigationFrameIndex = navigationFrameIndex + 1
-                
-                // Is there anything to pop?
-                
-                if navigationData.children.at(nextNavigationFrameIndex) != nil {
-                    // Yes chad.jpg
-                    return .pop
-                } else {
-                    return nil
-                }
-            } else {
-                // No navigation frames in this frame, which means, this call is a dud
-                return nil
-            }
+            dismissAction = nil
+        }
+        
+        switch (dismissAction, popAction) {
+        case (nil, nil):
+            return nil
+        case (.some(let dismissAction), nil):
+            return .dismiss(dismissAction)
+        case (nil, .some(let popAction)):
+            return .pop(popAction)
+        case (.some(let dismissAction), .some(let popAction)):
+            return .popAndThenDismiss(popAction, dismissAction)
         }
     }
     
@@ -941,17 +974,37 @@ public class InsecurityHost {
             return
         }
         
-        let action = findAppropriateActionForReset(at: coordinatorLocation)
+        resetAtLocation(coordinatorLocation)
+    }
+    
+    func resetAtLocation(_ location: CoordinatorLocation) {
+        
+        let action = findAppropriateActionForReset(at: location)
+        
+        let culledFrames = cullFramesAfterLocation(location)
+        
+        self.frames = culledFrames
         
         guard let action = action else {
             return
         }
-
-        let culledFrames = cullFramesAfterLocation(coordinatorLocation)
         
-        let frames = self.frames
-
-        
+        if state.notDead {
+            switch action {
+            case .dismiss(let dismiss):
+                dismiss.controller.dismiss(animated: true) { [weak self] in
+                    self?.executeScheduledStartRoutine()
+                }
+            case .pop(let pop):
+                pop.navigationController.popToViewController(pop.popToController, animated: true)
+                self.executeScheduledStartRoutineWithDelay()
+            case .popAndThenDismiss(let pop, let dismiss):
+                pop.navigationController.popToViewController(pop.popToController, animated: false)
+                dismiss.controller.dismiss(animated: true) { [weak self] in
+                    self?.executeScheduledStartRoutine()
+                }
+            }
+        }
     }
     
 #if DEBUG
