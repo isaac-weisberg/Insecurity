@@ -802,6 +802,158 @@ public class InsecurityHost {
         }
     }
     
+    // MARK: - Reset
+    
+    struct CoordinatorLocation {
+        let frameIndex: Int
+        let navigationFrameIndex: Int?
+    }
+    
+    private func findCoordinatorLocation(_ coordinator: CommonCoordinatorAny) -> CoordinatorLocation? {
+        var frameIndex: Int?
+        var navigationFrameIndex: Int?
+        
+        loop: for (index, frame) in frames.enumerated() {
+            if frame.coordinator === coordinator {
+                frameIndex = index
+                break loop
+            } else if let navigationData = frame.navigationData {
+                for (navigationIndex, navigationChild) in navigationData.children.enumerated() {
+                    if navigationChild.coordinator === coordinator {
+                        frameIndex = index
+                        navigationFrameIndex = navigationIndex
+                        break loop
+                    }
+                }
+            }
+        }
+        
+        guard let frameIndex = frameIndex else {
+            return nil
+        }
+
+        return CoordinatorLocation(frameIndex: frameIndex,
+                                   navigationFrameIndex: navigationFrameIndex)
+    }
+    
+    enum CullingAction {
+        case popAndDismiss
+        case dismiss
+        case pop
+    }
+    
+    private func findAppropriateActionForReset(at location: CoordinatorLocation) -> CullingAction? {
+        let frameIndex = location.frameIndex
+        let frame = frames[frameIndex]
+        
+        // Is there a next frame that will require modal dismissal?
+        let nextFrameIndex = frameIndex + 1
+        
+        if self.frames.at(nextFrameIndex) != nil {
+            // Alright, there is a next frame which will need to be dismissed
+            // Now, let's see if popping will also be necessary
+            if
+                let navigationFrameIndex = location.navigationFrameIndex,
+                let navigationData = frame.navigationData
+            {
+                let nextNavigationFrameIndex = navigationFrameIndex + 1
+                if navigationData.children.at(nextNavigationFrameIndex) != nil {
+                    // Yep, will need to pop
+                    return .popAndDismiss
+                } else {
+                    return .dismiss
+                }
+            } else {
+                // No navigation frames in this frame, which means, that dismissing will be completely enough
+                
+                return .dismiss
+            }
+            
+        } else {
+            // No nextFrame, good, nothing to dismiss
+            
+            if
+                let navigationFrameIndex = location.navigationFrameIndex,
+                let navigationData = frames[frameIndex].navigationData
+            {
+                let nextNavigationFrameIndex = navigationFrameIndex + 1
+                
+                // Is there anything to pop?
+                
+                if navigationData.children.at(nextNavigationFrameIndex) != nil {
+                    // Yes chad.jpg
+                    return .pop
+                } else {
+                    return nil
+                }
+            } else {
+                // No navigation frames in this frame, which means, this call is a dud
+                return nil
+            }
+        }
+    }
+    
+    private func cullFramesAfterLocation(_ location: CoordinatorLocation) -> [Frame] {
+        let frames = self.frames
+        
+        let culledFrames: [Frame]
+        
+        let frame = frames[location.frameIndex]
+        
+        let newlyCulledFrames = frames.removingAfter(index: location.frameIndex)
+        
+        if let navigationFrameIndex = location.navigationFrameIndex {
+            let oldNavigationData = frame.navigationData!
+            let oldChildren = oldNavigationData.children
+            
+            let culledChildren = oldChildren.removingAfter(index: navigationFrameIndex)
+            
+            let newNavigationData = FrameNavigationData(
+                children: culledChildren,
+                navigationController: oldNavigationData.navigationController,
+                rootController: oldNavigationData.rootController
+            )
+            let newFrame = Frame(
+                state: .live,
+                coordinator: frame.coordinator,
+                viewController: frame.viewController,
+                previousViewController: frame.previousViewController,
+                navigationData: newNavigationData
+            )
+            
+            let framesUpdatedWithNavigationData = newlyCulledFrames.replacingLast(with: newFrame)
+            
+            culledFrames = framesUpdatedWithNavigationData
+        } else {
+            culledFrames = newlyCulledFrames
+        }
+        
+        return culledFrames
+    }
+    
+    func reset(coordinator: CommonCoordinatorAny) {
+        guard state.notDead else { return }
+        
+        let coordinatorLocation = findCoordinatorLocation(coordinator)
+        
+        guard let coordinatorLocation = coordinatorLocation else {
+            assertionFailure("Calling reset on an untracked coordinator")
+            return
+        }
+        
+        let action = findAppropriateActionForReset(at: coordinatorLocation)
+        
+        guard let action = action else {
+            return
+        }
+
+        let culledFrames = cullFramesAfterLocation(coordinatorLocation)
+        
+        let frames = self.frames
+
+        
+    }
+    
 #if DEBUG
     deinit {
         insecPrint("\(type(of: self)) deinit")
@@ -994,6 +1146,13 @@ private extension Array {
             return self[index]
         }
         return nil
+    }
+    
+    func removingAfter(index: Int) -> Array {
+        if index >= count {
+            assertionFailure("Nothing to remove")
+        }
+        return Array(self.prefix(index + 1))
     }
 }
 
