@@ -1,6 +1,13 @@
 import UIKit
 
 open class AdaptiveCoordinator<Result>: CommonNavigationCoordinator, CommonModalCoordinator {
+    func bindToHost(_ navigation: AdaptiveNavigation & ModalNavigation,
+                    _ onFinish: @escaping (Result?, FinalizationKind) -> Void) -> UIViewController {
+        fatalError()
+    }
+    
+    var _onFinish: ((Result?) -> Void)?
+    
     private weak var _navigation: AdaptiveNavigation?
     
     public var navigation: AdaptiveNavigation! {

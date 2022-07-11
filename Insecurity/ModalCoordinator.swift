@@ -14,6 +14,55 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
     
     var _finishImplementation: ((Result?) -> Void)?
     
+    var _onFinish: ((Result?) -> Void)?
+    
+    func bindToHost(_ navigation: ModalNavigation & AdaptiveNavigation,
+                    _ onFinish: @escaping (Result?, FinalizationKind) -> Void) -> UIViewController {
+        self._navigation = navigation
+        
+        let controller = self.viewController
+        
+        weak var kvoContext: InsecurityKVOContext?
+        weak var weakController: UIViewController?
+        
+        self._finishImplementation = { [weak self] result in
+            if let kvoContext = kvoContext {
+                weakController?.insecurityKvo.removeObserver(kvoContext)
+            }
+            weakController?.deinitObservable.onDeinit = nil
+            self?._finishImplementation = nil
+            
+            onFinish(nil, .callback)
+        }
+        
+        weakController = controller
+        
+        kvoContext = controller.insecurityKvo.addHandler(
+            UIViewController.self,
+            modalParentObservationKeypath
+        ) { [weak self] oldController, newController in
+            if oldController != nil, newController == nil {
+                if let kvoContext = kvoContext {
+                    weakController?.insecurityKvo.removeObserver(kvoContext)
+                }
+                weakController?.deinitObservable.onDeinit = nil
+                self?._finishImplementation = nil
+                
+                onFinish(nil, .kvo)
+            }
+        }
+        
+        controller.deinitObservable.onDeinit = { [weak self] in
+            assert(weakController == nil)
+            
+            self?._finishImplementation = nil
+            
+            onFinish(nil, .deinitialization)
+        }
+        
+        return controller
+    }
+    
     public func finish(_ result: Result) {
         guard let _finishImplementation = _finishImplementation else {
             assertionFailure("`finish` called before the coordinator was started")

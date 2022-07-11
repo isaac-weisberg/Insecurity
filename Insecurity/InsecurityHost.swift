@@ -28,11 +28,13 @@ private struct InsecurityHostState {
     var notDead: Bool
 }
 
-private enum FinalizationKind {
+enum FinalizationKind {
     case callback
     case kvo
     case deinitialization
-    
+}
+
+private extension FinalizationKind {
     func toFrameState() -> FrameState {
         switch self {
         case .callback:
@@ -187,63 +189,11 @@ public class InsecurityHost {
         
         assert(state.stage.allowsPresentation)
         
-        child._updateHostReference(self)
-        
-        weak var weakChild = child
-        weak var kvoContext: InsecurityKVOContext?
-        weak var weakController: UIViewController?
-        
-        child._finishImplementation = { [weak self] result in
-            if let kvoContext = kvoContext {
-                weakController?.insecurityKvo.removeObserver(kvoContext)
-            }
-            weakController?.deinitObservable.onDeinit = nil
-            weakChild?._finishImplementation = nil
-            
-            guard let self = self else {
-                assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
-                return
-            }
-            guard let child = weakChild else { return }
-            
-            self.finalizeModal(child, .callback) {
+        let controller = child.bindToHost(self) { [weak self, weak child] result, finalizationKind in
+            guard let self = self else { return }
+            guard let child = child else { return }
+            self.finalizeModal(child, finalizationKind) {
                 completion(result)
-            }
-        }
-        
-        let controller = child.viewController
-        weakController = controller
-        
-        kvoContext = controller.insecurityKvo.addHandler(
-            UIViewController.self,
-            modalParentObservationKeypath
-        ) { [weak self, weak child] oldController, newController in
-            if oldController != nil, newController == nil {
-                if let kvoContext = kvoContext {
-                    weakController?.insecurityKvo.removeObserver(kvoContext)
-                }
-                weakController?.deinitObservable.onDeinit = nil
-                weakChild?._finishImplementation = nil
-                
-                guard let self = self else {
-                    assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
-                    return
-                }
-                guard let child = child else { return }
-                
-                self.finalizeModal(child, .kvo) {
-                    completion(nil)
-                }
-            }
-        }
-        
-        controller.deinitObservable.onDeinit = { [weak self, weak child] in
-            weakChild?._finishImplementation = nil
-            
-            guard let self = self, let child = child else { return }
-            
-            self.finalizeModal(child, .deinitialization) {
-                completion(nil)
             }
         }
         

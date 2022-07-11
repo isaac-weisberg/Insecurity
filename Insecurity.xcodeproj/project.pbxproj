@@ -14,6 +14,7 @@
 		A309742B274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */; };
 		A309742D274C2B3D003EB063 /* PaymentMethodAddCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */; };
 		A309742F274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */; };
+		A31F0D71287CB6AA0039481E /* Binding.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31F0D70287CB6AA0039481E /* Binding.swift */; };
 		A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320332F27164E0400ABD197 /* ModalNavigation.swift */; };
 		A320333227164E1300ABD197 /* ModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333127164E1300ABD197 /* ModalCoordinator.swift */; };
 		A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */; };
@@ -165,6 +166,7 @@
 		A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsAdaptiveCoordinator.swift; sourceTree = "<group>"; };
 		A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodAddCell.swift; sourceTree = "<group>"; };
 		A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodAdaptiveCoordinator.swift; sourceTree = "<group>"; };
+		A31F0D70287CB6AA0039481E /* Binding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Binding.swift; sourceTree = "<group>"; };
 		A320332F27164E0400ABD197 /* ModalNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNavigation.swift; sourceTree = "<group>"; };
 		A320333127164E1300ABD197 /* ModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalCoordinator.swift; sourceTree = "<group>"; };
 		A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerNavigation.swift; sourceTree = "<group>"; };
@@ -645,6 +647,7 @@
 				A3DD891D2732EB2800C07EBD /* WindowHost.swift */,
 				A3DD891F2732F29E00C07EBD /* WindowCoordinator.swift */,
 				A3A5C3E9273497BC00689F0B /* CommonCoordinatorAny.swift */,
+				A31F0D70287CB6AA0039481E /* Binding.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -988,6 +991,7 @@
 				A390C14E2717965100E9C905 /* CommonNavigationCoordinator.swift in Sources */,
 				A3E7F8FD272B448800881641 /* DankSpeak.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,
+				A31F0D71287CB6AA0039481E /* Binding.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
