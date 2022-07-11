@@ -49,18 +49,15 @@ private struct FrameNavigationChild {
     var state: FrameState
     let coordinator: CommonNavigationCoordinatorAny
     weak var viewController: UIViewController?
-    weak var previousViewController: UIViewController?
     
     init(
         state: FrameState,
         coordinator: CommonNavigationCoordinatorAny,
-        viewController: UIViewController?,
-        previousViewController: UIViewController?
+        viewController: UIViewController?
     ) {
         self.state = state
         self.coordinator = coordinator
         self.viewController = viewController
-        self.previousViewController = previousViewController
     }
 }
 
@@ -95,20 +92,17 @@ private struct Frame {
     var state: FrameState
     let coordinator: CommonCoordinatorAny
     weak var viewController: UIViewController?
-    weak var previousViewController: UIViewController?
     var navigationData: FrameNavigationData?
     
     init(
         state: FrameState,
         coordinator: CommonCoordinatorAny,
         viewController: UIViewController?,
-        previousViewController: UIViewController?,
         navigationData: FrameNavigationData?
     ) {
         self.state = state
         self.coordinator = coordinator
         self.viewController = viewController
-        self.previousViewController = previousViewController
         self.navigationData = navigationData
     }
 }
@@ -311,7 +305,6 @@ public class InsecurityHost {
             state: .live,
             coordinator: child,
             viewController: controller,
-            previousViewController: electedHostController,
             navigationData: nil
         )
         self.frames.append(frame)
@@ -461,17 +454,10 @@ public class InsecurityHost {
     ) {
         if let lastFrame = frames.last {
             if let navigationData = lastFrame.navigationData {
-                let previousViewController: UIViewController?
-                if let lastNavigationChild = navigationData.children.last {
-                    previousViewController = lastNavigationChild.viewController.assertingNotNil()
-                } else {
-                    previousViewController = navigationData.rootController.assertingNotNil()
-                }
                 let navigationFrame = FrameNavigationChild(
                     state: .live,
                     coordinator: child,
-                    viewController: controller,
-                    previousViewController: previousViewController.assertingNotNil()
+                    viewController: controller
                 )
                 
                 var updatedFrame = lastFrame
@@ -500,8 +486,7 @@ public class InsecurityHost {
                 let frameChild = FrameNavigationChild(
                     state: .live,
                     coordinator: child,
-                    viewController: controller,
-                    previousViewController: navigationController.viewControllers[0]
+                    viewController: controller
                 )
                 
                 let navigationData = FrameNavigationData(
@@ -515,7 +500,6 @@ public class InsecurityHost {
                     state: .live,
                     coordinator: RootNavigationCrutchCoordinator(),
                     viewController: navigationController,
-                    previousViewController: nil,
                     navigationData: navigationData
                 )
                 
@@ -666,7 +650,6 @@ public class InsecurityHost {
             state: .live,
             coordinator: child,
             viewController: navigationController,
-            previousViewController: electedHostController,
             navigationData: FrameNavigationData(
                 children: [],
                 navigationController: navigationController,
@@ -787,7 +770,7 @@ public class InsecurityHost {
         let frameIndex = location.frameIndex
         let frame = frames[frameIndex]
         
-        // Now, let's see if popping will also be necessary
+        // Let's see if popping will be necessary
         let popAction: CullingAction.Pop?
         
         if
@@ -882,7 +865,6 @@ public class InsecurityHost {
                 state: .live,
                 coordinator: frame.coordinator,
                 viewController: frame.viewController,
-                previousViewController: frame.previousViewController,
                 navigationData: newNavigationData
             )
             
