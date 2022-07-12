@@ -156,22 +156,8 @@ public class InsecurityHost {
         let coordinates = CoordinatorLocation(frameIndex: frames.count,
                                               navigationFrameIndex: nil)
         
-        
         let controller = child.bindToHost(self) { [weak self] result, finalizationKind in
-            guard let self = self else { return }
-            guard self.state.notDead else { return }
-            
-            switch self.state.stage {
-            case .ready:
-                self.state.stage = .precull(coordinates)
-                completion(result)
-                
-            case .precull(let currentLowestCoordinates):
-                let newLowestCoordinates = min(currentLowestCoordinates, coordinates)
-                self.state.stage = .precull(newLowestCoordinates)
-            case .culling:
-                assertionFailure()
-            }
+            self?.handleCoordinatorFinished(with: result, at: coordinates, completion)
         }
         
         let newFrame = Frame(coordinator: child,
@@ -197,7 +183,7 @@ public class InsecurityHost {
             immediateDispatchNavigation(child, animated: animated) { result in
                 completion(result)
             }
-        case .batching:
+        case .precull:
             if _scheduledStartRoutine != nil {
                 assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
                 return
@@ -211,7 +197,7 @@ public class InsecurityHost {
                     completion(result)
                 }
             }
-        case .purging:
+        case .culling:
             assertionFailure("Please don't start during purges")
         }
     }
@@ -222,133 +208,45 @@ public class InsecurityHost {
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
         guard state.notDead else { return }
-        
         assert(state.stage.allowsPresentation)
         
-        
-        sendOffNavigation(controller, animated, child)
-    }
-    
-    private func finalizeNavigation(
-        _ child: CommonNavigationCoordinatorAny,
-        _ kind: FinalizationKind,
-        _ callback: () -> Void
-    ) {
-        // Very questionable code ahead
-        var indexInsideNavigationOpt: Int?
-        let indexOfFrameOpt = frames.firstIndex(where: { frame -> Bool in
-            if frame.coordinator === child {
-                return true
-            } else if let navigationData = frame.navigationData {
-                let firstIndexInsideNavigationOpt = navigationData.children.firstIndex(where: { navigationChild in
-                    return navigationChild.coordinator === child
-                })
-                
-                if let firstIndexInsideNavigation = firstIndexInsideNavigationOpt {
-                    indexInsideNavigationOpt = firstIndexInsideNavigation
-                    return true
-                } else {
-                    return false
-                }
-            } else {
-                return false
-            }
-        })
-        
-        if let indexOfFrame = indexOfFrameOpt {
-            assert(frames.at(indexOfFrame) != nil)
-            
-            if let indexInsideNavigation = indexInsideNavigationOpt {
-                assert(frames[indexOfFrame].navigationData != nil)
-                frames[indexOfFrame].navigationData?.children[indexInsideNavigation].state = kind.toFrameState()
-            } else {
-                frames[indexOfFrame].state = kind.toFrameState()
-            }
+        guard let lastFrame = frames.last else {
+            assertionFailure("Why would there be no frames")
+            return
         }
         
-        if indexOfFrameOpt != nil {
-            switch state.stage {
-            case .batching:
-                if self.state.notDead {
-                    callback()
-                }
-            case .purging:
-                fatalError()
-            case .ready:
-                self.state.stage = .batching
-                if self.state.notDead {
-                    callback()
-                }
-                self.state.stage = .purging
-                self.purge()
-                self.state.stage = .ready
-            }
+        guard let lastFrameNavigationData = lastFrame.navigationData else {
+            assertionFailure("Starting a navigationChild in non-navigation context")
+            return
         }
-    }
-    
-    func sendOffNavigation(
-        _ controller: UIViewController,
-        _ animated: Bool,
-        _ child: CommonNavigationCoordinatorAny
-    ) {
-        if let lastFrame = frames.last {
-            if let navigationData = lastFrame.navigationData {
-                let navigationFrame = FrameNavigationChild(
-                    state: .live,
-                    coordinator: child,
-                    viewController: controller
-                )
-                
-                var updatedFrame = lastFrame
-                assert(lastFrame.navigationData != nil)
-                updatedFrame.navigationData?.children.append(navigationFrame)
-                
-                frames = frames.replacingLast(with: updatedFrame)
-                
-                navigationData.navigationController.assertNotNil()
-                navigationData.navigationController?.pushViewController(controller, animated: true)
-            } else {
-                assertionFailure("Can not start navigation child when the top context is not UINavigationController")
-                return
-            }
-        } else {
-            switch root {
-            case .modal:
-                assertionFailure("Can not start navigation child when the top context is not UINavigationController")
-                return
-            case .navigation(let weak):
-                guard let navigationController = weak.value else {
-                    assertionFailure("InsecurityHost wanted to start NavigationChild, but the UINavigationController was found dead")
-                    return
-                }
-                
-                let frameChild = FrameNavigationChild(
-                    state: .live,
-                    coordinator: child,
-                    viewController: controller
-                )
-                
-                let navigationData = FrameNavigationData(
-                    children: [ frameChild ],
-                    navigationController: navigationController,
-                    rootController: navigationController.viewControllers[0]
-                )
-                
-                // This is ass, this is really-really bad
-                let frame = Frame(
-                    state: .live,
-                    coordinator: RootNavigationCrutchCoordinator(),
-                    viewController: navigationController,
-                    navigationData: navigationData
-                )
-                
-                self.frames = [
-                    frame
-                ]
-                
-                navigationController.pushViewController(controller, animated: true)
-            }
+        
+        guard let host = lastFrameNavigationData.navigationController else {
+            assertionFailure("No navigation controller to start a child, it died")
+            return
         }
+        
+        let coordinates = CoordinatorLocation(frameIndex: frames.count - 1,
+                                              navigationFrameIndex: lastFrameNavigationData.children.count)
+        
+        let controller = child.bindToHost(self) { [weak self] result, finalizationKind in
+            self?.handleCoordinatorFinished(with: result, at: coordinates, completion)
+        }
+        
+        let navigationFrame = FrameNavigationChild(coordinator: child,
+                                                   viewController: controller)
+        let newNavigationDataChildren = lastFrameNavigationData.children + [navigationFrame]
+        let newNavigationData = FrameNavigationData(children: newNavigationDataChildren,
+                                                    navigationController: lastFrameNavigationData.navigationController,
+                                                    rootController: lastFrameNavigationData.rootController)
+        let newFrame = Frame(coordinator: lastFrame.coordinator,
+                             viewController: lastFrame.viewController,
+                             navigationData: newNavigationData)
+        
+        let newFrames = self.frames.replacingLast(with: newFrame)
+        
+        self.frames = newFrames
+        
+        host.pushViewController(controller, animated: animated)
     }
     
     // MARK: - Navigation New
@@ -503,6 +401,30 @@ public class InsecurityHost {
     }
     
     // MARK: - Purge
+    
+    private func handleCoordinatorFinished<Result>(with result: Result?,
+                                                   at coordinates: CoordinatorLocation,
+                                                   _ completion: @escaping (Result?) -> Void) {
+        guard self.state.notDead else { return }
+        
+        switch self.state.stage {
+        case .ready:
+            self.state.stage = .precull(coordinates)
+            completion(result)
+            
+            switch self.state.stage {
+            case .precull(let minimumCoordinates):
+                self.purge(locationOfFirstDeadCoordinator: minimumCoordinates)
+            case .culling, .ready:
+                assertionFailure()
+            }
+        case .precull(let currentLowestCoordinates):
+            let newLowestCoordinates = min(currentLowestCoordinates, coordinates)
+            self.state.stage = .precull(newLowestCoordinates)
+        case .culling:
+            assertionFailure()
+        }
+    }
     
     private func purge(locationOfFirstDeadCoordinator location: CoordinatorLocation) {
         guard let previousLocation = self.previousLocation(for: location) else {
