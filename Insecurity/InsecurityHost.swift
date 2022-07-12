@@ -11,21 +11,21 @@ private struct Weak<Value> where Value: AnyObject {
 private struct InsecurityHostState {
     enum Stage {
         case ready
-        case batching
-        case purging
+        case precull(CoordinatorLocation)
+        case culling
         
         var allowsPresentation: Bool {
             switch self {
-            case .batching:
+            case .precull:
                 return false
-            case .ready, .purging:
+            case .ready, .culling:
                 return true
             }
         }
     }
     
-    var stage: Stage
     var notDead: Bool
+    var stage: Stage
 }
 
 enum FinalizationKind {
@@ -112,27 +112,18 @@ private struct Frame {
 public class InsecurityHost {
     fileprivate var frames: [Frame] = []
     
-    fileprivate enum Root {
-        case modal(Weak<UIViewController>)
-        case navigation(Weak<UINavigationController>)
-    }
-    
-    fileprivate let root: Root
-    
-    fileprivate var state = InsecurityHostState(stage: .ready, notDead: true)
+    fileprivate var state = InsecurityHostState(notDead: true,
+                                                stage: .ready)
     
     func kill() {
         state.notDead = false
     }
     
-    public init(modal viewController: UIViewController) {
-        self.root = .modal(Weak<UIViewController>(viewController))
+    public init() {
+        
     }
     
-    public init(navigation navigationController: UINavigationController) {
-        assert(navigationController.viewControllers.count == 1)
-        self.root = .navigation(Weak<UINavigationController>(navigationController))
-    }
+    // MARK: - Scheduled start routine
     
     fileprivate var _scheduledStartRoutine: (() -> Void)?
     
@@ -156,12 +147,12 @@ public class InsecurityHost {
     ) {
         guard state.notDead else { return }
         
-        switch state.stage {
+        switch state.modernStage {
         case .ready:
             immediateDispatchModal(child, animated: animated) { result in
                 completion(result)
             }
-        case .batching:
+        case .precull:
             if _scheduledStartRoutine != nil {
                 assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
                 return
@@ -175,7 +166,7 @@ public class InsecurityHost {
                     completion(result)
                 }
             }
-        case .purging:
+        case .culling:
             assertionFailure("Please don't start during purges")
         }
     }
@@ -189,49 +180,74 @@ public class InsecurityHost {
         
         assert(state.stage.allowsPresentation)
         
-        let controller = child.bindToHost(self) { [weak self, weak child] result, finalizationKind in
+        guard let host = frames.last?.viewController else {
+            assertionFailure("Frames chain integrity violated, one modal host is dead")
+            return
+        }
+                
+        let coordinates = CoordinatorLocation(frameIndex: frames.count,
+                                              navigationFrameIndex: nil)
+        
+        
+        let controller = child.bindToHost(self) { [weak self] result, finalizationKind in
             guard let self = self else { return }
-            guard let child = child else { return }
-            self.finalizeModal(child, finalizationKind) {
+            guard self.state.notDead else { return }
+            
+            switch self.state.stage {
+            case .ready:
+                self.state.stage = .precull(coordinates)
                 completion(result)
+                
+            case .precull(let currentLowestCoordinates):
+                let newLowestCoordinates = min(currentLowestCoordinates, coordinates)
+                self.state.stage = .precull(newLowestCoordinates)
+            case .culling:
+                assertionFailure()
             }
         }
         
-        sendOffModal(controller, animated, child)
+        let newFrame = Frame(state: .live,
+                             coordinator: child,
+                             viewController: controller,
+                             navigationData: nil)
+        
+        frames.append(newFrame)
+        
+        host.present(controller, animated: animated, completion: nil)
     }
     
-    private func finalizeModal(
-        _ child: CommonModalCoordinatorAny,
-        _ kind: FinalizationKind,
-        _ callback: () -> Void
-    ) {
-        let indexOfFrameOpt = frames.firstIndex(where: { frame in
-            return frame.coordinator === child
-        })
-        
-        if let indexOfFrame = indexOfFrameOpt {
-            frames[indexOfFrame].state = kind.toFrameState()
-        }
-        
-        if indexOfFrameOpt != nil {
-            switch state.stage {
-            case .batching:
-                if self.state.notDead {
-                    callback()
-                }
-            case .purging:
-                fatalError()
-            case .ready:
-                self.state.stage = .batching
-                if self.state.notDead {
-                    callback()
-                }
-                self.state.stage = .purging
-                self.purge()
-                self.state.stage = .ready
-            }
-        }
-    }
+//    private func finalizeModal(
+//        _ child: CommonModalCoordinatorAny,
+//        _ kind: FinalizationKind,
+//        _ callback: () -> Void
+//    ) {
+//        let indexOfFrameOpt = frames.firstIndex(where: { frame in
+//            return frame.coordinator === child
+//        })
+//
+//        if let indexOfFrame = indexOfFrameOpt {
+//            frames[indexOfFrame].state = kind.toFrameState()
+//        }
+//
+//        if indexOfFrameOpt != nil {
+//            switch state.stage {
+//            case .batching:
+//                if self.state.notDead {
+//                    callback()
+//                }
+//            case .purging:
+//                fatalError()
+//            case .ready:
+//                self.state.stage = .batching
+//                if self.state.notDead {
+//                    callback()
+//                }
+//                self.state.stage = .purging
+//                self.purge()
+//                self.state.stage = .ready
+//            }
+//        }
+//    }
     
     private func sendOffModal(_ controller: UIViewController, _ animated: Bool, _ child: CommonModalCoordinatorAny) {
         let electedHostControllerOpt: UIViewController?
@@ -615,91 +631,15 @@ public class InsecurityHost {
     
     // MARK: - Purge
     
-    private func purge() {
-        guard let lastNonDeadLocation = findLocationForLastNonDeadCoordinator() else { return }
+    private func purge(locationOfFirstDeadCoordinator location: CoordinatorLocation) {
+        guard let previousLocation = self.previousLocation(for: location) else {
+            assertionFailure("How comes every frame died?")
+        }
         
-        resetAtLocation(lastNonDeadLocation)
+        resetAtLocation(previousLocation)
     }
     
     // MARK: - Reset
-    
-    struct CoordinatorLocation {
-        let frameIndex: Int
-        let navigationFrameIndex: Int?
-    }
-    
-    private func findLocationForLastNonDeadCoordinator() -> CoordinatorLocation? {
-        var firstDeadNavigationChildIndexOpt: Int?
-        let firstDeadChildIndexOpt = self.frames.firstIndex(where: { frame in
-            switch frame.state {
-            case .finishedByCompletion, .finishedByKVO, .finishedByDeinit:
-                return true
-            case .live:
-                if let navigationData = frame.navigationData {
-                    let firstDeadNavigationIndexOpt = navigationData.children.firstIndex(where: { child in
-                        switch child.state {
-                        case .finishedByDeinit, .finishedByKVO, .finishedByCompletion:
-                            return true
-                        case .live:
-                            return false
-                        }
-                    })
-                    
-                    if let firstDeadNavigationIndex = firstDeadNavigationIndexOpt {
-                        firstDeadNavigationChildIndexOpt = firstDeadNavigationIndex
-                        return true
-                    }
-                    return false
-                } else {
-                    return false
-                }
-            }
-        })
-        
-        if let firstDeadChildIndex = firstDeadChildIndexOpt {
-            if
-                let firstDeadNavigationChildIndex = firstDeadNavigationChildIndexOpt,
-                firstDeadNavigationChildIndex > 0
-            {
-                return CoordinatorLocation(frameIndex: firstDeadChildIndex,
-                                           navigationFrameIndex: firstDeadNavigationChildIndex - 1)
-            } else if firstDeadChildIndex > 0 {
-                return CoordinatorLocation(frameIndex: firstDeadChildIndex - 1,
-                                           navigationFrameIndex: nil)
-            } else {
-                return nil
-            }
-        } else {
-             return nil
-        }
-    }
-    
-    private func findCoordinatorLocation(_ coordinator: CommonCoordinatorAny) -> CoordinatorLocation? {
-        var frameIndex: Int?
-        var navigationFrameIndex: Int?
-        
-        loop: for (index, frame) in frames.enumerated() {
-            if frame.coordinator === coordinator {
-                frameIndex = index
-                break loop
-            } else if let navigationData = frame.navigationData {
-                for (navigationIndex, navigationChild) in navigationData.children.enumerated() {
-                    if navigationChild.coordinator === coordinator {
-                        frameIndex = index
-                        navigationFrameIndex = navigationIndex
-                        break loop
-                    }
-                }
-            }
-        }
-        
-        guard let frameIndex = frameIndex else {
-            return nil
-        }
-
-        return CoordinatorLocation(frameIndex: frameIndex,
-                                   navigationFrameIndex: navigationFrameIndex)
-    }
     
     enum CullingAction {
         struct Dismiss {
@@ -866,6 +806,71 @@ public class InsecurityHost {
                 executeScheduledStartRoutine()
             }
         }
+    }
+        
+    // MARK: - Calculus
+    
+    func previousLocation(for location: CoordinatorLocation) -> CoordinatorLocation? {
+        if let navigationIndex = location.navigationFrameIndex {
+            if navigationIndex > 0 {
+                let previousNavigationIndex = navigationIndex - 1
+                
+                return CoordinatorLocation(frameIndex: location.frameIndex,
+                                           navigationFrameIndex: previousNavigationIndex)
+            } else {
+                return CoordinatorLocation(frameIndex: location.frameIndex,
+                                           navigationFrameIndex: nil)
+            }
+        } else {
+            let previousFrameIndex = location.frameIndex - 1
+            
+            if let previousFrame = frames.at(previousFrameIndex) {
+                if
+                    let previousFrameNavigationData = previousFrame.navigationData
+                {
+                    if previousFrameNavigationData.children.isEmpty {
+                        return CoordinatorLocation(frameIndex: previousFrameIndex,
+                                                   navigationFrameIndex: nil)
+                    } else {
+                        let lastNavigationIndex = previousFrameNavigationData.children.count - 1
+                        return CoordinatorLocation(frameIndex: previousFrameIndex,
+                                                   navigationFrameIndex: lastNavigationIndex)
+                    }
+                } else {
+                    return CoordinatorLocation(frameIndex: previousFrameIndex,
+                                               navigationFrameIndex: nil)
+                }
+            } else {
+                 return nil
+            }
+        }
+    }
+    
+    private func findCoordinatorLocation(_ coordinator: CommonCoordinatorAny) -> CoordinatorLocation? {
+        var frameIndex: Int?
+        var navigationFrameIndex: Int?
+        
+        loop: for (index, frame) in frames.enumerated() {
+            if frame.coordinator === coordinator {
+                frameIndex = index
+                break loop
+            } else if let navigationData = frame.navigationData {
+                for (navigationIndex, navigationChild) in navigationData.children.enumerated() {
+                    if navigationChild.coordinator === coordinator {
+                        frameIndex = index
+                        navigationFrameIndex = navigationIndex
+                        break loop
+                    }
+                }
+            }
+        }
+        
+        guard let frameIndex = frameIndex else {
+            return nil
+        }
+
+        return CoordinatorLocation(frameIndex: frameIndex,
+                                   navigationFrameIndex: navigationFrameIndex)
     }
     
 #if DEBUG
