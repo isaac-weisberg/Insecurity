@@ -66,17 +66,33 @@ private struct Frame {
 }
 
 public class InsecurityHost {
-    fileprivate var frames: [Frame] = []
-    
-    fileprivate var state = InsecurityHostState(notDead: true,
+    private var frames: [Frame]
+    private var state = InsecurityHostState(notDead: true,
                                                 stage: .ready)
     
     func kill() {
         state.notDead = false
     }
     
-    public init() {
-        
+    public init(navigation navigationController: UINavigationController) {
+        guard let rootController = navigationController.viewControllers.first else {
+            fatalError("Root controller on UINavigationController must be already set")
+        }
+        self.frames = [
+            Frame(coordinator: InsecurityHostRootCoordinator(),
+                  viewController: navigationController,
+                  navigationData: FrameNavigationData(children: [],
+                                                      navigationController: navigationController,
+                                                      rootController: rootController))
+        ]
+    }
+    
+    public init(modal modalController: UIViewController) {
+        self.frames = [
+            Frame(coordinator: InsecurityHostRootCoordinator(),
+                  viewController: modalController,
+                  navigationData: nil)
+        ]
     }
     
     // MARK: - Scheduled start routine
@@ -341,6 +357,7 @@ public class InsecurityHost {
     private func purge(locationOfFirstDeadCoordinator location: CoordinatorLocation) {
         guard let previousLocation = self.previousLocation(for: location) else {
             assertionFailure("How comes every frame died?")
+            return
         }
         
         resetAtLocation(previousLocation)
@@ -371,30 +388,48 @@ public class InsecurityHost {
         let popAction: CullingAction.Pop?
         
         if
-            let navigationFrameIndex = location.navigationFrameIndex,
             let navigationData = frame.navigationData
         {
-            let navigationFrame = navigationData.children[navigationFrameIndex]
-            
-            let nextNavigationFrameIndex = navigationFrameIndex + 1
-            
-            if navigationData.children.at(nextNavigationFrameIndex) != nil {
-                // Yep, will need to pop
+            if let navigationFrameIndex = location.navigationFrameIndex {
+                let navigationFrame = navigationData.children[navigationFrameIndex]
                 
-                if let navigationController = navigationData.navigationController {
-                    if let popToController = navigationFrame.viewController {
-                        popAction = CullingAction.Pop(navigationController: navigationController,
-                                                      popToController: popToController)
+                let nextNavigationFrameIndex = navigationFrameIndex + 1
+                
+                if navigationData.children.at(nextNavigationFrameIndex) != nil {
+                    // Yep, will need to pop
+                    
+                    if let navigationController = navigationData.navigationController {
+                        if let popToController = navigationFrame.viewController {
+                            popAction = CullingAction.Pop(navigationController: navigationController,
+                                                          popToController: popToController)
+                        } else {
+                            insecPrint("Can't find a popToController during pop")
+                            popAction = nil
+                        }
                     } else {
-                        insecPrint("Can't find a popToController during pop")
+                        insecPrint("Can't find a navigationController during pop")
                         popAction = nil
                     }
                 } else {
-                    insecPrint("Can't find a navigationController during pop")
                     popAction = nil
                 }
             } else {
-                popAction = nil
+                if navigationData.children.isEmpty {
+                    popAction = nil
+                } else {
+                    if let navigationController = navigationData.navigationController {
+                        if let popToController = navigationData.rootController {
+                            popAction = CullingAction.Pop(navigationController: navigationController,
+                                                          popToController: popToController)
+                        } else {
+                            insecPrint("Can't find a popToController during pop")
+                            popAction = nil
+                        }
+                    } else {
+                        insecPrint("Can't find a navigationController during pop")
+                        popAction = nil
+                    }
+                }
             }
         } else {
             // No navigation frames in this frame, which means, that dismissing will be completely enough

@@ -17,6 +17,8 @@ public class WindowHost {
             return
         }
         
+        
+        
         let controller = child.viewController
         let host = InsecurityHost(modal: controller)
         
