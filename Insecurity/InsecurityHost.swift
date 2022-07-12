@@ -264,7 +264,7 @@ public class InsecurityHost {
             immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
                 completion(result)
             }
-        case .batching:
+        case .precull:
             if _scheduledStartRoutine != nil {
                 assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
                 return
@@ -278,7 +278,7 @@ public class InsecurityHost {
                     completion(result)
                 }
             }
-        case .purging:
+        case .culling:
             assertionFailure("Please don't start during purges")
         }
     }
@@ -290,101 +290,24 @@ public class InsecurityHost {
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
         guard state.notDead else { return }
-        
         assert(state.stage.allowsPresentation)
         
-        child._updateHostReference(self)
+        guard let host = frames.last?.viewController else {
+            return
+        }
         
-        weak var weakChild = child
-        weak var kvoContext: InsecurityKVOContext?
-        weak var weakController: UIViewController? = navigationController
+        let newNavigationCoordinator = NewNavigationCoordinator(child)
         
-        child._finishImplementation = { [weak self] result in
-            if let kvoContext = kvoContext {
-                weakController?.insecurityKvo.removeObserver(kvoContext)
-            }
-            weakController?.deinitObservable.onDeinit = nil
-            weakChild?._finishImplementation = nil
-            
-            guard let self = self else {
-                assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
-                return
-            }
-            guard let child = weakChild else { return }
-            
-            self.finalizeNavigation(child, .callback) {
+        let coordinates = CoordinatorLocation(frameIndex: frames.count,
+                                              navigationFrameIndex: nil)
+        
+        let controller = newNavigationCoordinator.bindToHost(self, navigationController) { [weak self] result, finalizationKind in
+            self?.handleCoordinatorFinished(with: result, at: coordinates) { result in
                 completion(result)
             }
         }
         
-        let controller = child.viewController
-        
-        kvoContext = navigationController.insecurityKvo.addHandler(
-            UIViewController.self,
-            modalParentObservationKeypath
-        ) { [weak self, weak child] oldController, newController in
-            if oldController != nil, newController == nil {
-                if let kvoContext = kvoContext {
-                    weakController?.insecurityKvo.removeObserver(kvoContext)
-                }
-                weakController?.deinitObservable.onDeinit = nil
-                weakChild?._finishImplementation = nil
-                
-                guard let self = self else {
-                    assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
-                    return
-                }
-                guard let child = child else { return }
-                
-                self.finalizeNavigation(child, .kvo) {
-                    completion(nil)
-                }
-            }
-        }
-        
-        navigationController.deinitObservable.onDeinit = { [weak self, weak child] in
-            weakChild?._finishImplementation = nil
-            
-            guard let self = self, let child = child else { return }
-            
-            self.finalizeNavigation(child, .deinitialization) {
-                completion(nil)
-            }
-        }
-        
-        sendOffNewNavigation(navigationController, controller, animated, child)
-    }
-    
-    private func sendOffNewNavigation(
-        _ navigationController: UINavigationController,
-        _ controller: UIViewController,
-        _ animated: Bool,
-        _ child: CommonNavigationCoordinatorAny
-    ) {
-        let electedHostControllerOpt: UIViewController?
-        if let topFrame = frames.last {
-            if let hostController = topFrame.viewController {
-                let hostDoesntPresentAnything = hostController.presentedViewController == nil
-                if hostDoesntPresentAnything {
-                    electedHostControllerOpt = hostController
-                } else {
-                    assertionFailure("Top controller in the modal stack is already busy presenting something else")
-                    electedHostControllerOpt = nil
-                }
-            } else {
-                assertionFailure("Top controller of modal stack is somehow dead")
-                electedHostControllerOpt = nil
-            }
-        } else {
-            electedHostControllerOpt = root.viewController
-        }
-        
-        guard let electedHostController = electedHostControllerOpt else {
-            assertionFailure("No parent was found to start a child")
-            return
-        }
         let frame = Frame(
-            state: .live,
             coordinator: child,
             viewController: navigationController,
             navigationData: FrameNavigationData(
@@ -396,8 +319,7 @@ public class InsecurityHost {
         
         self.frames.append(frame)
         
-        navigationController.setViewControllers([ controller ], animated: false)
-        electedHostController.present(navigationController, animated: animated, completion: nil)
+        host.present(navigationController, animated: animated, completion: nil)
     }
     
     // MARK: - Purge
@@ -414,7 +336,9 @@ public class InsecurityHost {
             
             switch self.state.stage {
             case .precull(let minimumCoordinates):
+                self.state.stage = .culling
                 self.purge(locationOfFirstDeadCoordinator: minimumCoordinates)
+                self.state.stage = .ready
             case .culling, .ready:
                 assertionFailure()
             }
@@ -465,10 +389,8 @@ public class InsecurityHost {
             let navigationFrame = navigationData.children[navigationFrameIndex]
             
             let nextNavigationFrameIndex = navigationFrameIndex + 1
-            if
-                let nextNavigationFrame = navigationData.children.at(nextNavigationFrameIndex),
-                nextNavigationFrame.state.needsDismissalInADeadChain
-            {
+            
+            if navigationData.children.at(nextNavigationFrameIndex) != nil {
                 // Yep, will need to pop
                 
                 if let navigationController = navigationData.navigationController {
@@ -497,10 +419,7 @@ public class InsecurityHost {
         // Is there a next frame that will require modal dismissal?
         let nextFrameIndex = frameIndex + 1
         
-        if
-            let nextFrame = frames.at(nextFrameIndex),
-            nextFrame.state.needsDismissalInADeadChain
-        {
+        if frames.at(nextFrameIndex) != nil {
             // Alright, there is a next frame which will need to be dismissed
             if let dismissController = frame.viewController {
                 dismissAction = CullingAction.Dismiss(controller: dismissController)
@@ -547,7 +466,6 @@ public class InsecurityHost {
                 rootController: oldNavigationData.rootController
             )
             let newFrame = Frame(
-                state: .live,
                 coordinator: frame.coordinator,
                 viewController: frame.viewController,
                 navigationData: newNavigationData
@@ -726,7 +644,7 @@ extension InsecurityHost: AdaptiveNavigation {
             self.immediateDispatchAdaptive(child, in: context, animated: animated) { result in
                 completion(result)
             }
-        case .batching:
+        case .precull:
             if _scheduledStartRoutine != nil {
                 assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
                 return
@@ -740,7 +658,7 @@ extension InsecurityHost: AdaptiveNavigation {
                     completion(result)
                 }
             }
-        case .purging:
+        case .culling:
             assertionFailure("Please don't start during purges")
         }
     }
@@ -764,16 +682,7 @@ extension InsecurityHost: AdaptiveNavigation {
                     }
                 }
             } else {
-                switch self.root {
-                case .navigation:
-                    self.immediateDispatchNavigation(child, animated: animated) { result in
-                        completion(result)
-                    }
-                case .modal:
-                    self.immediateDispatchModal(child, animated: animated) { result in
-                        completion(result)
-                    }
-                }
+                assertionFailure()
             }
         case .modal:
             self.immediateDispatchModal(child, animated: animated) { result in
@@ -793,45 +702,12 @@ extension InsecurityHost: AdaptiveNavigation {
                     }
                 }
             } else {
-                switch self.root {
-                case .navigation:
-                    self.immediateDispatchNavigation(child, animated: animated) { result in
-                        completion(result)
-                    }
-                case .modal:
-                    let navigationController = deferredNavigationController.make()
-                    
-                    self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
-                        completion(result)
-                    }
-                }
+                assertionFailure()
             }
         case .newNavigation(let navigationController):
             self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
                 completion(result)
             }
-        }
-    }
-}
-
-private extension InsecurityHost.Root {
-    var viewController: UIViewController? {
-        switch self {
-        case .navigation(let weak):
-            return weak.value
-        case .modal(let weak):
-            return weak.value
-        }
-    }
-}
-
-private extension FrameState {
-    var needsDismissalInADeadChain: Bool {
-        switch self {
-        case .finishedByDeinit, .finishedByKVO:
-            return false
-        case .finishedByCompletion, .live:
-            return true
         }
     }
 }

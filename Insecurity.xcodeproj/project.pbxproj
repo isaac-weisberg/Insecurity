@@ -16,6 +16,8 @@
 		A309742F274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */; };
 		A31F0D73287D715C0039481E /* CoordinatorLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31F0D72287D715C0039481E /* CoordinatorLocation.swift */; };
 		A31F0D75287D857A0039481E /* FinalizationKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31F0D74287D857A0039481E /* FinalizationKind.swift */; };
+		A31F0D7C287D9A7E0039481E /* NewNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31F0D7B287D9A7E0039481E /* NewNavigationCoordinator.swift */; };
+		A31F0D7E287D9AE80039481E /* CommonNewNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31F0D7D287D9AE80039481E /* CommonNewNavigationCoordinator.swift */; };
 		A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320332F27164E0400ABD197 /* ModalNavigation.swift */; };
 		A320333227164E1300ABD197 /* ModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333127164E1300ABD197 /* ModalCoordinator.swift */; };
 		A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */; };
@@ -169,6 +171,8 @@
 		A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodAdaptiveCoordinator.swift; sourceTree = "<group>"; };
 		A31F0D72287D715C0039481E /* CoordinatorLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorLocation.swift; sourceTree = "<group>"; };
 		A31F0D74287D857A0039481E /* FinalizationKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalizationKind.swift; sourceTree = "<group>"; };
+		A31F0D7B287D9A7E0039481E /* NewNavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewNavigationCoordinator.swift; sourceTree = "<group>"; };
+		A31F0D7D287D9AE80039481E /* CommonNewNavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNewNavigationCoordinator.swift; sourceTree = "<group>"; };
 		A320332F27164E0400ABD197 /* ModalNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNavigation.swift; sourceTree = "<group>"; };
 		A320333127164E1300ABD197 /* ModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalCoordinator.swift; sourceTree = "<group>"; };
 		A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerNavigation.swift; sourceTree = "<group>"; };
@@ -324,6 +328,7 @@
 		A31F0D76287D865E0039481E /* Coordinators */ = {
 			isa = PBXGroup;
 			children = (
+				A31F0D7A287D9A6F0039481E /* NewNavigation */,
 				A3A5C3E9273497BC00689F0B /* CommonCoordinatorAny.swift */,
 				A31F0D78287D86B20039481E /* ModalCoordinator */,
 				A31F0D77287D86A30039481E /* NavigationCoordinator */,
@@ -360,6 +365,15 @@
 				A392A1352720A0C200976B7E /* Deferred.swift */,
 			);
 			path = Util;
+			sourceTree = "<group>";
+		};
+		A31F0D7A287D9A6F0039481E /* NewNavigation */ = {
+			isa = PBXGroup;
+			children = (
+				A31F0D7B287D9A7E0039481E /* NewNavigationCoordinator.swift */,
+				A31F0D7D287D9AE80039481E /* CommonNewNavigationCoordinator.swift */,
+			);
+			path = NewNavigation;
 			sourceTree = "<group>";
 		};
 		A3383BC4270E42FE006982B1 /* ParentSample */ = {
@@ -1016,6 +1030,7 @@
 				A392A1362720A0C200976B7E /* Deferred.swift in Sources */,
 				A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */,
 				A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */,
+				A31F0D7E287D9AE80039481E /* CommonNewNavigationCoordinator.swift in Sources */,
 				A31F0D73287D715C0039481E /* CoordinatorLocation.swift in Sources */,
 				A3DD89202732F29E00C07EBD /* WindowCoordinator.swift in Sources */,
 				A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */,
@@ -1028,6 +1043,7 @@
 				A390C14E2717965100E9C905 /* CommonNavigationCoordinator.swift in Sources */,
 				A3E7F8FD272B448800881641 /* DankSpeak.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,
+				A31F0D7C287D9A7E0039481E /* NewNavigationCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
