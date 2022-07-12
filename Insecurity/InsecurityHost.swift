@@ -1,13 +1,5 @@
 import UIKit
 
-private struct Weak<Value> where Value: AnyObject {
-    weak var value: Value?
-    
-    init(_ value: Value) {
-        self.value = value
-    }
-}
-
 private struct InsecurityHostState {
     enum Stage {
         case ready
@@ -55,10 +47,6 @@ private struct FrameNavigationData {
         self.navigationController = navigationController
         self.rootController = rootController
     }
-}
-
-private class RootNavigationCrutchCoordinator: CommonCoordinatorAny {
-    
 }
 
 private struct Frame {
