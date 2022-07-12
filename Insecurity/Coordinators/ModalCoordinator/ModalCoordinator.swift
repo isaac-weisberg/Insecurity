@@ -14,16 +14,13 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
     
     var _finishImplementation: ((Result?) -> Void)?
     
-    var _onFinish: ((Result?) -> Void)?
-    
     func bindToHost(_ navigation: ModalNavigation & AdaptiveNavigation,
                     _ onFinish: @escaping (Result?, FinalizationKind) -> Void) -> UIViewController {
         self._navigation = navigation
         
         let controller = self.viewController
-        
         weak var kvoContext: InsecurityKVOContext?
-        weak var weakController: UIViewController?
+        weak var weakController: UIViewController? = controller
         
         self._finishImplementation = { [weak self] result in
             if let kvoContext = kvoContext {
@@ -34,8 +31,6 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
             
             onFinish(nil, .callback)
         }
-        
-        weakController = controller
         
         kvoContext = controller.insecurityKvo.addHandler(
             UIViewController.self,
@@ -79,10 +74,6 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         }
         
         _finishImplementation(nil)
-    }
-    
-    func _updateHostReference(_ host: ModalNavigation & AdaptiveNavigation) {
-        _navigation = host
     }
     
     public init() {

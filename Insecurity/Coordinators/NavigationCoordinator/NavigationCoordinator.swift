@@ -32,8 +32,31 @@ open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
         _finishImplementation(nil)
     }
     
-    func _updateHostReference(_ host: NavigationControllerNavigation & AdaptiveNavigation) {
-        _navigation = host
+    func bindToHost(_ navigation: NavigationControllerNavigation & AdaptiveNavigation,
+                    _ onFinish: @escaping (Result?, FinalizationKind) -> Void) -> UIViewController {
+        
+        self._navigation = navigation
+        
+        let controller = self.viewController
+        weak var weakController: UIViewController? = controller
+        
+        self._finishImplementation = { [weak self] result in
+            weakController?.deinitObservable.onDeinit = nil
+            
+            guard let self = self else { return }
+            self._finishImplementation = nil
+            
+            onFinish(result, .callback)
+        }
+        
+        controller.deinitObservable.onDeinit = { [weak self] in
+            guard let self = self else { return }
+            self._finishImplementation = nil
+            
+            onFinish(nil, .deinitialization)
+        }
+        
+        return controller
     }
     
     public init() {

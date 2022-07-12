@@ -15,6 +15,7 @@
 		A309742D274C2B3D003EB063 /* PaymentMethodAddCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */; };
 		A309742F274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */; };
 		A31F0D73287D715C0039481E /* CoordinatorLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31F0D72287D715C0039481E /* CoordinatorLocation.swift */; };
+		A31F0D75287D857A0039481E /* FinalizationKind.swift in Sources */ = {isa = PBXBuildFile; fileRef = A31F0D74287D857A0039481E /* FinalizationKind.swift */; };
 		A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320332F27164E0400ABD197 /* ModalNavigation.swift */; };
 		A320333227164E1300ABD197 /* ModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333127164E1300ABD197 /* ModalCoordinator.swift */; };
 		A320333627164F0900ABD197 /* NavigationControllerNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */; };
@@ -167,6 +168,7 @@
 		A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodAddCell.swift; sourceTree = "<group>"; };
 		A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodAdaptiveCoordinator.swift; sourceTree = "<group>"; };
 		A31F0D72287D715C0039481E /* CoordinatorLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorLocation.swift; sourceTree = "<group>"; };
+		A31F0D74287D857A0039481E /* FinalizationKind.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinalizationKind.swift; sourceTree = "<group>"; };
 		A320332F27164E0400ABD197 /* ModalNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalNavigation.swift; sourceTree = "<group>"; };
 		A320333127164E1300ABD197 /* ModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalCoordinator.swift; sourceTree = "<group>"; };
 		A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerNavigation.swift; sourceTree = "<group>"; };
@@ -317,6 +319,47 @@
 				0F11C1516A14E4898598B79F /* Pods-InsecurityDemo.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		A31F0D76287D865E0039481E /* Coordinators */ = {
+			isa = PBXGroup;
+			children = (
+				A3A5C3E9273497BC00689F0B /* CommonCoordinatorAny.swift */,
+				A31F0D78287D86B20039481E /* ModalCoordinator */,
+				A31F0D77287D86A30039481E /* NavigationCoordinator */,
+			);
+			path = Coordinators;
+			sourceTree = "<group>";
+		};
+		A31F0D77287D86A30039481E /* NavigationCoordinator */ = {
+			isa = PBXGroup;
+			children = (
+				A320333727164F2800ABD197 /* NavigationCoordinator.swift */,
+				A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */,
+			);
+			path = NavigationCoordinator;
+			sourceTree = "<group>";
+		};
+		A31F0D78287D86B20039481E /* ModalCoordinator */ = {
+			isa = PBXGroup;
+			children = (
+				A320333127164E1300ABD197 /* ModalCoordinator.swift */,
+				A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */,
+			);
+			path = ModalCoordinator;
+			sourceTree = "<group>";
+		};
+		A31F0D79287D87940039481E /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				A3441883270F9CD800CE49E4 /* Insecurity.swift */,
+				A36B058B2731E81000E67488 /* Util.swift */,
+				A3C44FE92729E71500A05C44 /* KVOObservable.swift */,
+				A3E7F8FC272B448800881641 /* DankSpeak.swift */,
+				A36E5AA62725C8660000C551 /* InsecurityLogger.swift */,
+				A392A1352720A0C200976B7E /* Deferred.swift */,
+			);
+			path = Util;
 			sourceTree = "<group>";
 		};
 		A3383BC4270E42FE006982B1 /* ParentSample */ = {
@@ -628,26 +671,18 @@
 		A3968FDF26FF25A800B6A59B /* Insecurity */ = {
 			isa = PBXGroup;
 			children = (
+				A31F0D79287D87940039481E /* Util */,
+				A31F0D76287D865E0039481E /* Coordinators */,
 				A370767F26FFCED600ED7391 /* DeinitObservable.swift */,
-				A3441883270F9CD800CE49E4 /* Insecurity.swift */,
 				A320332F27164E0400ABD197 /* ModalNavigation.swift */,
-				A320333127164E1300ABD197 /* ModalCoordinator.swift */,
 				A320333527164F0900ABD197 /* NavigationControllerNavigation.swift */,
-				A320333727164F2800ABD197 /* NavigationCoordinator.swift */,
 				A390C14B271792F100E9C905 /* AdaptiveNavigation.swift */,
 				A390C149271792C900E9C905 /* AdaptiveCoordinator.swift */,
-				A390C14D2717965100E9C905 /* CommonNavigationCoordinator.swift */,
-				A390C14F2717992100E9C905 /* CommonModalCoordinator.swift */,
-				A392A1352720A0C200976B7E /* Deferred.swift */,
-				A36E5AA62725C8660000C551 /* InsecurityLogger.swift */,
-				A3C44FE92729E71500A05C44 /* KVOObservable.swift */,
-				A3E7F8FC272B448800881641 /* DankSpeak.swift */,
 				A38CBDD8272F205100560B65 /* InsecurityHost.swift */,
-				A36B058B2731E81000E67488 /* Util.swift */,
 				A3DD891D2732EB2800C07EBD /* WindowHost.swift */,
 				A3DD891F2732F29E00C07EBD /* WindowCoordinator.swift */,
-				A3A5C3E9273497BC00689F0B /* CommonCoordinatorAny.swift */,
 				A31F0D72287D715C0039481E /* CoordinatorLocation.swift */,
+				A31F0D74287D857A0039481E /* FinalizationKind.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -984,6 +1019,7 @@
 				A31F0D73287D715C0039481E /* CoordinatorLocation.swift in Sources */,
 				A3DD89202732F29E00C07EBD /* WindowCoordinator.swift in Sources */,
 				A320333027164E0400ABD197 /* ModalNavigation.swift in Sources */,
+				A31F0D75287D857A0039481E /* FinalizationKind.swift in Sources */,
 				A320333827164F2800ABD197 /* NavigationCoordinator.swift in Sources */,
 				A3A5C3EA273497BC00689F0B /* CommonCoordinatorAny.swift in Sources */,
 				A3DD891E2732EB2800C07EBD /* WindowHost.swift in Sources */,

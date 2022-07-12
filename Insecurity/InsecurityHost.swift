@@ -28,36 +28,14 @@ private struct InsecurityHostState {
     var stage: Stage
 }
 
-enum FinalizationKind {
-    case callback
-    case kvo
-    case deinitialization
-}
-
-private extension FinalizationKind {
-    func toFrameState() -> FrameState {
-        switch self {
-        case .callback:
-            return .finishedByCompletion
-        case .kvo:
-            return .finishedByKVO
-        case .deinitialization:
-            return .finishedByDeinit
-        }
-    }
-}
-
 private struct FrameNavigationChild {
-    var state: FrameState
     let coordinator: CommonNavigationCoordinatorAny
     weak var viewController: UIViewController?
     
     init(
-        state: FrameState,
         coordinator: CommonNavigationCoordinatorAny,
         viewController: UIViewController?
     ) {
-        self.state = state
         self.coordinator = coordinator
         self.viewController = viewController
     }
@@ -79,30 +57,20 @@ private struct FrameNavigationData {
     }
 }
 
-private enum FrameState {
-    case live
-    case finishedByCompletion
-    case finishedByKVO
-    case finishedByDeinit
-}
-
 private class RootNavigationCrutchCoordinator: CommonCoordinatorAny {
     
 }
 
 private struct Frame {
-    var state: FrameState
     let coordinator: CommonCoordinatorAny
     weak var viewController: UIViewController?
     var navigationData: FrameNavigationData?
     
     init(
-        state: FrameState,
         coordinator: CommonCoordinatorAny,
         viewController: UIViewController?,
         navigationData: FrameNavigationData?
     ) {
-        self.state = state
         self.coordinator = coordinator
         self.viewController = viewController
         self.navigationData = navigationData
@@ -147,7 +115,7 @@ public class InsecurityHost {
     ) {
         guard state.notDead else { return }
         
-        switch state.modernStage {
+        switch state.stage {
         case .ready:
             immediateDispatchModal(child, animated: animated) { result in
                 completion(result)
@@ -206,76 +174,13 @@ public class InsecurityHost {
             }
         }
         
-        let newFrame = Frame(state: .live,
-                             coordinator: child,
+        let newFrame = Frame(coordinator: child,
                              viewController: controller,
                              navigationData: nil)
         
         frames.append(newFrame)
         
         host.present(controller, animated: animated, completion: nil)
-    }
-    
-//    private func finalizeModal(
-//        _ child: CommonModalCoordinatorAny,
-//        _ kind: FinalizationKind,
-//        _ callback: () -> Void
-//    ) {
-//        let indexOfFrameOpt = frames.firstIndex(where: { frame in
-//            return frame.coordinator === child
-//        })
-//
-//        if let indexOfFrame = indexOfFrameOpt {
-//            frames[indexOfFrame].state = kind.toFrameState()
-//        }
-//
-//        if indexOfFrameOpt != nil {
-//            switch state.stage {
-//            case .batching:
-//                if self.state.notDead {
-//                    callback()
-//                }
-//            case .purging:
-//                fatalError()
-//            case .ready:
-//                self.state.stage = .batching
-//                if self.state.notDead {
-//                    callback()
-//                }
-//                self.state.stage = .purging
-//                self.purge()
-//                self.state.stage = .ready
-//            }
-//        }
-//    }
-    
-    private func sendOffModal(_ controller: UIViewController, _ animated: Bool, _ child: CommonModalCoordinatorAny) {
-        let electedHostControllerOpt: UIViewController?
-        if let topFrame = frames.last {
-            if let hostController = topFrame.viewController {
-                electedHostControllerOpt = hostController
-            } else {
-                assertionFailure("Top controller of modal stack is somehow dead")
-                electedHostControllerOpt = nil
-            }
-        } else {
-            electedHostControllerOpt = root.viewController
-        }
-        
-        guard let electedHostController = electedHostControllerOpt else {
-            assertionFailure("No parent was found to start a child")
-            return
-        }
-        
-        let frame = Frame(
-            state: .live,
-            coordinator: child,
-            viewController: controller,
-            navigationData: nil
-        )
-        self.frames.append(frame)
-        
-        electedHostController.present(controller, animated: animated, completion: nil)
     }
     
     // MARK: - Navigation Current
@@ -320,38 +225,6 @@ public class InsecurityHost {
         
         assert(state.stage.allowsPresentation)
         
-        child._updateHostReference(self)
-        
-        weak var weakChild = child
-        weak var weakController: UIViewController?
-        
-        child._finishImplementation = { [weak self] result in
-            weakController?.deinitObservable.onDeinit = nil
-            weakChild?._finishImplementation = nil
-            
-            guard let self = self else {
-                assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
-                return
-            }
-            guard let child = weakChild else { return }
-            
-            self.finalizeNavigation(child, .callback) {
-                completion(result)
-            }
-        }
-        
-        let controller = child.viewController
-        weakController = controller
-        
-        controller.deinitObservable.onDeinit = { [weak self, weak child] in
-            weakChild?._finishImplementation = nil
-            
-            guard let self = self, let child = child else { return }
-            
-            self.finalizeNavigation(child, .deinitialization) {
-                completion(nil)
-            }
-        }
         
         sendOffNavigation(controller, animated, child)
     }

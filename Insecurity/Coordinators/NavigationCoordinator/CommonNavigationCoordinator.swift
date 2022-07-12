@@ -9,9 +9,6 @@ protocol CommonNavigationCoordinatorAny: CommonCoordinatorAny {
 protocol CommonNavigationCoordinator: CommonNavigationCoordinatorAny {
     associatedtype Result
     
-    var viewController: UIViewController { get }
-    
-    var _finishImplementation: ((Result?) -> Void)? { get set }
-    
-    func _updateHostReference(_ host: NavigationControllerNavigation & AdaptiveNavigation)
+    func bindToHost(_ navigation: NavigationControllerNavigation & AdaptiveNavigation,
+                    _ onFinish: @escaping (Result?, FinalizationKind) -> Void) -> UIViewController
 }
