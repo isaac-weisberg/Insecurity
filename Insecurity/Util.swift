@@ -13,3 +13,11 @@ func insecDelay(_ timeInterval: TimeInterval, _ work: @escaping () -> Void) {
         work()
     }
 }
+
+struct Weak<Value> where Value: AnyObject {
+    weak var value: Value?
+    
+    init(_ value: Value) {
+        self.value = value
+    }
+}

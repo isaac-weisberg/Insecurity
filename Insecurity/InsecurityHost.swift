@@ -1,13 +1,5 @@
 import UIKit
 
-private struct Weak<Value> where Value: AnyObject {
-    weak var value: Value?
-    
-    init(_ value: Value) {
-        self.value = value
-    }
-}
-
 private struct InsecurityHostState {
     enum Stage {
         case ready
