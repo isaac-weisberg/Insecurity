@@ -1,9 +1,9 @@
 import UIKit
 
 open class ModalCoordinator<Result>: CommonModalCoordinator {
-    private weak var _navigation: (ModalNavigation & AdaptiveNavigation)?
+    private weak var _navigation: ModalNavigation?
     
-    public var navigation: (ModalNavigation & AdaptiveNavigation)! {
+    public var navigation: ModalNavigation! {
         assert(_navigation != nil, "Attempted to use `navigation` before the coordinator was started or after it has finished")
         return _navigation
     }
@@ -14,7 +14,7 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
     
     var _finishImplementation: ((Result?) -> Void)?
     
-    func bindToHost(_ navigation: ModalNavigation & AdaptiveNavigation,
+    func bindToHost(_ navigation: ModalNavigation,
                     _ onFinish: @escaping (Result?, FinalizationKind) -> Void) -> UIViewController {
         self._navigation = navigation
         

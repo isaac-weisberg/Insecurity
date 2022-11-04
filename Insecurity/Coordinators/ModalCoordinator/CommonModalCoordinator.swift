@@ -9,6 +9,6 @@ protocol CommonModalCoordinatorAny: CommonCoordinatorAny {
 protocol CommonModalCoordinator: CommonModalCoordinatorAny {
     associatedtype Result
     
-    func bindToHost(_ navigation: ModalNavigation & AdaptiveNavigation,
+    func bindToHost(_ navigation: ModalNavigation,
                     _ onFinish: @escaping (Result?, FinalizationKind) -> Void) -> UIViewController
 }

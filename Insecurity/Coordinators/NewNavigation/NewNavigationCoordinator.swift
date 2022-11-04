@@ -7,7 +7,7 @@ class NewNavigationCoordinator<NavigationCoordinator: CommonNavigationCoordinato
         self.navigationCoordinator = navigationCoordinator
     }
     
-    func bindToHost(_ navigation: NavigationControllerNavigation & AdaptiveNavigation,
+    func bindToHost(_ navigation: NavigationControllerNavigation,
                     _ navigationController: UINavigationController,
                     _ onFinish: @escaping (NavigationCoordinator.Result?, FinalizationKind) -> Void) -> UIViewController {
         

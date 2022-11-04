@@ -66,7 +66,7 @@ private struct Frame {
 }
 
 public class InsecurityHost {
-    private var frames: [Frame]
+    private var frames: [Frame] = []
     private var state = InsecurityHostState(notDead: true,
                                                 stage: .ready)
     
@@ -74,25 +74,8 @@ public class InsecurityHost {
         state.notDead = false
     }
     
-    public init(navigation navigationController: UINavigationController) {
-        guard let rootController = navigationController.viewControllers.first else {
-            fatalError("Root controller on UINavigationController must be already set")
-        }
-        self.frames = [
-            Frame(coordinator: InsecurityHostRootCoordinator(),
-                  viewController: navigationController,
-                  navigationData: FrameNavigationData(children: [],
-                                                      navigationController: navigationController,
-                                                      rootController: rootController))
-        ]
-    }
-    
-    public init(modal modalController: UIViewController) {
-        self.frames = [
-            Frame(coordinator: InsecurityHostRootCoordinator(),
-                  viewController: modalController,
-                  navigationData: nil)
-        ]
+    public init() {
+        
     }
     
     // MARK: - Scheduled start routine
@@ -361,6 +344,37 @@ public class InsecurityHost {
         }
         
         resetAtLocation(previousLocation)
+    }
+    
+    // MARK: - Mount
+    
+    public func mount(navigation navigationController: UINavigationController) {
+        guard frames.isEmpty else {
+            assertionFailure("Already mounted")
+            return
+        }
+        guard let rootController = navigationController.viewControllers.first else {
+            fatalError("Root controller on UINavigationController must be already set")
+        }
+        self.frames = [
+            Frame(coordinator: InsecurityHostRootCoordinator(),
+                  viewController: navigationController,
+                  navigationData: FrameNavigationData(children: [],
+                                                      navigationController: navigationController,
+                                                      rootController: rootController))
+        ]
+    }
+    
+    public func mount(modal modalController: UIViewController) {
+        guard frames.isEmpty else {
+            assertionFailure("Already mounted")
+            return
+        }
+        self.frames = [
+            Frame(coordinator: InsecurityHostRootCoordinator(),
+                  viewController: modalController,
+                  navigationData: nil)
+        ]
     }
     
     // MARK: - Reset
@@ -649,88 +663,6 @@ extension InsecurityHost: NavigationControllerNavigation {
     ) {
         startNavigation(child, animated: animated) { result in
             completion(result)
-        }
-    }
-}
-
-extension InsecurityHost: AdaptiveNavigation {
-    public func start<NewResult>(
-        _ child: AdaptiveCoordinator<NewResult>,
-        in context: AdaptiveContext,
-        animated: Bool,
-        _ completion: @escaping (NewResult?) -> Void
-    ) {
-        guard state.notDead else { return }
-        
-        switch state.stage {
-        case .ready:
-            self.immediateDispatchAdaptive(child, in: context, animated: animated) { result in
-                completion(result)
-            }
-        case .precull:
-            if _scheduledStartRoutine != nil {
-                assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
-                return
-            }
-            
-            _scheduledStartRoutine = { [weak self] in
-                guard let self = self else { return }
-                
-                self._scheduledStartRoutine = nil
-                self.immediateDispatchAdaptive(child, in: context, animated: animated) { result in
-                    completion(result)
-                }
-            }
-        case .culling:
-            assertionFailure("Please don't start during purges")
-        }
-    }
-    
-    func immediateDispatchAdaptive<NewResult>(
-        _ child: AdaptiveCoordinator<NewResult>,
-        in context: AdaptiveContext,
-        animated: Bool,
-        _ completion: @escaping (NewResult?) -> Void
-    ) {
-        switch context._internalContext {
-        case .current:
-            if let lastFrame = self.frames.last {
-                if lastFrame.navigationData != nil {
-                    self.immediateDispatchNavigation(child, animated: animated) { result in
-                        completion(result)
-                    }
-                } else {
-                    self.immediateDispatchModal(child, animated: animated) { result in
-                        completion(result)
-                    }
-                }
-            } else {
-                assertionFailure()
-            }
-        case .modal:
-            self.immediateDispatchModal(child, animated: animated) { result in
-                completion(result)
-            }
-        case .currentNavigation(let deferredNavigationController):
-            if let lastFrame = self.frames.last {
-                if lastFrame.navigationData != nil {
-                    self.immediateDispatchNavigation(child, animated: animated) { result in
-                        completion(result)
-                    }
-                } else {
-                    let navigationController = deferredNavigationController.make()
-                    
-                    self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
-                        completion(result)
-                    }
-                }
-            } else {
-                assertionFailure()
-            }
-        case .newNavigation(let navigationController):
-            self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
-                completion(result)
-            }
         }
     }
 }
