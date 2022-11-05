@@ -31,24 +31,24 @@ class LoginPhoneCoordinator: ModalCoordinatorV2<LoginPhoneCoordinatorResult> {
             }
         }
         
-        DispatchQueue.main.asyncAfter(deadline: 1.0, execute: { [self] in
-            let loginSMSCodeCoordinator = LoginSMSCodeCoordinator(di: di)
-            
-            start(loginSMSCodeCoordinator, animated: true) { [self] result in
-                print("End LoginSMSCode \(result)")
-                switch result {
-                case .loggedIn:
-                    finish(.loggedIn)
-                case nil:
-                    break
-                }
-            }
-            
-            DispatchQueue.main.asyncAfter(deadline: 1.0, execute: { [self] in
-                self.dismissChildren(animated: true)
-            })
-            
-        })
+//        DispatchQueue.main.asyncAfter(deadline: 1.0, execute: { [self] in
+//            let loginSMSCodeCoordinator = LoginSMSCodeCoordinator(di: di)
+//            
+//            start(loginSMSCodeCoordinator, animated: true) { [self] result in
+//                print("End LoginSMSCode \(result)")
+//                switch result {
+//                case .loggedIn:
+//                    finish(.loggedIn)
+//                case nil:
+//                    break
+//                }
+//            }
+//            
+//            DispatchQueue.main.asyncAfter(deadline: 1.0, execute: { [self] in
+//                self.dismissChildren(animated: true)
+//            })
+//            
+//        })
         
         return controller
     }

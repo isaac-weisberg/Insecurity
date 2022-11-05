@@ -5,6 +5,8 @@ protocol CommonModalCoordinatorV2: AnyObject {
     
     func parentWillDismiss()
     
+    func childWillUnmount()
+    
     var instantiatedViewController: UIViewController? { get }
 }
 

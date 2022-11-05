@@ -18,7 +18,8 @@ open class ModalCoordinatorV2<Result> {
         }
         
         enum Dead {
-            case finished
+            case result
+            case deinitialized
             case dismissedByParent
         }
         
@@ -50,6 +51,10 @@ open class ModalCoordinatorV2<Result> {
         }
         
         let controller = self.viewController
+        
+        controller.deinitObservable.onDeinit = { [weak self] in
+            self?.finish(nil, source: .deinitialized)
+        }
         
         self.state = .live(.mounted(State.Live.Mounted(parent: WeakCommonModalCoordinatorV2(parent), controller: Weak(controller))))
         
@@ -91,6 +96,10 @@ open class ModalCoordinatorV2<Result> {
                       _ completion: @escaping (Result?) -> Void) {
         let controller = self.viewController
         
+        controller.deinitObservable.onDeinit = { [weak self] in
+            self?.finish(nil, source: .deinitialized)
+        }
+        
         self.state = .live(.root(State.Live.Root(parentViewController: Weak(parentViewController), controller: Weak(controller))))
         
         self.completionHandler = { result in
@@ -100,7 +109,16 @@ open class ModalCoordinatorV2<Result> {
         parentViewController.present(controller, animated: animated)
     }
     
+    enum FinishSource {
+        case result
+        case deinitialized
+    }
+    
     public func finish(_ result: Result?) {
+        finish(result, source: .result)
+    }
+    
+    func finish(_ result: Result?, source: FinishSource) {
         let live: State.Live
         let oldState = self.state
         switch oldState {
@@ -113,7 +131,14 @@ open class ModalCoordinatorV2<Result> {
             live = liveData
         }
         
-        self.state = .dead(.finished)
+        let deadReason: State.Dead
+        switch source {
+        case .result:
+            deadReason = .result
+        case .deinitialized:
+            deadReason = .deinitialized
+        }
+        self.state = .dead(deadReason)
         
         completionHandler?(result)
         
@@ -126,6 +151,7 @@ open class ModalCoordinatorV2<Result> {
             }
         case .mounted(let mounted):
             if let parent = mounted.parent.value {
+                parent.childWillUnmount()
                 if !parent.isInDeadState {
                     if let instantiatedParentController = parent.instantiatedViewController {
                         if instantiatedParentController.presentedViewController != nil {
@@ -140,7 +166,7 @@ open class ModalCoordinatorV2<Result> {
     }
     
     public func dismissChildren(animated: Bool,
-                             completion: (() -> Void)? = nil) {
+                                completion: (() -> Void)? = nil) {
         switch self.state {
         case .idle, .dead:
             completion?()
@@ -173,6 +199,10 @@ open class ModalCoordinatorV2<Result> {
 }
 
 extension ModalCoordinatorV2: CommonModalCoordinatorV2 {
+    func childWillUnmount() {
+        child = nil
+    }
+    
     var instantiatedViewController: UIViewController? {
         switch state {
         case .live(let live):
