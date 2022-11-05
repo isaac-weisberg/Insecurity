@@ -26,6 +26,14 @@ func insecPrint(_ message: @autoclosure () -> String,
 #endif
 }
 
+func insecAssertFail(_ message: @autoclosure () -> String,
+                 file: StaticString = #file,
+                 line: UInt = #line) {
+    #if DEBUG
+    assertionFailure(message(), file: file, line: line)
+    #endif
+}
+
 #if DEBUG
 private extension StaticString {
     var string: String {

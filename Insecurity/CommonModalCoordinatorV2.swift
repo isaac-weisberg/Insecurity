@@ -1,5 +1,9 @@
+import UIKit
+
 protocol CommonModalCoordinatorV2: AnyObject {
+    var isInDeadState: Bool { get }
     
+    var instantiatedViewController: UIViewController? { get }
 }
 
 struct WeakCommonModalCoordinatorV2 {
