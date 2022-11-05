@@ -5,7 +5,7 @@ enum LoginSMSCodeCoordinatorResult {
     case loggedIn
 }
 
-class LoginSMSCodeCoordinator: ModalCoordinatorV2<LoginSMSCodeCoordinatorResult> {
+class LoginSMSCodeCoordinator: ModalCoordinator<LoginSMSCodeCoordinatorResult> {
     typealias DI = LoginSMSCodeViewController.DI
     
     override var viewController: UIViewController {

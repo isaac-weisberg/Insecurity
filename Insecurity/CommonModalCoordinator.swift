@@ -1,17 +1,19 @@
 import UIKit
 
-// This protocol exists purely for AnyObject
-// and is not supposed to declare any members
-protocol CommonModalCoordinatorAny: CommonCoordinatorAny {
+protocol CommonModalCoordinator: AnyObject {
+    var isInDeadState: Bool { get }
     
+    func parentWillDismiss()
+    
+    func childWillUnmount()
+    
+    var instantiatedViewController: UIViewController? { get }
 }
 
-protocol CommonModalCoordinator: CommonModalCoordinatorAny {
-    associatedtype Result
+struct WeakCommonModalCoordinatorV2 {
+    weak var value: CommonModalCoordinator?
     
-    var viewController: UIViewController { get }
-    
-    var _finishImplementation: ((Result?) -> Void)? { get set }
-    
-    func _updateHostReference(_ host: ModalNavigation & AdaptiveNavigation)
+    init(_ value: CommonModalCoordinator) {
+        self.value = value
+    }
 }

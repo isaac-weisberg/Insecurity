@@ -11,7 +11,7 @@ extension DispatchTime: ExpressibleByFloatLiteral {
     }
 }
 
-class LoginPhoneCoordinator: ModalCoordinatorV2<LoginPhoneCoordinatorResult> {
+class LoginPhoneCoordinator: ModalCoordinator<LoginPhoneCoordinatorResult> {
     typealias DI = HasAuthService
     
     override var viewController: UIViewController {
