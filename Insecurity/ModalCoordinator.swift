@@ -114,8 +114,12 @@ open class ModalCoordinator<Result> {
         case deinitialized
     }
     
-    public func finish(_ result: Result?) {
+    public func finish(_ result: Result) {
         finish(result, source: .result)
+    }
+    
+    public func dismiss() {
+        finish(nil, source: .result)
     }
     
     func finish(_ result: Result?, source: FinishSource) {
