@@ -17,9 +17,14 @@ open class ModalCoordinatorV2<Result> {
             case root(Root)
         }
         
+        enum Dead {
+            case finished
+            case dismissedByParent
+        }
+        
         case idle
         case live(Live)
-        case dead
+        case dead(Dead)
     }
     
     var state: State = .idle
@@ -108,7 +113,7 @@ open class ModalCoordinatorV2<Result> {
             live = liveData
         }
         
-        self.state = .dead
+        self.state = .dead(.finished)
         
         completionHandler?(result)
         
@@ -133,6 +138,38 @@ open class ModalCoordinatorV2<Result> {
         
         self.child = nil
     }
+    
+    public func dismissChildren(animated: Bool,
+                             completion: (() -> Void)? = nil) {
+        switch self.state {
+        case .idle, .dead:
+            completion?()
+            break
+        case .live(let live):
+            if let child = child {
+                self.child = nil
+                child.parentWillDismiss()
+                switch live {
+                case .mounted(let mounted):
+                    if let presentingViewController = mounted.controller.value {
+                        if presentingViewController.presentedViewController != nil {
+                            presentingViewController.dismiss(animated: animated, completion: {
+                                completion?()
+                            })
+                        }
+                    }
+                case .root(let root):
+                    if let presentingViewController = root.controller.value {
+                        if presentingViewController.presentedViewController != nil {
+                            presentingViewController.dismiss(animated: animated, completion: {
+                                completion?()
+                            })
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 
 extension ModalCoordinatorV2: CommonModalCoordinatorV2 {
@@ -147,6 +184,18 @@ extension ModalCoordinatorV2: CommonModalCoordinatorV2 {
             }
         case .dead, .idle:
             return nil
+        }
+    }
+    
+    func parentWillDismiss() {
+        switch state {
+        case .idle:
+            self.state = .dead(.dismissedByParent)
+            insecAssertFail("Impossible")
+        case .dead:
+            break
+        case .live:
+            self.state = .dead(.dismissedByParent)
         }
     }
     

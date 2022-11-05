@@ -3,6 +3,8 @@ import UIKit
 protocol CommonModalCoordinatorV2: AnyObject {
     var isInDeadState: Bool { get }
     
+    func parentWillDismiss()
+    
     var instantiatedViewController: UIViewController? { get }
 }
 
