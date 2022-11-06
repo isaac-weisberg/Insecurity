@@ -8,7 +8,7 @@ public enum InsecurityLoggerMode {
 func insecPrint(_ message: @autoclosure () -> String,
                 file: StaticString = #file,
                 line: UInt = #line) {
-#if DEBUG
+    #if DEBUG
     switch Insecurity.loggerMode {
     case .full:
         let fileString: String
@@ -23,12 +23,21 @@ func insecPrint(_ message: @autoclosure () -> String,
     case .none:
         break
     }
-#endif
+    #endif
+}
+
+func insecAssert(_ condition: @autoclosure () -> Bool,
+                 _ message: @autoclosure () -> String,
+                 file: StaticString = #file,
+                 line: UInt = #line) {
+    #if DEBUG
+    assert(condition(), message(), file: file, line: line)
+    #endif
 }
 
 func insecAssertFail(_ message: @autoclosure () -> String,
-                 file: StaticString = #file,
-                 line: UInt = #line) {
+                     file: StaticString = #file,
+                     line: UInt = #line) {
     #if DEBUG
     assertionFailure(message(), file: file, line: line)
     #endif

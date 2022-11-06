@@ -21,3 +21,14 @@ struct Weak<Value> where Value: AnyObject {
         self.value = value
     }
 }
+
+extension Array {
+    func preLast() -> Element? {
+        let prelastIndex = count - 2
+        
+        if prelastIndex >= 0 {
+            return self[prelastIndex]
+        }
+        return nil
+    }
+}

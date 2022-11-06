@@ -41,6 +41,8 @@
 		A370FB642706775200D5EF51 /* DebugViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370FB632706775200D5EF51 /* DebugViewCoordinator.swift */; };
 		A370FB662706780900D5EF51 /* Application.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370FB652706780900D5EF51 /* Application.swift */; };
 		A370FB682706782E00D5EF51 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = A370FB672706782E00D5EF51 /* main.swift */; };
+		A372133C2917B08900BE489A /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A372133B2917B08900BE489A /* NavigationCoordinator.swift */; };
+		A372133E2917B0A100BE489A /* CommonNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A372133D2917B0A100BE489A /* CommonNavigationCoordinator.swift */; };
 		A377B5732713859300A4331B /* GenericViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5722713859300A4331B /* GenericViewController.swift */; };
 		A377B575271385BA00A4331B /* UIColor+random.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B574271385BA00A4331B /* UIColor+random.swift */; };
 		A377B5772713862900A4331B /* GenericCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A377B5762713862900A4331B /* GenericCoordinator.swift */; };
@@ -216,6 +218,8 @@
 		A370FB632706775200D5EF51 /* DebugViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugViewCoordinator.swift; sourceTree = "<group>"; };
 		A370FB652706780900D5EF51 /* Application.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Application.swift; sourceTree = "<group>"; };
 		A370FB672706782E00D5EF51 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		A372133B2917B08900BE489A /* NavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCoordinator.swift; sourceTree = "<group>"; };
+		A372133D2917B0A100BE489A /* CommonNavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonNavigationCoordinator.swift; sourceTree = "<group>"; };
 		A377B5722713859300A4331B /* GenericViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericViewController.swift; sourceTree = "<group>"; };
 		A377B574271385BA00A4331B /* UIColor+random.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+random.swift"; sourceTree = "<group>"; };
 		A377B5762713862900A4331B /* GenericCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GenericCoordinator.swift; sourceTree = "<group>"; };
@@ -685,6 +689,8 @@
 				A36B058B2731E81000E67488 /* Util.swift */,
 				A38D386A291598BD0007440F /* ModalCoordinator.swift */,
 				A3CE95AA291647AA007BC3C4 /* CommonModalCoordinator.swift */,
+				A372133B2917B08900BE489A /* NavigationCoordinator.swift */,
+				A372133D2917B0A100BE489A /* CommonNavigationCoordinator.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -1087,9 +1093,11 @@
 				A36E5AA72725C8660000C551 /* InsecurityLogger.swift in Sources */,
 				A36B058C2731E81000E67488 /* Util.swift in Sources */,
 				A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */,
+				A372133E2917B0A100BE489A /* CommonNavigationCoordinator.swift in Sources */,
 				A38D386B291598BD0007440F /* ModalCoordinator.swift in Sources */,
 				A3CE95AB291647AA007BC3C4 /* CommonModalCoordinator.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,
+				A372133C2917B08900BE489A /* NavigationCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
