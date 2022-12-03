@@ -15,7 +15,7 @@ class NavigationCoordinator<Result> {
         
         case idle
         case live(Live)
-        case dead
+        case dead(Dead)
     }
     
     var state = State.idle
@@ -50,22 +50,23 @@ class NavigationCoordinator<Result> {
             self?.finish(nil, source: .deinitialized)
         }
         
-        self.completionHandler = { result
+        self.completionHandler = { result in
             completion(result)
         }
         
         self.state = .live(State.Live(navigationController: Weak(navigationController),
-                                      parent: nil))
+                                      parent: nil,
+                                      controller: Weak(controller)))
         
         navigationController.pushViewController(controller, animated: animated)
     }
     
     public func finish(_ result: Result) {
-        finish?(result, .finishCall)
+        finish(result, source: .finishCall)
     }
     
     public func dismiss() {
-        finish?(nil, .finishCall)
+        finish(nil, source: .finishCall)
     }
     
     enum FinishSource {
@@ -88,7 +89,7 @@ class NavigationCoordinator<Result> {
         
         let deadReason: State.Dead
         switch source {
-        case .result:
+        case .finishCall:
             deadReason = .finishCalled
         case .deinitialized:
             deadReason = .deinitialized
@@ -112,9 +113,26 @@ class NavigationCoordinator<Result> {
             }
         }
     }
+    
+    private var viewControllerIfExists: UIViewController? {
+        switch state {
+        case .live(let live):
+            if let controller = live.controller.value {
+                return controller
+            } else {
+                return nil
+            }
+        case .dead, .idle:
+            return nil
+        }
+    }
 }
 
 extension NavigationCoordinator: CommonNavigationCoordinator {
+    var instantiatedViewController: UIViewController? {
+        viewControllerIfExists
+    }
+    
     var isInDeadState: Bool {
         switch self.state {
         case .dead:

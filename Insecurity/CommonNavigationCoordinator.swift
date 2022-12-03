@@ -8,4 +8,8 @@ protocol CommonNavigationCoordinator: AnyObject {
 
 struct WeakCommonNavigationCoordinator {
     weak var value: CommonNavigationCoordinator?
+    
+    init(_ value: CommonNavigationCoordinator) {
+        self.value = value
+    }
 }

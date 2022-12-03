@@ -1,10 +1,3 @@
-//
-//  CardNumberTextField.swift
-//  InsecurityDemo
-//
-//  Created by a.vaysberg on 11/20/21.
-//
-
 import Foundation
 
 class CardNumberTextField: InsetTextField {
