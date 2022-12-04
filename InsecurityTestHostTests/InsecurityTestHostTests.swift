@@ -36,6 +36,53 @@ final class InsecurityTestHostTests: XCTestCase {
         assert(rootController.presentedViewController == nil)
     }
     
+    func testFinishCallButThereIsALiveChildOnTop() {
+        let coordinator = ControlableCoordinator()
+        
+        let presentCompleted = XCTestExpectation()
+        
+        coordinator.mount(on: rootController, animated: true) { void in
+            
+        } onPresentCompleted: {
+            presentCompleted.fulfill()
+        }
+    
+        wait(for: presentCompleted)
+        
+        let childCoordinator = ControlableCoordinator()
+        
+        let childPresentCompleted = XCTestExpectation()
+        
+        coordinator.start(childCoordinator, animated: true) { void in
+            
+        } onPresentCompleted: {
+            childPresentCompleted.fulfill()
+        }
+        
+        wait(for: childPresentCompleted)
+        
+        assert(rootController.presentedViewController == coordinator.state.instantiatedVCIfLive)
+        assert(coordinator.state.isLive(child: childCoordinator))
+        expect(childCoordinator.state.isLive(child: nil)) == true
+        
+        let finishDismissFinished = XCTestExpectation()
+        
+        coordinator.finish((), source: .result, onDismissCompleted: {
+            finishDismissFinished.fulfill()
+        })
+        
+        assert(coordinator.state.isDead)
+        assert(childCoordinator.state.isDead)
+        expect(self.rootController.presentedViewController).toNot(beNil())
+        expect(self.rootController.modalChildrenChain.count) == 2
+        
+        wait(for: finishDismissFinished)
+        assert(coordinator.state.isDead)
+        assert(childCoordinator.state.isDead)
+        assert(rootController.presentedViewController == nil)
+        expect(self.rootController.modalChildrenChain).to(beEmpty())
+    }
+    
     func testFinishChain() {
         let coordinatorsThatStay = create(count: 4, of: ControlableCoordinator.init)
         let coordinatorsThatFinish = create(count: 6, of: ControlableCoordinator.init)
