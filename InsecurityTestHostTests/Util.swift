@@ -48,3 +48,23 @@ extension XCTestCase {
         self.wait(for: [expectation], timeout: timeout ?? 5)
     }
 }
+
+func create<Object>(count: Int, of objectFactory: () -> Object) -> [Object] {
+    return (0..<count).map { _ in
+        objectFactory()
+    }
+}
+
+extension UIViewController {
+    var modalChildrenChain: [UIViewController] {
+        var children: [UIViewController] = []
+        
+        var controllerToSearchForAChild = self
+        while let childController = controllerToSearchForAChild.presentedViewController {
+            children.append(childController)
+            controllerToSearchForAChild = childController
+        }
+        
+        return children
+    }
+}

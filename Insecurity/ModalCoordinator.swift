@@ -37,6 +37,7 @@ open class ModalCoordinator<Result> {
     }
     
     func mount(on parent: CommonModalCoordinator) -> UIViewController {
+        assert(parent !== self)
         switch state {
         case .idle:
             break
@@ -67,6 +68,7 @@ open class ModalCoordinator<Result> {
                                animated: Bool,
                                completion: @escaping (Result?) -> Void,
                                onPresentCompleted: (() -> Void)?) {
+        assert(coordinator !== self)
         switch self.state {
         case .live(let live):
             assert(live.child == nil)
@@ -77,7 +79,8 @@ open class ModalCoordinator<Result> {
             
             let controller = coordinator.mount(on: self)
             
-            coordinator.completionHandler = { result in
+            coordinator.completionHandler = { [self] result in
+                _ = self
                 completion(result)
             }
             
