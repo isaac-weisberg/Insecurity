@@ -231,6 +231,8 @@ open class ModalCoordinator<Result> {
         
         if shouldDismiss {
             self.state = .dead(State.Dead(reason: deadReason))
+            live.child?.parentWillDismiss()
+            
             switch live.parent {
             case .controller(let parentController):
                 if
@@ -244,10 +246,16 @@ open class ModalCoordinator<Result> {
                     onDismissCompleted?()
                 }
             case .coordinator(let parentCoordinator):
-                parentCoordinator.value?.findFirstAliveAncestorAndCutTheChainDismissing {
+                if let parentCoordinator = parentCoordinator.value {
+                    parentCoordinator.findFirstAliveAncestorAndCutTheChainDismissing {
+                        onDismissCompleted?()
+                    }
+                } else {
                     onDismissCompleted?()
                 }
             }
+        } else {
+            insecAssert(onDismissCompleted == nil, "onDismissCompleted was passed in the middle of finish chain, so it wont be called")
         }
     }
     
