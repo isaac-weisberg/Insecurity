@@ -20,17 +20,51 @@ final class InsecurityTestHostTests: XCTestCase {
         wait(for: presentCompleted)
         
         assert(rootController.presentedViewController == coordinator.instantiatedViewController)
+        assert(coordinator.state.isLive(hasChild: false))
         
-        assert(coordinator.state.isLive)
+        let finishDismissFinished = XCTestExpectation()
+        
+        coordinator.finish((), source: .result, onDismissCompleted: {
+            finishDismissFinished.fulfill()
+        })
+        
+        assert(coordinator.state.isDead)
+        assert(rootController.presentedViewController != nil)
+        
+        wait(for: finishDismissFinished)
+        assert(coordinator.state.isDead)
+        assert(rootController.presentedViewController == nil)
     }
 }
 
 extension ModalCoordinator.State {
+    func isLive(hasChild: Bool) -> Bool {
+        switch self {
+        case .live(let live):
+            if hasChild {
+                return live.child != nil
+            } else {
+                return live.child == nil
+            }
+        case .dead, .idle:
+            return false
+        }
+    }
+    
     var isLive: Bool {
         switch self {
         case .live:
             return true
         case .dead, .idle:
+            return false
+        }
+    }
+    
+    var isDead: Bool {
+        switch self {
+        case .dead:
+            return true
+        case .live, .idle:
             return false
         }
     }

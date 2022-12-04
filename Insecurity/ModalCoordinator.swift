@@ -3,18 +3,15 @@ import UIKit
 
 open class ModalCoordinator<Result> {
     enum State {
-        enum Live {
-            struct Mounted {
-                let parent: WeakCommonModalCoordinatorV2
-                let controller: Weak<UIViewController>
+        struct Live {
+            enum Parent {
+                case controller(Weak<UIViewController>)
+                case coordinator(WeakCommonModalCoordinator)
             }
             
-            struct Root {
-                let parentViewController: Weak<UIViewController>
-                let controller: Weak<UIViewController>
-            }
-            case mounted(Mounted)
-            case root(Root)
+            let parent: Parent
+            let controller: Weak<UIViewController>
+            let child: CommonModalCoordinator?
         }
         
         enum Dead {
@@ -30,7 +27,6 @@ open class ModalCoordinator<Result> {
     
     var state: State = .idle
     var completionHandler: ((Result?) -> Void)?
-    private var child: CommonModalCoordinator?
     
     open var viewController: UIViewController {
         fatalError("Override this getter")
@@ -53,10 +49,16 @@ open class ModalCoordinator<Result> {
         let controller = self.viewController
         
         controller.deinitObservable.onDeinit = { [weak self] in
-            self?.finish(nil, source: .deinitialized)
+            self?.finish(nil, source: .deinitialized, onDismissCompleted: nil)
         }
         
-        self.state = .live(.mounted(State.Live.Mounted(parent: WeakCommonModalCoordinatorV2(parent), controller: Weak(controller))))
+        self.state = .live(
+            State.Live(
+                parent: .coordinator(parent.weak),
+                controller: Weak(controller),
+                child: nil
+            )
+        )
         
         return controller
     }
@@ -65,37 +67,50 @@ open class ModalCoordinator<Result> {
                                animated: Bool,
                                completion: @escaping (Result?) -> Void,
                                onPresentCompleted: (() -> Void)?) {
-        let presentingViewController: UIViewController
         switch self.state {
-        case .live(.mounted(let mounted)):
-            guard let existingViewController = mounted.controller.value else {
-                return
+        case .live(let live):
+            assert(live.child == nil)
+            
+            let presentingViewController: UIViewController
+            switch live.parent {
+            case .coordinator(let parentCoordinator):
+                guard let parentCoordinatorController = parentCoordinator.value?.instantiatedViewController else {
+                    return
+                }
+                
+                presentingViewController = parentCoordinatorController
+            case .controller(let parentController):
+                guard let parentController = parentController.value else {
+                    return
+                }
+                presentingViewController = parentController
             }
-            presentingViewController = existingViewController
-        case .live(.root(let root)):
-            guard let existingViewController = root.controller.value else {
-                return
+            
+            
+            let controller = coordinator.mount(on: self)
+            
+            coordinator.completionHandler = { result in
+                completion(result)
             }
-            presentingViewController = existingViewController
+            
+            presentingViewController.present(
+                controller,
+                animated: animated,
+                completion: {
+                    onPresentCompleted?()
+                }
+            )
+            
+            self.state = .live(State.Live(
+                parent: live.parent,
+                controller: live.controller,
+                child: coordinator
+            ))
+            
         case .idle, .dead:
             insecAssertFail("Can not start on an unmounted coordinator")
             return
         }
-        assert(child == nil)
-        let controller = coordinator.mount(on: self)
-        
-        coordinator.completionHandler = { result in
-            completion(result)
-        }
-        
-        presentingViewController.present(
-            controller,
-            animated: animated,
-            completion: {
-                onPresentCompleted?()
-            }
-        )
-        self.child = coordinator
     }
     
     public func start<Result>(_ coordinator: ModalCoordinator<Result>,
@@ -128,10 +143,16 @@ open class ModalCoordinator<Result> {
         let controller = self.viewController
         
         controller.deinitObservable.onDeinit = { [weak self] in
-            self?.finish(nil, source: .deinitialized)
+            self?.finish(nil, source: .deinitialized, onDismissCompleted: nil)
         }
         
-        self.state = .live(.root(State.Live.Root(parentViewController: Weak(parentViewController), controller: Weak(controller))))
+        self.state = .live(
+            State.Live(
+                parent: .controller(Weak(parentViewController)),
+                controller: Weak(controller),
+                child: nil
+            )
+        )
         
         self.completionHandler = { result in
             completion(result)
@@ -171,14 +192,18 @@ open class ModalCoordinator<Result> {
     }
     
     public func finish(_ result: Result) {
-        finish(result, source: .result)
+        finish(result, source: .result, onDismissCompleted: nil)
     }
     
     public func dismiss() {
-        finish(nil, source: .result)
+        finish(nil, source: .result, onDismissCompleted: nil)
     }
     
-    func finish(_ result: Result?, source: FinishSource) {
+    func finish(
+        _ result: Result?,
+        source: FinishSource,
+        onDismissCompleted: (() -> Void)?
+    ) {
         let live: State.Live
         let oldState = self.state
         switch oldState {
@@ -202,57 +227,62 @@ open class ModalCoordinator<Result> {
         
         completionHandler?(result)
         
-        switch live {
-        case .root(let root):
-            if let presentingController = root.parentViewController.value {
-                if presentingController.presentedViewController != nil {
-                    presentingController.dismiss(animated: true)
+        switch live.parent {
+        case .controller(let parentController):
+            if
+                let presentingController = parentController.value,
+                presentingController.presentedViewController != nil
+            {
+                presentingController.dismiss(animated: true) {
+                    onDismissCompleted?()
                 }
+            } else {
+                onDismissCompleted?()
             }
-        case .mounted(let mounted):
-            if let parent = mounted.parent.value {
+        case .coordinator(let parentCoordinator):
+            if let parent = parentCoordinator.value {
                 parent.childWillUnmount()
-                if !parent.isInDeadState {
-                    if let instantiatedParentController = parent.instantiatedViewController {
-                        if instantiatedParentController.presentedViewController != nil {
-                            instantiatedParentController.dismiss(animated: true)
-                        }
+                if
+                    !parent.isInDeadState,
+                    let instantiatedParentController = parent.instantiatedViewController,
+                    instantiatedParentController.presentedViewController != nil
+                {
+                    instantiatedParentController.dismiss(animated: true) {
+                        onDismissCompleted?()
                     }
+                } else {
+                    onDismissCompleted?()
                 }
+            } else {
+                onDismissCompleted?()
             }
         }
+    }
+    
+    public func dismissChildren(animated: Bool) {
         
-        self.child = nil
     }
     
     public func dismissChildren(animated: Bool,
-                                completion: (() -> Void)? = nil) {
+                                completion: @escaping () -> Void) {
         switch self.state {
         case .idle, .dead:
-            completion?()
-            break
+            completion()
         case .live(let live):
-            if let child = child {
-                self.child = nil
+            if let child = live.child {
+                let newLive = live.settingChild(to: nil)
+                self.state = .live(newLive)
                 child.parentWillDismiss()
-                switch live {
-                case .mounted(let mounted):
-                    if let presentingViewController = mounted.controller.value {
-                        if presentingViewController.presentedViewController != nil {
-                            presentingViewController.dismiss(animated: animated, completion: {
-                                completion?()
-                            })
-                        }
-                    }
-                case .root(let root):
-                    if let presentingViewController = root.controller.value {
-                        if presentingViewController.presentedViewController != nil {
-                            presentingViewController.dismiss(animated: animated, completion: {
-                                completion?()
-                            })
-                        }
-                    }
-                }
+            }
+            if
+                let presentingViewController = live.controller.value,
+                presentingViewController.presentedViewController != nil
+            {
+                presentingViewController.dismiss(animated: animated, completion: {
+                    completion()
+                })
+            } else {
+                completion()
             }
         }
     }
@@ -260,18 +290,19 @@ open class ModalCoordinator<Result> {
 
 extension ModalCoordinator: CommonModalCoordinator {
     func childWillUnmount() {
-        child = nil
+        switch self.state {
+        case .live(let live):
+            let newLive = live.settingChild(to: nil)
+            self.state = .live(newLive)
+        case .dead, .idle:
+            break
+        }
     }
     
     var instantiatedViewController: UIViewController? {
         switch state {
         case .live(let live):
-            switch live {
-            case .root(let root):
-                return root.controller.value
-            case .mounted(let mounted):
-                return mounted.controller.value
-            }
+            return live.controller.value
         case .dead, .idle:
             return nil
         }
@@ -284,8 +315,9 @@ extension ModalCoordinator: CommonModalCoordinator {
             insecAssertFail("Impossible")
         case .dead:
             break
-        case .live:
+        case .live(let live):
             self.state = .dead(.dismissedByParent)
+            live.child?.parentWillDismiss()
         }
     }
     
@@ -296,6 +328,14 @@ extension ModalCoordinator: CommonModalCoordinator {
         case .live, .idle:
             return false
         }
+    }
+}
+
+extension ModalCoordinator.State.Live {
+    func settingChild(to child: CommonModalCoordinator?) -> ModalCoordinator.State.Live {
+        ModalCoordinator.State.Live(parent: self.parent,
+                                    controller: self.controller,
+                                    child: child)
     }
 }
 

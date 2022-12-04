@@ -10,10 +10,16 @@ protocol CommonModalCoordinator: AnyObject {
     var instantiatedViewController: UIViewController? { get }
 }
 
-struct WeakCommonModalCoordinatorV2 {
+struct WeakCommonModalCoordinator {
     weak var value: CommonModalCoordinator?
     
     init(_ value: CommonModalCoordinator) {
         self.value = value
+    }
+}
+
+extension CommonModalCoordinator {
+    var weak: WeakCommonModalCoordinator {
+        WeakCommonModalCoordinator(self)
     }
 }
