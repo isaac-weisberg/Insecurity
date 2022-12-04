@@ -28,7 +28,7 @@ final class InsecurityTestHostTests: XCTestCase {
             finishDismissFinished.fulfill()
         })
         
-        assert(coordinator.state.isStagedForDeath)
+        assert(coordinator.state.isDead)
         assert(rootController.presentedViewController != nil)
         
         wait(for: finishDismissFinished)

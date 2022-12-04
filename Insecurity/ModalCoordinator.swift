@@ -230,7 +230,7 @@ open class ModalCoordinator<Result> {
         }
         
         if shouldDismiss {
-            findFirstAliveAncestorAndMakeHimDismiss()
+            self.state = .dead(State.Dead(reason: deadReason))
             switch live.parent {
             case .controller(let parentController):
                 if
@@ -249,10 +249,6 @@ open class ModalCoordinator<Result> {
                 }
             }
         }
-    }
-    
-    func findFirstAliveAncestorAndMakeHimDismiss() {
-        
     }
     
     public func dismissChildren(animated: Bool) {
