@@ -14,14 +14,19 @@ open class ModalCoordinator<Result> {
             let child: CommonModalCoordinator?
         }
         
-        enum Dead {
-            case result
-            case deinitialized
-            case dismissedByParent
+        struct Dead {
+            enum Reason {
+                case result
+                case deinitialized
+                case dismissedByParent
+            }
+            
+            let reason: Reason
         }
         
         case idle
         case live(Live)
+        case liveButStagedForDeath(Live, Dead.Reason)
         case dead(Dead)
     }
     
@@ -43,7 +48,7 @@ open class ModalCoordinator<Result> {
             break
         case .live:
             fatalError("Can not mount a coordinator that's already mounted")
-        case .dead:
+        case .dead, .liveButStagedForDeath:
             fatalError("Can not mount a coordinator that's already been used")
         }
         
@@ -79,8 +84,7 @@ open class ModalCoordinator<Result> {
             
             let controller = coordinator.mount(on: self)
             
-            coordinator.completionHandler = { [self] result in
-                _ = self
+            coordinator.completionHandler = { result in
                 completion(result)
             }
             
@@ -98,7 +102,7 @@ open class ModalCoordinator<Result> {
                 child: coordinator
             ))
             
-        case .idle, .dead:
+        case .idle, .dead, .liveButStagedForDeath:
             insecAssertFail("Can not start on an unmounted coordinator")
             return
         }
@@ -200,65 +204,71 @@ open class ModalCoordinator<Result> {
         switch oldState {
         case .idle:
             fatalError("Can't finish on a coordinator that wasn't mounted")
-        case .dead:
+        case .dead, .liveButStagedForDeath:
             insecAssertFail("Can't finish on something that's dead")
             return
         case .live(let liveData):
             live = liveData
         }
         
-        let deadReason: State.Dead
+        let deadReason: State.Dead.Reason
         switch source {
         case .result:
             deadReason = .result
         case .deinitialized:
             deadReason = .deinitialized
         }
-        self.state = .dead(deadReason)
+        self.state = .liveButStagedForDeath(live, deadReason)
         
         completionHandler?(result)
         
-        switch live.parent {
-        case .controller(let parentController):
-            if
-                let presentingController = parentController.value,
-                presentingController.presentedViewController != nil
-            {
-                presentingController.dismiss(animated: true) {
-                    onDismissCompleted?()
-                }
-            } else {
-                onDismissCompleted?()
-            }
-        case .coordinator(let parentCoordinator):
-            if let parent = parentCoordinator.value {
-                parent.childWillUnmount()
+        let shouldDismiss: Bool
+        if let child = live.child {
+            shouldDismiss = child.isInLiveState
+        } else {
+            shouldDismiss = true
+        }
+        
+        if shouldDismiss {
+            findFirstAliveAncestorAndMakeHimDismiss()
+            switch live.parent {
+            case .controller(let parentController):
                 if
-                    !parent.isInDeadState,
-                    let instantiatedParentController = parent.instantiatedViewController,
-                    instantiatedParentController.presentedViewController != nil
+                    let presentingController = parentController.value,
+                    presentingController.presentedViewController != nil
                 {
-                    instantiatedParentController.dismiss(animated: true) {
+                    presentingController.dismiss(animated: true) {
                         onDismissCompleted?()
                     }
                 } else {
                     onDismissCompleted?()
                 }
-            } else {
-                onDismissCompleted?()
+            case .coordinator(let parentCoordinator):
+                parentCoordinator.value?.findFirstAliveAncestorAndCutTheChainDismissing {
+                    onDismissCompleted?()
+                }
             }
         }
     }
     
-    public func dismissChildren(animated: Bool) {
+    func findFirstAliveAncestorAndMakeHimDismiss() {
         
+    }
+    
+    public func dismissChildren(animated: Bool) {
+        dismissChildrenInternal(animated: animated, completion: nil)
     }
     
     public func dismissChildren(animated: Bool,
                                 completion: @escaping () -> Void) {
+        dismissChildrenInternal(animated: animated, completion: completion)
+    }
+    
+    func dismissChildrenInternal(animated: Bool,
+                                 completion: (() -> Void)?) {
         switch self.state {
-        case .idle, .dead:
-            completion()
+        case .idle, .dead, .liveButStagedForDeath:
+            completion?()
         case .live(let live):
             if let child = live.child {
                 let newLive = live.settingChild(to: nil)
@@ -270,53 +280,76 @@ open class ModalCoordinator<Result> {
                 presentingViewController.presentedViewController != nil
             {
                 presentingViewController.dismiss(animated: animated, completion: {
-                    completion()
+                    completion?()
                 })
             } else {
-                completion()
+                completion?()
             }
         }
     }
 }
 
 extension ModalCoordinator: CommonModalCoordinator {
-    func childWillUnmount() {
-        switch self.state {
-        case .live(let live):
-            let newLive = live.settingChild(to: nil)
-            self.state = .live(newLive)
-        case .dead, .idle:
-            break
-        }
-    }
-    
-    var instantiatedViewController: UIViewController? {
+    func findFirstAliveAncestorAndCutTheChainDismissing(_ completion: @escaping () -> Void) {
         switch state {
         case .live(let live):
-            return live.controller.value
+            self.state = .live(live.settingChild(to: nil))
+            if
+                let controller = live.controller.value,
+                controller.presentedViewController != nil
+            {
+                controller.dismiss(animated: true) {
+                    completion()
+                }
+            } else {
+                completion()
+            }
+        case .liveButStagedForDeath(let live, let deadReason):
+            self.state = .dead(State.Dead(reason: deadReason))
+            
+            switch live.parent {
+            case .coordinator(let parentCoordinator):
+                if let parentCoordinator = parentCoordinator.value {
+                    parentCoordinator.findFirstAliveAncestorAndCutTheChainDismissing {
+                        completion()
+                    }
+                } else {
+                    completion()
+                }
+            case .controller(let parentController):
+                if
+                    let parentController = parentController.value,
+                    parentController.presentedViewController != nil
+                {
+                    parentController.dismiss(animated: true) {
+                        completion()
+                    }
+                } else {
+                    completion()
+                }
+            }
         case .dead, .idle:
-            return nil
+            assertionFailure()
         }
     }
     
     func parentWillDismiss() {
         switch state {
         case .idle:
-            self.state = .dead(.dismissedByParent)
             insecAssertFail("Impossible")
-        case .dead:
+        case .dead, .liveButStagedForDeath:
             break
         case .live(let live):
-            self.state = .dead(.dismissedByParent)
+            self.state = .dead(State.Dead(reason: .dismissedByParent))
             live.child?.parentWillDismiss()
         }
     }
     
-    var isInDeadState: Bool {
+    var isInLiveState: Bool {
         switch self.state {
-        case .dead:
+        case .live:
             return true
-        case .live, .idle:
+        case .dead, .idle, .liveButStagedForDeath:
             return false
         }
     }

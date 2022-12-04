@@ -1,13 +1,11 @@
 import UIKit
 
 protocol CommonModalCoordinator: AnyObject {
-    var isInDeadState: Bool { get }
+    var isInLiveState: Bool { get }
     
     func parentWillDismiss()
     
-    func childWillUnmount()
-    
-    var instantiatedViewController: UIViewController? { get }
+    func findFirstAliveAncestorAndCutTheChainDismissing(_ completion: @escaping () -> Void)
 }
 
 struct WeakCommonModalCoordinator {

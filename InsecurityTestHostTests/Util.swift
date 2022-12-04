@@ -6,7 +6,7 @@ extension ModalCoordinator.State {
         switch self {
         case .live(let live):
             return live.child === child
-        case .dead, .idle:
+        case .dead, .idle, .liveButStagedForDeath:
             return false
         }
     }
@@ -19,7 +19,7 @@ extension ModalCoordinator.State {
             } else {
                 return live.child == nil
             }
-        case .dead, .idle:
+        case .dead, .idle, .liveButStagedForDeath:
             return false
         }
     }
@@ -28,7 +28,16 @@ extension ModalCoordinator.State {
         switch self {
         case .live:
             return true
-        case .dead, .idle:
+        case .dead, .idle, .liveButStagedForDeath:
+            return false
+        }
+    }
+    
+    var isStagedForDeath: Bool {
+        switch self {
+        case .liveButStagedForDeath:
+            return true
+        case .idle, .dead, .live:
             return false
         }
     }
@@ -37,8 +46,17 @@ extension ModalCoordinator.State {
         switch self {
         case .dead:
             return true
-        case .live, .idle:
+        case .live, .idle, .liveButStagedForDeath:
             return false
+        }
+    }
+    
+    var instantiatedVCIfLive: UIViewController? {
+        switch self {
+        case .live(let live):
+            return live.controller.value
+        case .liveButStagedForDeath, .dead, .idle:
+            return nil
         }
     }
 }
