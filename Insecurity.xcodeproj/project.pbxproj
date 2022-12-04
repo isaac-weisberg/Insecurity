@@ -123,6 +123,7 @@
 		A3CE95AB291647AA007BC3C4 /* CommonModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CE95AA291647AA007BC3C4 /* CommonModalCoordinator.swift */; };
 		A3CE95AC29165408007BC3C4 /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A3CE95AD29165408007BC3C4 /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		A3EA1BAD293C972F003934B1 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EA1BAC293C972F003934B1 /* Util.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -332,6 +333,7 @@
 		A3986FE32748FE43002AA98B /* CVVTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVTextField.swift; sourceTree = "<group>"; };
 		A3986FE5274901D1002AA98B /* CardHolderTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHolderTextField.swift; sourceTree = "<group>"; };
 		A3CE95AA291647AA007BC3C4 /* CommonModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonModalCoordinator.swift; sourceTree = "<group>"; };
+		A3EA1BAC293C972F003934B1 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPlayground.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -438,6 +440,7 @@
 			children = (
 				A33D579A293BE9C8009A6C61 /* InsecurityTestHostTests.swift */,
 				A33D57A1293BEDD5009A6C61 /* ControlableCoordinator.swift */,
+				A3EA1BAC293C972F003934B1 /* Util.swift */,
 			);
 			path = InsecurityTestHostTests;
 			sourceTree = "<group>";
@@ -1181,6 +1184,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A33D57A2293BEDD5009A6C61 /* ControlableCoordinator.swift in Sources */,
+				A3EA1BAD293C972F003934B1 /* Util.swift in Sources */,
 				A33D579B293BE9C8009A6C61 /* InsecurityTestHostTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -71,21 +71,9 @@ open class ModalCoordinator<Result> {
         case .live(let live):
             assert(live.child == nil)
             
-            let presentingViewController: UIViewController
-            switch live.parent {
-            case .coordinator(let parentCoordinator):
-                guard let parentCoordinatorController = parentCoordinator.value?.instantiatedViewController else {
-                    return
-                }
-                
-                presentingViewController = parentCoordinatorController
-            case .controller(let parentController):
-                guard let parentController = parentController.value else {
-                    return
-                }
-                presentingViewController = parentController
+            guard let presentingViewController = live.controller.value else {
+                return
             }
-            
             
             let controller = coordinator.mount(on: self)
             
@@ -165,7 +153,7 @@ open class ModalCoordinator<Result> {
     
     public func mount(on parentViewController: UIViewController,
                       animated: Bool,
-                      _ completion: @escaping (Result?) -> Void,
+                      completion: @escaping (Result?) -> Void,
                       onPresentCompleted: @escaping () -> Void) {
         mountInternal(
             on: parentViewController,
@@ -177,7 +165,7 @@ open class ModalCoordinator<Result> {
     
     public func mount(on parentViewController: UIViewController,
                       animated: Bool,
-                      _ completion: @escaping (Result?) -> Void) {
+                      completion: @escaping (Result?) -> Void) {
         mountInternal(
             on: parentViewController,
             animated: animated,
