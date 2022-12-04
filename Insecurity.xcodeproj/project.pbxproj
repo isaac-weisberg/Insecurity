@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4419276DCD15C0D4FB64CC47 /* libPods-InsecurityPlayground.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */; };
 		6039A8D0C53204A35B9478F6 /* libPods-InsecurityPodspecTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */; };
+		619CEAA35B88BC7DB9776A60 /* libPods-InsecurityTestHost.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3DDC132AE5B6007E7B892480 /* libPods-InsecurityTestHost.a */; };
 		6BA2676A691705959F4C475A /* libPods-InsecurityDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */; };
 		74E4D606D2DBEAB5AA158CF0 /* libPods-InsecurityV2Playground.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3798B14D433453DAA2A2D1E4 /* libPods-InsecurityV2Playground.a */; };
 		A3097429274C1CD2003EB063 /* ProfileOrdersButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3097428274C1CD2003EB063 /* ProfileOrdersButton.swift */; };
@@ -124,6 +125,7 @@
 		A3CE95AC29165408007BC3C4 /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A3CE95AD29165408007BC3C4 /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		A3EA1BAD293C972F003934B1 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3EA1BAC293C972F003934B1 /* Util.swift */; };
+		DB41FFFBC68B06E941893C39 /* libPods-InsecurityTestHost-InsecurityTestHostTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 9CA0ACE630C710B00115F215 /* libPods-InsecurityTestHost-InsecurityTestHostTests.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -218,10 +220,13 @@
 		1D7A2D9ED7081104D2B5B148 /* Pods-InsecurityV2Playground.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityV2Playground.release.xcconfig"; path = "Target Support Files/Pods-InsecurityV2Playground/Pods-InsecurityV2Playground.release.xcconfig"; sourceTree = "<group>"; };
 		27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPodspecTest.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3798B14D433453DAA2A2D1E4 /* libPods-InsecurityV2Playground.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityV2Playground.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3DDC132AE5B6007E7B892480 /* libPods-InsecurityTestHost.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityTestHost.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		69C7034CD4AF5AC792168C11 /* Pods-InsecurityV2Playground.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityV2Playground.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityV2Playground/Pods-InsecurityV2Playground.debug.xcconfig"; sourceTree = "<group>"; };
 		6C9E60E5EBFC027AD77BE703 /* Pods-InsecurityDemo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityDemo.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityDemo/Pods-InsecurityDemo.debug.xcconfig"; sourceTree = "<group>"; };
+		7038886488E8FD8A24F32843 /* Pods-InsecurityTestHost.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityTestHost.release.xcconfig"; path = "Target Support Files/Pods-InsecurityTestHost/Pods-InsecurityTestHost.release.xcconfig"; sourceTree = "<group>"; };
 		7ED2D0086C3E5EABF27BE1C5 /* Pods-InsecurityPlayground.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPlayground.release.xcconfig"; path = "Target Support Files/Pods-InsecurityPlayground/Pods-InsecurityPlayground.release.xcconfig"; sourceTree = "<group>"; };
 		9630C86ACEA183BA279A7CFE /* Pods-InsecurityPodspecTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPodspecTest.release.xcconfig"; path = "Target Support Files/Pods-InsecurityPodspecTest/Pods-InsecurityPodspecTest.release.xcconfig"; sourceTree = "<group>"; };
+		9CA0ACE630C710B00115F215 /* libPods-InsecurityTestHost-InsecurityTestHostTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityTestHost-InsecurityTestHostTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3097428274C1CD2003EB063 /* ProfileOrdersButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOrdersButton.swift; sourceTree = "<group>"; };
 		A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsAdaptiveCoordinator.swift; sourceTree = "<group>"; };
 		A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodAddCell.swift; sourceTree = "<group>"; };
@@ -334,8 +339,11 @@
 		A3986FE5274901D1002AA98B /* CardHolderTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHolderTextField.swift; sourceTree = "<group>"; };
 		A3CE95AA291647AA007BC3C4 /* CommonModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonModalCoordinator.swift; sourceTree = "<group>"; };
 		A3EA1BAC293C972F003934B1 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		A562EC42D9DA68E2987C50B5 /* Pods-InsecurityTestHost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityTestHost.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityTestHost/Pods-InsecurityTestHost.debug.xcconfig"; sourceTree = "<group>"; };
 		C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPlayground.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		D04DA740956E9F05EBA9C8CB /* Pods-InsecurityTestHost-InsecurityTestHostTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityTestHost-InsecurityTestHostTests.release.xcconfig"; path = "Target Support Files/Pods-InsecurityTestHost-InsecurityTestHostTests/Pods-InsecurityTestHost-InsecurityTestHostTests.release.xcconfig"; sourceTree = "<group>"; };
 		D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		E2208A9D7779263F2302D8CD /* Pods-InsecurityTestHost-InsecurityTestHostTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityTestHost-InsecurityTestHostTests.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityTestHost-InsecurityTestHostTests/Pods-InsecurityTestHost-InsecurityTestHostTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -344,6 +352,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A33D578F293BE71A009A6C61 /* Insecurity.framework in Frameworks */,
+				619CEAA35B88BC7DB9776A60 /* libPods-InsecurityTestHost.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -351,6 +360,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DB41FFFBC68B06E941893C39 /* libPods-InsecurityTestHost-InsecurityTestHostTests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -410,6 +420,10 @@
 				0F11C1516A14E4898598B79F /* Pods-InsecurityDemo.release.xcconfig */,
 				69C7034CD4AF5AC792168C11 /* Pods-InsecurityV2Playground.debug.xcconfig */,
 				1D7A2D9ED7081104D2B5B148 /* Pods-InsecurityV2Playground.release.xcconfig */,
+				A562EC42D9DA68E2987C50B5 /* Pods-InsecurityTestHost.debug.xcconfig */,
+				7038886488E8FD8A24F32843 /* Pods-InsecurityTestHost.release.xcconfig */,
+				E2208A9D7779263F2302D8CD /* Pods-InsecurityTestHost-InsecurityTestHostTests.debug.xcconfig */,
+				D04DA740956E9F05EBA9C8CB /* Pods-InsecurityTestHost-InsecurityTestHostTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -805,6 +819,8 @@
 				C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */,
 				D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */,
 				3798B14D433453DAA2A2D1E4 /* libPods-InsecurityV2Playground.a */,
+				3DDC132AE5B6007E7B892480 /* libPods-InsecurityTestHost.a */,
+				9CA0ACE630C710B00115F215 /* libPods-InsecurityTestHost-InsecurityTestHostTests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -826,6 +842,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A33D578E293BE5CE009A6C61 /* Build configuration list for PBXNativeTarget "InsecurityTestHost" */;
 			buildPhases = (
+				0082042350FDB5881E415A99 /* [CP] Check Pods Manifest.lock */,
 				A33D5777293BE5CD009A6C61 /* Sources */,
 				A33D5778293BE5CD009A6C61 /* Frameworks */,
 				A33D5779293BE5CD009A6C61 /* Resources */,
@@ -845,6 +862,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = A33D579E293BE9C8009A6C61 /* Build configuration list for PBXNativeTarget "InsecurityTestHostTests" */;
 			buildPhases = (
+				08281BC5E598532E404515D3 /* [CP] Check Pods Manifest.lock */,
 				A33D5794293BE9C7009A6C61 /* Sources */,
 				A33D5795293BE9C7009A6C61 /* Frameworks */,
 				A33D5796293BE9C7009A6C61 /* Resources */,
@@ -1079,6 +1097,50 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		0082042350FDB5881E415A99 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-InsecurityTestHost-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		08281BC5E598532E404515D3 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-InsecurityTestHost-InsecurityTestHostTests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 		6285E1EA0307A5D157EF79C1 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1397,6 +1459,7 @@
 /* Begin XCBuildConfiguration section */
 		A33D578C293BE5CE009A6C61 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A562EC42D9DA68E2987C50B5 /* Pods-InsecurityTestHost.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1426,6 +1489,7 @@
 		};
 		A33D578D293BE5CE009A6C61 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7038886488E8FD8A24F32843 /* Pods-InsecurityTestHost.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -1455,6 +1519,7 @@
 		};
 		A33D579F293BE9C8009A6C61 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E2208A9D7779263F2302D8CD /* Pods-InsecurityTestHost-InsecurityTestHostTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
@@ -1475,6 +1540,7 @@
 		};
 		A33D57A0293BE9C8009A6C61 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D04DA740956E9F05EBA9C8CB /* Pods-InsecurityTestHost-InsecurityTestHostTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";

@@ -1,13 +1,16 @@
 PODS:
   - Insecurity (2.1.0)
+  - Nimble (10.0.0)
   - SnapKit (5.0.1)
 
 DEPENDENCIES:
   - Insecurity (from `./Insecurity.podspec`)
+  - Nimble
   - SnapKit
 
 SPEC REPOS:
   trunk:
+    - Nimble
     - SnapKit
 
 EXTERNAL SOURCES:
@@ -16,8 +19,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Insecurity: 8addef44f776a3f0ea19bc4f4aaac5b158876a7e
+  Nimble: 5316ef81a170ce87baf72dd961f22f89a602ff84
   SnapKit: 97b92857e3df3a0c71833cce143274bf6ef8e5eb
 
-PODFILE CHECKSUM: 88240b02e82eb4be6d6bbce613545111daf86973
+PODFILE CHECKSUM: 53d2dfe8cf98862f0d4d0dfae0213d3663149f00
 
 COCOAPODS: 1.11.2

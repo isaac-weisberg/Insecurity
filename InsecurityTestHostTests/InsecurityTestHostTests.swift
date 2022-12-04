@@ -37,6 +37,7 @@ final class InsecurityTestHostTests: XCTestCase {
     
     func testFinishChain() {
         let coordinatorsCount = 10
+        let lastCoordinatorThatFinishes = 5
         let coordinators = (0..<coordinatorsCount).map { _ in
             ControlableCoordinator()
         }
@@ -51,11 +52,13 @@ final class InsecurityTestHostTests: XCTestCase {
         wait(for: presentCompleted)
         
         var parentCoordinator = coordinators[0]
-        for coordinator in coordinators.suffix(coordinatorsCount - 1) {
+        for (index, coordinator) in coordinators.enumerated().suffix(coordinatorsCount - 1) {
             let presentCompleted = XCTestExpectation()
             
             parentCoordinator.start(coordinator, animated: true, { _ in
-                
+                if index > lastCoordinatorThatFinishes {
+                    parentCoordinator.finish(())
+                }
             }, onPresentCompleted: {
                 presentCompleted.fulfill()
             })
@@ -63,5 +66,8 @@ final class InsecurityTestHostTests: XCTestCase {
             wait(for: presentCompleted)
             parentCoordinator = coordinator
         }
+        
+        
+        
     }
 }

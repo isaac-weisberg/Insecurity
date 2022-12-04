@@ -16,3 +16,11 @@ end
 target 'InsecurityV2Playground' do
   pod 'SnapKit'
 end
+
+target 'InsecurityTestHost' do
+  pod 'SnapKit'
+
+  target 'InsecurityTestHostTests' do
+    pod 'Nimble'
+  end
+end

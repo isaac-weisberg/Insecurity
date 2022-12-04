@@ -2,6 +2,15 @@
 import XCTest
 
 extension ModalCoordinator.State {
+    func isLive(child: CommonModalCoordinator?) -> Bool {
+        switch self {
+        case .live(let live):
+            return live.child === child
+        case .dead, .idle:
+            return false
+        }
+    }
+    
     func isLive(hasChild: Bool) -> Bool {
         switch self {
         case .live(let live):
