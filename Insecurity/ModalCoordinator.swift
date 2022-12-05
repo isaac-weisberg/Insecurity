@@ -205,7 +205,7 @@ open class ModalCoordinator<Result> {
         case .idle:
             fatalError("Can't finish on a coordinator that wasn't mounted")
         case .dead, .liveButStagedForDeath:
-            insecAssertFail("Can't finish on something that's dead")
+            insecAssert(source == .deinitialized, "Can't finish on something that's dead")
             return
         case .live(let liveData):
             live = liveData

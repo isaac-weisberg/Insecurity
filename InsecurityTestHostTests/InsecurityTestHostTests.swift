@@ -133,5 +133,80 @@ final class InsecurityTestHostTests: XCTestCase {
         expect(coordinatorsThatStay.map(\.state.isLive)).to(allPass(beTrue()))
         expect(coordinatorsThatFinish.map(\.state.isDead)).to(allPass(beTrue()))
         expect(self.rootController.modalChildrenChain).to(haveCount(coordinatorsThatStay.count))
+        
+        let cleanedUp = XCTestExpectation()
+        
+        coordinators.first!.finish((), source: .result) {
+            cleanedUp.fulfill()
+        }
+        
+        expect(coordinatorsThatStay.map(\.state.isDead)).to(allPass(beTrue()))
+        
+        wait(for: cleanedUp)
+        
+        expect(self.rootController.modalChildrenChain).to(beEmpty())
+    }
+    
+    func testDismissWorksAsExpected() {
+        let coordinatorsThatStay = create(count: 4, of: ControlableCoordinator.init)
+        let coordinatorsThatFinish = create(count: 6, of: ControlableCoordinator.init)
+        
+        let coordinators = coordinatorsThatStay + coordinatorsThatFinish
+        
+        let presentCompleted = XCTestExpectation()
+        
+        coordinators[0].mount(on: rootController, animated: true) { _ in
+            
+        } onPresentCompleted: {
+            presentCompleted.fulfill()
+        }
+        
+        wait(for: presentCompleted)
+        
+        var lastHandledCoordinator = coordinators[0]
+        for (index, coordinator) in coordinators.enumerated().suffix(coordinators.count - 1) {
+            let presentCompleted = XCTestExpectation()
+            let parentCoordinator = lastHandledCoordinator
+            
+            parentCoordinator.start(coordinator, animated: true, { _ in
+                if index > coordinatorsThatStay.count {
+                    parentCoordinator.finish(())
+                }
+            }, onPresentCompleted: {
+                presentCompleted.fulfill()
+            })
+            
+            wait(for: presentCompleted)
+            lastHandledCoordinator = coordinator
+        }
+        
+        expect(coordinators.map(\.state.isLive)).to(allPass(beTrue()))
+        expect(self.rootController.modalChildrenChain).to(haveCount(coordinators.count))
+        
+        let dismissed = XCTestExpectation()
+        
+        coordinatorsThatStay.last!.dismissChildren(animated: true) {
+            dismissed.fulfill()
+        }
+        
+        expect(coordinatorsThatStay.map(\.state.isLive)).to(allPass(beTrue()))
+        expect(coordinatorsThatFinish.map(\.state.isDead)).to(allPass(beTrue()))
+        expect(self.rootController.modalChildrenChain).to(haveCount(coordinators.count))
+        
+        wait(for: dismissed)
+        
+        expect(self.rootController.modalChildrenChain).to(haveCount(coordinatorsThatStay.count))
+        
+        let cleanedUp = XCTestExpectation()
+        
+        coordinators.first!.finish((), source: .result) {
+            cleanedUp.fulfill()
+        }
+        
+        expect(coordinatorsThatStay.map(\.state.isDead)).to(allPass(beTrue()))
+        
+        wait(for: cleanedUp)
+        
+        expect(self.rootController.modalChildrenChain).to(beEmpty())
     }
 }
