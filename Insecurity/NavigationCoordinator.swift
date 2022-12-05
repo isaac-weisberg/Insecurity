@@ -6,6 +6,7 @@ class NavigationCoordinator<Result> {
             let navigationController: Weak<UINavigationController>
             let parent: WeakCommonNavigationCoordinator?
             let controller: Weak<UIViewController>
+            let child: CommonNavigationCoordinator?
         }
         
         enum Dead {
@@ -30,19 +31,15 @@ class NavigationCoordinator<Result> {
     }
     
     public func mount(on navigationController: UINavigationController,
-                      animated: Bool,
                       completion: @escaping (Result?) -> Void) {
         switch state {
         case .idle:
             break
-        case .dead:
+        case .dead, .live:
             insecAssertFail("Can not reuse a coordinator")
             return
-        case .live:
-            insecAssertFail("Coordinator already in use")
-            return
         }
-        assert(navigationController.viewControllers.count == 1)
+        assert(navigationController.viewControllers.isEmpty)
         
         let controller = self.viewController
         
@@ -56,9 +53,10 @@ class NavigationCoordinator<Result> {
         
         self.state = .live(State.Live(navigationController: Weak(navigationController),
                                       parent: nil,
-                                      controller: Weak(controller)))
+                                      controller: Weak(controller),
+                                      child: nil))
         
-        navigationController.pushViewController(controller, animated: animated)
+        navigationController.setViewControllers([controller], animated: false)
     }
     
     public func finish(_ result: Result) {
@@ -81,7 +79,7 @@ class NavigationCoordinator<Result> {
         case .idle:
             fatalError("Can't finish on a coordinator that wasn't mounted")
         case .dead:
-            insecAssertFail("Can't finish on something that's dead")
+            insecAssert(source == .deinitialized, "Can't finish on something that's dead")
             return
         case .live(let liveData):
             live = liveData

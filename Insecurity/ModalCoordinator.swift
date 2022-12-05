@@ -12,6 +12,7 @@ open class ModalCoordinator<Result> {
             let parent: Parent
             let controller: Weak<UIViewController>
             let child: CommonModalCoordinator?
+            let completionHandler: (Result?) -> Void
         }
         
         struct Dead {
@@ -31,7 +32,6 @@ open class ModalCoordinator<Result> {
     }
     
     var state: State = .idle
-    var completionHandler: ((Result?) -> Void)?
     
     open var viewController: UIViewController {
         fatalError("Override this getter")
@@ -41,7 +41,8 @@ open class ModalCoordinator<Result> {
         
     }
     
-    func mount(on parent: CommonModalCoordinator) -> UIViewController {
+    func mount(on parent: CommonModalCoordinator,
+               completionHandler: @escaping (Result?) -> Void) -> UIViewController {
         assert(parent !== self)
         switch state {
         case .idle:
@@ -62,7 +63,10 @@ open class ModalCoordinator<Result> {
             State.Live(
                 parent: .coordinator(parent.weak),
                 controller: Weak(controller),
-                child: nil
+                child: nil,
+                completionHandler: { result in
+                    completionHandler(result)
+                }
             )
         )
         
@@ -82,11 +86,9 @@ open class ModalCoordinator<Result> {
                 return
             }
             
-            let controller = coordinator.mount(on: self)
-            
-            coordinator.completionHandler = { result in
+            let controller = coordinator.mount(on: self, completionHandler: { result in
                 completion(result)
-            }
+            })
             
             presentingViewController.present(
                 controller,
@@ -99,7 +101,8 @@ open class ModalCoordinator<Result> {
             self.state = .live(State.Live(
                 parent: live.parent,
                 controller: live.controller,
-                child: coordinator
+                child: coordinator,
+                completionHandler: live.completionHandler
             ))
             
         case .idle, .dead, .liveButStagedForDeath:
@@ -131,10 +134,12 @@ open class ModalCoordinator<Result> {
         )
     }
     
-    func mountInternal(on parentViewController: UIViewController,
-                       animated: Bool,
-                       completion: @escaping (Result?) -> Void,
-                       onPresentCompleted: (() -> Void)?) {
+    func mountOnControllerInternal(
+        on parentViewController: UIViewController,
+        animated: Bool,
+        completion: @escaping (Result?) -> Void,
+        onPresentCompleted: (() -> Void)?
+    ) {
         let controller = self.viewController
         
         controller.deinitObservable.onDeinit = { [weak self] in
@@ -145,13 +150,12 @@ open class ModalCoordinator<Result> {
             State.Live(
                 parent: .controller(Weak(parentViewController)),
                 controller: Weak(controller),
-                child: nil
+                child: nil,
+                completionHandler: { result in
+                    completion(result)
+                }
             )
         )
-        
-        self.completionHandler = { result in
-            completion(result)
-        }
         
         parentViewController.present(controller, animated: animated, completion: {
             onPresentCompleted?()
@@ -162,7 +166,7 @@ open class ModalCoordinator<Result> {
                       animated: Bool,
                       completion: @escaping (Result?) -> Void,
                       onPresentCompleted: @escaping () -> Void) {
-        mountInternal(
+        mountOnControllerInternal(
             on: parentViewController,
             animated: animated,
             completion: completion,
@@ -173,7 +177,7 @@ open class ModalCoordinator<Result> {
     public func mount(on parentViewController: UIViewController,
                       animated: Bool,
                       completion: @escaping (Result?) -> Void) {
-        mountInternal(
+        mountOnControllerInternal(
             on: parentViewController,
             animated: animated,
             completion: completion,
@@ -218,9 +222,10 @@ open class ModalCoordinator<Result> {
         case .deinitialized:
             deadReason = .deinitialized
         }
+        live.controller.value?.deinitObservable.onDeinit = nil
         self.state = .liveButStagedForDeath(live, deadReason)
         
-        completionHandler?(result)
+        live.completionHandler(result)
         
         let shouldDismiss: Bool
         if let child = live.child {
@@ -274,6 +279,7 @@ open class ModalCoordinator<Result> {
         case .idle, .dead, .liveButStagedForDeath:
             completion?()
         case .live(let live):
+            live.controller.value?.deinitObservable.onDeinit = nil
             if let child = live.child {
                 let newLive = live.settingChild(to: nil)
                 self.state = .live(newLive)
@@ -344,6 +350,7 @@ extension ModalCoordinator: CommonModalCoordinator {
         case .dead, .liveButStagedForDeath:
             break
         case .live(let live):
+            live.controller.value?.deinitObservable.onDeinit = nil
             self.state = .dead(State.Dead(reason: .dismissedByParent))
             live.child?.parentWillDismiss()
         }
@@ -361,37 +368,11 @@ extension ModalCoordinator: CommonModalCoordinator {
 
 extension ModalCoordinator.State.Live {
     func settingChild(to child: CommonModalCoordinator?) -> ModalCoordinator.State.Live {
-        ModalCoordinator.State.Live(parent: self.parent,
-                                    controller: self.controller,
-                                    child: child)
+        ModalCoordinator.State.Live(
+            parent: self.parent,
+            controller: self.controller,
+            child: child,
+            completionHandler: self.completionHandler
+        )
     }
 }
-
-//@available(iOS 13, *)
-//public extension ModalCoordinator {
-//    func start<Result>(_ coordinator: ModalCoordinator<Result>,
-//                       animated: Bool) async -> Result? {
-//        return await withCheckedContinuation { continuation in
-//            self.startInternal(coordinator,
-//                               animated: animated,
-//                               completion: continuation.resume(returning:),
-//                               onPresentCompleted: nil)
-//        }
-//    }
-//
-//    struct StartAwaitables {
-//        let completed: Task<Result?, Never>
-//        let presentCompleted: Task<Void, Never>
-//    }
-//
-//    func start<Result>(_ coordinator: ModalCoordinator<Result>,
-//                       animated: Bool) async -> StartAwaitables {
-//        let onPresentCompletedTask = Task<Void, Never>()
-//
-//
-//
-//        startInternal(T##coordinator: ModalCoordinator<Result>##ModalCoordinator<Result>
-//, animated: T##Bool, completion: T##(Result?) -> Void
-//, onPresentCompleted: T##(() -> Void)?##(() -> Void)?##() -> Void)
-//    }
-//}

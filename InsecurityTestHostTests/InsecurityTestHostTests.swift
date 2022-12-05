@@ -21,6 +21,7 @@ final class InsecurityTestHostTests: XCTestCase {
         
         assert(rootController.presentedViewController == coordinator.state.instantiatedVCIfLive)
         assert(coordinator.state.isLive(hasChild: false))
+        assert(coordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit != nil)
         
         let finishDismissFinished = XCTestExpectation()
         
@@ -28,10 +29,12 @@ final class InsecurityTestHostTests: XCTestCase {
             finishDismissFinished.fulfill()
         })
         
+        assert(coordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit == nil)
         assert(coordinator.state.isDead)
         assert(rootController.presentedViewController != nil)
         
         wait(for: finishDismissFinished)
+        assert(coordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit == nil)
         assert(coordinator.state.isDead)
         assert(rootController.presentedViewController == nil)
     }
@@ -61,6 +64,8 @@ final class InsecurityTestHostTests: XCTestCase {
         
         wait(for: childPresentCompleted)
         
+        assert(coordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit != nil)
+        assert(childCoordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit != nil)
         assert(rootController.presentedViewController == coordinator.state.instantiatedVCIfLive)
         assert(coordinator.state.isLive(child: childCoordinator))
         expect(childCoordinator.state.isLive(child: nil)) == true
@@ -71,12 +76,16 @@ final class InsecurityTestHostTests: XCTestCase {
             finishDismissFinished.fulfill()
         })
         
+        assert(coordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit == nil)
+        assert(childCoordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit == nil)
         assert(coordinator.state.isDead)
         assert(childCoordinator.state.isDead)
         expect(self.rootController.presentedViewController).toNot(beNil())
         expect(self.rootController.modalChildrenChain.count) == 2
         
         wait(for: finishDismissFinished)
+        assert(coordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit == nil)
+        assert(childCoordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit == nil)
         assert(coordinator.state.isDead)
         assert(childCoordinator.state.isDead)
         assert(rootController.presentedViewController == nil)
