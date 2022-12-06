@@ -1,9 +1,11 @@
 import UIKit
 
 protocol CommonNavigationCoordinator: AnyObject {
-    var isInDeadState: Bool { get }
+    var isInLiveState: Bool { get }
     
-    var instantiatedViewController: UIViewController? { get }
+    func parentWillDismiss()
+    
+    func findFirstAliveAncestorAndPerformDismissal()
 }
 
 struct WeakCommonNavigationCoordinator {

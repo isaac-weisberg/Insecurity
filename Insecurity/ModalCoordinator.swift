@@ -41,6 +41,73 @@ open class ModalCoordinator<Result> {
         
     }
     
+    // MARK: - Public
+    
+    public func start<Result>(_ coordinator: ModalCoordinator<Result>,
+                              animated: Bool,
+                              _ completion: @escaping (Result?) -> Void) {
+        startInternal(
+            coordinator,
+            animated: animated,
+            completion: completion,
+            onPresentCompleted: nil
+        )
+    }
+    
+    public func start<Result>(_ coordinator: ModalCoordinator<Result>,
+                              animated: Bool,
+                              _ completion: @escaping (Result?) -> Void,
+                              onPresentCompleted: @escaping () -> Void) {
+        startInternal(
+            coordinator,
+            animated: animated,
+            completion: completion,
+            onPresentCompleted: onPresentCompleted
+        )
+    }
+    
+    public func mount(on parentViewController: UIViewController,
+                      animated: Bool,
+                      completion: @escaping (Result?) -> Void,
+                      onPresentCompleted: @escaping () -> Void) {
+        mountOnControllerInternal(
+            on: parentViewController,
+            animated: animated,
+            completion: completion,
+            onPresentCompleted: onPresentCompleted
+        )
+    }
+    
+    public func mount(on parentViewController: UIViewController,
+                      animated: Bool,
+                      completion: @escaping (Result?) -> Void) {
+        mountOnControllerInternal(
+            on: parentViewController,
+            animated: animated,
+            completion: completion,
+            onPresentCompleted: nil
+        )
+    }
+    
+    public func finish(_ result: Result) {
+        finish(result, source: .result, onDismissCompleted: nil)
+    }
+    
+    public func dismiss() {
+        finish(nil, source: .result, onDismissCompleted: nil)
+    }
+    
+    public func dismissChildren(animated: Bool) {
+        dismissChildrenInternal(animated: animated, completion: nil)
+    }
+    
+    public func dismissChildren(animated: Bool,
+                                completion: @escaping () -> Void) {
+        dismissChildrenInternal(animated: animated, completion: completion)
+    }
+    
+    // MARK: - Internal
+    
     func mount(on parent: CommonModalCoordinator,
                completionHandler: @escaping (Result?) -> Void) -> UIViewController {
         assert(parent !== self)
@@ -111,29 +178,6 @@ open class ModalCoordinator<Result> {
         }
     }
     
-    public func start<Result>(_ coordinator: ModalCoordinator<Result>,
-                              animated: Bool,
-                              _ completion: @escaping (Result?) -> Void) {
-        startInternal(
-            coordinator,
-            animated: animated,
-            completion: completion,
-            onPresentCompleted: nil
-        )
-    }
-    
-    public func start<Result>(_ coordinator: ModalCoordinator<Result>,
-                              animated: Bool,
-                              _ completion: @escaping (Result?) -> Void,
-                              onPresentCompleted: @escaping () -> Void) {
-        startInternal(
-            coordinator,
-            animated: animated,
-            completion: completion,
-            onPresentCompleted: onPresentCompleted
-        )
-    }
-    
     func mountOnControllerInternal(
         on parentViewController: UIViewController,
         animated: Bool,
@@ -162,40 +206,9 @@ open class ModalCoordinator<Result> {
         })
     }
     
-    public func mount(on parentViewController: UIViewController,
-                      animated: Bool,
-                      completion: @escaping (Result?) -> Void,
-                      onPresentCompleted: @escaping () -> Void) {
-        mountOnControllerInternal(
-            on: parentViewController,
-            animated: animated,
-            completion: completion,
-            onPresentCompleted: onPresentCompleted
-        )
-    }
-    
-    public func mount(on parentViewController: UIViewController,
-                      animated: Bool,
-                      completion: @escaping (Result?) -> Void) {
-        mountOnControllerInternal(
-            on: parentViewController,
-            animated: animated,
-            completion: completion,
-            onPresentCompleted: nil
-        )
-    }
-    
     enum FinishSource {
         case result
         case deinitialized
-    }
-    
-    public func finish(_ result: Result) {
-        finish(result, source: .result, onDismissCompleted: nil)
-    }
-    
-    public func dismiss() {
-        finish(nil, source: .result, onDismissCompleted: nil)
     }
     
     func finish(
@@ -230,6 +243,8 @@ open class ModalCoordinator<Result> {
         let shouldDismiss: Bool
         if let child = live.child {
             shouldDismiss = child.isInLiveState
+            // This means, that the child and its children are not participating in
+            // this finish call chain and `self` is the topmost handler of this finishing
         } else {
             shouldDismiss = true
         }
@@ -262,15 +277,6 @@ open class ModalCoordinator<Result> {
         } else {
             insecAssert(onDismissCompleted == nil, "onDismissCompleted was passed in the middle of finish chain, so it wont be called")
         }
-    }
-    
-    public func dismissChildren(animated: Bool) {
-        dismissChildrenInternal(animated: animated, completion: nil)
-    }
-    
-    public func dismissChildren(animated: Bool,
-                                completion: @escaping () -> Void) {
-        dismissChildrenInternal(animated: animated, completion: completion)
     }
     
     func dismissChildrenInternal(animated: Bool,

@@ -19,9 +19,9 @@ final class InsecurityTestHostTests: XCTestCase {
     
         wait(for: presentCompleted)
         
-        assert(rootController.presentedViewController == coordinator.state.instantiatedVCIfLive)
+        assert(rootController.presentedViewController == coordinator.state.instantiatedVCIfLive?.value)
         assert(coordinator.state.isLive(hasChild: false))
-        assert(coordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit != nil)
+        assert(coordinator.state.instantiatedVCIfLive?.value?.deinitObservable.onDeinit != nil)
         
         let finishDismissFinished = XCTestExpectation()
         
@@ -29,12 +29,12 @@ final class InsecurityTestHostTests: XCTestCase {
             finishDismissFinished.fulfill()
         })
         
-        assert(coordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit == nil)
+        assert(coordinator.state.instantiatedVCIfLive?.value?.deinitObservable.onDeinit == nil)
         assert(coordinator.state.isDead)
         assert(rootController.presentedViewController != nil)
         
         wait(for: finishDismissFinished)
-        assert(coordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit == nil)
+        assert(coordinator.state.instantiatedVCIfLive?.value?.deinitObservable.onDeinit == nil)
         assert(coordinator.state.isDead)
         assert(rootController.presentedViewController == nil)
     }
@@ -64,9 +64,9 @@ final class InsecurityTestHostTests: XCTestCase {
         
         wait(for: childPresentCompleted)
         
-        assert(coordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit != nil)
-        assert(childCoordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit != nil)
-        assert(rootController.presentedViewController == coordinator.state.instantiatedVCIfLive)
+        assert(coordinator.state.instantiatedVCIfLive?.value?.deinitObservable.onDeinit != nil)
+        assert(childCoordinator.state.instantiatedVCIfLive?.value?.deinitObservable.onDeinit != nil)
+        assert(rootController.presentedViewController == coordinator.state.instantiatedVCIfLive?.value)
         assert(coordinator.state.isLive(child: childCoordinator))
         expect(childCoordinator.state.isLive(child: nil)) == true
         
@@ -76,16 +76,16 @@ final class InsecurityTestHostTests: XCTestCase {
             finishDismissFinished.fulfill()
         })
         
-        assert(coordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit == nil)
-        assert(childCoordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit == nil)
+        assert(coordinator.state.instantiatedVCIfLive?.value?.deinitObservable.onDeinit == nil)
+        assert(childCoordinator.state.instantiatedVCIfLive?.value?.deinitObservable.onDeinit == nil)
         assert(coordinator.state.isDead)
         assert(childCoordinator.state.isDead)
         expect(self.rootController.presentedViewController).toNot(beNil())
         expect(self.rootController.modalChildrenChain.count) == 2
         
         wait(for: finishDismissFinished)
-        assert(coordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit == nil)
-        assert(childCoordinator.state.instantiatedVCIfLive?.deinitObservable.onDeinit == nil)
+        assert(coordinator.state.instantiatedVCIfLive?.value?.deinitObservable.onDeinit == nil)
+        assert(childCoordinator.state.instantiatedVCIfLive?.value?.deinitObservable.onDeinit == nil)
         assert(coordinator.state.isDead)
         assert(childCoordinator.state.isDead)
         assert(rootController.presentedViewController == nil)
@@ -125,7 +125,11 @@ final class InsecurityTestHostTests: XCTestCase {
             lastHandledCoordinator = coordinator
         }
         
+        let allControllers = coordinators.map(\.state.instantiatedVCIfLive)
+            .lazy
+        expect(allControllers.map(\.?.value).filterNil()).to(haveCount(coordinators.count))
         expect(coordinators.map(\.state.isLive)).to(allPass(beTrue()))
+        expect(allControllers.map(\.?.value?.deinitObservable.onDeinit)).to(allPass({ $0 != nil }))
         
         let finishChainFinished = XCTestExpectation()
         
@@ -135,6 +139,20 @@ final class InsecurityTestHostTests: XCTestCase {
         
         expect(coordinatorsThatStay.map(\.state.isLive)).to(allPass(beTrue()))
         expect(coordinatorsThatFinish.map(\.state.isDead)).to(allPass(beTrue()))
+        
+        let deinitsThatStay = allControllers[0..<coordinatorsThatStay.count]
+            .map(\.?.value?.deinitObservable.onDeinit)
+        let deinitsThatFinish = allControllers[
+            coordinatorsThatStay.count
+            ..<
+            coordinatorsThatStay.count + coordinatorsThatFinish.count
+        ].map(\.?.value?.deinitObservable.onDeinit)
+        
+        expect(
+            Array(deinitsThatStay.compactMap { $0 })
+        ).to(haveCount(coordinatorsThatStay.count))
+        expect(Array(deinitsThatFinish.compactMap { $0 })).to(beEmpty())
+        
         expect(self.rootController.modalChildrenChain).to(haveCount(coordinators.count))
         
         wait(for: finishChainFinished)
@@ -148,7 +166,7 @@ final class InsecurityTestHostTests: XCTestCase {
         coordinators.first!.finish((), source: .result) {
             cleanedUp.fulfill()
         }
-        
+        expect(allControllers.map(\.?.value?.deinitObservable.onDeinit)).to(allPass(beNil()))
         expect(coordinatorsThatStay.map(\.state.isDead)).to(allPass(beTrue()))
         
         wait(for: cleanedUp)
@@ -217,5 +235,32 @@ final class InsecurityTestHostTests: XCTestCase {
         wait(for: cleanedUp)
         
         expect(self.rootController.modalChildrenChain).to(beEmpty())
+    }
+}
+
+extension Array {
+    func allStates<CoordinatorResult>() -> [ModalCoordinator<CoordinatorResult>.State] where Element == ModalCoordinator<CoordinatorResult> {
+        return self.map(\.state)
+    }
+    
+    func allVCifAlive<CoordinatorResult>() -> [UIViewController?] where Element == ModalCoordinator<CoordinatorResult>.State {
+        return self.map { state in
+            switch state {
+            case .live(let live):
+                return live.controller.value
+            case .liveButStagedForDeath, .dead, .idle:
+                return nil
+            }
+        }
+    }
+    
+    func filterNil() -> [Element] {
+        return self.compactMap { $0 }
+    }
+}
+
+extension LazySequence {
+    func filterNil<ElementOfResult>() -> LazyMapSequence<LazyFilterSequence<LazyMapSequence<Self.Elements, ElementOfResult?>>, ElementOfResult> where Base.Element == ElementOfResult? {
+        return compactMap { $0 }
     }
 }

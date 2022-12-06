@@ -51,10 +51,10 @@ extension ModalCoordinator.State {
         }
     }
     
-    var instantiatedVCIfLive: UIViewController? {
+    var instantiatedVCIfLive: Weak<UIViewController>? {
         switch self {
         case .live(let live):
-            return live.controller.value
+            return live.controller
         case .liveButStagedForDeath, .dead, .idle:
             return nil
         }
