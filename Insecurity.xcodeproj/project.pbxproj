@@ -74,6 +74,8 @@
 		A382534A270091A900FBC6DC /* PaymentSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3825349270091A900FBC6DC /* PaymentSuccessViewController.swift */; };
 		A382534C2700924400FBC6DC /* PaymentSuccessCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382534B2700924400FBC6DC /* PaymentSuccessCoordinator.swift */; };
 		A385FCA329424955001F37D8 /* InsecurityMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = A385FCA229424955001F37D8 /* InsecurityMessages.swift */; };
+		A385FCA529424DD6001F37D8 /* NavigationCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A385FCA429424DD6001F37D8 /* NavigationCoordinatorTests.swift */; };
+		A385FCA729424EA0001F37D8 /* TestNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A385FCA629424EA0001F37D8 /* TestNavigationCoordinator.swift */; };
 		A38D386B291598BD0007440F /* ModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D386A291598BD0007440F /* ModalCoordinator.swift */; };
 		A38D387329159D8F0007440F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D387229159D8F0007440F /* AppDelegate.swift */; };
 		A38D387729159D8F0007440F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D387629159D8F0007440F /* ViewController.swift */; };
@@ -297,6 +299,8 @@
 		A3825349270091A900FBC6DC /* PaymentSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSuccessViewController.swift; sourceTree = "<group>"; };
 		A382534B2700924400FBC6DC /* PaymentSuccessCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSuccessCoordinator.swift; sourceTree = "<group>"; };
 		A385FCA229424955001F37D8 /* InsecurityMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsecurityMessages.swift; sourceTree = "<group>"; };
+		A385FCA429424DD6001F37D8 /* NavigationCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationCoordinatorTests.swift; sourceTree = "<group>"; };
+		A385FCA629424EA0001F37D8 /* TestNavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNavigationCoordinator.swift; sourceTree = "<group>"; };
 		A38D386A291598BD0007440F /* ModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalCoordinator.swift; sourceTree = "<group>"; };
 		A38D387029159D8F0007440F /* InsecurityV2Playground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityV2Playground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A38D387229159D8F0007440F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -457,6 +461,8 @@
 				A33D579A293BE9C8009A6C61 /* InsecurityTestHostTests.swift */,
 				A33D57A1293BEDD5009A6C61 /* ControlableCoordinator.swift */,
 				A3EA1BAC293C972F003934B1 /* Util.swift */,
+				A385FCA429424DD6001F37D8 /* NavigationCoordinatorTests.swift */,
+				A385FCA629424EA0001F37D8 /* TestNavigationCoordinator.swift */,
 			);
 			path = InsecurityTestHostTests;
 			sourceTree = "<group>";
@@ -1248,9 +1254,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A385FCA529424DD6001F37D8 /* NavigationCoordinatorTests.swift in Sources */,
 				A33D57A2293BEDD5009A6C61 /* ControlableCoordinator.swift in Sources */,
 				A3EA1BAD293C972F003934B1 /* Util.swift in Sources */,
 				A33D579B293BE9C8009A6C61 /* InsecurityTestHostTests.swift in Sources */,
+				A385FCA729424EA0001F37D8 /* TestNavigationCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1531,7 +1539,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H24Z5L89V6;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityTestHostTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1552,7 +1560,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = H24Z5L89V6;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.caroline.weisberg.InsecurityTestHostTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";

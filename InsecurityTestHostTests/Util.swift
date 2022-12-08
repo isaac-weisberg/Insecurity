@@ -86,3 +86,37 @@ extension UIViewController {
         return children
     }
 }
+
+func sleep(_ timeInterval: TimeInterval) async {
+    try? await Task.sleep(nanoseconds: UInt64(timeInterval * 1_000_000_000))
+}
+
+extension UIViewController {
+    @MainActor
+    func present(_ viewController: UIViewController, animated: Bool) async {
+        await withCheckedContinuation { cont in
+            self.present(viewController, animated: animated) {
+                cont.resume(returning: ())
+            }
+        }
+    }
+    
+    @MainActor
+    func dismiss(animated: Bool) async {
+        await withCheckedContinuation { cont in
+            self.dismiss(animated: animated) {
+                cont.resume(returning: ())
+            }
+        }
+    }
+}
+
+extension Bool {
+    var not: Bool {
+        !self
+    }
+}
+
+func assert(_ expression: Bool, file: StaticString = #file, line: UInt = #line) {
+    XCTAssert(expression)
+}

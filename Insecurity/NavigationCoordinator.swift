@@ -1,6 +1,6 @@
 import UIKit
 
-class NavigationCoordinator<Result> {
+open class NavigationCoordinator<Result> {
     enum State {
         struct Live {
             let navigationController: Weak<UINavigationController>
