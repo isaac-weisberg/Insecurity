@@ -157,6 +157,9 @@ open class ModalCoordinator<Result> {
                 completion(result)
             })
             
+            
+            self.state = .live(live.settingChild(to: coordinator))
+            
             presentingViewController.present(
                 controller,
                 animated: animated,
@@ -164,16 +167,8 @@ open class ModalCoordinator<Result> {
                     onPresentCompleted?()
                 }
             )
-            
-            self.state = .live(State.Live(
-                parent: live.parent,
-                controller: live.controller,
-                child: coordinator,
-                completionHandler: live.completionHandler
-            ))
-            
         case .idle, .dead, .liveButStagedForDeath:
-            insecAssertFail("Can not start on an unmounted coordinator")
+            insecAssertFail(InsecurityMessage.noStartOverDead.s)
             return
         }
     }
@@ -285,7 +280,6 @@ open class ModalCoordinator<Result> {
         case .idle, .dead, .liveButStagedForDeath:
             completion?()
         case .live(let live):
-            live.controller.value?.deinitObservable.onDeinit = nil
             if let child = live.child {
                 let newLive = live.settingChild(to: nil)
                 self.state = .live(newLive)

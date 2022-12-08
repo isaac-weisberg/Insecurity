@@ -15,3 +15,9 @@ struct WeakCommonNavigationCoordinator {
         self.value = value
     }
 }
+
+extension CommonNavigationCoordinator {
+    var weak: WeakCommonNavigationCoordinator {
+        WeakCommonNavigationCoordinator(self)
+    }
+}

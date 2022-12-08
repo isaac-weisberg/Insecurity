@@ -76,6 +76,53 @@ class NavigationCoordinator<Result> {
         finish(nil, source: .finishCall)
     }
     
+    public func start<Result>(_ coordinator: NavigationCoordinator<Result>,
+                              animated: Bool,
+                              _ completion: @escaping (Result?) -> Void) {
+        switch state {
+        case .live(let live):
+            assert(live.child == nil)
+            guard let navigationController = live.navigationController.value else {
+                return
+            }
+            
+            let controller = coordinator.mount(
+                on: self,
+                navigationController: navigationController,
+                completion: { result in
+                    completion(result)
+                }
+            )
+            
+            self.state = .live(live.settingChild(to: coordinator))
+            
+            navigationController.pushViewController(controller, animated: animated)
+        case .idle, .dead, .liveButStagedForDeath:
+            insecAssertFail(InsecurityMessage.noStartOverDead.s)
+            return
+        }
+    }
+    
+    public func dismissChildren(animated: Bool) {
+        switch self.state {
+        case .idle, .dead, .liveButStagedForDeath:
+            break
+        case .live(let live):
+            if let child = live.child {
+                let newLive = live.settingChild(to: nil)
+                self.state = .live(newLive)
+                child.parentWillDismiss()
+            }
+            
+            if
+                let navigationController = live.navigationController.value,
+                let controller = live.controller.value
+            {
+                navigationController.popToViewController(controller, animated: animated)
+            }
+        }
+    }
+    
     // MARK: - Internal
     
     enum FinishSource {
@@ -83,7 +130,7 @@ class NavigationCoordinator<Result> {
         case deinitialized
     }
     
-    public func finish(_ result: Result?, source: FinishSource) {
+    func finish(_ result: Result?, source: FinishSource) {
         let live: State.Live
         let oldState = self.state
         switch oldState {
@@ -128,6 +175,40 @@ class NavigationCoordinator<Result> {
                 // and roots dismissal is handled by the initiator
             }
         }
+    }
+    
+    func mount(on parent: CommonNavigationCoordinator,
+               navigationController: UINavigationController,
+               completion: @escaping (Result?) -> Void) -> UIViewController {
+        assert(parent !== self)
+        switch state {
+        case .idle:
+            break
+        case .live:
+            fatalError("Can not mount a coordinator that's already mounted")
+        case .dead, .liveButStagedForDeath:
+            fatalError("Can not mount a coordinator that's already been used")
+        }
+        
+        let controller = self.viewController
+        
+        controller.deinitObservable.onDeinit = { [weak self] in
+            self?.finish(nil, source: .deinitialized)
+        }
+        
+        self.state = .live(
+            State.Live(
+                navigationController: Weak(navigationController),
+                parent: parent.weak,
+                controller: Weak(controller),
+                child: nil,
+                completionHandler: { result in
+                    completion(result)
+                }
+            )
+        )
+        
+        return controller
     }
 }
 

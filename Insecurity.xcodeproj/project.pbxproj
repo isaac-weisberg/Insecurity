@@ -73,6 +73,7 @@
 		A38253472700906100FBC6DC /* PaymentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38253462700906100FBC6DC /* PaymentCoordinator.swift */; };
 		A382534A270091A900FBC6DC /* PaymentSuccessViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3825349270091A900FBC6DC /* PaymentSuccessViewController.swift */; };
 		A382534C2700924400FBC6DC /* PaymentSuccessCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A382534B2700924400FBC6DC /* PaymentSuccessCoordinator.swift */; };
+		A385FCA329424955001F37D8 /* InsecurityMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = A385FCA229424955001F37D8 /* InsecurityMessages.swift */; };
 		A38D386B291598BD0007440F /* ModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D386A291598BD0007440F /* ModalCoordinator.swift */; };
 		A38D387329159D8F0007440F /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D387229159D8F0007440F /* AppDelegate.swift */; };
 		A38D387729159D8F0007440F /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A38D387629159D8F0007440F /* ViewController.swift */; };
@@ -295,6 +296,7 @@
 		A38253462700906100FBC6DC /* PaymentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentCoordinator.swift; sourceTree = "<group>"; };
 		A3825349270091A900FBC6DC /* PaymentSuccessViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSuccessViewController.swift; sourceTree = "<group>"; };
 		A382534B2700924400FBC6DC /* PaymentSuccessCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentSuccessCoordinator.swift; sourceTree = "<group>"; };
+		A385FCA229424955001F37D8 /* InsecurityMessages.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsecurityMessages.swift; sourceTree = "<group>"; };
 		A38D386A291598BD0007440F /* ModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalCoordinator.swift; sourceTree = "<group>"; };
 		A38D387029159D8F0007440F /* InsecurityV2Playground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityV2Playground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A38D387229159D8F0007440F /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -790,6 +792,7 @@
 				A3CE95AA291647AA007BC3C4 /* CommonModalCoordinator.swift */,
 				A372133B2917B08900BE489A /* NavigationCoordinator.swift */,
 				A372133D2917B0A100BE489A /* CommonNavigationCoordinator.swift */,
+				A385FCA229424955001F37D8 /* InsecurityMessages.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -1326,6 +1329,7 @@
 				A3CE95AB291647AA007BC3C4 /* CommonModalCoordinator.swift in Sources */,
 				A370768026FFCED600ED7391 /* DeinitObservable.swift in Sources */,
 				A372133C2917B08900BE489A /* NavigationCoordinator.swift in Sources */,
+				A385FCA329424955001F37D8 /* InsecurityMessages.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
