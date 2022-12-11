@@ -158,10 +158,6 @@ extension Array {
         return map(\.state)
     }
     
-    func areAllLive<Result>() -> Bool where Element == NavigationCoordinator<Result>.State {
-        return allSatisfy { $0.isLive }
-    }
-    
     func assertAllLive<Result>(file: String = #file, line: UInt = #line) where Element == NavigationCoordinator<Result>.State {
         expect(file: file, line: line, self).to(allPass({ $0.isLive }))
     }

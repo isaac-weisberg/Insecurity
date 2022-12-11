@@ -240,7 +240,7 @@ final class ModalCoordinatorTests: XCTestCase {
     
     func testDeinitDismissWorks() async {
         let coordinatorsThatStay = create(count: 2, of: TestModalCoordinator.init)
-        let coordinatorsThatGetDismissedFromMiddle = create(count: 3, of: TestModalCoordinator.init)
+        let coordinatorsThatGetDismissedFromMiddle = create(count: 10, of: TestModalCoordinator.init)
         let coordinatorThatGetDismissedFromTheEnd = TestModalCoordinator()
         let coordinatorsThatGetDismissedFromTheEnd = [coordinatorThatGetDismissedFromTheEnd]
         let coordinators = coordinatorsThatStay
@@ -277,12 +277,23 @@ final class ModalCoordinatorTests: XCTestCase {
         controllerThatGetDismissedFromTheEnd.value.assertNil()
         coordinatorsThatGetDismissedFromMiddle.last!.state.isLive(hasChild: false).assertTrue()
         
-        await awaitAnims()
-
-        // However nooow...
-        coordinatorThatGetDismissedFromTheEnd.isInLiveState.assertFalse()
-        controllerThatGetDismissedFromTheEnd.value.assertNil()
-        coordinatorsThatGetDismissedFromMiddle.last!.state.isLive(hasChild: false).assertTrue()
+        // Now, dismiss from middle
+        let weakControllersDismissedFromMiddle = coordinatorsThatGetDismissedFromMiddle.weakVcsIfLive().assertUnwrapped()
+        
+        let dismissFromMiddleTask = mainTask {
+            await coordinatorsThatGetDismissedFromMiddle.first!.vcIfLive().assertUnwrapped()
+                .presentingViewController!.dismiss(animated: true)
+        }
+        
+        weakControllersDismissedFromMiddle.values().assertUnwrapped().deinitHandlers().assertAllNotNil()
+        coordinatorsThatGetDismissedFromMiddle.states().assertAllLive()
+        coordinatorsThatStay.last!.state.isLive(hasChild: true).assertTrue()
+        
+        await dismissFromMiddleTask.value
+        
+        weakControllersDismissedFromMiddle.values().assertAllNil()
+        coordinatorsThatGetDismissedFromMiddle.states().assertAllNotLive()
+        coordinatorsThatStay.last!.state.isLive(hasChild: false).assertTrue()
         
         await rootController.dismiss(animated: false)
     }
@@ -302,6 +313,37 @@ extension ModalCoordinator {
         case .liveButStagedForDeath, .dead, .idle:
             return nil
         }
+    }
+    
+    func vcIfLive() -> UIViewController? {
+        switch state {
+        case .live(let live):
+            return live.controller.value
+        case .liveButStagedForDeath, .dead, .idle:
+            return nil
+        }
+    }
+}
+
+extension Array {
+    func values<Object>() -> [Object?] where Element == Weak<Object> {
+        return self.map(\.value)
+    }
+    
+    func states<Result>() -> [Element.State] where Element: ModalCoordinator<Result> {
+        return map(\.state)
+    }
+    
+    func weakVcsIfLive<Result>() -> [Weak<UIViewController>?] where Element: ModalCoordinator<Result> {
+        return map { $0.weakVcIfLive() }
+    }
+    
+    func assertAllLive<Result>(file: String = #file, line: UInt = #line) where Element == ModalCoordinator<Result>.State {
+        expect(file: file, line: line, self).to(allPass({ $0.isLive }))
+    }
+    
+    func assertAllNotLive<Result>(file: String = #file, line: UInt = #line) where Element == ModalCoordinator<Result>.State {
+        expect(file: file, line: line, self).to(allPass({ !$0.isLive }))
     }
 }
 
