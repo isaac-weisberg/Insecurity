@@ -109,7 +109,7 @@ open class ModalCoordinator<Result> {
     // MARK: - Internal
     
     func mount(on parent: CommonModalCoordinator,
-               completionHandler: @escaping (Result?) -> Void) -> UIViewController {
+               completion: @escaping (Result?) -> Void) -> UIViewController {
         assert(parent !== self)
         switch state {
         case .idle:
@@ -132,7 +132,7 @@ open class ModalCoordinator<Result> {
                 controller: Weak(controller),
                 child: nil,
                 completionHandler: { result in
-                    completionHandler(result)
+                    completion(result)
                 }
             )
         )
@@ -153,7 +153,7 @@ open class ModalCoordinator<Result> {
                 return
             }
             
-            let controller = coordinator.mount(on: self, completionHandler: { result in
+            let controller = coordinator.mount(on: self, completion: { result in
                 completion(result)
             })
             

@@ -1,5 +1,6 @@
 @testable import Insecurity
 import XCTest
+import Nimble
 
 extension ModalCoordinator.State {
     func isLive(child: CommonModalCoordinator?) -> Bool {
@@ -115,8 +116,22 @@ extension Bool {
     var not: Bool {
         !self
     }
+    
+    func assertTrue(file: String = #file, line: UInt = #line) {
+        expect(file: file, line: line, self).to(beTrue())
+    }
+    
+    func assertFalse(file: String = #file, line: UInt = #line) {
+        expect(file: file, line: line, self).to(beFalse())
+    }
 }
 
 func assert(_ expression: Bool, file: StaticString = #file, line: UInt = #line) {
     XCTAssert(expression)
+}
+
+func mainTask(_ work: @MainActor @escaping () async -> Void) -> Task<Void, Never> {
+    Task { @MainActor in
+        await work()
+    }
 }

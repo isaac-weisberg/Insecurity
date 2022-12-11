@@ -24,8 +24,8 @@
 		A33D578A293BE5CE009A6C61 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A33D5788293BE5CE009A6C61 /* LaunchScreen.storyboard */; };
 		A33D578F293BE71A009A6C61 /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A33D5790293BE71A009A6C61 /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		A33D579B293BE9C8009A6C61 /* InsecurityTestHostTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D579A293BE9C8009A6C61 /* InsecurityTestHostTests.swift */; };
-		A33D57A2293BEDD5009A6C61 /* ControlableCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D57A1293BEDD5009A6C61 /* ControlableCoordinator.swift */; };
+		A33D579B293BE9C8009A6C61 /* ModalCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D579A293BE9C8009A6C61 /* ModalCoordinatorTests.swift */; };
+		A33D57A2293BEDD5009A6C61 /* TestModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D57A1293BEDD5009A6C61 /* TestModalCoordinator.swift */; };
 		A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3441883270F9CD800CE49E4 /* Insecurity.swift */; };
 		A35A78232709EF3E00256FBD /* ScoringCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */; };
 		A35A78252709EFFB00256FBD /* ScoringViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A35A78242709EFFB00256FBD /* ScoringViewController.swift */; };
@@ -243,8 +243,8 @@
 		A33D5789293BE5CE009A6C61 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		A33D578B293BE5CE009A6C61 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A33D5798293BE9C7009A6C61 /* InsecurityTestHostTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = InsecurityTestHostTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		A33D579A293BE9C8009A6C61 /* InsecurityTestHostTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsecurityTestHostTests.swift; sourceTree = "<group>"; };
-		A33D57A1293BEDD5009A6C61 /* ControlableCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlableCoordinator.swift; sourceTree = "<group>"; };
+		A33D579A293BE9C8009A6C61 /* ModalCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalCoordinatorTests.swift; sourceTree = "<group>"; };
+		A33D57A1293BEDD5009A6C61 /* TestModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModalCoordinator.swift; sourceTree = "<group>"; };
 		A3441883270F9CD800CE49E4 /* Insecurity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Insecurity.swift; sourceTree = "<group>"; };
 		A35A78222709EF3E00256FBD /* ScoringCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringCoordinator.swift; sourceTree = "<group>"; };
 		A35A78242709EFFB00256FBD /* ScoringViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoringViewController.swift; sourceTree = "<group>"; };
@@ -458,8 +458,8 @@
 		A33D5799293BE9C8009A6C61 /* InsecurityTestHostTests */ = {
 			isa = PBXGroup;
 			children = (
-				A33D579A293BE9C8009A6C61 /* InsecurityTestHostTests.swift */,
-				A33D57A1293BEDD5009A6C61 /* ControlableCoordinator.swift */,
+				A33D579A293BE9C8009A6C61 /* ModalCoordinatorTests.swift */,
+				A33D57A1293BEDD5009A6C61 /* TestModalCoordinator.swift */,
 				A3EA1BAC293C972F003934B1 /* Util.swift */,
 				A385FCA429424DD6001F37D8 /* NavigationCoordinatorTests.swift */,
 				A385FCA629424EA0001F37D8 /* TestNavigationCoordinator.swift */,
@@ -1255,9 +1255,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				A385FCA529424DD6001F37D8 /* NavigationCoordinatorTests.swift in Sources */,
-				A33D57A2293BEDD5009A6C61 /* ControlableCoordinator.swift in Sources */,
+				A33D57A2293BEDD5009A6C61 /* TestModalCoordinator.swift in Sources */,
 				A3EA1BAD293C972F003934B1 /* Util.swift in Sources */,
-				A33D579B293BE9C8009A6C61 /* InsecurityTestHostTests.swift in Sources */,
+				A33D579B293BE9C8009A6C61 /* ModalCoordinatorTests.swift in Sources */,
 				A385FCA729424EA0001F37D8 /* TestNavigationCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

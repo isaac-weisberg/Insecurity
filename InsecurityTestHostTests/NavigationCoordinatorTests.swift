@@ -55,13 +55,9 @@ class NavigationCoordinatorTests: XCTestCase {
     
     @MainActor
     func testDismissAllChildrenWorksAsExpected() async {
-        let coordinatorsThatStay = (0..<4).map { _ in
-            TestNavigationCoordinator<Void>()
-        }
+        let coordinatorsThatStay = create(count: 4, of: TestNavigationCoordinator<Void>.init)
         
-        let coordinatorsThatGetDismissed = (0..<5).map { _ in
-            TestNavigationCoordinator<Void>()
-        }
+        let coordinatorsThatGetDismissed = create(count: 5, of: TestNavigationCoordinator<Void>.init)
         
         let coordinators = coordinatorsThatStay + coordinatorsThatGetDismissed
         
@@ -100,7 +96,7 @@ class NavigationCoordinatorTests: XCTestCase {
         await awaitAnims()
         
         // Last controller is again captured by _disappearingViewController and UIViewAnimationBlockDelegate
-        controllersThatGetDismissed.dropLast(1).map(\.value).assertAllNil()
+        controllersThatGetDismissed.dropLast().map(\.value).assertAllNil()
 //        weakCoordinatorsThatGetDismissed.last!.value.assertNil()
         
         await ViewController.sharedInstance.dismiss(animated: false)
@@ -167,11 +163,11 @@ extension Array {
     }
     
     func assertAllLive<Result>(file: String = #file, line: UInt = #line) where Element == NavigationCoordinator<Result>.State {
-        expect(self).to(allPass({ $0.isLive }))
+        expect(file: file, line: line, self).to(allPass({ $0.isLive }))
     }
     
     func assertAllNotLive<Result>(file: String = #file, line: UInt = #line) where Element == NavigationCoordinator<Result>.State {
-        expect(self).to(allPass({ !$0.isLive }))
+        expect(file: file, line: line, self).to(allPass({ !$0.isLive }))
     }
     
     func weakVcsIfLive<Result>() -> [Weak<UIViewController>?] where Element: NavigationCoordinator<Result> {
@@ -205,11 +201,11 @@ extension Array {
 
 extension Optional {
     func assertNotNil(file: String = #file, line: UInt = #line) {
-        expect(self).toNot(beNil())
+        expect(file: file, line: line, self).toNot(beNil())
     }
     
     func assertNil(file: String = #file, line: UInt = #line) {
-        expect(self).to(beNil())
+        expect(file: file, line: line, self).to(beNil())
     }
     
     func assertUnwrapped(file: String = #file, line: UInt = #line) -> Wrapped {
