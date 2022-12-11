@@ -46,7 +46,8 @@ class NavigationCoordinatorTests: XCTestCase {
         assert(coordinator.vcIfLive!.hasDeinitObservable)
         
         assert(childController.value?.hasDeinitObservable == false)
-//        assert(childController.value == nil) // still stored on `navigationController` _disappearingViewController
+        // Next is still stored on `navigationController` _disappearingViewController and UIViewAnimationBlockDelegate
+        //        assert(childController.value == nil)
         expect(navigationController.viewControllers) == [coordinator.vcIfLive!]
         
         await ViewController.sharedInstance.dismiss(animated: true)
@@ -81,10 +82,10 @@ class NavigationCoordinatorTests: XCTestCase {
             parentCoordinator = coordinator
         }
         
-        let weakControllersThatStay = coordinatorsThatGetDismissed.weakVcsIfLive().assertUnwrapped()
+        let controllersThatGetDismissed = coordinatorsThatGetDismissed.weakVcsIfLive().assertUnwrapped()
         coordinators.states().assertAllLive()
         coordinators.vcsIfLive().assertUnwrapped().deinitHandlers().assertAllNotNil()
-        weakControllersThatStay.map(\.value).assertUnwrapped().deinitHandlers().assertAllNotNil()
+        controllersThatGetDismissed.map(\.value).assertUnwrapped().deinitHandlers().assertAllNotNil()
         
         // Dismiss
         coordinatorsThatStay.last.assertUnwrapped().dismissChildren(animated: true)
@@ -94,11 +95,13 @@ class NavigationCoordinatorTests: XCTestCase {
         
         coordinatorsThatGetDismissed.vcsIfLive().assertAllNil()
         coordinatorsThatGetDismissed.states().assertAllNotLive()
-        weakControllersThatStay.map(\.value).assertUnwrapped().deinitHandlers().assertAllNotNil()
+        controllersThatGetDismissed.map(\.value).assertUnwrapped().deinitHandlers().assertAllNil()
         
         await awaitAnims()
         
-        weakControllersThatStay.map(\.value).assertAllNil()
+        // Last controller is again captured by _disappearingViewController and UIViewAnimationBlockDelegate
+        controllersThatGetDismissed.dropLast(1).map(\.value).assertAllNil()
+//        weakCoordinatorsThatGetDismissed.last!.value.assertNil()
         
         await ViewController.sharedInstance.dismiss(animated: false)
     }
@@ -203,6 +206,10 @@ extension Array {
 extension Optional {
     func assertNotNil(file: String = #file, line: UInt = #line) {
         expect(self).toNot(beNil())
+    }
+    
+    func assertNil(file: String = #file, line: UInt = #line) {
+        expect(self).to(beNil())
     }
     
     func assertUnwrapped(file: String = #file, line: UInt = #line) -> Wrapped {
