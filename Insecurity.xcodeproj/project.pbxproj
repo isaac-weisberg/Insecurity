@@ -124,6 +124,7 @@
 		A3986FE22748FD69002AA98B /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3986FE12748FD69002AA98B /* SeparatorView.swift */; };
 		A3986FE42748FE43002AA98B /* CVVTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3986FE32748FE43002AA98B /* CVVTextField.swift */; };
 		A3986FE6274901D1002AA98B /* CardHolderTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3986FE5274901D1002AA98B /* CardHolderTextField.swift */; };
+		A3A7226629465A3700F09192 /* AsyncStart.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A7226529465A3700F09192 /* AsyncStart.swift */; };
 		A3CE95AB291647AA007BC3C4 /* CommonModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3CE95AA291647AA007BC3C4 /* CommonModalCoordinator.swift */; };
 		A3CE95AC29165408007BC3C4 /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A3CE95AD29165408007BC3C4 /* Insecurity.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -343,6 +344,7 @@
 		A3986FE12748FD69002AA98B /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
 		A3986FE32748FE43002AA98B /* CVVTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVTextField.swift; sourceTree = "<group>"; };
 		A3986FE5274901D1002AA98B /* CardHolderTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHolderTextField.swift; sourceTree = "<group>"; };
+		A3A7226529465A3700F09192 /* AsyncStart.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncStart.swift; sourceTree = "<group>"; };
 		A3CE95AA291647AA007BC3C4 /* CommonModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonModalCoordinator.swift; sourceTree = "<group>"; };
 		A3EA1BAC293C972F003934B1 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 		A562EC42D9DA68E2987C50B5 /* Pods-InsecurityTestHost.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityTestHost.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityTestHost/Pods-InsecurityTestHost.debug.xcconfig"; sourceTree = "<group>"; };
@@ -463,6 +465,7 @@
 				A3EA1BAC293C972F003934B1 /* Util.swift */,
 				A385FCA429424DD6001F37D8 /* NavigationCoordinatorTests.swift */,
 				A385FCA629424EA0001F37D8 /* TestNavigationCoordinator.swift */,
+				A3A7226529465A3700F09192 /* AsyncStart.swift */,
 			);
 			path = InsecurityTestHostTests;
 			sourceTree = "<group>";
@@ -1259,6 +1262,7 @@
 				A3EA1BAD293C972F003934B1 /* Util.swift in Sources */,
 				A33D579B293BE9C8009A6C61 /* ModalCoordinatorTests.swift in Sources */,
 				A385FCA729424EA0001F37D8 /* TestNavigationCoordinator.swift in Sources */,
+				A3A7226629465A3700F09192 /* AsyncStart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

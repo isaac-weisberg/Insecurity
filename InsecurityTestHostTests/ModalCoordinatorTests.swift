@@ -260,25 +260,29 @@ final class ModalCoordinatorTests: XCTestCase {
             parentCoordinator = coordinator
         }
         
-        let controllerThatGetDismissedFromTheEnd = coordinatorThatGetDismissedFromTheEnd.weakVcIfLive()
+        let controllerThatGetDismissedFromTheEnd = coordinatorThatGetDismissedFromTheEnd.weakVcIfLive().assertUnwrapped()
         
         // Dismiss as if by swiping down ;) (hopefully it works omg)
-        let dismissFromEndExpectation = XCTestExpectation()
+        let dismissFromEndTask = mainTask {
+            await coordinatorThatGetDismissedFromTheEnd.weakVcIfLive()!.value!.dismiss(animated: true)
+        }
         
-        coordinatorThatGetDismissedFromTheEnd.weakVcIfLive()!.value!.dismiss(animated: true, completion: {
-            dismissFromEndExpectation.fulfill()
-        })
-        
-        controllerThatGetDismissedFromTheEnd?.value.assertUnwrapped()
+        controllerThatGetDismissedFromTheEnd.value.assertUnwrapped()
             .deinitObservable.onDeinit.assertNotNil()
         coordinatorThatGetDismissedFromTheEnd.isInLiveState.assertTrue()
         
-        wait(for: dismissFromEndExpectation)
+        await dismissFromEndTask.value
         
-        // Still retained by parent view controller, as well as the OneToOneTransitionContext.... damn...
-//        coordinatorThatGetDismissedFromTheEnd.isInLiveState.assertFalse()
-//        controllerThatGetDismissedFromTheEnd?.value.assertNil()
+        coordinatorThatGetDismissedFromTheEnd.isInLiveState.assertFalse()
+        controllerThatGetDismissedFromTheEnd.value.assertNil()
+        coordinatorsThatGetDismissedFromMiddle.last!.state.isLive(hasChild: false).assertTrue()
         
+        await awaitAnims()
+
+        // However nooow...
+        coordinatorThatGetDismissedFromTheEnd.isInLiveState.assertFalse()
+        controllerThatGetDismissedFromTheEnd.value.assertNil()
+        coordinatorsThatGetDismissedFromMiddle.last!.state.isLive(hasChild: false).assertTrue()
         
         await rootController.dismiss(animated: false)
     }
@@ -304,87 +308,5 @@ extension ModalCoordinator {
 extension LazySequence {
     func filterNil<ElementOfResult>() -> LazyMapSequence<LazyFilterSequence<LazyMapSequence<Self.Elements, ElementOfResult?>>, ElementOfResult> where Base.Element == ElementOfResult? {
         return compactMap { $0 }
-    }
-}
-
-extension ModalCoordinator {
-    struct AsyncMount {
-        let onPresentCompleted: Task<Void, Never>
-        let onFinish: Task<Result?, Never>
-    }
-    
-    @MainActor
-    func asyncMount(on viewController: UIViewController, animated: Bool) async -> AsyncMount {
-        var onPresentCompletedCont: CheckedContinuation<Void, Never>?
-        var onFinishCont: CheckedContinuation<Result?, Never>?
-        
-        let onPresentCompletedTask: Task<Void, Never> = Task { @MainActor in
-            await withCheckedContinuation { cont in
-                onPresentCompletedCont = cont
-            }
-        }
-        
-        let onFinishTask: Task<Result?, Never> = Task { @MainActor in
-            await withCheckedContinuation { cont in
-                onFinishCont = cont
-            }
-        }
-        
-        mount(on: viewController, animated: animated, completion: { result in
-            if let onFinishCont {
-                onFinishCont.resume(returning: result)
-            } else {
-                assertionFailure()
-            }
-        }, onPresentCompleted: {
-            if let onPresentCompletedCont {
-                onPresentCompletedCont.resume(returning: ())
-            } else {
-                assertionFailure()
-            }
-        })
-        
-        return AsyncMount(onPresentCompleted: onPresentCompletedTask, onFinish: onFinishTask)
-    }
-    
-    struct AsyncStart<NewResult> {
-        let onPresentCompleted: Task<Void, Never>
-        let onFinish: Task<NewResult?, Never>
-    }
-    
-    @MainActor
-    func asyncStart<NewResult>(_ coordinator: ModalCoordinator<NewResult>, animated: Bool) async -> AsyncStart<NewResult> {
-        
-        var onPresentCompletedCont: CheckedContinuation<Void, Never>?
-        var onFinishCont: CheckedContinuation<NewResult?, Never>?
-        
-        let onPresentCompletedTask: Task<Void, Never> = Task { @MainActor in
-            await withCheckedContinuation { cont in
-                onPresentCompletedCont = cont
-            }
-        }
-        
-        let onFinishTask: Task<NewResult?, Never> = Task { @MainActor in
-            await withCheckedContinuation { cont in
-                onFinishCont = cont
-            }
-        }
-        
-        self.start(coordinator, animated: animated, { result in
-                if let onFinishCont {
-                    onFinishCont.resume(returning: result)
-                } else {
-                    assertionFailure()
-                }
-        }, onPresentCompleted: {
-            
-                if let onPresentCompletedCont {
-                    onPresentCompletedCont.resume(returning: ())
-                } else {
-                    assertionFailure()
-                }
-        })
-        
-        return AsyncStart(onPresentCompleted: onPresentCompletedTask, onFinish: onFinishTask)
     }
 }
