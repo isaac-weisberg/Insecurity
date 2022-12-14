@@ -81,4 +81,15 @@ extension ModalCoordinator {
         
         return AsyncStart(onPresentCompleted: onPresentCompletedTask, onFinish: onFinishTask)
     }
+    
+    @MainActor
+    func dismissChildren(animated: Bool) async -> Task<Void, Never> {
+        return mainTask {
+            await withCheckedContinuation { cont in
+                self.dismissChildren(animated: animated, completion: {
+                    cont.resume(returning: ())
+                })
+            }
+        }
+    }
 }

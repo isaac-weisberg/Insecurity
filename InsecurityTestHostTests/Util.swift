@@ -5,7 +5,7 @@ import Nimble
 extension ModalCoordinator.State {
     func isLive(child: CommonModalCoordinator?) -> Bool {
         switch self {
-        case .live(let live):
+        case .live(let live), .liveButChildIsStagedForDeath(let live):
             return live.child === child
         case .dead, .idle, .liveButStagedForDeath:
             return false
@@ -14,7 +14,7 @@ extension ModalCoordinator.State {
     
     func isLive(hasChild: Bool) -> Bool {
         switch self {
-        case .live(let live):
+        case .live(let live), .liveButChildIsStagedForDeath(let live):
             if hasChild {
                 return live.child != nil
             } else {
@@ -27,7 +27,7 @@ extension ModalCoordinator.State {
     
     var isLive: Bool {
         switch self {
-        case .live:
+        case .live, .liveButChildIsStagedForDeath:
             return true
         case .dead, .idle, .liveButStagedForDeath:
             return false
@@ -38,7 +38,7 @@ extension ModalCoordinator.State {
         switch self {
         case .liveButStagedForDeath:
             return true
-        case .idle, .dead, .live:
+        case .idle, .dead, .live, .liveButChildIsStagedForDeath:
             return false
         }
     }
@@ -47,14 +47,14 @@ extension ModalCoordinator.State {
         switch self {
         case .dead:
             return true
-        case .live, .idle, .liveButStagedForDeath:
+        case .live, .idle, .liveButStagedForDeath, .liveButChildIsStagedForDeath:
             return false
         }
     }
     
     var weakVcIfLive: Weak<UIViewController>? {
         switch self {
-        case .live(let live):
+        case .live(let live), .liveButChildIsStagedForDeath(let live):
             return live.controller
         case .liveButStagedForDeath, .dead, .idle:
             return nil
@@ -63,7 +63,7 @@ extension ModalCoordinator.State {
     
     var vcIfLive: UIViewController? {
         switch self {
-        case .live(let live):
+        case .live(let live), .liveButChildIsStagedForDeath(let live):
             return live.controller.value
         case .liveButStagedForDeath, .dead, .idle:
             return nil
@@ -136,7 +136,7 @@ extension Bool {
 }
 
 func assert(_ expression: Bool, file: StaticString = #file, line: UInt = #line) {
-    XCTAssert(expression)
+    XCTAssert(expression, file: file, line: line)
 }
 
 func mainTask(_ work: @MainActor @escaping () async -> Void) -> Task<Void, Never> {

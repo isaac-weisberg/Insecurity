@@ -104,7 +104,7 @@ class NavigationCoordinatorTests: XCTestCase {
 }
 
 func awaitAnims() async {
-    await sleep(0.3)
+    await sleep(1)
 }
 
 extension NavigationCoordinator.State {

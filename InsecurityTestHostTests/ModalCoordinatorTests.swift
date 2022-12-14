@@ -7,63 +7,47 @@ import Nimble
 final class ModalCoordinatorTests: XCTestCase {
     let rootController = ViewController.sharedInstance
     
-    func testFinishCallSuccessfullyDismisses() {
+    func testFinishCallSuccessfullyDismisses() async {
         let coordinator = TestModalCoordinator()
-        
-        let presentCompleted = XCTestExpectation()
         
         coordinator.mount(on: rootController, animated: true) { void in
             
-        } onPresentCompleted: {
-            presentCompleted.fulfill()
         }
-    
-        wait(for: presentCompleted)
+        
+        await awaitAnims()
         
         assert(rootController.presentedViewController == coordinator.state.weakVcIfLive?.value)
         assert(coordinator.state.isLive(hasChild: false))
         assert(coordinator.state.weakVcIfLive?.value?.deinitObservable.onDeinit != nil)
         
-        let finishDismissFinished = XCTestExpectation()
-        
-        coordinator.finish((), source: .result, onDismissCompleted: {
-            finishDismissFinished.fulfill()
-        })
+        coordinator.finish(())
         
         assert(coordinator.state.weakVcIfLive?.value?.deinitObservable.onDeinit == nil)
         assert(coordinator.state.isDead)
         assert(rootController.presentedViewController != nil)
         
-        wait(for: finishDismissFinished)
+        await awaitAnims()
+        
         assert(coordinator.state.weakVcIfLive?.value?.deinitObservable.onDeinit == nil)
         assert(coordinator.state.isDead)
         assert(rootController.presentedViewController == nil)
     }
     
-    func testFinishCallButThereIsALiveChildOnTop() {
+    func testFinishCallButThereIsALiveChildOnTop() async {
         let coordinator = TestModalCoordinator()
-        
-        let presentCompleted = XCTestExpectation()
-        
         coordinator.mount(on: rootController, animated: true) { void in
             
-        } onPresentCompleted: {
-            presentCompleted.fulfill()
         }
     
-        wait(for: presentCompleted)
+        await awaitAnims()
         
         let childCoordinator = TestModalCoordinator()
         
-        let childPresentCompleted = XCTestExpectation()
-        
         coordinator.start(childCoordinator, animated: true) { void in
             
-        } onPresentCompleted: {
-            childPresentCompleted.fulfill()
         }
         
-        wait(for: childPresentCompleted)
+        await awaitAnims()
         
         assert(coordinator.state.weakVcIfLive?.value?.deinitObservable.onDeinit != nil)
         assert(childCoordinator.state.weakVcIfLive?.value?.deinitObservable.onDeinit != nil)
@@ -71,11 +55,7 @@ final class ModalCoordinatorTests: XCTestCase {
         assert(coordinator.state.isLive(child: childCoordinator))
         expect(childCoordinator.state.isLive(child: nil)) == true
         
-        let finishDismissFinished = XCTestExpectation()
-        
-        coordinator.finish((), source: .result, onDismissCompleted: {
-            finishDismissFinished.fulfill()
-        })
+        coordinator.finish(())
         
         assert(coordinator.state.weakVcIfLive?.value?.deinitObservable.onDeinit == nil)
         assert(childCoordinator.state.weakVcIfLive?.value?.deinitObservable.onDeinit == nil)
@@ -84,7 +64,8 @@ final class ModalCoordinatorTests: XCTestCase {
         expect(self.rootController.presentedViewController).toNot(beNil())
         expect(self.rootController.modalChildrenChain.count) == 2
         
-        wait(for: finishDismissFinished)
+        await awaitAnims()
+    
         assert(coordinator.state.weakVcIfLive?.value?.deinitObservable.onDeinit == nil)
         assert(childCoordinator.state.weakVcIfLive?.value?.deinitObservable.onDeinit == nil)
         assert(coordinator.state.isDead)
@@ -93,36 +74,26 @@ final class ModalCoordinatorTests: XCTestCase {
         expect(self.rootController.modalChildrenChain).to(beEmpty())
     }
     
-    func testFinishChain() {
+    func testFinishChain() async {
         let coordinatorsThatStay = create(count: 4, of: TestModalCoordinator.init)
         let coordinatorsThatFinish = create(count: 6, of: TestModalCoordinator.init)
         
         let coordinators = coordinatorsThatStay + coordinatorsThatFinish
         
-        let presentCompleted = XCTestExpectation()
-        
-        coordinators[0].mount(on: rootController, animated: true) { _ in
+        coordinators[0].mount(on: rootController, animated: false) { _ in
             
-        } onPresentCompleted: {
-            presentCompleted.fulfill()
         }
-        
-        wait(for: presentCompleted)
         
         var lastHandledCoordinator = coordinators[0]
         for (index, coordinator) in coordinators.enumerated().suffix(coordinators.count - 1) {
-            let presentCompleted = XCTestExpectation()
             let parentCoordinator = lastHandledCoordinator
             
-            parentCoordinator.start(coordinator, animated: true, { _ in
+            parentCoordinator.start(coordinator, animated: false, { _ in
                 if index > coordinatorsThatStay.count {
                     parentCoordinator.finish(())
                 }
-            }, onPresentCompleted: {
-                presentCompleted.fulfill()
             })
-            
-            wait(for: presentCompleted)
+        
             lastHandledCoordinator = coordinator
         }
         
@@ -132,11 +103,7 @@ final class ModalCoordinatorTests: XCTestCase {
         expect(coordinators.map(\.state.isLive)).to(allPass(beTrue()))
         expect(allControllers.map(\.?.value?.deinitObservable.onDeinit)).to(allPass({ $0 != nil }))
         
-        let finishChainFinished = XCTestExpectation()
-        
-        coordinators.last!.finish((), source: .result) {
-            finishChainFinished.fulfill()
-        }
+        coordinators.last!.finish(())
         
         expect(coordinatorsThatStay.map(\.state.isLive)).to(allPass(beTrue()))
         expect(coordinatorsThatFinish.map(\.state.isDead)).to(allPass(beTrue()))
@@ -156,84 +123,63 @@ final class ModalCoordinatorTests: XCTestCase {
         
         expect(self.rootController.modalChildrenChain).to(haveCount(coordinators.count))
         
-        wait(for: finishChainFinished)
+        await awaitAnims()
         
         expect(coordinatorsThatStay.map(\.state.isLive)).to(allPass(beTrue()))
         expect(coordinatorsThatFinish.map(\.state.isDead)).to(allPass(beTrue()))
         expect(self.rootController.modalChildrenChain).to(haveCount(coordinatorsThatStay.count))
         
-        let cleanedUp = XCTestExpectation()
+        coordinators.first!.finish(())
         
-        coordinators.first!.finish((), source: .result) {
-            cleanedUp.fulfill()
-        }
         expect(allControllers.map(\.?.value?.deinitObservable.onDeinit)).to(allPass(beNil()))
         expect(coordinatorsThatStay.map(\.state.isDead)).to(allPass(beTrue()))
         
-        wait(for: cleanedUp)
+        await awaitAnims()
         
         expect(self.rootController.modalChildrenChain).to(beEmpty())
     }
     
-    func testDismissWorksAsExpected() {
+    func testDismissWorksAsExpected() async {
         let coordinatorsThatStay = create(count: 4, of: TestModalCoordinator.init)
         let coordinatorsThatFinish = create(count: 6, of: TestModalCoordinator.init)
         
         let coordinators = coordinatorsThatStay + coordinatorsThatFinish
         
-        let presentCompleted = XCTestExpectation()
-        
-        coordinators[0].mount(on: rootController, animated: true) { _ in
+        coordinators[0].mount(on: rootController, animated: false) { _ in
             
-        } onPresentCompleted: {
-            presentCompleted.fulfill()
         }
-        
-        wait(for: presentCompleted)
         
         var lastHandledCoordinator = coordinators[0]
         for (index, coordinator) in coordinators.enumerated().suffix(coordinators.count - 1) {
-            let presentCompleted = XCTestExpectation()
             let parentCoordinator = lastHandledCoordinator
             
-            parentCoordinator.start(coordinator, animated: true, { _ in
+            parentCoordinator.start(coordinator, animated: false, { _ in
                 if index > coordinatorsThatStay.count {
                     parentCoordinator.finish(())
                 }
-            }, onPresentCompleted: {
-                presentCompleted.fulfill()
             })
             
-            wait(for: presentCompleted)
             lastHandledCoordinator = coordinator
         }
         
         expect(coordinators.map(\.state.isLive)).to(allPass(beTrue()))
         expect(self.rootController.modalChildrenChain).to(haveCount(coordinators.count))
         
-        let dismissed = XCTestExpectation()
-        
-        coordinatorsThatStay.last!.dismissChildren(animated: true) {
-            dismissed.fulfill()
-        }
+        let dismissTask = await coordinatorsThatStay.last!.dismissChildren(animated: true)
         
         expect(coordinatorsThatStay.map(\.state.isLive)).to(allPass(beTrue()))
         expect(coordinatorsThatFinish.map(\.state.isDead)).to(allPass(beTrue()))
         expect(self.rootController.modalChildrenChain).to(haveCount(coordinators.count))
         
-        wait(for: dismissed)
+        await dismissTask.value
         
         expect(self.rootController.modalChildrenChain).to(haveCount(coordinatorsThatStay.count))
         
-        let cleanedUp = XCTestExpectation()
-        
-        coordinators.first!.finish((), source: .result) {
-            cleanedUp.fulfill()
-        }
+        coordinators.first!.finish(())
         
         expect(coordinatorsThatStay.map(\.state.isDead)).to(allPass(beTrue()))
         
-        wait(for: cleanedUp)
+        await awaitAnims()
         
         expect(self.rootController.modalChildrenChain).to(beEmpty())
     }
@@ -342,7 +288,7 @@ extension Array {
 extension ModalCoordinator {
     func weakVcIfLive() -> Weak<UIViewController>? {
         switch state {
-        case .live(let live):
+        case .live(let live), .liveButChildIsStagedForDeath(let live):
             return live.controller
         case .liveButStagedForDeath, .dead, .idle:
             return nil
@@ -351,7 +297,7 @@ extension ModalCoordinator {
     
     func vcIfLive() -> UIViewController? {
         switch state {
-        case .live(let live):
+        case .live(let live), .liveButChildIsStagedForDeath(let live):
             return live.controller.value
         case .liveButStagedForDeath, .dead, .idle:
             return nil

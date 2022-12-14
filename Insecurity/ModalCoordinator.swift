@@ -27,6 +27,7 @@ open class ModalCoordinator<Result> {
         
         case idle
         case live(Live)
+        case liveButChildIsStagedForDeath(Live)
         case liveButStagedForDeath(Live, Dead.Reason)
         case dead(Dead)
     }
@@ -90,11 +91,11 @@ open class ModalCoordinator<Result> {
     }
     
     public func finish(_ result: Result) {
-        finish(result, source: .result, onDismissCompleted: nil)
+        finish(result, source: .result)
     }
     
     public func dismiss() {
-        finish(nil, source: .result, onDismissCompleted: nil)
+        finish(nil, source: .result)
     }
     
     public func dismissChildren(animated: Bool) {
@@ -114,7 +115,7 @@ open class ModalCoordinator<Result> {
         switch state {
         case .idle:
             break
-        case .live:
+        case .live, .liveButChildIsStagedForDeath:
             fatalError("Can not mount a coordinator that's already mounted")
         case .dead, .liveButStagedForDeath:
             fatalError("Can not mount a coordinator that's already been used")
@@ -123,7 +124,7 @@ open class ModalCoordinator<Result> {
         let controller = self.viewController
         
         controller.deinitObservable.onDeinit = { [weak self] in
-            self?.finish(nil, source: .deinitialized, onDismissCompleted: nil)
+            self?.finish(nil, source: .deinitialized)
         }
         
         self.state = .live(
@@ -140,37 +141,73 @@ open class ModalCoordinator<Result> {
         return controller
     }
     
-    func startInternal<Result>(_ coordinator: ModalCoordinator<Result>,
-                               animated: Bool,
-                               completion: @escaping (Result?) -> Void,
-                               onPresentCompleted: (() -> Void)?) {
+    var _performCoordinatorStartBlock: (() -> Void)?
+    
+    func performCoordinatorStartIfNeeded() {
+        if let _performCoordinatorStartBlock = _performCoordinatorStartBlock {
+            self._performCoordinatorStartBlock = nil
+            
+            _performCoordinatorStartBlock()
+        }
+    }
+    
+    func startInternal<NewResult>(_ coordinator: ModalCoordinator<NewResult>,
+                                  animated: Bool,
+                                  completion: @escaping (NewResult?) -> Void,
+                                  onPresentCompleted: (() -> Void)?) {
         assert(coordinator !== self)
         switch self.state {
-        case .live(let live):
-            assert(live.child == nil)
-            
-            guard let presentingViewController = live.controller.value else {
-                return
-            }
-            
-            let controller = coordinator.mount(on: self, completion: { result in
-                completion(result)
-            })
-            
-            
-            self.state = .live(live.settingChild(to: coordinator))
-            
-            presentingViewController.present(
-                controller,
-                animated: animated,
-                completion: {
-                    onPresentCompleted?()
+        case .liveButChildIsStagedForDeath:
+            _performCoordinatorStartBlock = { [weak self] in
+                guard let self = self else { return }
+                
+                switch self.state {
+                case .live(let live):
+                    self._startStateless(live,
+                                         coordinator,
+                                         animated: animated,
+                                         completion: completion,
+                                         onPresentCompleted: onPresentCompleted)
+                case .liveButChildIsStagedForDeath, .dead, .idle, .liveButStagedForDeath:
+                    fatalError()
                 }
-            )
+            }
+        case .live(let live):
+            _startStateless(live,
+                            coordinator,
+                            animated: animated,
+                            completion: completion,
+                            onPresentCompleted: onPresentCompleted)
         case .idle, .dead, .liveButStagedForDeath:
             insecAssertFail(InsecurityMessage.noStartOverDead.s)
             return
         }
+    }
+    
+    func _startStateless<NewResult>(_ live: State.Live,
+                                    _ coordinator: ModalCoordinator<NewResult>,
+                                    animated: Bool,
+                                    completion: @escaping (NewResult?) -> Void,
+                                    onPresentCompleted: (() -> Void)?) {
+        assert(live.child == nil)
+        
+        guard let presentingViewController = live.controller.value else {
+            return
+        }
+        
+        let controller = coordinator.mount(on: self, completion: { result in
+            completion(result)
+        })
+        
+        self.state = .live(live.settingChild(to: coordinator))
+        
+        presentingViewController.present(
+            controller,
+            animated: animated,
+            completion: {
+                onPresentCompleted?()
+            }
+        )
     }
     
     func mountOnControllerInternal(
@@ -182,7 +219,7 @@ open class ModalCoordinator<Result> {
         let controller = self.viewController
         
         controller.deinitObservable.onDeinit = { [weak self] in
-            self?.finish(nil, source: .deinitialized, onDismissCompleted: nil)
+            self?.finish(nil, source: .deinitialized)
         }
         
         self.state = .live(
@@ -208,8 +245,7 @@ open class ModalCoordinator<Result> {
     
     func finish(
         _ result: Result?,
-        source: FinishSource,
-        onDismissCompleted: (() -> Void)?
+        source: FinishSource
     ) {
         let live: State.Live
         let oldState = self.state
@@ -219,7 +255,7 @@ open class ModalCoordinator<Result> {
         case .dead, .liveButStagedForDeath:
             insecAssert(source == .deinitialized, "Can't finish on something that's dead")
             return
-        case .live(let liveData):
+        case .live(let liveData), .liveButChildIsStagedForDeath(let liveData):
             live = liveData
         }
         
@@ -233,18 +269,25 @@ open class ModalCoordinator<Result> {
         live.controller.value?.deinitObservable.onDeinit = nil
         self.state = .liveButStagedForDeath(live, deadReason)
         
-        live.completionHandler(result)
-        
-        let shouldDismiss: Bool
-        if let child = live.child {
-            shouldDismiss = child.isInLiveState
-            // This means, that the child and its children are not participating in
-            // this finish call chain and `self` is the topmost handler of this finishing
-        } else {
-            shouldDismiss = true
+        switch live.parent {
+        case .controller:
+            break
+        case .coordinator(let parent):
+            parent.value?.childIsStagedForDeath()
         }
         
-        if shouldDismiss {
+        live.completionHandler(result)
+        
+        let shouldStartDismissPropagationChain: Bool
+        if let child = live.child {
+            shouldStartDismissPropagationChain = child.isInLiveState
+            // This means, that the child and its children are not participating in
+            // this finish call chain and `self` is the topmost handler of this finishing chain
+        } else {
+            shouldStartDismissPropagationChain = true
+        }
+        
+        if shouldStartDismissPropagationChain {
             self.state = .dead(State.Dead(reason: deadReason))
             live.child?.parentWillDismiss()
             
@@ -254,29 +297,21 @@ open class ModalCoordinator<Result> {
                     let presentingController = parentController.value,
                     presentingController.presentedViewController != nil
                 {
-                    presentingController.dismiss(animated: true) {
-                        onDismissCompleted?()
-                    }
-                } else {
-                    onDismissCompleted?()
+                    presentingController.dismiss(animated: true)
                 }
             case .coordinator(let parentCoordinator):
                 if let parentCoordinator = parentCoordinator.value {
-                    parentCoordinator.findFirstAliveAncestorAndCutTheChainDismissing {
-                        onDismissCompleted?()
-                    }
-                } else {
-                    onDismissCompleted?()
+                    parentCoordinator.findFirstAliveAncestorAndCutTheChainDismissing()
                 }
             }
-        } else {
-            insecAssert(onDismissCompleted == nil, "onDismissCompleted was passed in the middle of finish chain, so it wont be called")
         }
     }
     
     func dismissChildrenInternal(animated: Bool,
                                  completion: (() -> Void)?) {
         switch self.state {
+        case .liveButChildIsStagedForDeath:
+            insecAssertFail(InsecurityMessage.noDismissMidOfFin.s)
         case .idle, .dead, .liveButStagedForDeath:
             completion?()
         case .live(let live):
@@ -300,19 +335,19 @@ open class ModalCoordinator<Result> {
 }
 
 extension ModalCoordinator: CommonModalCoordinator {
-    func findFirstAliveAncestorAndCutTheChainDismissing(_ completion: @escaping () -> Void) {
+    func findFirstAliveAncestorAndCutTheChainDismissing() {
         switch state {
-        case .live(let live):
+        case .liveButChildIsStagedForDeath(let live):
             self.state = .live(live.settingChild(to: nil))
             if
                 let controller = live.controller.value,
                 controller.presentedViewController != nil
             {
                 controller.dismiss(animated: true) {
-                    completion()
+                    self.performCoordinatorStartIfNeeded()
                 }
             } else {
-                completion()
+                self.performCoordinatorStartIfNeeded()
             }
         case .liveButStagedForDeath(let live, let deadReason):
             self.state = .dead(State.Dead(reason: deadReason))
@@ -320,31 +355,34 @@ extension ModalCoordinator: CommonModalCoordinator {
             switch live.parent {
             case .coordinator(let parentCoordinator):
                 if let parentCoordinator = parentCoordinator.value {
-                    parentCoordinator.findFirstAliveAncestorAndCutTheChainDismissing {
-                        completion()
-                    }
-                } else {
-                    completion()
+                    parentCoordinator.findFirstAliveAncestorAndCutTheChainDismissing()
                 }
             case .controller(let parentController):
                 if
                     let parentController = parentController.value,
                     parentController.presentedViewController != nil
                 {
-                    parentController.dismiss(animated: true) {
-                        completion()
-                    }
-                } else {
-                    completion()
+                    parentController.dismiss(animated: true)
                 }
             }
-        case .dead, .idle:
+        case .dead, .idle, .live:
             assertionFailure()
+        }
+    }
+    
+    func childIsStagedForDeath() {
+        switch state {
+        case .live(let live):
+            self.state = .liveButChildIsStagedForDeath(live)
+        case .liveButChildIsStagedForDeath, .dead, .idle, .liveButStagedForDeath:
+            fatalError()
         }
     }
     
     func parentWillDismiss() {
         switch state {
+        case .liveButChildIsStagedForDeath:
+            insecAssertFail(InsecurityMessage.noDismissMidOfFin.s)
         case .idle:
             insecAssertFail("Impossible")
         case .dead, .liveButStagedForDeath:
@@ -358,7 +396,7 @@ extension ModalCoordinator: CommonModalCoordinator {
     
     var isInLiveState: Bool {
         switch self.state {
-        case .live:
+        case .live, .liveButChildIsStagedForDeath:
             return true
         case .dead, .idle, .liveButStagedForDeath:
             return false

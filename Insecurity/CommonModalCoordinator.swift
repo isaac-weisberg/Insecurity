@@ -5,7 +5,9 @@ protocol CommonModalCoordinator: AnyObject {
     
     func parentWillDismiss()
     
-    func findFirstAliveAncestorAndCutTheChainDismissing(_ completion: @escaping () -> Void)
+    func findFirstAliveAncestorAndCutTheChainDismissing()
+    
+    func childIsStagedForDeath()
 }
 
 struct WeakCommonModalCoordinator {
