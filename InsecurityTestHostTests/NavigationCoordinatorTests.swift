@@ -45,7 +45,7 @@ class NavigationCoordinatorTests: XCTestCase {
         assert(child.state.isDead)
         assert(coordinator.vcIfLive!.hasDeinitObservable)
         
-        assert(childController.value?.hasDeinitObservable == false)
+        assert(childController.value?.hasDeinitObservable != true)
         // Next is still stored on `navigationController` _disappearingViewController and UIViewAnimationBlockDelegate
         //        assert(childController.value == nil)
         expect(navigationController.viewControllers) == [coordinator.vcIfLive!]

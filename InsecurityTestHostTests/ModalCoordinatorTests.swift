@@ -80,19 +80,19 @@ final class ModalCoordinatorTests: XCTestCase {
         
         let coordinators = coordinatorsThatStay + coordinatorsThatFinish
         
-        coordinators[0].mount(on: rootController, animated: false) { _ in
-            
-        }
+        await coordinators[0].asyncMount(on: rootController, animated: false, { _ in }).onPresentCompleted.value
         
         var lastHandledCoordinator = coordinators[0]
         for (index, coordinator) in coordinators.enumerated().suffix(coordinators.count - 1) {
             let parentCoordinator = lastHandledCoordinator
             
-            parentCoordinator.start(coordinator, animated: false, { _ in
+            let asyncStart = await parentCoordinator.asyncStart(coordinator, animated: false) { _ in
                 if index > coordinatorsThatStay.count {
                     parentCoordinator.finish(())
                 }
-            })
+            }
+            
+            await asyncStart.onPresentCompleted.value
         
             lastHandledCoordinator = coordinator
         }
@@ -104,6 +104,7 @@ final class ModalCoordinatorTests: XCTestCase {
         expect(allControllers.map(\.?.value?.deinitObservable.onDeinit)).to(allPass({ $0 != nil }))
         
         coordinators.last!.finish(())
+
         
         expect(coordinatorsThatStay.map(\.state.isLive)).to(allPass(beTrue()))
         expect(coordinatorsThatFinish.map(\.state.isDead)).to(allPass(beTrue()))
@@ -153,11 +154,11 @@ final class ModalCoordinatorTests: XCTestCase {
         for (index, coordinator) in coordinators.enumerated().suffix(coordinators.count - 1) {
             let parentCoordinator = lastHandledCoordinator
             
-            parentCoordinator.start(coordinator, animated: false, { _ in
+            await parentCoordinator.asyncStart(coordinator, animated: false, { _ in
                 if index > coordinatorsThatStay.count {
                     parentCoordinator.finish(())
                 }
-            })
+            }).onPresentCompleted.value
             
             lastHandledCoordinator = coordinator
         }
@@ -165,14 +166,15 @@ final class ModalCoordinatorTests: XCTestCase {
         expect(coordinators.map(\.state.isLive)).to(allPass(beTrue()))
         expect(self.rootController.modalChildrenChain).to(haveCount(coordinators.count))
         
-        let dismissTask = await coordinatorsThatStay.last!.dismissChildren(animated: true)
+        coordinatorsThatStay.last!.dismissChildren(animated: true, completion: {
+            
+        })
         
         expect(coordinatorsThatStay.map(\.state.isLive)).to(allPass(beTrue()))
         expect(coordinatorsThatFinish.map(\.state.isDead)).to(allPass(beTrue()))
         expect(self.rootController.modalChildrenChain).to(haveCount(coordinators.count))
         
-        await dismissTask.value
-        
+        await awaitAnims()
         expect(self.rootController.modalChildrenChain).to(haveCount(coordinatorsThatStay.count))
         
         coordinators.first!.finish(())
@@ -193,13 +195,15 @@ final class ModalCoordinatorTests: XCTestCase {
             + coordinatorsThatGetDismissedFromMiddle
             + coordinatorsThatGetDismissedFromTheEnd
         
-        let firstCoordinatorMount = await coordinators.first!.asyncMount(on: rootController, animated: false)
+        let firstCoordinatorMount = await coordinators.first!.asyncMount(on: rootController, animated: false, { _ in})
         
         await firstCoordinatorMount.onPresentCompleted.value
         
         var parentCoordinator = coordinators.first!
         for coordinator in coordinators.dropFirst() {
-            let asyncStart = await parentCoordinator.asyncStart(coordinator, animated: false)
+            let asyncStart = await parentCoordinator.asyncStart(coordinator, animated: false) { _ in
+                
+            }
             
             await asyncStart.onPresentCompleted.value
             
