@@ -111,13 +111,13 @@ open class NavigationCoordinator<Result> {
     
     // MARK: - Internal
     
-    var _childCreaterAndMounterBlock: ((State.Live) -> UIViewController)?
+    var _childCreatorAndMounterBlock: ((NavigationCoordinator, State.Live, UINavigationController) -> UIViewController)?
     
-    func getChildCreaterAndMounterBlockIfNeeded() -> ((State.Live) -> UIViewController)? {
-        if let _childCreaterAndMounterBlock = self._childCreaterAndMounterBlock {
-            self._childCreaterAndMounterBlock = nil
+    func getChildCreatorAndMounterBlockIfNeeded() -> ((NavigationCoordinator, State.Live, UINavigationController) -> UIViewController)? {
+        if let _childCreatorAndMounterBlock = self._childCreatorAndMounterBlock {
+            self._childCreatorAndMounterBlock = nil
             
-            return _childCreaterAndMounterBlock
+            return _childCreatorAndMounterBlock
         }
         return nil
     }
@@ -127,22 +127,17 @@ open class NavigationCoordinator<Result> {
                                _ completion: @escaping (Result?) -> Void) {
         switch state {
         case .liveButChildIsStagedForDeath:
-            _childCreaterAndMounterBlock = { [weak self] (live: State.Live) -> UIViewController in
-                guard let self = self else { return }
-                guard let navigationController = live.navigationController.value else {
-                    return
-                }
-                
+            _childCreatorAndMounterBlock = { shelf, live, navigationController -> UIViewController in
                 let controller = coordinator.mount(
-                    on: self,
+                    on: shelf,
                     navigationController: navigationController,
                     completion: { result in
                         completion(result)
                     }
                 )
-                
-                self.state = .live(live.settingChild(to: coordinator))
-                
+
+                shelf.state = .live(live.settingChild(to: coordinator))
+
                 return controller
             }
         case .live(let live):
@@ -280,13 +275,14 @@ extension NavigationCoordinator: CommonNavigationCoordinator {
             let newLive = live.settingChild(to: nil)
             self.state = .live(newLive)
             
-            if let childCreaterAndMounterBlock = getChildCreaterAndMounterBlockIfNeeded() {
+            // Very good code, make me feel very comfortable about the whole state management in this project 👍🅱️
+            if let childCreaterAndMounterBlock = getChildCreatorAndMounterBlockIfNeeded() {
                 if
                     let navigationController = live.navigationController.value,
                     let controller = live.controller.value
                 {
                     
-                    let childController = childCreaterAndMounterBlock(newLive)
+                    let childController = childCreaterAndMounterBlock(self, newLive, navigationController)
                     
                     let existingControllers = navigationController.viewControllers
                     

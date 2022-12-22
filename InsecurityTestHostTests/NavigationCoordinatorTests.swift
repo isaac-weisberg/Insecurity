@@ -110,7 +110,7 @@ func awaitAnims() async {
 extension NavigationCoordinator.State {
     var isLive: Bool {
         switch self {
-        case .live:
+        case .live,. liveButChildIsStagedForDeath:
             return true
         case .idle, .liveButStagedForDeath, .dead:
             return false
@@ -121,7 +121,7 @@ extension NavigationCoordinator.State {
         switch self {
         case .dead:
             return true
-        case .live, .liveButStagedForDeath, .idle:
+        case .live, .liveButStagedForDeath, .idle, .liveButChildIsStagedForDeath:
             return false
         }
     }
@@ -130,7 +130,7 @@ extension NavigationCoordinator.State {
 extension NavigationCoordinator {
     var weakVcIfLive: Weak<UIViewController>? {
         switch state {
-        case .live(let live):
+        case .live(let live), .liveButChildIsStagedForDeath(let live):
             return live.controller
         case .dead, .liveButStagedForDeath, .idle:
             return nil
@@ -139,7 +139,7 @@ extension NavigationCoordinator {
     
     var vcIfLive: UIViewController? {
         switch state {
-        case .live(let live):
+        case .live(let live), .liveButChildIsStagedForDeath(let live):
             return live.controller.value
         case .dead, .liveButStagedForDeath, .idle:
             return nil
