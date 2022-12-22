@@ -16,6 +16,7 @@
 		A309742B274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */; };
 		A309742D274C2B3D003EB063 /* PaymentMethodAddCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */; };
 		A309742F274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */; };
+		A326986A2954B23A00DEF186 /* NavigationRootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32698692954B23A00DEF186 /* NavigationRootCoordinator.swift */; };
 		A3383BC6270E430D006982B1 /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC5270E430D006982B1 /* ParentViewController.swift */; };
 		A3383BC8270E43B4006982B1 /* ParentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */; };
 		A33D577E293BE5CD009A6C61 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A33D577D293BE5CD009A6C61 /* AppDelegate.swift */; };
@@ -235,6 +236,7 @@
 		A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsAdaptiveCoordinator.swift; sourceTree = "<group>"; };
 		A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodAddCell.swift; sourceTree = "<group>"; };
 		A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodAdaptiveCoordinator.swift; sourceTree = "<group>"; };
+		A32698692954B23A00DEF186 /* NavigationRootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRootCoordinator.swift; sourceTree = "<group>"; };
 		A3383BC5270E430D006982B1 /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
 		A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCoordinator.swift; sourceTree = "<group>"; };
 		A33D577B293BE5CD009A6C61 /* InsecurityTestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityTestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -802,6 +804,7 @@
 				A372133B2917B08900BE489A /* NavigationCoordinator.swift */,
 				A372133D2917B0A100BE489A /* CommonNavigationCoordinator.swift */,
 				A385FCA229424955001F37D8 /* InsecurityMessages.swift */,
+				A32698692954B23A00DEF186 /* NavigationRootCoordinator.swift */,
 			);
 			path = Insecurity;
 			sourceTree = "<group>";
@@ -1335,6 +1338,7 @@
 			files = (
 				A36E5AA72725C8660000C551 /* InsecurityLogger.swift in Sources */,
 				A36B058C2731E81000E67488 /* Util.swift in Sources */,
+				A326986A2954B23A00DEF186 /* NavigationRootCoordinator.swift in Sources */,
 				A3441884270F9CD800CE49E4 /* Insecurity.swift in Sources */,
 				A372133E2917B0A100BE489A /* CommonNavigationCoordinator.swift in Sources */,
 				A38D386B291598BD0007440F /* ModalCoordinator.swift in Sources */,
