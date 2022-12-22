@@ -17,9 +17,9 @@ open class ModalCoordinator<Result> {
         
         struct Dead {
             enum Reason {
-                case result
-                case deinitialized
+                case finishCalled
                 case dismissedByParent
+                case deinitialized
             }
             
             let reason: Reason
@@ -35,7 +35,8 @@ open class ModalCoordinator<Result> {
     var state: State = .idle
     
     open var viewController: UIViewController {
-        fatalError("Override this getter")
+        // Override this in the subclass
+        fatalError()
     }
     
     public init() {
@@ -91,11 +92,11 @@ open class ModalCoordinator<Result> {
     }
     
     public func finish(_ result: Result) {
-        finish(result, source: .result)
+        finish(result, source: .finishCall)
     }
     
     public func dismiss() {
-        finish(nil, source: .result)
+        finish(nil, source: .finishCall)
     }
     
     public func dismissChildren(animated: Bool) {
@@ -116,9 +117,9 @@ open class ModalCoordinator<Result> {
         case .idle:
             break
         case .live, .liveButChildIsStagedForDeath:
-            fatalError("Can not mount a coordinator that's already mounted")
+            fatalError(InsecurityMessage.noMountAMounted.s)
         case .dead, .liveButStagedForDeath:
-            fatalError("Can not mount a coordinator that's already been used")
+            fatalError(InsecurityMessage.noMountAUsedOne.s)
         }
         
         let controller = self.viewController
@@ -239,7 +240,7 @@ open class ModalCoordinator<Result> {
     }
     
     enum FinishSource {
-        case result
+        case finishCall
         case deinitialized
     }
     
@@ -253,7 +254,15 @@ open class ModalCoordinator<Result> {
         case .idle:
             fatalError("Can't finish on a coordinator that wasn't mounted")
         case .dead, .liveButStagedForDeath:
-            insecAssert(source == .deinitialized, "Can't finish on something that's dead")
+            switch source {
+            case .deinitialized:
+                // This is kinda expected because there might be an off chance that the deinit handler of the controller will fire during the dismissal
+                // Although, a bit lower down the code, we take an extra stride to clean the deinit observable
+                // So actually I change my mind
+                fatalError()
+            case .finishCall:
+                insecAssertFail(InsecurityMessage.noFinishOnDead.s)
+            }
             return
         case .live(let liveData), .liveButChildIsStagedForDeath(let liveData):
             live = liveData
@@ -261,8 +270,8 @@ open class ModalCoordinator<Result> {
         
         let deadReason: State.Dead.Reason
         switch source {
-        case .result:
-            deadReason = .result
+        case .finishCall:
+            deadReason = .finishCalled
         case .deinitialized:
             deadReason = .deinitialized
         }
@@ -384,7 +393,7 @@ extension ModalCoordinator: CommonModalCoordinator {
         case .liveButChildIsStagedForDeath:
             insecAssertFail(InsecurityMessage.noDismissMidOfFin.s)
         case .idle:
-            insecAssertFail("Impossible")
+            insecAssertFail(InsecurityMessage.impossible.s)
         case .dead, .liveButStagedForDeath:
             break
         case .live(let live):

@@ -6,6 +6,8 @@ protocol CommonNavigationCoordinator: AnyObject {
     func parentWillDismiss()
     
     func findFirstAliveAncestorAndPerformDismissal()
+    
+    func childIsStagedForDeath()
 }
 
 struct WeakCommonNavigationCoordinator {

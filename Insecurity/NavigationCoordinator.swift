@@ -22,6 +22,7 @@ open class NavigationCoordinator<Result> {
         
         case idle
         case live(Live)
+        case liveButChildIsStagedForDeath(Live)
         case liveButStagedForDeath(Live, Dead.Reason)
         case dead(Dead)
     }
@@ -33,7 +34,8 @@ open class NavigationCoordinator<Result> {
     }
     
     open var viewController: UIViewController {
-        fatalError("Override this")
+        // Override this in the subclass
+        fatalError()
     }
     
     // MARK: - Public
@@ -43,8 +45,11 @@ open class NavigationCoordinator<Result> {
         switch state {
         case .idle:
             break
-        case .dead, .live, .liveButStagedForDeath:
-            insecAssertFail("Can not reuse a coordinator")
+        case .live, .liveButChildIsStagedForDeath:
+            insecAssertFail(InsecurityMessage.noMountAMounted.s)
+            return
+        case .dead, .liveButStagedForDeath:
+            insecAssertFail(InsecurityMessage.noMountAUsedOne.s)
             return
         }
         assert(navigationController.viewControllers.isEmpty)
@@ -79,32 +84,13 @@ open class NavigationCoordinator<Result> {
     public func start<Result>(_ coordinator: NavigationCoordinator<Result>,
                               animated: Bool,
                               _ completion: @escaping (Result?) -> Void) {
-        switch state {
-        case .live(let live):
-            assert(live.child == nil)
-            guard let navigationController = live.navigationController.value else {
-                return
-            }
-            
-            let controller = coordinator.mount(
-                on: self,
-                navigationController: navigationController,
-                completion: { result in
-                    completion(result)
-                }
-            )
-            
-            self.state = .live(live.settingChild(to: coordinator))
-            
-            navigationController.pushViewController(controller, animated: animated)
-        case .idle, .dead, .liveButStagedForDeath:
-            insecAssertFail(InsecurityMessage.noStartOverDead.s)
-            return
-        }
+        startInternal(coordinator, animated: animated, completion)
     }
     
     public func dismissChildren(animated: Bool) {
         switch self.state {
+        case .liveButChildIsStagedForDeath:
+            insecAssertFail(InsecurityMessage.noDismissMidOfFin.s)
         case .idle, .dead, .liveButStagedForDeath:
             break
         case .live(let live):
@@ -125,6 +111,71 @@ open class NavigationCoordinator<Result> {
     
     // MARK: - Internal
     
+    var _childCreaterAndMounterBlock: ((State.Live) -> UIViewController)?
+    
+    func getChildCreaterAndMounterBlockIfNeeded() -> ((State.Live) -> UIViewController)? {
+        if let _childCreaterAndMounterBlock = self._childCreaterAndMounterBlock {
+            self._childCreaterAndMounterBlock = nil
+            
+            return _childCreaterAndMounterBlock
+        }
+        return nil
+    }
+
+    func startInternal<Result>(_ coordinator: NavigationCoordinator<Result>,
+                               animated: Bool,
+                               _ completion: @escaping (Result?) -> Void) {
+        switch state {
+        case .liveButChildIsStagedForDeath:
+            _childCreaterAndMounterBlock = { [weak self] (live: State.Live) -> UIViewController in
+                guard let self = self else { return }
+                guard let navigationController = live.navigationController.value else {
+                    return
+                }
+                
+                let controller = coordinator.mount(
+                    on: self,
+                    navigationController: navigationController,
+                    completion: { result in
+                        completion(result)
+                    }
+                )
+                
+                self.state = .live(live.settingChild(to: coordinator))
+                
+                return controller
+            }
+        case .live(let live):
+            _startStateless(live: live, coordinator, animated: animated, completion)
+        case .idle, .dead, .liveButStagedForDeath:
+            insecAssertFail(InsecurityMessage.noStartOverDead.s)
+            return
+        }
+    }
+    
+    func _startStateless<Result>(live: State.Live,
+                                 _ coordinator: NavigationCoordinator<Result>,
+                                 animated: Bool,
+                                 _ completion: @escaping (Result?) -> Void) {
+        
+        assert(live.child == nil)
+        guard let navigationController = live.navigationController.value else {
+            return
+        }
+        
+        let controller = coordinator.mount(
+            on: self,
+            navigationController: navigationController,
+            completion: { result in
+                completion(result)
+            }
+        )
+        
+        self.state = .live(live.settingChild(to: coordinator))
+        
+        navigationController.pushViewController(controller, animated: animated)
+    }
+    
     enum FinishSource {
         case finishCall
         case deinitialized
@@ -137,9 +188,17 @@ open class NavigationCoordinator<Result> {
         case .idle:
             fatalError("Can't finish on a coordinator that wasn't mounted")
         case .dead, .liveButStagedForDeath:
-            insecAssert(source == .deinitialized, "Can't finish on something that's dead")
+            switch source {
+            case .deinitialized:
+                // This is kinda expected because there might be an off chance that the deinit handler of the controller will fire during the dismissal
+                // Although, a bit lower down the code, we take an extra stride to clean the deinit observable
+                // So actually I change my mind
+                fatalError()
+            case .finishCall:
+                insecAssertFail(InsecurityMessage.noFinishOnDead.s)
+            }
             return
-        case .live(let liveData):
+        case .live(let liveData), .liveButChildIsStagedForDeath(let liveData):
             live = liveData
         }
         
@@ -152,6 +211,8 @@ open class NavigationCoordinator<Result> {
         }
         live.controller.value?.deinitObservable.onDeinit = nil
         self.state = .liveButStagedForDeath(live, deadReason)
+        
+        live.parent?.value?.childIsStagedForDeath()
         
         live.completionHandler(result)
         
@@ -184,10 +245,10 @@ open class NavigationCoordinator<Result> {
         switch state {
         case .idle:
             break
-        case .live:
-            fatalError("Can not mount a coordinator that's already mounted")
+        case .live, .liveButChildIsStagedForDeath:
+            fatalError(InsecurityMessage.noMountAMounted.s)
         case .dead, .liveButStagedForDeath:
-            fatalError("Can not mount a coordinator that's already been used")
+            fatalError(InsecurityMessage.noMountAUsedOne.s)
         }
         
         let controller = self.viewController
@@ -215,12 +276,34 @@ open class NavigationCoordinator<Result> {
 extension NavigationCoordinator: CommonNavigationCoordinator {
     func findFirstAliveAncestorAndPerformDismissal() {
         switch state {
-        case .live(let live):
-            if
-                let navigationController = live.navigationController.value,
-                let controller = live.controller.value
-            {
-                navigationController.popToViewController(controller, animated: true)
+        case .liveButChildIsStagedForDeath(let live):
+            let newLive = live.settingChild(to: nil)
+            self.state = .live(newLive)
+            
+            if let childCreaterAndMounterBlock = getChildCreaterAndMounterBlockIfNeeded() {
+                if
+                    let navigationController = live.navigationController.value,
+                    let controller = live.controller.value
+                {
+                    
+                    let childController = childCreaterAndMounterBlock(newLive)
+                    
+                    let existingControllers = navigationController.viewControllers
+                    
+                    let newControllersOpt = existingControllers.removeSuffixAfterElByRef(controller, appending: childController)
+                    if let newControllers = newControllersOpt {
+                        navigationController.setViewControllers(newControllers, animated: true)
+                    } else {
+                        insecAssertFail(InsecurityMessage.noLlerInLlersNavi.s)
+                    }
+                }
+            } else {
+                if
+                    let navigationController = live.navigationController.value,
+                    let controller = live.controller.value
+                {
+                    navigationController.popToViewController(controller, animated: true)
+                }
             }
         case .liveButStagedForDeath(let live, let deadReason):
             self.state = .dead(State.Dead(reason: deadReason))
@@ -231,13 +314,24 @@ extension NavigationCoordinator: CommonNavigationCoordinator {
                 // There is no parent, which means, that this is the root coordinator,
                 // and roots dismissal is handled by the initiator
             }
-        case .dead, .idle:
+        case .dead, .idle, .live:
             assertionFailure()
+        }
+    }
+    
+    func childIsStagedForDeath() {
+        switch state {
+        case .live(let live):
+            self.state = .liveButChildIsStagedForDeath(live)
+        case .liveButChildIsStagedForDeath, .dead, .idle, .liveButStagedForDeath:
+            fatalError()
         }
     }
     
     func parentWillDismiss() {
         switch state {
+        case .liveButChildIsStagedForDeath:
+            insecAssertFail(InsecurityMessage.noDismissMidOfFin.s)
         case .idle:
             insecAssertFail("Impossible")
         case .dead, .liveButStagedForDeath:
@@ -251,7 +345,7 @@ extension NavigationCoordinator: CommonNavigationCoordinator {
     
     var isInLiveState: Bool {
         switch self.state {
-        case .live:
+        case .live, .liveButChildIsStagedForDeath:
             return true
         case .dead, .idle, .liveButStagedForDeath:
             return false
@@ -268,5 +362,20 @@ extension NavigationCoordinator.State.Live {
             child: child,
             completionHandler: self.completionHandler
         )
+    }
+}
+
+extension Array where Element == UIViewController {
+    func removeSuffixAfterElByRef(_ element: UIViewController, appending: UIViewController) -> [UIViewController]? {
+        if let firstIndexOfElement = self.firstIndex(where: { el in
+            el === element
+        }) {
+            let prefixIncludingElement = self[0...firstIndexOfElement]
+            
+            let totalArray = prefixIncludingElement + [appending]
+            
+            return Array(totalArray)
+        }
+        return nil
     }
 }
