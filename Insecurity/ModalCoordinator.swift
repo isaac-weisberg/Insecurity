@@ -219,6 +219,20 @@ open class ModalCoordinator<Result> {
     ) {
         let controller = self.viewController
         
+        mountOnCtrlForCtrl(on: parentViewController,
+                           controller: controller,
+                           completion: completion)
+        
+        parentViewController.present(controller, animated: animated, completion: {
+            onPresentCompleted?()
+        })
+    }
+    
+    func mountOnCtrlForCtrl(
+        on parentViewController: UIViewController,
+        controller: UIViewController,
+        completion: @escaping (Result?) -> Void
+    ) {
         controller.deinitObservable.onDeinit = { [weak self] in
             self?.finish(nil, source: .deinitialized)
         }
@@ -233,10 +247,6 @@ open class ModalCoordinator<Result> {
                 }
             )
         )
-        
-        parentViewController.present(controller, animated: animated, completion: {
-            onPresentCompleted?()
-        })
     }
     
     enum FinishSource {

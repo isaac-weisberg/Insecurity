@@ -16,6 +16,8 @@
 		A309742B274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */; };
 		A309742D274C2B3D003EB063 /* PaymentMethodAddCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */; };
 		A309742F274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */; };
+		A312A84329740B57009EAAE1 /* NavigationRootCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A312A84229740B57009EAAE1 /* NavigationRootCoordinatorTests.swift */; };
+		A312A84529740C44009EAAE1 /* TestNavigationRootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A312A84429740C44009EAAE1 /* TestNavigationRootCoordinator.swift */; };
 		A326986A2954B23A00DEF186 /* NavigationRootCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A32698692954B23A00DEF186 /* NavigationRootCoordinator.swift */; };
 		A3383BC6270E430D006982B1 /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC5270E430D006982B1 /* ParentViewController.swift */; };
 		A3383BC8270E43B4006982B1 /* ParentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */; };
@@ -236,6 +238,8 @@
 		A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsAdaptiveCoordinator.swift; sourceTree = "<group>"; };
 		A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodAddCell.swift; sourceTree = "<group>"; };
 		A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodAdaptiveCoordinator.swift; sourceTree = "<group>"; };
+		A312A84229740B57009EAAE1 /* NavigationRootCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRootCoordinatorTests.swift; sourceTree = "<group>"; };
+		A312A84429740C44009EAAE1 /* TestNavigationRootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNavigationRootCoordinator.swift; sourceTree = "<group>"; };
 		A32698692954B23A00DEF186 /* NavigationRootCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationRootCoordinator.swift; sourceTree = "<group>"; };
 		A3383BC5270E430D006982B1 /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
 		A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCoordinator.swift; sourceTree = "<group>"; };
@@ -468,6 +472,8 @@
 				A385FCA429424DD6001F37D8 /* NavigationCoordinatorTests.swift */,
 				A385FCA629424EA0001F37D8 /* TestNavigationCoordinator.swift */,
 				A3A7226529465A3700F09192 /* AsyncStart.swift */,
+				A312A84229740B57009EAAE1 /* NavigationRootCoordinatorTests.swift */,
+				A312A84429740C44009EAAE1 /* TestNavigationRootCoordinator.swift */,
 			);
 			path = InsecurityTestHostTests;
 			sourceTree = "<group>";
@@ -1264,7 +1270,9 @@
 				A33D57A2293BEDD5009A6C61 /* TestModalCoordinator.swift in Sources */,
 				A3EA1BAD293C972F003934B1 /* Util.swift in Sources */,
 				A33D579B293BE9C8009A6C61 /* ModalCoordinatorTests.swift in Sources */,
+				A312A84329740B57009EAAE1 /* NavigationRootCoordinatorTests.swift in Sources */,
 				A385FCA729424EA0001F37D8 /* TestNavigationCoordinator.swift in Sources */,
+				A312A84529740C44009EAAE1 /* TestNavigationRootCoordinator.swift in Sources */,
 				A3A7226629465A3700F09192 /* AsyncStart.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
