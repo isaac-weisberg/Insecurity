@@ -1,16 +1,19 @@
 import UIKit
 
-open class NavigationRootCoordinator<Result>: ModalCoordinator<Result> {
-    var _navigationCoordinator: _NavigationRootUnderlyingCoordinator<Result>!
+final public class NavigationRootCoordinator<Result>: ModalCoordinator<Result> {
+    let navigationCoordinator: NavigationCoordinator<Result>
+    let navigationControllerFactory: () -> UINavigationController
     
-    open override var viewController: UIViewController {
-        // Override this
-        fatalError()
+    public init(_ navigationCoordinator: NavigationCoordinator<Result>,
+                _ navigationControllerFactory: @escaping () -> UINavigationController) {
+        self.navigationCoordinator = navigationCoordinator
+        self.navigationControllerFactory = navigationControllerFactory
+        
+        super.init()
     }
     
-    open var navigationController: UINavigationController {
-        // Also, override this
-        fatalError()
+    override public var viewController: UIViewController {
+        navigationControllerFactory()
     }
     
     func start<NewResult>(
@@ -18,7 +21,7 @@ open class NavigationRootCoordinator<Result>: ModalCoordinator<Result> {
         animated: Bool,
         _ completion: @escaping (NewResult?) -> Void
     ) {
-        _navigationCoordinator.start(child, animated: animated, { result in
+        navigationCoordinator.start(child, animated: animated, { result in
             completion(result)
         })
     }
@@ -27,7 +30,7 @@ open class NavigationRootCoordinator<Result>: ModalCoordinator<Result> {
                                             animated: Bool,
                                             completion: @escaping (Result?) -> Void,
                                             onPresentCompleted: (() -> Void)?) {
-        let navigationController = self.navigationController
+        let navigationController = self.navigationControllerFactory()
         
         mountOnCtrlForCtrl(
             on: parentViewController,
@@ -36,17 +39,12 @@ open class NavigationRootCoordinator<Result>: ModalCoordinator<Result> {
                 completion(result)
             })
         
-        let controller = self.viewController
-        
-        let navigationCoordinator = _NavigationRootUnderlyingCoordinator(owner: self, vc: controller)
         
         navigationCoordinator.mountOnNavigationCoontroller(on: navigationController,
                                                            modalCoordinator: self.weak,
                                                            completion: { result in
             completion(result)
         })
-        
-        self._navigationCoordinator = navigationCoordinator
         
         parentViewController.present(navigationController, animated: animated, completion: {
             onPresentCompleted?()
@@ -55,13 +53,10 @@ open class NavigationRootCoordinator<Result>: ModalCoordinator<Result> {
     
     override func mount(on parent: CommonModalCoordinator,
                         completion: @escaping (Result?) -> Void) -> UIViewController {
-        let controller = super.mount(on: parent, completion: { result in
+        let navigationController = super.mount(on: parent, completion: { result in
             completion(result)
-        })
+        }) as! UINavigationController
         
-        let navigationController = self.navigationController
-        
-        let navigationCoordinator = _NavigationRootUnderlyingCoordinator(owner: self, vc: controller)
         navigationCoordinator.mountOnNavigationCoontroller(
             on: navigationController,
             modalCoordinator: self.weak,
@@ -69,25 +64,12 @@ open class NavigationRootCoordinator<Result>: ModalCoordinator<Result> {
                 completion(result)
             })
         
-        self._navigationCoordinator = navigationCoordinator
-        
         return navigationController
     }
 }
 
-class _NavigationRootUnderlyingCoordinator<Result>: NavigationCoordinator<Result> {
-    unowned let owner: NavigationRootCoordinator<Result>
-    
-    var _cachedVC: UIViewController?
-    
-    override var viewController: UIViewController {
-        let vc = _cachedVC!
-        _cachedVC = nil
-        return vc
-    }
-    
-    init(owner: NavigationRootCoordinator<Result>, vc: UIViewController) {
-        self.owner = owner
-        self._cachedVC = vc
+public extension NavigationCoordinator {
+    func root(_ navigationControllerFactory: @autoclosure @escaping () -> UINavigationController) -> NavigationRootCoordinator<Result> {
+        NavigationRootCoordinator(self, navigationControllerFactory)
     }
 }

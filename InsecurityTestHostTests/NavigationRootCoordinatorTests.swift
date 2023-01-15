@@ -8,7 +8,8 @@ class NavigationRootCoordinatorTests: XCTestCase {
     
     @MainActor
     func testInnerCoordinatorsCanStartModalScreens() async {
-        let navigationRootCoordinator = TestNavigationRootCoordinator()
+        let outerCoordinator = TestNavigationCoordinator<Void>()
+        let navigationRootCoordinator = outerCoordinator.root(UINavigationController())
         
         let innerCoordinator = TestNavigationCoordinator<Int>()
         
@@ -26,7 +27,7 @@ class NavigationRootCoordinatorTests: XCTestCase {
         
         expect(self.rootController.modalChildrenChain) == [navigationController]
         expect(navigationController.viewControllers) == [
-            navigationRootCoordinator._navigationCoordinator.vcIfLive!,
+            navigationRootCoordinator.navigationCoordinator.vcIfLive!,
             innerCoordinator.vcIfLive!
         ]
         
@@ -41,7 +42,7 @@ class NavigationRootCoordinatorTests: XCTestCase {
             modalCoordinator.vcIfLive()!
         ]
         expect(navigationController.viewControllers) == [
-            navigationRootCoordinator._navigationCoordinator.vcIfLive!,
+            navigationRootCoordinator.navigationCoordinator.vcIfLive!,
             innerCoordinator.vcIfLive!
         ]
         
