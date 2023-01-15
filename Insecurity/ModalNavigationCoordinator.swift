@@ -1,6 +1,6 @@
 import UIKit
 
-final public class NavigationRootCoordinator<Result>: ModalCoordinator<Result> {
+final public class ModalNavigationCoordinator<Result>: ModalCoordinator<Result> {
     let navigationCoordinator: NavigationCoordinator<Result>
     let navigationControllerFactory: () -> UINavigationController
     
@@ -69,7 +69,7 @@ final public class NavigationRootCoordinator<Result>: ModalCoordinator<Result> {
 }
 
 public extension NavigationCoordinator {
-    func root(_ navigationControllerFactory: @autoclosure @escaping () -> UINavigationController) -> NavigationRootCoordinator<Result> {
-        NavigationRootCoordinator(self, navigationControllerFactory)
+    func modal(_ navigationControllerFactory: @autoclosure @escaping () -> UINavigationController) -> ModalNavigationCoordinator<Result> {
+        ModalNavigationCoordinator(self, navigationControllerFactory)
     }
 }

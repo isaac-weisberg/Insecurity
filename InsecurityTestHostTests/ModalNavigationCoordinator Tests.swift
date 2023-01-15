@@ -3,37 +3,37 @@ import XCTest
 @testable import InsecurityTestHost
 import Nimble
 
-class NavigationRootCoordinatorTests: XCTestCase {
+class ModalNavigationCoordinatorTests: XCTestCase {
     let rootController = ViewController.sharedInstance
     
     @MainActor
     func testInnerCoordinatorsCanStartModalScreens() async {
         let outerCoordinator = TestNavigationCoordinator<Void>()
-        let navigationRootCoordinator = outerCoordinator.root(UINavigationController())
+        let modalRootCoordinator = outerCoordinator.modal(UINavigationController())
         
         let innerCoordinator = TestNavigationCoordinator<Int>()
         
-        navigationRootCoordinator.mount(on: rootController, animated: true, completion: { _ in })
+        modalRootCoordinator.mount(on: rootController, animated: true, completion: { _ in })
         
         await awaitAnims()
         
-        navigationRootCoordinator.start(innerCoordinator, animated: true, { _ in
+        modalRootCoordinator.start(innerCoordinator, animated: true, { _ in
             
         })
         
         await awaitAnims()
         
-        unowned let navigationController: UINavigationController = (navigationRootCoordinator.state.vcIfLive! as! UINavigationController)
+        unowned let navigationController: UINavigationController = (modalRootCoordinator.state.vcIfLive! as! UINavigationController)
         
         expect(self.rootController.modalChildrenChain) == [navigationController]
         expect(navigationController.viewControllers) == [
-            navigationRootCoordinator.navigationCoordinator.vcIfLive!,
+            modalRootCoordinator.navigationCoordinator.vcIfLive!,
             innerCoordinator.vcIfLive!
         ]
         
         let modalCoordinator = TestModalCoordinator()
         
-        navigationRootCoordinator.start(modalCoordinator, animated: true) { _ in }
+        modalRootCoordinator.start(modalCoordinator, animated: true) { _ in }
         
         await awaitAnims()
         
@@ -42,7 +42,7 @@ class NavigationRootCoordinatorTests: XCTestCase {
             modalCoordinator.vcIfLive()!
         ]
         expect(navigationController.viewControllers) == [
-            navigationRootCoordinator.navigationCoordinator.vcIfLive!,
+            modalRootCoordinator.navigationCoordinator.vcIfLive!,
             innerCoordinator.vcIfLive!
         ]
         
