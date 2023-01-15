@@ -3,6 +3,7 @@ import UIKit
 open class NavigationCoordinator<Result> {
     enum State {
         struct Live {
+            let modalCoordinator: WeakCommonModalCoordinator?
             let navigationController: Weak<UINavigationController>
             let parent: WeakCommonNavigationCoordinator?
             let controller: Weak<UIViewController>
@@ -42,35 +43,12 @@ open class NavigationCoordinator<Result> {
     
     public func mount(on navigationController: UINavigationController,
                       completion: @escaping (Result?) -> Void) {
-        switch state {
-        case .idle:
-            break
-        case .live, .liveButChildIsStagedForDeath:
-            insecAssertFail(InsecurityMessage.noMountAMounted.s)
-            return
-        case .dead, .liveButStagedForDeath:
-            insecAssertFail(InsecurityMessage.noMountAUsedOne.s)
-            return
-        }
-        assert(navigationController.viewControllers.isEmpty)
-        
-        let controller = self.viewController
-        
-        controller.deinitObservable.onDeinit = { [weak self] in
-            self?.finish(nil, source: .deinitialized)
-        }
-        
-        self.state = .live(State.Live(
-            navigationController: Weak(navigationController),
-            parent: nil,
-            controller: Weak(controller),
-            child: nil,
-            completionHandler: { result in
+        self.mountOnNavigationCoontroller(
+            on: navigationController,
+            modalCoordinator: nil,
+            completion: { result in
                 completion(result)
-            }
-        ))
-        
-        navigationController.setViewControllers([controller], animated: false)
+            })
     }
     
     public func finish(_ result: Result) {
@@ -85,6 +63,19 @@ open class NavigationCoordinator<Result> {
                               animated: Bool,
                               _ completion: @escaping (Result?) -> Void) {
         startInternal(coordinator, animated: animated, completion)
+    }
+    
+    public func start<Result>(_ coordinator: ModalCoordinator<Result>,
+                              animated: Bool,
+                              _ completion: @escaping (Result?) -> Void) {
+        switch state {
+        case .live(let live), .liveButChildIsStagedForDeath(let live):
+            live.modalCoordinator?.value?.start(coordinator, animated: animated, { result in
+                completion(result)
+            })
+        case .dead, .idle, .liveButStagedForDeath:
+            insecAssertFail(InsecurityMessage.noStartOverDead.s)
+        }
     }
     
     public func dismissChildren(animated: Bool) {
@@ -121,23 +112,24 @@ open class NavigationCoordinator<Result> {
         }
         return nil
     }
-
+    
     func startInternal<Result>(_ coordinator: NavigationCoordinator<Result>,
                                animated: Bool,
                                _ completion: @escaping (Result?) -> Void) {
         switch state {
         case .liveButChildIsStagedForDeath:
             _childCreatorAndMounterBlock = { shelf, live, navigationController -> UIViewController in
-                let controller = coordinator.mount(
-                    on: shelf,
+                let controller = coordinator.mountOnParent(
+                    shelf,
                     navigationController: navigationController,
+                    modalCoordinator: live.modalCoordinator,
                     completion: { result in
                         completion(result)
                     }
                 )
-
+                
                 shelf.state = .live(live.settingChild(to: coordinator))
-
+                
                 return controller
             }
         case .live(let live):
@@ -158,9 +150,10 @@ open class NavigationCoordinator<Result> {
             return
         }
         
-        let controller = coordinator.mount(
-            on: self,
+        let controller = coordinator.mountOnParent(
+            self,
             navigationController: navigationController,
+            modalCoordinator: live.modalCoordinator,
             completion: { result in
                 completion(result)
             }
@@ -233,9 +226,10 @@ open class NavigationCoordinator<Result> {
         }
     }
     
-    func mount(on parent: CommonNavigationCoordinator,
-               navigationController: UINavigationController,
-               completion: @escaping (Result?) -> Void) -> UIViewController {
+    func mountOnParent(_ parent: CommonNavigationCoordinator,
+                       navigationController: UINavigationController,
+                       modalCoordinator: WeakCommonModalCoordinator?,
+                       completion: @escaping (Result?) -> Void) -> UIViewController {
         assert(parent !== self)
         switch state {
         case .idle:
@@ -254,6 +248,7 @@ open class NavigationCoordinator<Result> {
         
         self.state = .live(
             State.Live(
+                modalCoordinator: modalCoordinator,
                 navigationController: Weak(navigationController),
                 parent: parent.weak,
                 controller: Weak(controller),
@@ -265,6 +260,41 @@ open class NavigationCoordinator<Result> {
         )
         
         return controller
+    }
+    
+    func mountOnNavigationCoontroller(on navigationController: UINavigationController,
+                                      modalCoordinator: WeakCommonModalCoordinator?,
+                                      completion: @escaping (Result?) -> Void) {
+        switch state {
+        case .idle:
+            break
+        case .live, .liveButChildIsStagedForDeath:
+            insecAssertFail(InsecurityMessage.noMountAMounted.s)
+            return
+        case .dead, .liveButStagedForDeath:
+            insecAssertFail(InsecurityMessage.noMountAUsedOne.s)
+            return
+        }
+        assert(navigationController.viewControllers.isEmpty)
+        
+        let controller = self.viewController
+        
+        controller.deinitObservable.onDeinit = { [weak self] in
+            self?.finish(nil, source: .deinitialized)
+        }
+        
+        self.state = .live(State.Live(
+            modalCoordinator: modalCoordinator,
+            navigationController: Weak(navigationController),
+            parent: nil,
+            controller: Weak(controller),
+            child: nil,
+            completionHandler: { result in
+                completion(result)
+            }
+        ))
+        
+        navigationController.setViewControllers([controller], animated: false)
     }
 }
 
@@ -352,6 +382,7 @@ extension NavigationCoordinator: CommonNavigationCoordinator {
 extension NavigationCoordinator.State.Live {
     func settingChild(to child: CommonNavigationCoordinator?) -> NavigationCoordinator.State.Live {
         NavigationCoordinator.State.Live(
+            modalCoordinator: self.modalCoordinator,
             navigationController: self.navigationController,
             parent: self.parent,
             controller: self.controller,

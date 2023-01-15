@@ -8,6 +8,10 @@ protocol CommonModalCoordinator: AnyObject {
     func findFirstAliveAncestorAndCutTheChainDismissing()
     
     func childIsStagedForDeath()
+    
+    func start<Result>(_ coordinator: ModalCoordinator<Result>,
+                       animated: Bool,
+                       _ completion: @escaping (Result?) -> Void)
 }
 
 struct WeakCommonModalCoordinator {

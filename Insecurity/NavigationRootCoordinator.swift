@@ -32,9 +32,12 @@ open class NavigationRootCoordinator<Result>: ModalCoordinator<Result> {
         let navigationController = self.navigationController
         
         let navigationCoordinator = NavigationRootUnderlyingCoordinator(owner: self, vc: controller)
-        navigationCoordinator.mount(on: navigationController, completion: { result in
-            fatalError()
-        })
+        navigationCoordinator.mountOnNavigationCoontroller(
+            on: navigationController,
+            modalCoordinator: self.weak,
+            completion: { result in
+                fatalError()
+            })
         
         self.navigationCoordinator = navigationCoordinator
         
