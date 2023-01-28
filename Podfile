@@ -10,5 +10,5 @@ end
 
 target 'InsecurityPodspecTest' do
   pod 'SnapKit'
-  pod 'Insecurity', :podspec => './Insecurity.podspec'
+  # pod 'Insecurity', :podspec => './Insecurity.podspec'
 end

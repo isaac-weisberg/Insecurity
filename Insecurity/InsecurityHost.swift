@@ -1,117 +1,79 @@
 import UIKit
 
-private struct Weak<Value> where Value: AnyObject {
-    weak var value: Value?
-    
-    init(_ value: Value) {
-        self.value = value
-    }
+enum CoordinatorDeathReason {
+    case result
+    case deinitOrKvo
 }
 
-private struct InsecurityHostState {
+struct InsecurityHostState {
     enum Stage {
-        case ready
-        case batching
-        case purging
-        
-        var allowsPresentation: Bool {
-            switch self {
-            case .batching:
-                return false
-            case .ready, .purging:
-                return true
-            }
+        struct Batching {
+            let deepestDeadIndex: CoordinatorIndex
+            let modalIndexThatNeedsDismissing: Int?
+            let needsNavigationDismissal: Bool
         }
+        
+        case ready
+        case batching(Batching)
+        case purging
     }
     
     var stage: Stage
     var notDead: Bool
 }
 
-private enum FinalizationKind {
-    case callback
-    case kvo
-    case deinitialization
-    
-    func toFrameState() -> FrameState {
-        switch self {
-        case .callback:
-            return .finishedByCompletion
-        case .kvo:
-            return .finishedByKVO
-        case .deinitialization:
-            return .finishedByDeinit
-        }
-    }
-}
-
-private struct FrameNavigationChild {
-    var state: FrameState
+class FrameNavigationChild {
     let coordinator: CommonNavigationCoordinatorAny
-    weak var viewController: UIViewController?
-    weak var previousViewController: UIViewController?
+    let controller: Weak<UIViewController>
+    let previousController: Weak<UIViewController>
     
     init(
-        state: FrameState,
         coordinator: CommonNavigationCoordinatorAny,
-        viewController: UIViewController?,
-        previousViewController: UIViewController?
+        controller: Weak<UIViewController>,
+        previousController: Weak<UIViewController>
     ) {
-        self.state = state
         self.coordinator = coordinator
-        self.viewController = viewController
-        self.previousViewController = previousViewController
+        self.controller = controller
+        self.previousController = previousController
     }
 }
 
-private struct FrameNavigationData {
+class FrameNavigationData {
     var children: [FrameNavigationChild]
-    weak var navigationController: UINavigationController?
-    weak var rootController: UIViewController?
+    let navigationController: Weak<UINavigationController>
+    let rootController: Weak<UIViewController>
     
     init(
         children: [FrameNavigationChild],
-        navigationController: UINavigationController?,
-        rootController: UIViewController?
+        navigationController: UINavigationController,
+        rootController: UIViewController
     ) {
         self.children = children
-        self.navigationController = navigationController
-        self.rootController = rootController
+        self.navigationController = Weak(navigationController)
+        self.rootController = Weak(rootController)
     }
 }
 
-private enum FrameState {
-    case live
-    case finishedByCompletion
-    case finishedByKVO
-    case finishedByDeinit
-}
-
-private class RootNavigationCrutchCoordinator: CommonCoordinatorAny {
-    
-}
-
-private struct Frame {
-    var state: FrameState
+class Frame {
     let coordinator: CommonCoordinatorAny
-    weak var viewController: UIViewController?
-    weak var previousViewController: UIViewController?
-    var navigationData: FrameNavigationData?
+    let controller: Weak<UIViewController>
+    let previousController: Weak<UIViewController>
+    let navigationData: FrameNavigationData?
     
     init(
-        state: FrameState,
         coordinator: CommonCoordinatorAny,
-        viewController: UIViewController?,
-        previousViewController: UIViewController?,
+        controller: UIViewController,
+        previousController: UIViewController,
         navigationData: FrameNavigationData?
     ) {
-        self.state = state
         self.coordinator = coordinator
-        self.viewController = viewController
-        self.previousViewController = previousViewController
+        self.controller = Weak(controller)
+        self.previousController = Weak(previousController)
         self.navigationData = navigationData
     }
 }
+
+// MARK: - InsecurityHost
 
 public class InsecurityHost {
     fileprivate var frames: [Frame] = []
@@ -155,377 +117,113 @@ public class InsecurityHost {
     
     func startModal<Coordinator: CommonModalCoordinator>(
         _ child: Coordinator,
+        after parentIndex: CoordinatorIndex,
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
-        guard state.notDead else { return }
-        
-        switch state.stage {
-        case .ready:
-            immediateDispatchModal(child, animated: animated) { result in
-                completion(result)
-            }
-        case .batching:
-            if _scheduledStartRoutine != nil {
-                assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
-                return
-            }
-            
-            _scheduledStartRoutine = { [weak self] in
-                guard let self = self else { return }
-                
-                self._scheduledStartRoutine = nil
-                self.immediateDispatchModal(child, animated: animated) { result in
-                    completion(result)
-                }
-            }
-        case .purging:
-            assertionFailure("Please don't start during purges")
-        }
-    }
-    
-    private func immediateDispatchModal<Coordinator: CommonModalCoordinator>(
-        _ child: Coordinator,
-        animated: Bool,
-        _ completion: @escaping (Coordinator.Result?) -> Void
-    ) {
-        guard state.notDead else { return }
-        
-        assert(state.stage.allowsPresentation)
-        
-        child._updateHostReference(self)
-        
-        weak var weakChild = child
-        weak var kvoContext: InsecurityKVOContext?
-        weak var weakController: UIViewController?
-        
-        child._finishImplementation = { [weak self] result in
-            if let kvoContext = kvoContext {
-                weakController?.insecurityKvo.removeObserver(kvoContext)
-            }
-            weakController?.deinitObservable.onDeinit = nil
-            weakChild?._finishImplementation = nil
-            
-            guard let self = self else {
-                assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
-                return
-            }
-            guard let child = weakChild else { return }
-            
-            self.finalizeModal(child, .callback) {
-                completion(result)
-            }
-        }
-        
-        let controller = child.viewController
-        weakController = controller
-        
-        kvoContext = controller.insecurityKvo.addHandler(
-            UIViewController.self,
-            modalParentObservationKeypath
-        ) { [weak self, weak child] oldController, newController in
-            if oldController != nil, newController == nil {
-                if let kvoContext = kvoContext {
-                    weakController?.insecurityKvo.removeObserver(kvoContext)
-                }
-                weakController?.deinitObservable.onDeinit = nil
-                weakChild?._finishImplementation = nil
-                
-                guard let self = self else {
-                    assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
-                    return
-                }
-                guard let child = child else { return }
-                
-                self.finalizeModal(child, .kvo) {
-                    completion(nil)
-                }
-            }
-        }
-        
-        controller.deinitObservable.onDeinit = { [weak self, weak child] in
-            weakChild?._finishImplementation = nil
-            
-            guard let self = self, let child = child else { return }
-            
-            self.finalizeModal(child, .deinitialization) {
-                completion(nil)
-            }
-        }
-        
-        sendOffModal(controller, animated, child)
-    }
-    
-    private func finalizeModal(
-        _ child: CommonModalCoordinatorAny,
-        _ kind: FinalizationKind,
-        _ callback: () -> Void
-    ) {
-        let indexOfFrameOpt = frames.firstIndex(where: { frame in
-            return frame.coordinator === child
-        })
-        
-        if let indexOfFrame = indexOfFrameOpt {
-            frames[indexOfFrame].state = kind.toFrameState()
-        }
-        
-        if indexOfFrameOpt != nil {
-            switch state.stage {
-            case .batching:
-                if self.state.notDead {
-                    callback()
-                }
-            case .purging:
-                fatalError()
-            case .ready:
-                self.state.stage = .batching
-                if self.state.notDead {
-                    callback()
-                }
-                self.state.stage = .purging
-                self.purge()
-                self.state.stage = .ready
-            }
-        }
-    }
-    
-    private func sendOffModal(_ controller: UIViewController, _ animated: Bool, _ child: CommonModalCoordinatorAny) {
-        let electedHostControllerOpt: UIViewController?
-        if let topFrame = frames.last {
-            if let hostController = topFrame.viewController {
-                electedHostControllerOpt = hostController
-            } else {
-                assertionFailure("Top controller of modal stack is somehow dead")
-                electedHostControllerOpt = nil
-            }
-        } else {
-            electedHostControllerOpt = root.viewController
-        }
-        
-        guard let electedHostController = electedHostControllerOpt else {
-            assertionFailure("No parent was found to start a child")
+        guard state.notDead else {
+            insecAssertFail(.hostDiedBeforeStart)
             return
         }
         
-        let frame = Frame(
-            state: .live,
-            coordinator: child,
-            viewController: controller,
-            previousViewController: electedHostController,
-            navigationData: nil
-        )
-        self.frames.append(frame)
-        
-        electedHostController.present(controller, animated: animated, completion: nil)
+        switch state.stage {
+        case .purging:
+            insecFatalError(.noStartingWhilePurging)
+        case .batching:
+            fatalError("Not impl")
+        case .ready:
+            let index = CoordinatorIndex(modalIndex: parentIndex.modalIndex + 1,
+                                         navigationData: nil)
+            
+            if let parentFrame = frames.at(parentIndex.modalIndex) {
+                if let existingFrame = frames.at(index.modalIndex) {
+                    fatalError("Not impl")
+                } else {
+                    if let parentController = parentFrame.controller.value {
+                        let controller = child.mountOnHostModal(self, index, completion: completion)
+                        
+                        let frame = Frame(coordinator: child,
+                                          controller: controller,
+                                          previousController: parentController,
+                                          navigationData: nil)
+                        
+                        self.frames = self.frames + [frame]
+                        
+                        parentController.present(controller, animated: animated)
+                    } else {
+                        insecAssertFail(.parentControllerHasBeenLost)
+                    }
+                }
+            } else {
+                insecAssertFail(.noFrameAtIndexPath)
+            }
+        }
     }
     
     // MARK: - Navigation Current
-    
     func startNavigation<Coordinator: CommonNavigationCoordinator>(
         _ child: Coordinator,
+        after parentIndex: CoordinatorIndex,
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
-        guard state.notDead else { return }
+        guard state.notDead else {
+            insecAssertFail(.hostDiedBeforeStart)
+            return
+        }
         
         switch state.stage {
-        case .ready:
-            immediateDispatchNavigation(child, animated: animated) { result in
-                completion(result)
-            }
-        case .batching:
-            if _scheduledStartRoutine != nil {
-                assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
-                return
-            }
-            
-            _scheduledStartRoutine = { [weak self] in
-                guard let self = self else { return }
-                
-                self._scheduledStartRoutine = nil
-                self.immediateDispatchNavigation(child, animated: animated) { result in
-                    completion(result)
-                }
-            }
         case .purging:
-            assertionFailure("Please don't start during purges")
-        }
-    }
-    
-    private func immediateDispatchNavigation<Coordinator: CommonNavigationCoordinator>(
-        _ child: Coordinator,
-        animated: Bool,
-        _ completion: @escaping (Coordinator.Result?) -> Void
-    ) {
-        guard state.notDead else { return }
-        
-        assert(state.stage.allowsPresentation)
-        
-        child._updateHostReference(self)
-        
-        weak var weakChild = child
-        weak var weakController: UIViewController?
-        
-        child._finishImplementation = { [weak self] result in
-            weakController?.deinitObservable.onDeinit = nil
-            weakChild?._finishImplementation = nil
-            
-            guard let self = self else {
-                assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
-                return
+            insecAssertFail(.noStartingWhilePurging)
+        case .batching:
+            fatalError("Not implemented")
+        case .ready:
+            let existingModalFrame = self.frames[parentIndex.modalIndex]
+            guard let existingNavigationData = existingModalFrame.navigationData else {
+                insecFatalError(.indexAssuredNavigationButFrameWasModal)
             }
-            guard let child = weakChild else { return }
-            
-            self.finalizeNavigation(child, .callback) {
-                completion(result)
-            }
-        }
-        
-        let controller = child.viewController
-        weakController = controller
-        
-        controller.deinitObservable.onDeinit = { [weak self, weak child] in
-            weakChild?._finishImplementation = nil
-            
-            guard let self = self, let child = child else { return }
-            
-            self.finalizeNavigation(child, .deinitialization) {
-                completion(nil)
-            }
-        }
-        
-        sendOffNavigation(controller, animated, child)
-    }
-    
-    private func finalizeNavigation(
-        _ child: CommonNavigationCoordinatorAny,
-        _ kind: FinalizationKind,
-        _ callback: () -> Void
-    ) {
-        // Very questionable code ahead
-        var indexInsideNavigationOpt: Int?
-        let indexOfFrameOpt = frames.firstIndex(where: { frame -> Bool in
-            if frame.coordinator === child {
-                return true
-            } else if let navigationData = frame.navigationData {
-                let firstIndexInsideNavigationOpt = navigationData.children.firstIndex(where: { navigationChild in
-                    return navigationChild.coordinator === child
-                })
-                
-                if let firstIndexInsideNavigation = firstIndexInsideNavigationOpt {
-                    indexInsideNavigationOpt = firstIndexInsideNavigation
-                    return true
+            if let parentIndexNavData = parentIndex.navigationData {
+                let newNavigationIndex: Int
+                if let naviChildIndex = parentIndexNavData.navigationIndex {
+                    newNavigationIndex = naviChildIndex + 1
                 } else {
-                    return false
+                    newNavigationIndex = 0
                 }
-            } else {
-                return false
-            }
-        })
-        
-        if let indexOfFrame = indexOfFrameOpt {
-            assert(frames.at(indexOfFrame) != nil)
-            
-            if let indexInsideNavigation = indexInsideNavigationOpt {
-                assert(frames[indexOfFrame].navigationData != nil)
-                frames[indexOfFrame].navigationData?.children[indexInsideNavigation].state = kind.toFrameState()
-            } else {
-                frames[indexOfFrame].state = kind.toFrameState()
-            }
-        }
-        
-        if indexOfFrameOpt != nil {
-            switch state.stage {
-            case .batching:
-                if self.state.notDead {
-                    callback()
-                }
-            case .purging:
-                fatalError()
-            case .ready:
-                self.state.stage = .batching
-                if self.state.notDead {
-                    callback()
-                }
-                self.state.stage = .purging
-                self.purge()
-                self.state.stage = .ready
-            }
-        }
-    }
-    
-    func sendOffNavigation(
-        _ controller: UIViewController,
-        _ animated: Bool,
-        _ child: CommonNavigationCoordinatorAny
-    ) {
-        if let lastFrame = frames.last {
-            if let navigationData = lastFrame.navigationData {
-                let previousViewController: UIViewController?
-                if let lastNavigationChild = navigationData.children.last {
-                    previousViewController = lastNavigationChild.viewController.assertingNotNil()
+                let index = CoordinatorIndex(
+                    modalIndex: parentIndex.modalIndex,
+                    navigationData: CoordinatorIndex.NavigationData(
+                        navigationIndex: newNavigationIndex
+                    )
+                )
+                
+                let controller = child.mountOnHostNavigation(self, index, completion: completion)
+                
+                if let existingNavigationChild = existingNavigationData.children.at(newNavigationIndex) {
+                    fatalError("Unimplemented")
                 } else {
-                    previousViewController = navigationData.rootController.assertingNotNil()
+                    let previousController: Weak<UIViewController>
+                    if let parentNavichildIndex = parentIndexNavData.navigationIndex {
+                        previousController = existingNavigationData.children[parentNavichildIndex].controller
+                    } else {
+                        previousController = existingNavigationData.rootController
+                    }
+                    let newNavichildFrame = FrameNavigationChild(coordinator: child,
+                                                                 controller: Weak(controller),
+                                                                 previousController: previousController)
+                    let newNavichildren = existingNavigationData.children + [newNavichildFrame]
+                    
+                    existingNavigationData.children = newNavichildren // MODIFICATION BY REFERENCE
+                    
+                    existingNavigationData.navigationController.value.insecAssertNotNil()?.pushViewController(
+                        controller,
+                        animated: animated
+                    )
                 }
-                let navigationFrame = FrameNavigationChild(
-                    state: .live,
-                    coordinator: child,
-                    viewController: controller,
-                    previousViewController: previousViewController.assertingNotNil()
-                )
-                
-                var updatedFrame = lastFrame
-                assert(lastFrame.navigationData != nil)
-                updatedFrame.navigationData?.children.append(navigationFrame)
-                
-                frames = frames.replacingLast(with: updatedFrame)
-                
-                navigationData.navigationController.assertNotNil()
-                navigationData.navigationController?.pushViewController(controller, animated: true)
             } else {
-                assertionFailure("Can not start navigation child when the top context is not UINavigationController")
-                return
-            }
-        } else {
-            switch root {
-            case .modal:
-                assertionFailure("Can not start navigation child when the top context is not UINavigationController")
-                return
-            case .navigation(let weak):
-                guard let navigationController = weak.value else {
-                    assertionFailure("InsecurityHost wanted to start NavigationChild, but the UINavigationController was found dead")
-                    return
-                }
-                
-                let frameChild = FrameNavigationChild(
-                    state: .live,
-                    coordinator: child,
-                    viewController: controller,
-                    previousViewController: navigationController.viewControllers[0]
-                )
-                
-                let navigationData = FrameNavigationData(
-                    children: [ frameChild ],
-                    navigationController: navigationController,
-                    rootController: navigationController.viewControllers[0]
-                )
-                
-                // This is ass, this is really-really bad
-                let frame = Frame(
-                    state: .live,
-                    coordinator: RootNavigationCrutchCoordinator(),
-                    viewController: navigationController,
-                    previousViewController: nil,
-                    navigationData: navigationData
-                )
-                
-                self.frames = [
-                    frame
-                ]
-                
-                navigationController.pushViewController(controller, animated: true)
+                insecAssertFail(.cantStartNavigationOverModalContext)
             }
         }
+        
     }
     
     // MARK: - Navigation New
@@ -533,268 +231,142 @@ public class InsecurityHost {
     func startNavigationNew<Coordinator: CommonNavigationCoordinator>(
         _ navigationController: UINavigationController,
         _ child: Coordinator,
+        after parentIndex: CoordinatorIndex,
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
-        guard state.notDead else { return }
-        
-        switch state.stage {
-        case .ready:
-            immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
-                completion(result)
-            }
-        case .batching:
-            if _scheduledStartRoutine != nil {
-                assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
-                return
-            }
-            
-            _scheduledStartRoutine = { [weak self] in
-                guard let self = self else { return }
-                
-                self._scheduledStartRoutine = nil
-                self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
-                    completion(result)
-                }
-            }
-        case .purging:
-            assertionFailure("Please don't start during purges")
-        }
-    }
-    
-    private func immediateDispatchNewNavigation<Coordinator: CommonNavigationCoordinator>(
-        _ navigationController: UINavigationController,
-        _ child: Coordinator,
-        animated: Bool,
-        _ completion: @escaping (Coordinator.Result?) -> Void
-    ) {
-        guard state.notDead else { return }
-        
-        assert(state.stage.allowsPresentation)
-        
-        child._updateHostReference(self)
-        
-        weak var weakChild = child
-        weak var kvoContext: InsecurityKVOContext?
-        weak var weakController: UIViewController? = navigationController
-        
-        child._finishImplementation = { [weak self] result in
-            if let kvoContext = kvoContext {
-                weakController?.insecurityKvo.removeObserver(kvoContext)
-            }
-            weakController?.deinitObservable.onDeinit = nil
-            weakChild?._finishImplementation = nil
-            
-            guard let self = self else {
-                assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
-                return
-            }
-            guard let child = weakChild else { return }
-            
-            self.finalizeNavigation(child, .callback) {
-                completion(result)
-            }
-        }
-        
-        let controller = child.viewController
-        
-        kvoContext = navigationController.insecurityKvo.addHandler(
-            UIViewController.self,
-            modalParentObservationKeypath
-        ) { [weak self, weak child] oldController, newController in
-            if oldController != nil, newController == nil {
-                if let kvoContext = kvoContext {
-                    weakController?.insecurityKvo.removeObserver(kvoContext)
-                }
-                weakController?.deinitObservable.onDeinit = nil
-                weakChild?._finishImplementation = nil
-                
-                guard let self = self else {
-                    assertionFailure("InsecurityHost wasn't properly retained. Make sure you save it somewhere before starting any children.")
-                    return
-                }
-                guard let child = child else { return }
-                
-                self.finalizeNavigation(child, .kvo) {
-                    completion(nil)
-                }
-            }
-        }
-        
-        navigationController.deinitObservable.onDeinit = { [weak self, weak child] in
-            weakChild?._finishImplementation = nil
-            
-            guard let self = self, let child = child else { return }
-            
-            self.finalizeNavigation(child, .deinitialization) {
-                completion(nil)
-            }
-        }
-        
-        sendOffNewNavigation(navigationController, controller, animated, child)
-    }
-    
-    private func sendOffNewNavigation(
-        _ navigationController: UINavigationController,
-        _ controller: UIViewController,
-        _ animated: Bool,
-        _ child: CommonNavigationCoordinatorAny
-    ) {
-        let electedHostControllerOpt: UIViewController?
-        if let topFrame = frames.last {
-            if let hostController = topFrame.viewController {
-                let hostDoesntPresentAnything = hostController.presentedViewController == nil
-                if hostDoesntPresentAnything {
-                    electedHostControllerOpt = hostController
-                } else {
-                    assertionFailure("Top controller in the modal stack is already busy presenting something else")
-                    electedHostControllerOpt = nil
-                }
-            } else {
-                assertionFailure("Top controller of modal stack is somehow dead")
-                electedHostControllerOpt = nil
-            }
-        } else {
-            electedHostControllerOpt = root.viewController
-        }
-        
-        guard let electedHostController = electedHostControllerOpt else {
-            assertionFailure("No parent was found to start a child")
+        guard state.notDead else {
+            insecAssertFail(.hostDiedBeforeStart)
             return
         }
-        let frame = Frame(
-            state: .live,
-            coordinator: child,
-            viewController: navigationController,
-            previousViewController: electedHostController,
-            navigationData: FrameNavigationData(
-                children: [],
-                navigationController: navigationController,
-                rootController: controller
+        
+        switch state.stage {
+        case .purging:
+            insecAssertFail(.noStartingWhilePurging)
+        case .batching:
+            fatalError("Not implemented")
+        case .ready:
+            let modalIndex = parentIndex.modalIndex + 1
+            let index = CoordinatorIndex(
+                modalIndex: parentIndex.modalIndex + 1,
+                navigationData: CoordinatorIndex.NavigationData(
+                    navigationIndex: nil
+                )
             )
-        )
-        
-        self.frames.append(frame)
-        
-        navigationController.setViewControllers([ controller ], animated: false)
-        electedHostController.present(navigationController, animated: animated, completion: nil)
+            if let parentFrame = frames.at(parentIndex.modalIndex) {
+                if let existingFrame = frames.at(index.modalIndex) {
+                    fatalError("Not impl")
+                } else {
+                    if let parentController = parentFrame.controller.value {
+                        let controller = child.mountOnHostNavigation(self, index, completion: completion)
+                        
+                        let frame = Frame(
+                            coordinator: child,
+                            controller: navigationController,
+                            previousController: parentController,
+                            navigationData: FrameNavigationData(
+                                children: [],
+                                navigationController: navigationController,
+                                rootController: controller
+                            )
+                        )
+                        
+                        self.frames.append(frame)
+                        
+                        navigationController.setViewControllers([ controller ], animated: false)
+                        parentController.present(navigationController, animated: animated, completion: nil)
+                    } else {
+                        insecAssertFail(.parentControllerHasBeenLost)
+                    }
+                }
+            } else {
+                insecAssertFail(.noFrameAtIndexPath)
+            }
+        }
     }
     
     // MARK: - Purge
     
-    private func purge() {
+    private func purge(deepestDeadIndex: CoordinatorIndex,
+                       modalIndexThatNeedsDismissing: Int?) {
         let prepurgeFrames = self.frames
-        
-        var firstDeadNavigationChildIndexOpt: Int?
-        let firstDeadChildIndexOpt = prepurgeFrames.firstIndex(where: { frame in
-            switch frame.state {
-            case .finishedByCompletion, .finishedByKVO, .finishedByDeinit:
-                return true
-            case .live:
-                if let navigationData = frame.navigationData {
-                    let firstDeadNavigationIndexOpt = navigationData.children.firstIndex(where: { child in
-                        switch child.state {
-                        case .finishedByDeinit, .finishedByKVO, .finishedByCompletion:
-                            return true
-                        case .live:
-                            return false
-                        }
-                    })
-                    
-                    if let firstDeadNavigationIndex = firstDeadNavigationIndexOpt {
-                        firstDeadNavigationChildIndexOpt = firstDeadNavigationIndex
-                        return true
-                    }
-                    return false
-                } else {
-                    return false
-                }
-            }
-        })
         
         let postPurgeFrames: [Frame]
         
-        if let firstDeadChildIndex = firstDeadChildIndexOpt {
-            let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
-            
-            if
-                let navigationChildIndex = firstDeadNavigationChildIndexOpt,
-                let navigationData = firstDeadChild.navigationData
-            {
-                var newFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex + 1))
-                
-                let newNavigationChildren = Array(navigationData.children.prefix(navigationChildIndex))
-                
-                if var lastFrame = newFrames.last {
-                    assert(lastFrame.navigationData != nil)
-                    lastFrame.navigationData?.children = newNavigationChildren
+        let firstDeadChildIndex = deepestDeadIndex.modalIndex
+        let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
+        
+        if let navigationData = firstDeadChild.navigationData {
+            if let indexNavData = deepestDeadIndex.navigationData {
+                if let navigationChildIndex = indexNavData.navigationIndex {
+                    var newFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex + 1))
                     
-                    newFrames = newFrames.replacingLast(with: lastFrame)
+                    let newNavigationChildren = Array(navigationData.children.prefix(navigationChildIndex))
+                    
+                    if var lastFrame = newFrames.last {
+                        assert(lastFrame.navigationData != nil)
+                        lastFrame.navigationData?.children = newNavigationChildren
+                        
+                        newFrames = newFrames.replacingLast(with: lastFrame)
+                    } else {
+                        assertionFailure()
+                    }
+                    
+                    postPurgeFrames = newFrames
                 } else {
-                    assertionFailure()
+                    postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex))
                 }
-                
-                postPurgeFrames = newFrames
             } else {
-                postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex))
+                insecFatalError(.indexAssuredNavigationButFrameWasModal)
             }
         } else {
-            assertionFailure("Noone died?")
-            postPurgeFrames = prepurgeFrames
+            postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex))
         }
         
         self.frames = postPurgeFrames
         
-        if state.notDead, let firstDeadChildIndex = firstDeadChildIndexOpt {
+        if state.notDead {
+            let firstDeadChildIndex = deepestDeadIndex.modalIndex
             let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
-            let frameAboveOpt = prepurgeFrames.at(firstDeadChildIndex + 1)
             
             if
-                let firstDeadNavigationChildIndex = firstDeadNavigationChildIndexOpt,
+                let firstDeadNavigationChildIndex = deepestDeadIndex.navigationData?.navigationIndex,
                 let navigationData = firstDeadChild.navigationData
             {
                 let navigationDeadChild = navigationData.children[firstDeadNavigationChildIndex]
                 
-                switch navigationDeadChild.state {
-                case .live:
-                    assertionFailure()
-                case .finishedByCompletion:
-                    navigationDeadChild.previousViewController.assertNotNil()
-                    navigationData.navigationController.assertNotNil()
-                    if
-                        let navigationController = navigationData.navigationController,
-                        let popToController = navigationDeadChild.previousViewController
-                    {
-                        if let frameAbove = frameAboveOpt, frameAbove.state.needsDismissalInADeadChain {
-                            frameAbove.previousViewController.assertNotNil()
-                            
-                            navigationController.popToViewController(popToController, animated: false)
-                            if let presentingViewController = frameAbove.previousViewController {
-                                presentingViewController.dismiss(animated: true) { [weak self] in
-                                    self?.executeScheduledStartRoutine()
-                                }
+                let frameThatNeedsModalDismissalOpt: Frame?
+                if let modalIndexThatNeedsDismissing = modalIndexThatNeedsDismissing {
+                    frameThatNeedsModalDismissalOpt = prepurgeFrames[modalIndexThatNeedsDismissing]
+                } else {
+                    frameThatNeedsModalDismissalOpt = nil
+                }
+                if
+                    let navigationController = navigationData.navigationController.value.insecAssertNotNil(),
+                    let popToController = navigationDeadChild.previousController.value.insecAssertNotNil()
+                {
+                    if let frameThatNeedsModalDismissal = frameThatNeedsModalDismissalOpt {
+                        frameThatNeedsModalDismissal.previousController.value.assertNotNil()
+                        
+                        navigationController.popToViewController(popToController, animated: false)
+                        if let presentingViewController = frameThatNeedsModalDismissal.previousController.value {
+                            presentingViewController.dismiss(animated: true) { [weak self] in
+                                self?.executeScheduledStartRoutine()
                             }
-                        } else {
-                            navigationController.popToViewController(popToController, animated: true)
-                            executeScheduledStartRoutineWithDelay()
                         }
+                    } else {
+                        navigationController.popToViewController(popToController, animated: true)
+                        executeScheduledStartRoutineWithDelay()
                     }
-                    
-                case .finishedByKVO, .finishedByDeinit:
-                    assert(frameAboveOpt == nil, "Not supposed to have a controller modally on top while controller in the navigation controller has been killed by popping")
-                    executeScheduledStartRoutine()
                 }
             } else {
-                switch firstDeadChild.state {
-                case .live:
-                    assertionFailure()
-                case .finishedByDeinit, .finishedByKVO:
+                if modalIndexThatNeedsDismissing == deepestDeadIndex.modalIndex {
+                    firstDeadChild.previousController.value.insecAssertNotNil()?
+                        .dismiss(animated: true) { [weak self] in
+                            self?.executeScheduledStartRoutine()
+                        }
+                } else {
                     executeScheduledStartRoutine()
-                case .finishedByCompletion:
-                    assert(firstDeadChild.previousViewController != nil)
-                    firstDeadChild.previousViewController?.dismiss(animated: true) { [weak self] in
-                        self?.executeScheduledStartRoutine()
-                    }
                 }
             }
         } else {
@@ -807,144 +379,199 @@ public class InsecurityHost {
         insecPrint("\(type(of: self)) deinit")
     }
 #endif
-}
-
-extension InsecurityHost: ModalNavigation {
-    public func start<NewResult>(
-        _ child: ModalCoordinator<NewResult>,
-        animated: Bool,
-        _ completion: @escaping (NewResult?) -> Void
-    ) {
-        startModal(child, animated: animated) { result in
-            completion(result)
-        }
-    }
     
-    public func start<NewResult>(
-        _ navigationController: UINavigationController,
-        _ child: NavigationCoordinator<NewResult>,
-        animated: Bool,
-        _ completion: @escaping (NewResult?) -> Void
-    ) {
-        startNavigationNew(navigationController, child, animated: animated) { result in
-            completion(result)
+    // MARK: - New API
+    
+    func handleCoordinatorDied<Result>(_ coordinator: CommonCoordinatorAny,
+                                       _ index: CoordinatorIndex,
+                                       _ deathReason: CoordinatorDeathReason,
+                                       _ result: Result?,
+                                       _ callback: (Result?) -> Void) {
+        guard state.notDead else {
+            insecAssertFail(.hostDiedBeforeCoordinator)
+            return
         }
-    }
-}
-
-extension InsecurityHost: NavigationControllerNavigation {
-    public func start<NewResult>(
-        _ child: NavigationCoordinator<NewResult>,
-        animated: Bool,
-        _ completion: @escaping (NewResult?) -> Void
-    ) {
-        startNavigation(child, animated: animated) { result in
-            completion(result)
-        }
-    }
-}
-
-extension InsecurityHost: AdaptiveNavigation {
-    public func start<NewResult>(
-        _ child: AdaptiveCoordinator<NewResult>,
-        in context: AdaptiveContext,
-        animated: Bool,
-        _ completion: @escaping (NewResult?) -> Void
-    ) {
-        guard state.notDead else { return }
-        
+        // Recursive function
         switch state.stage {
         case .ready:
-            self.immediateDispatchAdaptive(child, in: context, animated: animated) { result in
-                completion(result)
-            }
-        case .batching:
-            if _scheduledStartRoutine != nil {
-                assertionFailure("Another child is waiting to be started; can't start multiple children at the same time")
-                return
+            let modalIndexThatNeedsDismissing: Int?
+            let needsNavigationDismissal: Bool
+            switch deathReason {
+            case .deinitOrKvo:
+                needsNavigationDismissal = false
+                modalIndexThatNeedsDismissing = nil
+            case .result:
+                needsNavigationDismissal = index.navigationData != nil
+                modalIndexThatNeedsDismissing = index.modalIndex
             }
             
-            _scheduledStartRoutine = { [weak self] in
-                guard let self = self else { return }
+            self.state.stage = .batching(
+                InsecurityHostState.Stage.Batching(
+                    deepestDeadIndex: index,
+                    modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing,
+                    needsNavigationDismissal: needsNavigationDismissal
+                )
+            )
+            callback(result)
+            
+            switch self.state.stage {
+            case .batching(let batch):
+                self.state.stage = .purging
+                self.purge(
+                    deepestDeadIndex: batch.deepestDeadIndex,
+                    modalIndexThatNeedsDismissing: batch.modalIndexThatNeedsDismissing
+                )
+                self.state.stage = .ready
+            case .ready, .purging:
+                insecAssertFail(.unexpectedState)
+            }
+        case .batching(let batching):
+            if self.state.notDead {
+                let newDeepestDeadIndex: CoordinatorIndex
+                let modalIndexThatNeedsDismissing: Int?
+                let needsNavigationDismissal: Bool
                 
-                self._scheduledStartRoutine = nil
-                self.immediateDispatchAdaptive(child, in: context, animated: animated) { result in
-                    completion(result)
+                let modalComparison = compare(index.modalIndex, batching.deepestDeadIndex.modalIndex)
+                
+                switch modalComparison {
+                case .equal:
+                    // Same modal frame
+                    switch (index.navigationData, batching.deepestDeadIndex.navigationData) {
+                    case let (.some(newlyNavigationData), .some(deepestNavigationData)):
+                        // It's 2 navigation frames inside one modal frame
+                        
+                        switch (newlyNavigationData.navigationIndex, deepestNavigationData.navigationIndex) {
+                        case let (.some(newDeadNavIndex), .some(deepestDeadNavIndex)):
+                            // Both navigation frames are child frames
+                            switch compare(newDeadNavIndex, deepestDeadNavIndex) {
+                            case .equal:
+                                // Same navigation coordinator that is a navigation child has died twice
+                                insecFatalError(.coordinatorDiedTwice)
+                            case .less:
+                                // Navigation child that just died is deeper
+                                newDeepestDeadIndex = index
+                                
+                                switch deathReason {
+                                case .deinitOrKvo:
+                                    needsNavigationDismissal = false
+                                case .result:
+                                    needsNavigationDismissal = true
+                                }
+                                // And regarding modal dismissal - I guess we just preserve
+                                modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
+                            case .greater:
+                                // Newly died nav child is above the deepest
+                                // Do nothing
+                                newDeepestDeadIndex = batching.deepestDeadIndex
+                                needsNavigationDismissal = batching.needsNavigationDismissal
+                                modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
+                            }
+                        case (.some, nil):
+                            // Newly dead one is a navigation child
+                            // while deepest one is root
+                            // child > root, root is deeper, do nothing
+                            newDeepestDeadIndex = batching.deepestDeadIndex
+                            needsNavigationDismissal = batching.needsNavigationDismissal
+                            modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
+                        case (nil, .some):
+                            // Newly dead coordinator is the root controller
+                            // While current deepest is merely a child
+                            newDeepestDeadIndex = index
+                            // Navigation dismissal not needed because when root dies,
+                            // it's a transition of modal dismissal
+                            needsNavigationDismissal = false
+                            switch deathReason {
+                            case .result:
+                                modalIndexThatNeedsDismissing = index.modalIndex
+                            case .deinitOrKvo:
+                                modalIndexThatNeedsDismissing = nil
+                            }
+                        case (nil, nil):
+                            // Same navigation coordinator that is a root has died twice
+                            insecFatalError(.coordinatorDiedTwice)
+                        }
+                    case (nil, nil):
+                        // This is the same modal frame with no navigation
+                        insecFatalError(.coordinatorDiedTwice)
+                    case (.some, nil), (nil, .some):
+                        // Two comparable frames with same modal index should have similar presence/absense of navdata
+                        insecFatalError(.twoIndicesHaveSameModalIndexButNavDataDiffers)
+                    }
+                case .less:
+                    // Modal index is less than current deepest - definitely deeper!
+                    newDeepestDeadIndex = index
+                    
+                    if let navigationData = index.navigationData {
+                        // This is a modal frame with nav data
+                        if navigationData.navigationIndex != nil {
+                            // This is a navigation child
+                            // This means, the UINavigationController doesn't die
+                            // The need for modal dismissal still affects only controllers above
+                            
+                            modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
+                            switch deathReason {
+                            case .deinitOrKvo:
+                                needsNavigationDismissal = false
+                            case .result:
+                                needsNavigationDismissal = true
+                            }
+                        } else {
+                            // this is a navigation root
+                            
+                            // If a nav root dies, there is no need to do UINavigationController popping
+                            // since the transition is modal dismissal
+                            
+                            needsNavigationDismissal = false
+                            
+                            // ... as I said, modal dismissal
+                            switch deathReason {
+                            case .result:
+                                modalIndexThatNeedsDismissing = index.modalIndex
+                            case .deinitOrKvo:
+                                modalIndexThatNeedsDismissing = nil
+                            }
+                        }
+                    } else {
+                        // This is a pure modal frame
+                        
+                        // Every single navigation context above just dies, so no need to manipulate it
+                        needsNavigationDismissal = false
+                        
+                        // Modal dismissal is determined by deathReason
+                        switch deathReason {
+                        case .result:
+                            modalIndexThatNeedsDismissing = index.modalIndex
+                        case .deinitOrKvo:
+                            modalIndexThatNeedsDismissing = nil
+                        }
+                    }
+                case .greater:
+                    // Modal index is greater than current deepest
+                    // Do nothing
+                    newDeepestDeadIndex = batching.deepestDeadIndex
+                    needsNavigationDismissal = batching.needsNavigationDismissal
+                    modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
                 }
+                
+                self.state.stage = .batching(
+                    InsecurityHostState.Stage.Batching(
+                        deepestDeadIndex: newDeepestDeadIndex,
+                        modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing,
+                        needsNavigationDismissal: needsNavigationDismissal
+                    )
+                )
+                
+                callback(result)
+            } else {
+                insecAssertFail(.hostDiedMidBatch)
             }
         case .purging:
-            assertionFailure("Please don't start during purges")
-        }
-    }
-    
-    func immediateDispatchAdaptive<NewResult>(
-        _ child: AdaptiveCoordinator<NewResult>,
-        in context: AdaptiveContext,
-        animated: Bool,
-        _ completion: @escaping (NewResult?) -> Void
-    ) {
-        switch context._internalContext {
-        case .current:
-            if let lastFrame = self.frames.last {
-                if lastFrame.navigationData != nil {
-                    self.immediateDispatchNavigation(child, animated: animated) { result in
-                        completion(result)
-                    }
-                } else {
-                    self.immediateDispatchModal(child, animated: animated) { result in
-                        completion(result)
-                    }
-                }
-            } else {
-                switch self.root {
-                case .navigation:
-                    self.immediateDispatchNavigation(child, animated: animated) { result in
-                        completion(result)
-                    }
-                case .modal:
-                    self.immediateDispatchModal(child, animated: animated) { result in
-                        completion(result)
-                    }
-                }
-            }
-        case .modal:
-            self.immediateDispatchModal(child, animated: animated) { result in
-                completion(result)
-            }
-        case .currentNavigation(let deferredNavigationController):
-            if let lastFrame = self.frames.last {
-                if lastFrame.navigationData != nil {
-                    self.immediateDispatchNavigation(child, animated: animated) { result in
-                        completion(result)
-                    }
-                } else {
-                    let navigationController = deferredNavigationController.make()
-                    
-                    self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
-                        completion(result)
-                    }
-                }
-            } else {
-                switch self.root {
-                case .navigation:
-                    self.immediateDispatchNavigation(child, animated: animated) { result in
-                        completion(result)
-                    }
-                case .modal:
-                    let navigationController = deferredNavigationController.make()
-                    
-                    self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
-                        completion(result)
-                    }
-                }
-            }
-        case .newNavigation(let navigationController):
-            self.immediateDispatchNewNavigation(navigationController, child, animated: animated) { result in
-                completion(result)
-            }
+            insecAssertFail(.noDyingWhilePurging)
         }
     }
 }
+
+// MARK: - Extensions
 
 private extension InsecurityHost.Root {
     var viewController: UIViewController? {
@@ -956,47 +583,6 @@ private extension InsecurityHost.Root {
         }
     }
 }
-
-private extension FrameState {
-    var needsDismissalInADeadChain: Bool {
-        switch self {
-        case .finishedByDeinit, .finishedByKVO:
-            return false
-        case .finishedByCompletion, .live:
-            return true
-        }
-    }
-}
-
-private extension Array {
-    func replacing(_ index: Index, with element: Element) -> Array {
-        var array = self
-        array[index] = element
-        return array
-    }
-    
-    func replacingLast(with element: Element) -> Array {
-        return self.replacing(self.count - 1, with: element)
-    }
-}
-
-private extension Array {
-    func appending(_ element: Element) -> Array {
-        var array = self
-        array.append(element)
-        return array
-    }
-}
-
-private extension Array {
-    func at(_ index: Index) -> Element? {
-        if index >= 0, index < count {
-            return self[index]
-        }
-        return nil
-    }
-}
-
 private extension Optional {
     #if DEBUG
     func assertingNotNil(_ file: StaticString = #file, _ line: UInt = #line) -> Optional {

@@ -9,9 +9,7 @@ protocol CommonModalCoordinatorAny: CommonCoordinatorAny {
 protocol CommonModalCoordinator: CommonModalCoordinatorAny {
     associatedtype Result
     
-    var viewController: UIViewController { get }
-    
-    var _finishImplementation: ((Result?) -> Void)? { get set }
-    
-    func _updateHostReference(_ host: ModalNavigation & AdaptiveNavigation)
+    func mountOnHostModal(_ host: InsecurityHost,
+                          _ index: CoordinatorIndex,
+                          completion: @escaping (Result?) -> Void) -> UIViewController
 }

@@ -1,43 +1,25 @@
 import UIKit
 
 open class AdaptiveCoordinator<Result>: CommonNavigationCoordinator, CommonModalCoordinator {
-    private weak var _navigation: AdaptiveNavigation?
-    
-    public var navigation: AdaptiveNavigation! {
-        assert(_navigation != nil, "Attempted to use `navigation` before the coordinator was started or after it has finished")
-        return _navigation
+    func mountOnHostNavigation(_ host: InsecurityHost, _ index: CoordinatorIndex, completion: @escaping (Result?) -> Void) -> UIViewController {
+        fatalError()
     }
+    
+    func mountOnHostModal(_ host: InsecurityHost, _ index: CoordinatorIndex, completion: @escaping (Result?) -> Void) -> UIViewController {
+        fatalError()
+    }
+    
     
     open var viewController: UIViewController {
         fatalError("This coordinator didn't define a viewController")
     }
     
-    var _finishImplementation: ((Result?) -> Void)?
-    
     public func finish(_ result: Result) {
-        guard let _finishImplementation = _finishImplementation else {
-            assertionFailure("`finish` called before the coordinator was started")
-            return
-        }
         
-        _finishImplementation(result)
     }
     
     public func dismiss() {
-        guard let _finishImplementation = _finishImplementation else {
-            assertionFailure("`dismiss` called before the coordinator was started")
-            return
-        }
         
-        _finishImplementation(nil)
-    }
-    
-    func _updateHostReference(_ host: NavigationControllerNavigation & AdaptiveNavigation) {
-        _navigation = host
-    }
-    
-    func _updateHostReference(_ host: ModalNavigation & AdaptiveNavigation) {
-        _navigation = host
     }
     
     public init() {
