@@ -76,27 +76,15 @@ class Frame {
 
 public class InsecurityHost {
     fileprivate var frames: [Frame] = []
-    
-    fileprivate enum Root {
-        case modal(Weak<UIViewController>)
-        case navigation(Weak<UINavigationController>)
-    }
-    
-    fileprivate let root: Root
-    
+
     fileprivate var state = InsecurityHostState(stage: .ready, notDead: true)
     
     func kill() {
         state.notDead = false
     }
     
-    public init(modal viewController: UIViewController) {
-        self.root = .modal(Weak<UIViewController>(viewController))
-    }
-    
-    public init(navigation navigationController: UINavigationController) {
-        assert(navigationController.viewControllers.count == 1)
-        self.root = .navigation(Weak<UINavigationController>(navigationController))
+    public init() {
+        
     }
     
     fileprivate var _scheduledStartRoutine: (() -> Void)?
@@ -559,39 +547,24 @@ public class InsecurityHost {
             insecAssertFail(.noDyingWhilePurging)
         }
     }
-}
-
-// MARK: - Extensions
-
-private extension InsecurityHost.Root {
-    var viewController: UIViewController? {
-        switch self {
-        case .navigation(let weak):
-            return weak.value
-        case .modal(let weak):
-            return weak.value
-        }
-    }
-}
-private extension Optional {
-    #if DEBUG
-    func assertingNotNil(_ file: StaticString = #file, _ line: UInt = #line) -> Optional {
-        assert(self != nil, "\(type(of: Wrapped.self)) died too early")
-        return self
-    }
-    #else
-    @inline(__always) func assertingNotNil() -> Optional {
-        return self
-    }
-    #endif
     
-    #if DEBUG
-    func assertNotNil(_ file: StaticString = #file, _ line: UInt = #line) {
-        assert(self != nil, "\(type(of: Wrapped.self)) died too early")
-    }
-    #else
-    @inline(__always) func assertNotNil() {
+    // MARK: - NEW Mount API
+    
+    public func mount<Result>(_ coordinator: ModalCoordinator<Result>,
+                              on parentController: UIViewController,
+                              animated: Bool,
+                              _ completion: @escaping (Result?) -> Void) {
+        guard frames.isEmpty else {
+            insecFatalError(.hostIsAlreadyMounted)
+        }
+            
+        let index = CoordinatorIndex(modalIndex: 0, navigationData: nil)
+        let controller = coordinator.mountOnHostModal(self, index, completion: completion)
+        let frame = Frame(coordinator: coordinator,
+                          controller: controller,
+                          previousController: parentController, navigationData: nil)
+        self.frames = [frame]
         
+        parentController.present(controller, animated: animated)
     }
-    #endif
 }

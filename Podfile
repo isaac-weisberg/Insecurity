@@ -12,3 +12,7 @@ target 'InsecurityPodspecTest' do
   pod 'SnapKit'
   # pod 'Insecurity', :podspec => './Insecurity.podspec'
 end
+
+target 'InsecurityAutotestTests' do
+  pod 'Nimble'
+end

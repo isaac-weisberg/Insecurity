@@ -20,7 +20,7 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         case dead(Dead)
     }
 
-    private var state: State = .unmounted
+    var state: State = .unmounted
     
     open var viewController: UIViewController {
         fatalError("This coordinator didn't define a viewController")

@@ -14,6 +14,31 @@ func insecDelay(_ timeInterval: TimeInterval, _ work: @escaping () -> Void) {
     }
 }
 
+// MARK: - Extensions
+extension Optional {
+    #if DEBUG
+    func assertingNotNil(_ file: StaticString = #file, _ line: UInt = #line) -> Optional {
+        assert(self != nil, "\(type(of: Wrapped.self)) died too early")
+        return self
+    }
+    #else
+    @inline(__always) func assertingNotNil() -> Optional {
+        return self
+    }
+    #endif
+    
+    #if DEBUG
+    func assertNotNil(_ file: StaticString = #file, _ line: UInt = #line) {
+        assert(self != nil, "\(type(of: Wrapped.self)) died too early")
+    }
+    #else
+    @inline(__always) func assertNotNil() {
+        
+    }
+    #endif
+}
+
+
 func insecAssertFail(_ log: InsecurityLog,
                      _ file: StaticString = #file,
                      _ line: UInt = #line) {

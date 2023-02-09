@@ -36,4 +36,7 @@ enum InsecurityLog {
     case expectedThisToNotBeNil
     
     case cantStartNavigationOverModalContext
+    
+    // Can not mount a host twice
+    case hostIsAlreadyMounted
 }
