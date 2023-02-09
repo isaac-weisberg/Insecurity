@@ -10,7 +10,6 @@ struct InsecurityHostState {
         struct Batching {
             let deepestDeadIndex: CoordinatorIndex
             let modalIndexThatNeedsDismissing: Int?
-            let needsNavigationDismissal: Bool
         }
         
         case ready
@@ -246,7 +245,6 @@ public class InsecurityHost {
         case .batching:
             fatalError("Not implemented")
         case .ready:
-            let modalIndex = parentIndex.modalIndex + 1
             let index = CoordinatorIndex(
                 modalIndex: parentIndex.modalIndex + 1,
                 navigationData: CoordinatorIndex.NavigationData(
@@ -303,7 +301,7 @@ public class InsecurityHost {
                     
                     let newNavigationChildren = Array(navigationData.children.prefix(navigationChildIndex))
                     
-                    if var lastFrame = newFrames.last {
+                    if let lastFrame = newFrames.last {
                         assert(lastFrame.navigationData != nil)
                         lastFrame.navigationData?.children = newNavigationChildren
                         
@@ -330,10 +328,10 @@ public class InsecurityHost {
             let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
             
             if
-                let firstDeadNavigationChildIndex = deepestDeadIndex.navigationData?.navigationIndex,
-                let navigationData = firstDeadChild.navigationData
+                let deadNavIndex = deepestDeadIndex.navigationData?.navigationIndex,
+                let deadNavData = firstDeadChild.navigationData
             {
-                let navigationDeadChild = navigationData.children[firstDeadNavigationChildIndex]
+                let deadNavChild = deadNavData.children[deadNavIndex]
                 
                 let frameThatNeedsModalDismissalOpt: Frame?
                 if let modalIndexThatNeedsDismissing = modalIndexThatNeedsDismissing {
@@ -342,8 +340,8 @@ public class InsecurityHost {
                     frameThatNeedsModalDismissalOpt = nil
                 }
                 if
-                    let navigationController = navigationData.navigationController.value.insecAssertNotNil(),
-                    let popToController = navigationDeadChild.previousController.value.insecAssertNotNil()
+                    let navigationController = deadNavData.navigationController.value.insecAssertNotNil(),
+                    let popToController = deadNavChild.previousController.value.insecAssertNotNil()
                 {
                     if let frameThatNeedsModalDismissal = frameThatNeedsModalDismissalOpt {
                         frameThatNeedsModalDismissal.previousController.value.assertNotNil()
@@ -395,21 +393,17 @@ public class InsecurityHost {
         switch state.stage {
         case .ready:
             let modalIndexThatNeedsDismissing: Int?
-            let needsNavigationDismissal: Bool
             switch deathReason {
             case .deinitOrKvo:
-                needsNavigationDismissal = false
                 modalIndexThatNeedsDismissing = nil
             case .result:
-                needsNavigationDismissal = index.navigationData != nil
                 modalIndexThatNeedsDismissing = index.modalIndex
             }
             
             self.state.stage = .batching(
                 InsecurityHostState.Stage.Batching(
                     deepestDeadIndex: index,
-                    modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing,
-                    needsNavigationDismissal: needsNavigationDismissal
+                    modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing
                 )
             )
             callback(result)
@@ -463,7 +457,6 @@ public class InsecurityHost {
                                 // Newly died nav child is above the deepest
                                 // Do nothing
                                 newDeepestDeadIndex = batching.deepestDeadIndex
-                                needsNavigationDismissal = batching.needsNavigationDismissal
                                 modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
                             }
                         case (.some, nil):
@@ -471,7 +464,6 @@ public class InsecurityHost {
                             // while deepest one is root
                             // child > root, root is deeper, do nothing
                             newDeepestDeadIndex = batching.deepestDeadIndex
-                            needsNavigationDismissal = batching.needsNavigationDismissal
                             modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
                         case (nil, .some):
                             // Newly dead coordinator is the root controller
@@ -549,15 +541,13 @@ public class InsecurityHost {
                     // Modal index is greater than current deepest
                     // Do nothing
                     newDeepestDeadIndex = batching.deepestDeadIndex
-                    needsNavigationDismissal = batching.needsNavigationDismissal
                     modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
                 }
                 
                 self.state.stage = .batching(
                     InsecurityHostState.Stage.Batching(
                         deepestDeadIndex: newDeepestDeadIndex,
-                        modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing,
-                        needsNavigationDismissal: needsNavigationDismissal
+                        modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing
                     )
                 )
                 
