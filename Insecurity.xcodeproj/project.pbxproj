@@ -115,6 +115,7 @@
 		A3ECDE982995321E0068D3C0 /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A3ECDE9F299536320068D3C0 /* TestModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ECDE9E299536320068D3C0 /* TestModalCoordinator.swift */; };
 		A3ECDEA329953DED0068D3C0 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ECDEA229953DED0068D3C0 /* Util.swift */; };
+		A3ECDEA529953F6A0068D3C0 /* TestNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ECDEA429953F6A0068D3C0 /* TestNavigationCoordinator.swift */; };
 		D1D9AE3220A705AF5D0D21CD /* libPods-InsecurityAutotestTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E72BC42AA782E405B108CE69 /* libPods-InsecurityAutotestTests.a */; };
 /* End PBXBuildFile section */
 
@@ -293,6 +294,7 @@
 		A3ECDE962995321E0068D3C0 /* InsecurityAutotestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsecurityAutotestTests.swift; sourceTree = "<group>"; };
 		A3ECDE9E299536320068D3C0 /* TestModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModalCoordinator.swift; sourceTree = "<group>"; };
 		A3ECDEA229953DED0068D3C0 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
+		A3ECDEA429953F6A0068D3C0 /* TestNavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNavigationCoordinator.swift; sourceTree = "<group>"; };
 		BEBC148144E0CC7E3A7D66E2 /* Pods-InsecurityAutotestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityAutotestTests.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityAutotestTests/Pods-InsecurityAutotestTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPlayground.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -748,6 +750,7 @@
 				A3ECDE962995321E0068D3C0 /* InsecurityAutotestTests.swift */,
 				A3ECDE9E299536320068D3C0 /* TestModalCoordinator.swift */,
 				A3ECDEA229953DED0068D3C0 /* Util.swift */,
+				A3ECDEA429953F6A0068D3C0 /* TestNavigationCoordinator.swift */,
 			);
 			path = InsecurityAutotestTests;
 			sourceTree = "<group>";
@@ -1209,6 +1212,7 @@
 			files = (
 				A3ECDE9F299536320068D3C0 /* TestModalCoordinator.swift in Sources */,
 				A3ECDEA329953DED0068D3C0 /* Util.swift in Sources */,
+				A3ECDEA529953F6A0068D3C0 /* TestNavigationCoordinator.swift in Sources */,
 				A3ECDE972995321E0068D3C0 /* InsecurityAutotestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

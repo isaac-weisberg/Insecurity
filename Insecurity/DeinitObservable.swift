@@ -20,7 +20,7 @@
 
 import Foundation
 
-class DeinitObservable {
+final class DeinitObservable {
     var onDeinit: (() -> Void)?
     
     deinit {

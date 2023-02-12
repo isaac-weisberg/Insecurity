@@ -21,7 +21,7 @@ struct InsecurityHostState {
     var notDead: Bool
 }
 
-class FrameNavigationChild {
+final class FrameNavigationChild {
     let coordinator: CommonNavigationCoordinatorAny
     let controller: Weak<UIViewController>
     let previousController: Weak<UIViewController>
@@ -37,7 +37,7 @@ class FrameNavigationChild {
     }
 }
 
-class FrameNavigationData {
+final class FrameNavigationData {
     var children: [FrameNavigationChild]
     let navigationController: Weak<UINavigationController>
     let rootController: Weak<UIViewController>
@@ -53,7 +53,7 @@ class FrameNavigationData {
     }
 }
 
-class Frame {
+final class Frame {
     let coordinator: CommonCoordinatorAny
     let controller: Weak<UIViewController>
     let previousController: Weak<UIViewController>
@@ -74,10 +74,10 @@ class Frame {
 
 // MARK: - InsecurityHost
 
-public class InsecurityHost {
-    fileprivate var frames: [Frame] = []
+public final class InsecurityHost {
+    var frames: [Frame] = []
 
-    fileprivate var state = InsecurityHostState(stage: .ready, notDead: true)
+    var state = InsecurityHostState(stage: .ready, notDead: true)
     
     func kill() {
         state.notDead = false
@@ -87,14 +87,14 @@ public class InsecurityHost {
         
     }
     
-    fileprivate var _scheduledStartRoutine: (() -> Void)?
+    var _scheduledStartRoutine: (() -> Void)?
     
-    fileprivate func executeScheduledStartRoutine() {
+    func executeScheduledStartRoutine() {
         _scheduledStartRoutine?()
         _scheduledStartRoutine = nil
     }
     
-    fileprivate func executeScheduledStartRoutineWithDelay() {
+    func executeScheduledStartRoutineWithDelay() {
         insecDelay(Insecurity.navigationPopBatchedStartDelay) { [weak self] in
             self?.executeScheduledStartRoutine()
         }
@@ -275,6 +275,10 @@ public class InsecurityHost {
     
     private func purge(deepestDeadIndex: CoordinatorIndex,
                        modalIndexThatNeedsDismissing: Int?) {
+        #if DEBUG
+        insecPrint("Purging \(deepestDeadIndex.string) modalDismiss: \(modalIndexThatNeedsDismissing.flatMap({ "\($0)" }) ?? "nil")")
+        #endif
+        
         let prepurgeFrames = self.frames
         
         let postPurgeFrames: [Frame]
@@ -373,6 +377,10 @@ public class InsecurityHost {
                                        _ deathReason: CoordinatorDeathReason,
                                        _ result: Result?,
                                        _ callback: (Result?) -> Void) {
+        #if DEBUG
+        insecPrint("Index \(index.string) died")
+        #endif
+        
         guard state.notDead else {
             insecAssertFail(.hostDiedBeforeCoordinator)
             return

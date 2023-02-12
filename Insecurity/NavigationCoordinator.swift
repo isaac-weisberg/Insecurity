@@ -70,17 +70,36 @@ open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
         
     }
     
-    func start<Result>(
+    public func start<Result>(
         _ child: ModalCoordinator<Result>,
         animated: Bool,
         _ completion: @escaping (Result?) -> Void
     ) {
-        switch state {
-        case .mounted(let mounted):
+        startIfMounted { mounted in
             mounted.host.value.insecAssertNotNil()?.startModal(child,
                                                                after: mounted.index,
                                                                animated: animated,
                                                                completion)
+        }
+    }
+    
+    public func start<Result>(
+        _ child: NavigationCoordinator<Result>,
+        animated: Bool,
+        _ completion: @escaping (Result?) -> Void
+    ) {
+        startIfMounted { mounted in
+            mounted.host.value.insecAssertNotNil()?.startNavigation(child,
+                                                                    after: mounted.index,
+                                                                    animated: animated,
+                                                                    completion)
+        }
+    }
+    
+    private func startIfMounted(_ startBlock: (State.Mounted) -> Void) {
+        switch state {
+        case .mounted(let mounted):
+            startBlock(mounted)
         case .dead, .unmounted:
             insecAssertFail(.noStartOnDeadOrUnmounted)
         }

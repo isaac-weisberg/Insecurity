@@ -43,4 +43,11 @@ struct CoordinatorIndex {
     
     let modalIndex: Int
     let navigationData: NavigationData?
+    
+    #if DEBUG
+    var string: String {
+        let navIndexString = navigationData?.navigationIndex.flatMap { "\($0)" } ?? "nil"
+        return "(mod: \(modalIndex) nav: \(navIndexString))"
+    }
+    #endif
 }
