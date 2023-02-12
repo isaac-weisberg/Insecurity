@@ -1,6 +1,10 @@
 import UIKit
 
 open class AdaptiveCoordinator<Result>: CommonNavigationCoordinator, CommonModalCoordinator {
+    func dismountFromHost() {
+        fatalError()
+    }
+    
     func mountOnHostNavigation(_ host: InsecurityHost, _ index: CoordinatorIndex, completion: @escaping (Result?) -> Void) -> UIViewController {
         fatalError()
     }

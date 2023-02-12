@@ -12,5 +12,6 @@ protocol CommonNavigationCoordinator: CommonNavigationCoordinatorAny {
     func mountOnHostNavigation(_ host: InsecurityHost,
                                _ index: CoordinatorIndex,
                                completion: @escaping (Result?) -> Void) -> UIViewController
+    
+    func dismountFromHost()
 }
-

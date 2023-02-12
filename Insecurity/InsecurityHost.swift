@@ -286,30 +286,47 @@ public final class InsecurityHost {
         let firstDeadChildIndex = deepestDeadIndex.modalIndex
         let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
         
-        if let navigationData = firstDeadChild.navigationData {
-            if let indexNavData = deepestDeadIndex.navigationData {
-                if let navigationChildIndex = indexNavData.navigationIndex {
-                    var newFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex + 1))
-                    
-                    let newNavigationChildren = Array(navigationData.children.prefix(navigationChildIndex))
-                    
-                    if let lastFrame = newFrames.last {
-                        assert(lastFrame.navigationData != nil)
-                        lastFrame.navigationData?.children = newNavigationChildren
-                        
-                        newFrames = newFrames.replacingLast(with: lastFrame)
-                    } else {
-                        assertionFailure()
-                    }
-                    
-                    postPurgeFrames = newFrames
-                } else {
-                    postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex))
-                }
-            } else {
-                insecFatalError(.indexAssuredNavigationButFrameWasModal)
+        if
+            let navigationData = firstDeadChild.navigationData,
+            let indexNavData = deepestDeadIndex.navigationData.presenceAssuredByIndex(),
+            let navigationChildIndex = indexNavData.navigationIndex
+        {
+            let aliveNavChildrenCount = navigationChildIndex
+            let deadNavChildrenCount = navigationData.children.count - aliveNavChildrenCount
+            navigationData.children.suffix(deadNavChildrenCount).forEach { child in
+                child.coordinator.dismountFromHost()
             }
+            
+            let aliveNavChildren = Array(navigationData.children.prefix(aliveNavChildrenCount))
+            
+            let aliveFramesCount = firstDeadChildIndex + 1
+            let deadFramesCount = prepurgeFrames.count - aliveFramesCount
+            
+            let deadFrames = prepurgeFrames.suffix(deadFramesCount)
+            for deadFrame in deadFrames {
+                deadFrame.coordinator.dismountFromHost()
+                deadFrame.navigationData?.children.forEach { child in
+                    child.coordinator.dismountFromHost()
+                }
+            }
+            
+            var newFrames = Array(prepurgeFrames.prefix(aliveFramesCount))
+            
+            newFrames.last.assertingNotNil()?.navigationData.assertingNotNil()?.children = aliveNavChildren
+            
+            postPurgeFrames = newFrames
         } else {
+            let aliveFramesCount = firstDeadChildIndex
+            let deadFramesCount = prepurgeFrames.count - aliveFramesCount
+            
+            let deadFrames = prepurgeFrames.suffix(deadFramesCount)
+            for deadFrame in deadFrames {
+                deadFrame.coordinator.dismountFromHost()
+                deadFrame.navigationData?.children.forEach { child in
+                    child.coordinator.dismountFromHost()
+                }
+            }
+            
             postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex))
         }
         

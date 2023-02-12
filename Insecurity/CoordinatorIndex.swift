@@ -51,3 +51,13 @@ struct CoordinatorIndex {
     }
     #endif
 }
+
+extension Optional where Wrapped == CoordinatorIndex.NavigationData {
+    func presenceAssuredByIndex(_ file: StaticString = #file, _ line: UInt = #line) -> CoordinatorIndex.NavigationData? {
+        if let navigationData = self {
+            return navigationData
+        }
+        insecAssertFail(.indexAssuredNavigationButFrameWasModal, file, line)
+        return nil
+    }
+}

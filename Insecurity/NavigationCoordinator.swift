@@ -9,9 +9,15 @@ open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
             let completion: (Result?) -> Void
         }
         
+        enum Dead {
+            case deinitOrKvo
+            case result
+            case dismountedByHost
+        }
+        
         case unmounted
         case mounted(Mounted)
-        case dead(CoordinatorDeathReason)
+        case dead(Dead)
     }
     
     var state: State = .unmounted
@@ -26,6 +32,17 @@ open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
     
     public func dismiss() {
         handleFinish(nil, deathReason: .result)
+    }
+    
+    func dismountFromHost() {
+        switch state {
+        case .mounted(let mounted):
+            mounted.controller.value?.deinitObservable.onDeinit = nil
+            
+            self.state = .dead(.dismountedByHost)
+        case .dead, .unmounted:
+            break
+        }
     }
     
     func mountOnHostNavigation(_ host: InsecurityHost,
@@ -52,7 +69,14 @@ open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
         case .mounted(let mounted):
             mounted.controller.value?.deinitObservable.onDeinit = nil
             
-            self.state = .dead(deathReason)
+            let dead: State.Dead
+            switch deathReason {
+            case .result:
+                dead = .result
+            case .deinitOrKvo:
+                dead = .deinitOrKvo
+            }
+            self.state = .dead(dead)
             
             mounted.host.value?.handleCoordinatorDied(self,
                                                       mounted.index,

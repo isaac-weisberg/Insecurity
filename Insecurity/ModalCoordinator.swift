@@ -10,9 +10,9 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         }
         
         enum Dead {
-            case byDeinit
-            case byKVO
-            case byResult
+            case deinitOrKvo
+            case result
+            case dismountedByHost
         }
         
         case unmounted
@@ -27,11 +27,22 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
     }
     
     public func finish(_ result: Result) {
-        self.handleFinish(result, .byResult)
+        self.handleFinish(result, .result)
     }
     
     public func dismiss() {
-        self.handleFinish(nil, .byResult)
+        self.handleFinish(nil, .result)
+    }
+    
+    func dismountFromHost() {
+        switch state {
+        case .mounted(let mounted):
+            mounted.controller.value?.deinitObservable.onDeinit = nil
+            
+            self.state = .dead(.dismountedByHost)
+        case .dead, .unmounted:
+            break
+        }
     }
     
     func mountOnHostModal(_ host: InsecurityHost,
@@ -40,7 +51,7 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         let controller = self.viewController
         
         controller.deinitObservable.onDeinit = { [weak self] in
-            self?.handleFinish(nil, .byDeinit)
+            self?.handleFinish(nil, .deinitOrKvo)
         }
         
         self.state = .mounted(State.Mounted(controller: Weak(controller),
@@ -50,7 +61,7 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         return controller
     }
     
-    func handleFinish(_ result: Result?, _ reason: State.Dead) {
+    func handleFinish(_ result: Result?, _ reason: CoordinatorDeathReason) {
         switch self.state {
         case .unmounted:
             insecAssertFail(.noFinishOnUnmounted)
@@ -59,19 +70,18 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         case .mounted(let mounted):
             mounted.controller.value?.deinitObservable.onDeinit = nil
             
-            self.state = .dead(reason)
-            
-            let deadReason: CoordinatorDeathReason
+            let dead: State.Dead
             switch reason {
-            case .byResult:
-                deadReason = .result
-            case .byDeinit, .byKVO:
-                deadReason = .deinitOrKvo
+            case .deinitOrKvo:
+                dead = .deinitOrKvo
+            case .result:
+                dead = .result
             }
+            self.state = .dead(dead)
             
             mounted.host.value?.handleCoordinatorDied(self,
                                                       mounted.index,
-                                                      deadReason,
+                                                      reason,
                                                       result,
                                                       mounted.completion)
         }

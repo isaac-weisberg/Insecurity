@@ -12,4 +12,6 @@ protocol CommonModalCoordinator: CommonModalCoordinatorAny {
     func mountOnHostModal(_ host: InsecurityHost,
                           _ index: CoordinatorIndex,
                           completion: @escaping (Result?) -> Void) -> UIViewController
+    
+    func dismountFromHost()
 }
