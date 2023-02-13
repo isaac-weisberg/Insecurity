@@ -95,7 +95,26 @@ final class InsecurityAutotestTests: XCTestCase {
         
         // MARK: Test
         
+        // Initial
+        
         expect(host.frames).to(haveCount(5))
+        expect(root.modalChain) == [
+            modal1.instantiatedVC!,
+            navRoot1.instantiatedNavController!,
+            modal2.instantiatedVC!,
+            navRoot2.instantiatedNavController!,
+            modal3.instantiatedVC!
+        ]
+        
+        expect(navRoot1.instantiatedNavController!.viewControllers) == [
+            navRoot1.instantiatedVC
+        ] + navChildren1.map(\.instantiatedVC)
+        
+        expect(navRoot2.instantiatedNavController!.viewControllers) == [
+            navRoot2.instantiatedVC
+        ] + navChildren2.map(\.instantiatedVC)
+        
+        // 
         
         // MARK: Teardown
         await root.dismissAndAwait()

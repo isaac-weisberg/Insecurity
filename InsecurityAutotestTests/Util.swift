@@ -46,6 +46,20 @@ extension ModalCoordinator {
     }
 }
 
+extension NavigationCoordinator {
+    var instantiatedNavController: UINavigationController? {
+        instantiatedVC?.navigationController
+    }
+    
+    var instantiatedVC: UIViewController? {
+        switch self.state {
+        case .mounted(let mounted):
+            return mounted.controller.value
+        case .unmounted, .dead:
+            return nil
+        }
+    }
+}
 
 enum Type1 {
     
