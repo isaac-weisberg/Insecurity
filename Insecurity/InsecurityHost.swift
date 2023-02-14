@@ -5,36 +5,11 @@ enum CoordinatorDeathReason {
     case deinitOrKvo
 }
 
-protocol IModalScheduledStart {
-    associatedtype CoordinatorType: CommonModalCoordinator
-    
-    var child: CoordinatorType { get }
-    var parentIndex: CoordinatorIndex { get }
-    var animated: Bool { get }
-    var completion: (CoordinatorType.Result?) -> Void { get }
-}
-
-extension IModalScheduledStart {
-    func settingParentIndex(_ parentIndex: CoordinatorIndex) -> any IModalScheduledStart {
-        ModalScheduledStart(child: self.child,
-                            parentIndex: parentIndex,
-                            animated: self.animated,
-                            completion: self.completion)
-    }
-}
-
-struct ModalScheduledStart<CoordinatorType: CommonModalCoordinator>: IModalScheduledStart {
-    let child: CoordinatorType
-    let parentIndex: CoordinatorIndex
-    let animated: Bool
-    let completion: (CoordinatorType.Result?) -> Void
-}
-
 struct InsecurityHostState {
     enum Stage {
         struct Batching {
-            enum ScheduledStart {
-                case modal(any IModalScheduledStart)
+            struct ScheduledStart {
+                let routine: (CoordinatorIndex) -> Void
             }
             
             let deepestDeadIndex: CoordinatorIndex
@@ -86,37 +61,47 @@ public final class InsecurityHost {
         case .purging:
             insecFatalError(.noStartingWhilePurging)
         case .batching(let batching):
-            let scheduledStart = ModalScheduledStart(child: child,
-                                                     parentIndex: parentIndex,
-                                                     animated: animated,
-                                                     completion: completion)
-            self.state.stage = .batching(batching.settingScheduledStart(.modal(scheduledStart)))
+            let scheduledStart = InsecurityHostState.Stage.Batching.ScheduledStart { [unowned self] newParentIndex in
+                insecAssert(newParentIndex == parentIndex,
+                            .presumedParentForBatchedStartWasEitherDeadOrNotAtTheTopOfTheStack)
+                
+                self.startModalImmediately(child,
+                                           after: newParentIndex,
+                                           animated: animated,
+                                           completion)
+            }
+            self.state.stage = .batching(batching.settingScheduledStart(scheduledStart))
         case .ready:
-            startModalImmediately(ModalScheduledStart<Coordinator>(child: child,
-                                                                   parentIndex: parentIndex,
-                                                                   animated: animated,
-                                                                   completion: completion))
+            startModalImmediately(child,
+                                  after: parentIndex,
+                                  animated: animated,
+                                  completion)
         }
     }
     
-    private func startModalImmediately<CoordinatorType>(_ start: ModalScheduledStart<CoordinatorType>) {
-        let index = CoordinatorIndex(modalIndex: start.parentIndex.modalIndex + 1,
+    private func startModalImmediately<Coordinator: CommonModalCoordinator>(
+        _ child: Coordinator,
+        after parentIndex: CoordinatorIndex,
+        animated: Bool,
+        _ completion: @escaping (Coordinator.Result?) -> Void
+    ) {
+        let index = CoordinatorIndex(modalIndex: parentIndex.modalIndex + 1,
                                      navigationData: nil)
-        if let parentFrame = frames.at(start.parentIndex.modalIndex) {
+        if let parentFrame = frames.at(parentIndex.modalIndex) {
             if let existingFrame = frames.at(index.modalIndex) {
                 fatalError("Not impl")
             } else {
                 if let parentController = parentFrame.controller.value {
-                    let controller = start.child.mountOnHostModal(self, index, completion: start.completion)
+                    let controller = child.mountOnHostModal(self, index, completion: completion)
                     
-                    let frame = Frame(coordinator: start.child,
+                    let frame = Frame(coordinator: child,
                                       controller: controller,
                                       previousController: parentController,
                                       navigationData: nil)
                     
                     self.frames = self.frames + [frame]
                     
-                    parentController.present(controller, animated: start.animated)
+                    parentController.present(controller, animated: animated)
                 } else {
                     insecAssertFail(.parentControllerHasBeenLost)
                 }
@@ -352,7 +337,7 @@ public final class InsecurityHost {
                 switch scheduledStart {
                 case nil:
                     break
-                case .modal(let modalStart):
+                case .some(let start):
                     // undead = last undead index among the frames
                     let undeadModalIndex = deepestDeadIndex.modalIndex - 1
                     let undeadIndexNavData: CoordinatorIndex.NavigationData?
@@ -370,14 +355,7 @@ public final class InsecurityHost {
                     let undeadIndex = CoordinatorIndex(modalIndex: undeadModalIndex,
                                                        navigationData: undeadIndexNavData)
                     
-                    insecAssert(undeadIndex == modalStart.parentIndex,
-                                .presumedParentForBatchedStartWasEitherDeadOrNotAtTheTopOfTheStack)
-                    
-                    let start = modalStart.settingParentIndex(undeadIndex)
-                    
-                    let modalStart = ModalScheduledStart(child: modalStart.child, parentIndex: undeadIndex, animated: modalStart.animated, completion: modalStart.completion)
-                    
-                    self.startModalImmediately(modalStart)
+                    start.routine(undeadIndex)
                 }
             }
         }
@@ -396,9 +374,9 @@ public final class InsecurityHost {
                                        _ deathReason: CoordinatorDeathReason,
                                        _ result: Result?,
                                        _ callback: (Result?) -> Void) {
-        #if DEBUG
+#if DEBUG
         insecPrint("Index \(index.string) died")
-        #endif
+#endif
         
         // Recursive function
         switch state.stage {
@@ -569,11 +547,9 @@ public final class InsecurityHost {
             )
             
             callback(result)
-        } else {
-            insecAssertFail(.hostDiedMidBatch)
+        case .purging:
+            insecAssertFail(.noDyingWhilePurging)
         }
-    case .purging:
-        insecAssertFail(.noDyingWhilePurging)
     }
     
     // MARK: - NEW Mount API
