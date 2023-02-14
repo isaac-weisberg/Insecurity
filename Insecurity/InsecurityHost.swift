@@ -21,57 +21,6 @@ struct InsecurityHostState {
     var notDead: Bool
 }
 
-final class FrameNavigationChild {
-    let coordinator: CommonNavigationCoordinatorAny
-    let controller: Weak<UIViewController>
-    let previousController: Weak<UIViewController>
-    
-    init(
-        coordinator: CommonNavigationCoordinatorAny,
-        controller: Weak<UIViewController>,
-        previousController: Weak<UIViewController>
-    ) {
-        self.coordinator = coordinator
-        self.controller = controller
-        self.previousController = previousController
-    }
-}
-
-final class FrameNavigationData {
-    var children: [FrameNavigationChild]
-    let navigationController: Weak<UINavigationController>
-    let rootController: Weak<UIViewController>
-    
-    init(
-        children: [FrameNavigationChild],
-        navigationController: UINavigationController,
-        rootController: UIViewController
-    ) {
-        self.children = children
-        self.navigationController = Weak(navigationController)
-        self.rootController = Weak(rootController)
-    }
-}
-
-final class Frame {
-    let coordinator: CommonCoordinatorAny
-    let controller: Weak<UIViewController>
-    let previousController: Weak<UIViewController>
-    let navigationData: FrameNavigationData?
-    
-    init(
-        coordinator: CommonCoordinatorAny,
-        controller: UIViewController,
-        previousController: UIViewController,
-        navigationData: FrameNavigationData?
-    ) {
-        self.coordinator = coordinator
-        self.controller = Weak(controller)
-        self.previousController = Weak(previousController)
-        self.navigationData = navigationData
-    }
-}
-
 // MARK: - InsecurityHost
 
 public final class InsecurityHost {
@@ -199,9 +148,13 @@ public final class InsecurityHost {
                                                                  previousController: previousController)
                     let newNavichildren = existingNavigationData.children + [newNavichildFrame]
                     
-                    existingNavigationData.children = newNavichildren // MODIFICATION BY REFERENCE
+                    let newNavigationData = existingNavigationData.replacingChildren(newNavichildren)
                     
-                    existingNavigationData.navigationController.value.insecAssertNotNil()?.pushViewController(
+                    let frame = existingModalFrame.replacingNavigationData(newNavigationData)
+                    
+                    self.frames = self.frames.replacing(index.modalIndex, with: frame)
+                    
+                    newNavigationData.navigationController.value.insecAssertNotNil()?.pushViewController(
                         controller,
                         animated: animated
                     )
@@ -312,9 +265,12 @@ public final class InsecurityHost {
             
             var newFrames = Array(prepurgeFrames.prefix(aliveFramesCount))
             
-            newFrames.last.assertingNotNil()?.navigationData.assertingNotNil()?.children = aliveNavChildren
+            let newNavigationData = navigationData.replacingChildren(aliveNavChildren)
+            let newFrame = firstDeadChild.replacingNavigationData(newNavigationData)
             
-            postPurgeFrames = newFrames
+            let trulyNewFrames = newFrames.replacingLast(with: newFrame)
+            
+            postPurgeFrames = trulyNewFrames
         } else {
             let aliveFramesCount = firstDeadChildIndex
             let deadFramesCount = prepurgeFrames.count - aliveFramesCount

@@ -76,4 +76,8 @@ extension Array {
         array[index] = element
         return array
     }
+    
+    func replacingLast(with element: Element) -> Array {
+        replacing(self.count - 1, with: element)
+    }
 }

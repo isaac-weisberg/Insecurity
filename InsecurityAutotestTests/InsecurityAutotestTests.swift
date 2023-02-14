@@ -68,34 +68,33 @@ final class InsecurityAutotestTests: XCTestCase {
         
         let navRoot2 = TestNavigationCoordinator<Type4>()
         
-        let navChildren2 = [ TestNavigationCoordinator<Type4>(), TestNavigationCoordinator<Type4>() ]
-        
         modal2.start(TestNavigationController(),
                      navRoot2,
                      animated: false) { _ in
-            
+            modal2.dismiss()
         }
         
         await awaitAnimsShort()
         
-        var parent2 = navRoot2
-        for navChild in navChildren2 {
-            parent2.start(navChild, animated: false) { _ in }
-            
-            await awaitAnimsShort()
-            
-            parent2 = navChild
-        }
+        let navChildren2 = [ TestNavigationCoordinator<Type4>(), TestNavigationCoordinator<Type4>() ]
+        
+        navRoot2.start(navChildren2[0], animated: true, { _ in})
+        
+        await awaitAnims()
+        
+        navChildren2[0].start(navChildren2[1], animated: true, { _ in
+            navChildren2[0].dismiss()
+        })
         
         let modal3 = TestModalCoordinator<Type5>()
         
-        navChildren2.last!.start(modal3, animated: false, { _ in})
+        navChildren2.last!.start(modal3, animated: false, { _ in
+            navChildren2.last!.dismiss()
+        })
         
         await awaitAnimsShort()
         
-        // MARK: Test
-        
-        // Initial
+        // MARK: Initial Test
         
         expect(host.frames).to(haveCount(5))
         expect(root.modalChain) == [
@@ -114,7 +113,22 @@ final class InsecurityAutotestTests: XCTestCase {
             navRoot2.instantiatedVC
         ] + navChildren2.map(\.instantiatedVC)
         
-        // 
+        // MARK: First dismiss
+        
+        modal3.instantiatedVC!.dismiss(animated: true) // Simulate downswipe
+        
+        await awaitAnims()
+        
+        expect(host.frames).to(haveCount(4))
+        expect(host.frames[3].navigationData).toNot(beNil())
+        expect(host.frames[3].navigationData?.children).to(haveCount(0))
+        expect(root.modalChain) == [
+            modal1.instantiatedVC!,
+            navRoot1.instantiatedNavController!,
+            modal2.instantiatedVC!,
+            navRoot2.instantiatedNavController!
+        ]
+        expect(navRoot2.instantiatedNavController!.viewControllers) == [ navRoot2.instantiatedVC ]
         
         // MARK: Teardown
         await root.dismissAndAwait()
