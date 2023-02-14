@@ -5,20 +5,56 @@ enum CoordinatorDeathReason {
     case deinitOrKvo
 }
 
+protocol IModalScheduledStart {
+    associatedtype CoordinatorType: CommonModalCoordinator
+    
+    var child: CoordinatorType { get }
+    var parentIndex: CoordinatorIndex { get }
+    var animated: Bool { get }
+    var completion: (CoordinatorType.Result?) -> Void { get }
+}
+
+extension IModalScheduledStart {
+    func settingParentIndex(_ parentIndex: CoordinatorIndex) -> any IModalScheduledStart {
+        ModalScheduledStart(child: self.child,
+                            parentIndex: parentIndex,
+                            animated: self.animated,
+                            completion: self.completion)
+    }
+}
+
+struct ModalScheduledStart<CoordinatorType: CommonModalCoordinator>: IModalScheduledStart {
+    let child: CoordinatorType
+    let parentIndex: CoordinatorIndex
+    let animated: Bool
+    let completion: (CoordinatorType.Result?) -> Void
+}
+
 struct InsecurityHostState {
     enum Stage {
         struct Batching {
+            enum ScheduledStart {
+                case modal(any IModalScheduledStart)
+            }
+            
             let deepestDeadIndex: CoordinatorIndex
             let modalIndexThatNeedsDismissing: Int?
+            let scheduledStart: ScheduledStart?
+            
+            func settingScheduledStart(_ scheduledStart: ScheduledStart) -> Batching {
+                return Batching(deepestDeadIndex: deepestDeadIndex,
+                                modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing,
+                                scheduledStart: scheduledStart)
+            }
         }
         
         case ready
         case batching(Batching)
         case purging
+        case dead
     }
     
     var stage: Stage
-    var notDead: Bool
 }
 
 // MARK: - InsecurityHost
@@ -26,27 +62,14 @@ struct InsecurityHostState {
 public final class InsecurityHost {
     var frames: [Frame] = []
 
-    var state = InsecurityHostState(stage: .ready, notDead: true)
+    var state = InsecurityHostState(stage: .ready)
     
     func kill() {
-        state.notDead = false
+        state.stage = .dead
     }
     
     public init() {
         
-    }
-    
-    var _scheduledStartRoutine: (() -> Void)?
-    
-    func executeScheduledStartRoutine() {
-        _scheduledStartRoutine?()
-        _scheduledStartRoutine = nil
-    }
-    
-    func executeScheduledStartRoutineWithDelay() {
-        insecDelay(Insecurity.navigationPopBatchedStartDelay) { [weak self] in
-            self?.executeScheduledStartRoutine()
-        }
     }
     
     // MARK: - Modal
@@ -57,42 +80,49 @@ public final class InsecurityHost {
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
-        guard state.notDead else {
-            insecAssertFail(.hostDiedBeforeStart)
-            return
-        }
-        
         switch state.stage {
+        case .dead:
+            insecAssertFail(.hostDiedBeforeStart)
         case .purging:
             insecFatalError(.noStartingWhilePurging)
-        case .batching:
-            fatalError("Not impl")
+        case .batching(let batching):
+            let scheduledStart = ModalScheduledStart(child: child,
+                                                     parentIndex: parentIndex,
+                                                     animated: animated,
+                                                     completion: completion)
+            self.state.stage = .batching(batching.settingScheduledStart(.modal(scheduledStart)))
         case .ready:
-            let index = CoordinatorIndex(modalIndex: parentIndex.modalIndex + 1,
-                                         navigationData: nil)
-            
-            if let parentFrame = frames.at(parentIndex.modalIndex) {
-                if let existingFrame = frames.at(index.modalIndex) {
-                    fatalError("Not impl")
-                } else {
-                    if let parentController = parentFrame.controller.value {
-                        let controller = child.mountOnHostModal(self, index, completion: completion)
-                        
-                        let frame = Frame(coordinator: child,
-                                          controller: controller,
-                                          previousController: parentController,
-                                          navigationData: nil)
-                        
-                        self.frames = self.frames + [frame]
-                        
-                        parentController.present(controller, animated: animated)
-                    } else {
-                        insecAssertFail(.parentControllerHasBeenLost)
-                    }
-                }
+            startModalImmediately(ModalScheduledStart<Coordinator>(child: child,
+                                                                   parentIndex: parentIndex,
+                                                                   animated: animated,
+                                                                   completion: completion))
+        }
+    }
+    
+    private func startModalImmediately<CoordinatorType>(_ start: ModalScheduledStart<CoordinatorType>) {
+        let index = CoordinatorIndex(modalIndex: start.parentIndex.modalIndex + 1,
+                                     navigationData: nil)
+        if let parentFrame = frames.at(start.parentIndex.modalIndex) {
+            if let existingFrame = frames.at(index.modalIndex) {
+                fatalError("Not impl")
             } else {
-                insecAssertFail(.noFrameAtIndexPath)
+                if let parentController = parentFrame.controller.value {
+                    let controller = start.child.mountOnHostModal(self, index, completion: start.completion)
+                    
+                    let frame = Frame(coordinator: start.child,
+                                      controller: controller,
+                                      previousController: parentController,
+                                      navigationData: nil)
+                    
+                    self.frames = self.frames + [frame]
+                    
+                    parentController.present(controller, animated: start.animated)
+                } else {
+                    insecAssertFail(.parentControllerHasBeenLost)
+                }
             }
+        } else {
+            insecAssertFail(.noFrameAtIndexPath)
         }
     }
     
@@ -103,12 +133,9 @@ public final class InsecurityHost {
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
-        guard state.notDead else {
-            insecAssertFail(.hostDiedBeforeStart)
-            return
-        }
-        
         switch state.stage {
+        case .dead:
+            insecAssertFail(.hostDiedBeforeStart)
         case .purging:
             insecAssertFail(.noStartingWhilePurging)
         case .batching:
@@ -163,7 +190,6 @@ public final class InsecurityHost {
                 insecAssertFail(.cantStartNavigationOverModalContext)
             }
         }
-        
     }
     
     // MARK: - Navigation New
@@ -175,12 +201,9 @@ public final class InsecurityHost {
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
-        guard state.notDead else {
-            insecAssertFail(.hostDiedBeforeStart)
-            return
-        }
-        
         switch state.stage {
+        case .dead:
+            insecAssertFail(.hostDiedBeforeStart)
         case .purging:
             insecAssertFail(.noStartingWhilePurging)
         case .batching:
@@ -227,7 +250,8 @@ public final class InsecurityHost {
     // MARK: - Purge
     
     private func purge(deepestDeadIndex: CoordinatorIndex,
-                       modalIndexThatNeedsDismissing: Int?) {
+                       modalIndexThatNeedsDismissing: Int?,
+                       scheduledStart: InsecurityHostState.Stage.Batching.ScheduledStart?) {
         #if DEBUG
         insecPrint("Purging \(deepestDeadIndex.string) modalDismiss: \(modalIndexThatNeedsDismissing.flatMap({ "\($0)" }) ?? "nil")")
         #endif
@@ -288,52 +312,74 @@ public final class InsecurityHost {
         
         self.frames = postPurgeFrames
         
-        if state.notDead {
-            let firstDeadChildIndex = deepestDeadIndex.modalIndex
-            let firstDeadChild = prepurgeFrames[firstDeadChildIndex]
+        if
+            let deadNavIndex = deepestDeadIndex.navigationData?.navigationIndex,
+            let deadNavData = firstDeadChild.navigationData
+        {
+            let deadNavChild = deadNavData.children[deadNavIndex]
             
-            if
-                let deadNavIndex = deepestDeadIndex.navigationData?.navigationIndex,
-                let deadNavData = firstDeadChild.navigationData
-            {
-                let deadNavChild = deadNavData.children[deadNavIndex]
-                
-                let frameThatNeedsModalDismissalOpt: Frame?
-                if let modalIndexThatNeedsDismissing = modalIndexThatNeedsDismissing {
-                    frameThatNeedsModalDismissalOpt = prepurgeFrames[modalIndexThatNeedsDismissing]
-                } else {
-                    frameThatNeedsModalDismissalOpt = nil
-                }
-                if
-                    let navigationController = deadNavData.navigationController.value.insecAssertNotNil(),
-                    let popToController = deadNavChild.previousController.value.insecAssertNotNil()
-                {
-                    if let frameThatNeedsModalDismissal = frameThatNeedsModalDismissalOpt {
-                        frameThatNeedsModalDismissal.previousController.value.assertNotNil()
-                        
-                        navigationController.popToViewController(popToController, animated: false)
-                        if let presentingViewController = frameThatNeedsModalDismissal.previousController.value {
-                            presentingViewController.dismiss(animated: true) { [weak self] in
-                                self?.executeScheduledStartRoutine()
-                            }
-                        }
-                    } else {
-                        navigationController.popToViewController(popToController, animated: true)
-                        executeScheduledStartRoutineWithDelay()
-                    }
-                }
+            let frameThatNeedsModalDismissalOpt: Frame?
+            if let modalIndexThatNeedsDismissing = modalIndexThatNeedsDismissing {
+                frameThatNeedsModalDismissalOpt = prepurgeFrames[modalIndexThatNeedsDismissing]
             } else {
-                if modalIndexThatNeedsDismissing == deepestDeadIndex.modalIndex {
-                    firstDeadChild.previousController.value.insecAssertNotNil()?
-                        .dismiss(animated: true) { [weak self] in
+                frameThatNeedsModalDismissalOpt = nil
+            }
+            if
+                let navigationController = deadNavData.navigationController.value.insecAssertNotNil(),
+                let popToController = deadNavChild.previousController.value.insecAssertNotNil()
+            {
+                if let frameThatNeedsModalDismissal = frameThatNeedsModalDismissalOpt {
+                    frameThatNeedsModalDismissal.previousController.value.assertNotNil()
+                    
+                    navigationController.popToViewController(popToController, animated: false)
+                    if let presentingViewController = frameThatNeedsModalDismissal.previousController.value {
+                        presentingViewController.dismiss(animated: true) { [weak self] in
                             self?.executeScheduledStartRoutine()
                         }
+                    }
                 } else {
-                    executeScheduledStartRoutine()
+                    navigationController.popToViewController(popToController, animated: true)
+                    executeScheduledStartRoutineWithDelay()
                 }
             }
         } else {
-            executeScheduledStartRoutine()
+            if modalIndexThatNeedsDismissing == deepestDeadIndex.modalIndex {
+                firstDeadChild.previousController.value.insecAssertNotNil()?
+                    .dismiss(animated: true) { [weak self] in
+                        self?.executeScheduledStartRoutine()
+                    }
+            } else {
+                switch scheduledStart {
+                case nil:
+                    break
+                case .modal(let modalStart):
+                    // undead = last undead index among the frames
+                    let undeadModalIndex = deepestDeadIndex.modalIndex - 1
+                    let undeadIndexNavData: CoordinatorIndex.NavigationData?
+                    if let parentNavData = self.frames[undeadModalIndex].navigationData {
+                        if parentNavData.children.isEmpty {
+                            undeadIndexNavData = CoordinatorIndex.NavigationData(navigationIndex: nil)
+                        } else {
+                            undeadIndexNavData = CoordinatorIndex.NavigationData(
+                                navigationIndex: parentNavData.children.count - 1
+                            )
+                        }
+                    } else {
+                        undeadIndexNavData = nil
+                    }
+                    let undeadIndex = CoordinatorIndex(modalIndex: undeadModalIndex,
+                                                       navigationData: undeadIndexNavData)
+                    
+                    insecAssert(undeadIndex == modalStart.parentIndex,
+                                .presumedParentForBatchedStartWasEitherDeadOrNotAtTheTopOfTheStack)
+                    
+                    let start = modalStart.settingParentIndex(undeadIndex)
+                    
+                    let modalStart = ModalScheduledStart(child: modalStart.child, parentIndex: undeadIndex, animated: modalStart.animated, completion: modalStart.completion)
+                    
+                    self.startModalImmediately(modalStart)
+                }
+            }
         }
     }
     
@@ -354,12 +400,10 @@ public final class InsecurityHost {
         insecPrint("Index \(index.string) died")
         #endif
         
-        guard state.notDead else {
-            insecAssertFail(.hostDiedBeforeCoordinator)
-            return
-        }
         // Recursive function
         switch state.stage {
+        case .dead:
+            insecAssertFail(.hostDiedBeforeCoordinator)
         case .ready:
             let modalIndexThatNeedsDismissing: Int?
             switch deathReason {
@@ -372,7 +416,8 @@ public final class InsecurityHost {
             self.state.stage = .batching(
                 InsecurityHostState.Stage.Batching(
                     deepestDeadIndex: index,
-                    modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing
+                    modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing,
+                    scheduledStart: nil
                 )
             )
             callback(result)
@@ -382,123 +427,111 @@ public final class InsecurityHost {
                 self.state.stage = .purging
                 self.purge(
                     deepestDeadIndex: batch.deepestDeadIndex,
-                    modalIndexThatNeedsDismissing: batch.modalIndexThatNeedsDismissing
+                    modalIndexThatNeedsDismissing: batch.modalIndexThatNeedsDismissing,
+                    scheduledStart: batch.scheduledStart
                 )
                 self.state.stage = .ready
             case .ready, .purging:
                 insecAssertFail(.unexpectedState)
+            case .dead:
+                break
             }
         case .batching(let batching):
-            if self.state.notDead {
-                let newDeepestDeadIndex: CoordinatorIndex
-                let modalIndexThatNeedsDismissing: Int?
-                let needsNavigationDismissal: Bool
-                
-                let modalComparison = compare(index.modalIndex, batching.deepestDeadIndex.modalIndex)
-                
-                switch modalComparison {
-                case .equal:
-                    // Same modal frame
-                    switch (index.navigationData, batching.deepestDeadIndex.navigationData) {
-                    case let (.some(newlyNavigationData), .some(deepestNavigationData)):
-                        // It's 2 navigation frames inside one modal frame
-                        
-                        switch (newlyNavigationData.navigationIndex, deepestNavigationData.navigationIndex) {
-                        case let (.some(newDeadNavIndex), .some(deepestDeadNavIndex)):
-                            // Both navigation frames are child frames
-                            switch compare(newDeadNavIndex, deepestDeadNavIndex) {
-                            case .equal:
-                                // Same navigation coordinator that is a navigation child has died twice
-                                insecFatalError(.coordinatorDiedTwice)
-                            case .less:
-                                // Navigation child that just died is deeper
-                                newDeepestDeadIndex = index
-                                
-                                switch deathReason {
-                                case .deinitOrKvo:
-                                    needsNavigationDismissal = false
-                                case .result:
-                                    needsNavigationDismissal = true
-                                }
-                                // And regarding modal dismissal - I guess we just preserve
-                                modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
-                            case .greater:
-                                // Newly died nav child is above the deepest
-                                // Do nothing
-                                newDeepestDeadIndex = batching.deepestDeadIndex
-                                modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
-                            }
-                        case (.some, nil):
-                            // Newly dead one is a navigation child
-                            // while deepest one is root
-                            // child > root, root is deeper, do nothing
-                            newDeepestDeadIndex = batching.deepestDeadIndex
-                            modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
-                        case (nil, .some):
-                            // Newly dead coordinator is the root controller
-                            // While current deepest is merely a child
-                            newDeepestDeadIndex = index
-                            // Navigation dismissal not needed because when root dies,
-                            // it's a transition of modal dismissal
-                            needsNavigationDismissal = false
-                            switch deathReason {
-                            case .result:
-                                modalIndexThatNeedsDismissing = index.modalIndex
-                            case .deinitOrKvo:
-                                modalIndexThatNeedsDismissing = nil
-                            }
-                        case (nil, nil):
-                            // Same navigation coordinator that is a root has died twice
-                            insecFatalError(.coordinatorDiedTwice)
-                        }
-                    case (nil, nil):
-                        // This is the same modal frame with no navigation
-                        insecFatalError(.coordinatorDiedTwice)
-                    case (.some, nil), (nil, .some):
-                        // Two comparable frames with same modal index should have similar presence/absense of navdata
-                        insecFatalError(.twoIndicesHaveSameModalIndexButNavDataDiffers)
-                    }
-                case .less:
-                    // Modal index is less than current deepest - definitely deeper!
-                    newDeepestDeadIndex = index
+            let newDeepestDeadIndex: CoordinatorIndex
+            let modalIndexThatNeedsDismissing: Int?
+            let needsNavigationDismissal: Bool
+            
+            let modalComparison = compare(index.modalIndex, batching.deepestDeadIndex.modalIndex)
+            
+            switch modalComparison {
+            case .equal:
+                // Same modal frame
+                switch (index.navigationData, batching.deepestDeadIndex.navigationData) {
+                case let (.some(newlyNavigationData), .some(deepestNavigationData)):
+                    // It's 2 navigation frames inside one modal frame
                     
-                    if let navigationData = index.navigationData {
-                        // This is a modal frame with nav data
-                        if navigationData.navigationIndex != nil {
-                            // This is a navigation child
-                            // This means, the UINavigationController doesn't die
-                            // The need for modal dismissal still affects only controllers above
+                    switch (newlyNavigationData.navigationIndex, deepestNavigationData.navigationIndex) {
+                    case let (.some(newDeadNavIndex), .some(deepestDeadNavIndex)):
+                        // Both navigation frames are child frames
+                        switch compare(newDeadNavIndex, deepestDeadNavIndex) {
+                        case .equal:
+                            // Same navigation coordinator that is a navigation child has died twice
+                            insecFatalError(.coordinatorDiedTwice)
+                        case .less:
+                            // Navigation child that just died is deeper
+                            newDeepestDeadIndex = index
                             
-                            modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
                             switch deathReason {
                             case .deinitOrKvo:
                                 needsNavigationDismissal = false
                             case .result:
                                 needsNavigationDismissal = true
                             }
-                        } else {
-                            // this is a navigation root
-                            
-                            // If a nav root dies, there is no need to do UINavigationController popping
-                            // since the transition is modal dismissal
-                            
+                            // And regarding modal dismissal - I guess we just preserve
+                            modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
+                        case .greater:
+                            // Newly died nav child is above the deepest
+                            // Do nothing
+                            newDeepestDeadIndex = batching.deepestDeadIndex
+                            modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
+                        }
+                    case (.some, nil):
+                        // Newly dead one is a navigation child
+                        // while deepest one is root
+                        // child > root, root is deeper, do nothing
+                        newDeepestDeadIndex = batching.deepestDeadIndex
+                        modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
+                    case (nil, .some):
+                        // Newly dead coordinator is the root controller
+                        // While current deepest is merely a child
+                        newDeepestDeadIndex = index
+                        // Navigation dismissal not needed because when root dies,
+                        // it's a transition of modal dismissal
+                        needsNavigationDismissal = false
+                        switch deathReason {
+                        case .result:
+                            modalIndexThatNeedsDismissing = index.modalIndex
+                        case .deinitOrKvo:
+                            modalIndexThatNeedsDismissing = nil
+                        }
+                    case (nil, nil):
+                        // Same navigation coordinator that is a root has died twice
+                        insecFatalError(.coordinatorDiedTwice)
+                    }
+                case (nil, nil):
+                    // This is the same modal frame with no navigation
+                    insecFatalError(.coordinatorDiedTwice)
+                case (.some, nil), (nil, .some):
+                    // Two comparable frames with same modal index should have similar presence/absense of navdata
+                    insecFatalError(.twoIndicesHaveSameModalIndexButNavDataDiffers)
+                }
+            case .less:
+                // Modal index is less than current deepest - definitely deeper!
+                newDeepestDeadIndex = index
+                
+                if let navigationData = index.navigationData {
+                    // This is a modal frame with nav data
+                    if navigationData.navigationIndex != nil {
+                        // This is a navigation child
+                        // This means, the UINavigationController doesn't die
+                        // The need for modal dismissal still affects only controllers above
+                        
+                        modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
+                        switch deathReason {
+                        case .deinitOrKvo:
                             needsNavigationDismissal = false
-                            
-                            // ... as I said, modal dismissal
-                            switch deathReason {
-                            case .result:
-                                modalIndexThatNeedsDismissing = index.modalIndex
-                            case .deinitOrKvo:
-                                modalIndexThatNeedsDismissing = nil
-                            }
+                        case .result:
+                            needsNavigationDismissal = true
                         }
                     } else {
-                        // This is a pure modal frame
+                        // this is a navigation root
                         
-                        // Every single navigation context above just dies, so no need to manipulate it
+                        // If a nav root dies, there is no need to do UINavigationController popping
+                        // since the transition is modal dismissal
+                        
                         needsNavigationDismissal = false
                         
-                        // Modal dismissal is determined by deathReason
+                        // ... as I said, modal dismissal
                         switch deathReason {
                         case .result:
                             modalIndexThatNeedsDismissing = index.modalIndex
@@ -506,27 +539,41 @@ public final class InsecurityHost {
                             modalIndexThatNeedsDismissing = nil
                         }
                     }
-                case .greater:
-                    // Modal index is greater than current deepest
-                    // Do nothing
-                    newDeepestDeadIndex = batching.deepestDeadIndex
-                    modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
+                } else {
+                    // This is a pure modal frame
+                    
+                    // Every single navigation context above just dies, so no need to manipulate it
+                    needsNavigationDismissal = false
+                    
+                    // Modal dismissal is determined by deathReason
+                    switch deathReason {
+                    case .result:
+                        modalIndexThatNeedsDismissing = index.modalIndex
+                    case .deinitOrKvo:
+                        modalIndexThatNeedsDismissing = nil
+                    }
                 }
-                
-                self.state.stage = .batching(
-                    InsecurityHostState.Stage.Batching(
-                        deepestDeadIndex: newDeepestDeadIndex,
-                        modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing
-                    )
-                )
-                
-                callback(result)
-            } else {
-                insecAssertFail(.hostDiedMidBatch)
+            case .greater:
+                // Modal index is greater than current deepest
+                // Do nothing
+                newDeepestDeadIndex = batching.deepestDeadIndex
+                modalIndexThatNeedsDismissing = batching.modalIndexThatNeedsDismissing
             }
-        case .purging:
-            insecAssertFail(.noDyingWhilePurging)
+            
+            self.state.stage = .batching(
+                InsecurityHostState.Stage.Batching(
+                    deepestDeadIndex: newDeepestDeadIndex,
+                    modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing,
+                    scheduledStart: batching.scheduledStart
+                )
+            )
+            
+            callback(result)
+        } else {
+            insecAssertFail(.hostDiedMidBatch)
         }
+    case .purging:
+        insecAssertFail(.noDyingWhilePurging)
     }
     
     // MARK: - NEW Mount API

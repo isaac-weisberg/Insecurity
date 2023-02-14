@@ -38,6 +38,12 @@ extension Optional {
     #endif
 }
 
+func insecAssert(_ condition: @autoclosure () -> Bool,
+                 _ log: InsecurityLog,
+                 _ file: StaticString = #file,
+                 _ line: UInt = #line) {
+    assert(condition(), "\(log)", file: file, line: line)
+}
 
 func insecAssertFail(_ log: InsecurityLog,
                      _ file: StaticString = #file,

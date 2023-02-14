@@ -36,8 +36,8 @@ func compare(_ lhs: Int, _ rhs: Int) -> InsecComparisonResult {
     }
 }
 
-struct CoordinatorIndex {
-    struct NavigationData {
+struct CoordinatorIndex: Equatable {
+    struct NavigationData: Equatable {
         let navigationIndex: Int?
     }
     

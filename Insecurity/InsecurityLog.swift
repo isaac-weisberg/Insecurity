@@ -39,4 +39,13 @@ enum InsecurityLog {
     
     // Can not mount a host twice
     case hostIsAlreadyMounted
+    
+    // Start was called while there was a chain of finishes;
+    // The start was scheduled to happen after all dismisses
+    // However, the coordinator that was supposed to precede the new coordinator
+    // was suddenly found dead
+    //
+    // Alternatively, the finish chain didn't actually reach the presumed parent.
+    // There is still a coordinator on top of presumed parent
+    case presumedParentForBatchedStartWasEitherDeadOrNotAtTheTopOfTheStack
 }
