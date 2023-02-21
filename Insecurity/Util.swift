@@ -9,54 +9,38 @@ extension DispatchQueue {
 }
 
 // MARK: - Extensions
-extension Optional {
-    #if DEBUG
-    func assertingNotNil(_ file: StaticString = #file, _ line: UInt = #line) -> Optional {
-        assert(self != nil, "\(type(of: Wrapped.self)) died too early")
-        return self
-    }
-    #else
-    @inline(__always) func assertingNotNil() -> Optional {
-        return self
-    }
-    #endif
-    
-    #if DEBUG
-    func assertNotNil(_ file: StaticString = #file, _ line: UInt = #line) {
-        assert(self != nil, "\(type(of: Wrapped.self)) died too early")
-    }
-    #else
-    @inline(__always) func assertNotNil() {
-        
-    }
-    #endif
-}
 
-func insecAssert(_ condition: @autoclosure () -> Bool,
+@inline(__always) func insecAssert(_ condition: @autoclosure () -> Bool,
                  _ log: InsecurityLog,
                  _ file: StaticString = #file,
                  _ line: UInt = #line) {
+    #if DEBUG
     assert(condition(), "\(log)", file: file, line: line)
+    #endif
 }
 
-func insecAssertFail(_ log: InsecurityLog,
+@inline(__always) func insecAssertFail(_ log: InsecurityLog,
                      _ file: StaticString = #file,
                      _ line: UInt = #line) {
+    #if DEBUG
     assertionFailure("\(log)", file: file, line: line)
+    #endif
 }
 
-func insecFatalError(_ log: InsecurityLog,
+@inline(__always) func insecFatalError(_ log: InsecurityLog,
                      _ file: StaticString = #file,
                      _ line: UInt = #line) -> Never {
     fatalError("\(log)", file: file, line: line)
 }
 
 extension Optional {
-    func insecAssertNotNil(_ file: StaticString = #file,
-                           _ line: UInt = #line) -> Optional {
+    @inline(__always) func insecAssertNotNil(_ file: StaticString = #file,
+                                             _ line: UInt = #line) -> Optional {
+        #if DEBUG
         if self == nil {
             insecAssertFail(.expectedThisToNotBeNil)
         }
+        #endif
         return self
     }
 }
@@ -70,14 +54,14 @@ extension Array {
     }
 }
 
-extension Array {
-    func replacing(_ index: Index, with element: Element) -> Array {
+extension Sequence where Self: RandomAccessCollection & MutableCollection, Index == Int {
+    func replacing(_ index: Index, with element: Element) -> Self {
         var array = self
         array[index] = element
         return array
     }
     
-    func replacingLast(with element: Element) -> Array {
+    func replacingLast(with element: Element) -> Self {
         replacing(self.count - 1, with: element)
     }
 }

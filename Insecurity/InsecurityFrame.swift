@@ -105,13 +105,17 @@ extension Array where Element == Frame {
     }
 }
 
-extension Sequence where Element == Frame {
-    func dismountFromHost() {
+extension Sequence {
+    func dismountFromHost() where Element == Frame {
         for frame in self {
             frame.coordinator.dismountFromHost()
-            frame.navigationData?.children.forEach { child in
-                child.coordinator.dismountFromHost()
-            }
+            frame.navigationData?.children.dismountFromHost()
+        }
+    }
+    
+    func dismountFromHost() where Element == FrameNavigationChild {
+        for frameNavChild in self {
+            frameNavChild.coordinator.dismountFromHost()
         }
     }
 }
