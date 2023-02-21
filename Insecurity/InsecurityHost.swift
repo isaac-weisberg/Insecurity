@@ -10,6 +10,10 @@ struct InsecurityHostState {
         struct Batching {
             struct ScheduledStart {
                 let routine: () -> Void
+                
+                func routineAfterDelay() {
+                    DispatchQueue.main.asyncAfter(Insecurity.navigationPopBatchedStartDelay, routine)
+                }
             }
             
             let deepestDeadIndex: CoordinatorIndex
@@ -128,57 +132,85 @@ public final class InsecurityHost {
             insecAssertFail(.hostDiedBeforeStart)
         case .purging:
             insecAssertFail(.noStartingWhilePurging)
-        case .batching:
-            fatalError("Not implemented")
+        case .batching(let batching):
+            let scheduledStart = InsecurityHostState.Stage.Batching.ScheduledStart { [unowned self] in
+                guard let topAliveIndex = self.frames.topIndex() else {
+                    insecAssertFail(.wantedToBatchedStartButHostIsNotMountedAnymore)
+                    return
+                }
+                
+                insecAssert(topAliveIndex == parentIndex,
+                            .presumedParentForBatchedStartWasEitherDeadOrNotAtTheTopOfTheStack)
+                
+                insecAssert(topAliveIndex.navigationData != nil, .cantStartNavigationOverModalContext)
+                
+                self.startNavigationImmediately(child,
+                                                after: topAliveIndex,
+                                                animated: animated,
+                                                completion)
+            }
+            self.state.stage = .batching(batching.settingScheduledStart(scheduledStart))
         case .ready:
-            let existingModalFrame = self.frames[parentIndex.modalIndex]
-            guard let existingNavigationData = existingModalFrame.navigationData else {
-                insecFatalError(.indexAssuredNavigationButFrameWasModal)
-            }
-            if let parentIndexNavData = parentIndex.navigationData {
-                let newNavigationIndex: Int
-                if let naviChildIndex = parentIndexNavData.navigationIndex {
-                    newNavigationIndex = naviChildIndex + 1
-                } else {
-                    newNavigationIndex = 0
-                }
-                let index = CoordinatorIndex(
-                    modalIndex: parentIndex.modalIndex,
-                    navigationData: CoordinatorIndex.NavigationData(
-                        navigationIndex: newNavigationIndex
-                    )
-                )
-                
-                let controller = child.mountOnHostNavigation(self, index, completion: completion)
-                
-                if let existingNavigationChild = existingNavigationData.children.at(newNavigationIndex) {
-                    fatalError("Unimplemented")
-                } else {
-                    let previousController: Weak<UIViewController>
-                    if let parentNavichildIndex = parentIndexNavData.navigationIndex {
-                        previousController = existingNavigationData.children[parentNavichildIndex].controller
-                    } else {
-                        previousController = existingNavigationData.rootController
-                    }
-                    let newNavichildFrame = FrameNavigationChild(coordinator: child,
-                                                                 controller: Weak(controller),
-                                                                 previousController: previousController)
-                    let newNavichildren = existingNavigationData.children + [newNavichildFrame]
-                    
-                    let newNavigationData = existingNavigationData.replacingChildren(newNavichildren)
-                    
-                    let frame = existingModalFrame.replacingNavigationData(newNavigationData)
-                    
-                    self.frames = self.frames.replacing(index.modalIndex, with: frame)
-                    
-                    newNavigationData.navigationController.value.insecAssertNotNil()?.pushViewController(
-                        controller,
-                        animated: animated
-                    )
-                }
+            startNavigationImmediately(child,
+                                       after: parentIndex,
+                                       animated: animated,
+                                       completion)
+        }
+    }
+    
+    func startNavigationImmediately<Coordinator: CommonNavigationCoordinator>(
+        _ child: Coordinator,
+        after parentIndex: CoordinatorIndex,
+        animated: Bool,
+        _ completion: @escaping (Coordinator.Result?) -> Void
+    ) {
+        let existingModalFrame = self.frames[parentIndex.modalIndex]
+        guard let existingNavigationData = existingModalFrame.navigationData else {
+            insecFatalError(.indexAssuredNavigationButFrameWasModal)
+        }
+        if let parentIndexNavData = parentIndex.navigationData {
+            let newNavigationIndex: Int
+            if let naviChildIndex = parentIndexNavData.navigationIndex {
+                newNavigationIndex = naviChildIndex + 1
             } else {
-                insecAssertFail(.cantStartNavigationOverModalContext)
+                newNavigationIndex = 0
             }
+            let index = CoordinatorIndex(
+                modalIndex: parentIndex.modalIndex,
+                navigationData: CoordinatorIndex.NavigationData(
+                    navigationIndex: newNavigationIndex
+                )
+            )
+            
+            let controller = child.mountOnHostNavigation(self, index, completion: completion)
+            
+            if let existingNavigationChild = existingNavigationData.children.at(newNavigationIndex) {
+                fatalError("Unimplemented")
+            } else {
+                let previousController: Weak<UIViewController>
+                if let parentNavichildIndex = parentIndexNavData.navigationIndex {
+                    previousController = existingNavigationData.children[parentNavichildIndex].controller
+                } else {
+                    previousController = existingNavigationData.rootController
+                }
+                let newNavichildFrame = FrameNavigationChild(coordinator: child,
+                                                             controller: Weak(controller),
+                                                             previousController: previousController)
+                let newNavichildren = existingNavigationData.children + [newNavichildFrame]
+                
+                let newNavigationData = existingNavigationData.replacingChildren(newNavichildren)
+                
+                let frame = existingModalFrame.replacingNavigationData(newNavigationData)
+                
+                self.frames = self.frames.replacing(index.modalIndex, with: frame)
+                
+                newNavigationData.navigationController.value.insecAssertNotNil()?.pushViewController(
+                    controller,
+                    animated: animated
+                )
+            }
+        } else {
+            insecAssertFail(.cantStartNavigationOverModalContext)
         }
     }
     
@@ -329,7 +361,7 @@ public final class InsecurityHost {
                     }
                 } else {
                     navigationController.popToViewController(popToController, animated: true)
-                    scheduledStart?.routine()
+                    scheduledStart?.routineAfterDelay()
                 }
             }
         } else {
