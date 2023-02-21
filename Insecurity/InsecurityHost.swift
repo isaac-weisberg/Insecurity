@@ -98,7 +98,27 @@ public final class InsecurityHost {
                                      navigationData: nil)
         if let parentFrame = frames.at(parentIndex.modalIndex) {
             if let existingFrame = frames.at(index.modalIndex) {
-                fatalError("Not impl")
+                let aliveFramesCount = parentIndex.modalIndex + 1
+                let aliveFrames = self.frames.prefix(aliveFramesCount)
+                
+                if let parentController = existingFrame.controller.value.assertingNotNil() {
+                    let deadFrames = self.frames.suffix(self.frames.count - aliveFramesCount)
+                    deadFrames.dismountFromHost()
+                    
+                    let controller = child.mountOnHostModal(self, index, completion: completion)
+                    
+                    let frame = Frame(coordinator: child,
+                                      controller: controller,
+                                      previousController: parentController,
+                                      navigationData: nil)
+                    
+                    let newFrames = aliveFrames + [frame]
+                    self.frames = Array(newFrames)
+                    
+                    parentController.dismiss(animated: animated) {
+                        parentController.present(controller, animated: animated)
+                    }
+                }
             } else {
                 if let parentController = parentFrame.controller.value {
                     let controller = child.mountOnHostModal(self, index, completion: completion)
@@ -331,12 +351,7 @@ public final class InsecurityHost {
             let deadFramesCount = prepurgeFrames.count - aliveFramesCount
             
             let deadFrames = prepurgeFrames.suffix(deadFramesCount)
-            for deadFrame in deadFrames {
-                deadFrame.coordinator.dismountFromHost()
-                deadFrame.navigationData?.children.forEach { child in
-                    child.coordinator.dismountFromHost()
-                }
-            }
+            deadFrames.dismountFromHost()
             
             let newFrames = Array(prepurgeFrames.prefix(aliveFramesCount))
             

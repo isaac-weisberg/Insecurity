@@ -104,3 +104,14 @@ extension Array where Element == Frame {
         return CoordinatorIndex(modalIndex: modalIndex, navigationData: nil)
     }
 }
+
+extension Sequence where Element == Frame {
+    func dismountFromHost() {
+        for frame in self {
+            frame.coordinator.dismountFromHost()
+            frame.navigationData?.children.forEach { child in
+                child.coordinator.dismountFromHost()
+            }
+        }
+    }
+}
