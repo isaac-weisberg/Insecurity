@@ -9,7 +9,7 @@ struct InsecurityHostState {
     enum Stage {
         struct Batching {
             struct ScheduledStart {
-                let routine: (CoordinatorIndex) -> Void
+                let routine: () -> Void
             }
             
             let deepestDeadIndex: CoordinatorIndex
@@ -61,12 +61,17 @@ public final class InsecurityHost {
         case .purging:
             insecFatalError(.noStartingWhilePurging)
         case .batching(let batching):
-            let scheduledStart = InsecurityHostState.Stage.Batching.ScheduledStart { [unowned self] newParentIndex in
-                insecAssert(newParentIndex == parentIndex,
+            let scheduledStart = InsecurityHostState.Stage.Batching.ScheduledStart { [unowned self] in
+                guard let topAliveIndex = self.frames.topIndex() else {
+                    insecAssertFail(.wantedToBatchedStartButHostIsNotMountedAnymore)
+                    return
+                }
+                
+                insecAssert(topAliveIndex == parentIndex,
                             .presumedParentForBatchedStartWasEitherDeadOrNotAtTheTopOfTheStack)
                 
                 self.startModalImmediately(child,
-                                           after: newParentIndex,
+                                           after: topAliveIndex,
                                            animated: animated,
                                            completion)
             }
@@ -318,45 +323,23 @@ public final class InsecurityHost {
                     
                     navigationController.popToViewController(popToController, animated: false)
                     if let presentingViewController = frameThatNeedsModalDismissal.previousController.value {
-                        presentingViewController.dismiss(animated: true) { [weak self] in
-                            self?.executeScheduledStartRoutine()
+                        presentingViewController.dismiss(animated: true) {
+                            scheduledStart?.routine()
                         }
                     }
                 } else {
                     navigationController.popToViewController(popToController, animated: true)
-                    executeScheduledStartRoutineWithDelay()
+                    scheduledStart?.routine()
                 }
             }
         } else {
             if modalIndexThatNeedsDismissing == deepestDeadIndex.modalIndex {
                 firstDeadChild.previousController.value.insecAssertNotNil()?
-                    .dismiss(animated: true) { [weak self] in
-                        self?.executeScheduledStartRoutine()
+                    .dismiss(animated: true) {
+                        scheduledStart?.routine()
                     }
             } else {
-                switch scheduledStart {
-                case nil:
-                    break
-                case .some(let start):
-                    // undead = last undead index among the frames
-                    let undeadModalIndex = deepestDeadIndex.modalIndex - 1
-                    let undeadIndexNavData: CoordinatorIndex.NavigationData?
-                    if let parentNavData = self.frames[undeadModalIndex].navigationData {
-                        if parentNavData.children.isEmpty {
-                            undeadIndexNavData = CoordinatorIndex.NavigationData(navigationIndex: nil)
-                        } else {
-                            undeadIndexNavData = CoordinatorIndex.NavigationData(
-                                navigationIndex: parentNavData.children.count - 1
-                            )
-                        }
-                    } else {
-                        undeadIndexNavData = nil
-                    }
-                    let undeadIndex = CoordinatorIndex(modalIndex: undeadModalIndex,
-                                                       navigationData: undeadIndexNavData)
-                    
-                    start.routine(undeadIndex)
-                }
+                scheduledStart?.routine()
             }
         }
     }

@@ -83,3 +83,24 @@ struct Frame {
                      navigationData: newNavData)
     }
 }
+
+extension Array where Element == Frame {
+    func topIndex() -> CoordinatorIndex? {
+        if isEmpty {
+            return nil
+        }
+        let modalIndex = count - 1
+        
+        if let navigationData = self[modalIndex].navigationData {
+            let navIndex: Int?
+            if navigationData.children.isEmpty {
+                navIndex = nil
+            } else {
+                navIndex = navigationData.children.count - 1
+            }
+            return CoordinatorIndex(modalIndex: modalIndex,
+                                    navigationData: CoordinatorIndex.NavigationData(navigationIndex: navIndex))
+        }
+        return CoordinatorIndex(modalIndex: modalIndex, navigationData: nil)
+    }
+}

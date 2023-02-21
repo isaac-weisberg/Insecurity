@@ -48,4 +48,6 @@ enum InsecurityLog {
     // Alternatively, the finish chain didn't actually reach the presumed parent.
     // There is still a coordinator on top of presumed parent
     case presumedParentForBatchedStartWasEitherDeadOrNotAtTheTopOfTheStack
+    
+    case wantedToBatchedStartButHostIsNotMountedAnymore
 }
