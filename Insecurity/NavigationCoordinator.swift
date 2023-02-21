@@ -120,6 +120,15 @@ open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
         }
     }
     
+    public func dismissChildren(animated: Bool) {
+        switch state {
+        case .mounted(let mounted):
+            mounted.host.value.insecAssertNotNil()?.dismissChildren(animated: animated, after: mounted.index)
+        case .dead, .unmounted:
+            insecAssertFail(.noDismissChildrenOnDeadOrUnmounted)
+        }
+    }
+    
     private func startIfMounted(_ startBlock: (State.Mounted) -> Void) {
         switch state {
         case .mounted(let mounted):

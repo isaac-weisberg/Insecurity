@@ -33,12 +33,28 @@ extension DispatchQueue {
     fatalError("\(log)", file: file, line: line)
 }
 
+func insecAssumptionFailed(_ assumption: InsecurityAssumption,
+                           _ file: StaticString = #file,
+                           _ line: UInt = #line) {
+    Insecurity.onAssumptionFailedLog?(assumption)
+}
+
 extension Optional {
-    @inline(__always) func insecAssertNotNil(_ file: StaticString = #file,
+    func insecAssertNotNil(_ file: StaticString = #file,
                                              _ line: UInt = #line) -> Optional {
         #if DEBUG
         if self == nil {
             insecAssertFail(.expectedThisToNotBeNil)
+        }
+        #endif
+        return self
+    }
+    
+    func insecAssumeNotNil(_ file: StaticString = #file,
+                           _ line: UInt = #line) -> Optional {
+        #if DEBUG
+        if self == nil {
+            insecAssumptionFailed(.assumedThisThingWouldntBeNil)
         }
         #endif
         return self

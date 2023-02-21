@@ -400,7 +400,8 @@ public final class InsecurityHost {
     
     private func purge(deepestDeadIndex: CoordinatorIndex,
                        modalIndexThatNeedsDismissing: Int?,
-                       scheduledStart: InsecurityHostState.Stage.Batching.ScheduledStart?) {
+                       scheduledStart: InsecurityHostState.Stage.Batching.ScheduledStart?,
+                       animated: Bool) {
         #if DEBUG
         insecPrint("Purging \(deepestDeadIndex.string) modalDismiss: \(modalIndexThatNeedsDismissing.flatMap({ "\($0)" }) ?? "nil")")
         #endif
@@ -444,12 +445,7 @@ public final class InsecurityHost {
             let deadFramesCount = prepurgeFrames.count - aliveFramesCount
             
             let deadFrames = prepurgeFrames.suffix(deadFramesCount)
-            for deadFrame in deadFrames {
-                deadFrame.coordinator.dismountFromHost()
-                deadFrame.navigationData?.children.forEach { child in
-                    child.coordinator.dismountFromHost()
-                }
-            }
+            deadFrames.dismountFromHost()
             
             postPurgeFrames = Array(prepurgeFrames.prefix(firstDeadChildIndex))
         }
@@ -473,23 +469,23 @@ public final class InsecurityHost {
                 let popToController = deadNavChild.previousController.value.insecAssertNotNil()
             {
                 if let frameThatNeedsModalDismissal = frameThatNeedsModalDismissalOpt {
-                    frameThatNeedsModalDismissal.previousController.value.insecAssertNotNil()
+                    frameThatNeedsModalDismissal.previousController.value.insecAssumeNotNil()
                     
                     navigationController.popToViewController(popToController, animated: false)
                     if let presentingViewController = frameThatNeedsModalDismissal.previousController.value {
-                        presentingViewController.dismiss(animated: true) {
+                        presentingViewController.dismiss(animated: animated) {
                             scheduledStart?.routine()
                         }
                     }
                 } else {
-                    navigationController.popToViewController(popToController, animated: true)
+                    navigationController.popToViewController(popToController, animated: animated)
                     scheduledStart?.routineAfterDelay()
                 }
             }
         } else {
             if modalIndexThatNeedsDismissing == deepestDeadIndex.modalIndex {
                 firstDeadChild.previousController.value.insecAssertNotNil()?
-                    .dismiss(animated: true) {
+                    .dismiss(animated: animated) {
                         scheduledStart?.routine()
                     }
             } else {
@@ -543,7 +539,8 @@ public final class InsecurityHost {
                 self.purge(
                     deepestDeadIndex: batch.deepestDeadIndex,
                     modalIndexThatNeedsDismissing: batch.modalIndexThatNeedsDismissing,
-                    scheduledStart: batch.scheduledStart
+                    scheduledStart: batch.scheduledStart,
+                    animated: true
                 )
                 self.state.stage = .ready
             case .ready, .purging:
@@ -707,5 +704,86 @@ public final class InsecurityHost {
         self.frames = [frame]
         
         parentController.present(controller, animated: animated)
+    }
+    
+    // MARK: - NEW Dismiss API
+    
+    func dismissChildren(animated: Bool, after index: CoordinatorIndex) {
+        switch state.stage {
+        case .batching, .purging:
+            insecAssertFail(.dismiss(.cantDismissDuringBatchingOrPurging))
+        case .dead:
+            insecAssertFail(.dismiss(.cantDismissWhileDead))
+        case .ready:
+            let firstDeadIndex: CoordinatorIndex?
+            let modalIndexThatNeedsDismissing: Int?
+            
+            if let indexNavigationData = index.navigationData {
+                let firstDeadNavChildIndex: Int
+                if let lastAliveNavIndex = indexNavigationData.navigationIndex {
+                    firstDeadNavChildIndex = lastAliveNavIndex + 1
+                } else {
+                    firstDeadNavChildIndex = 0
+                }
+                
+                if
+                    let lastAliveModalFrame = self.frames.at(index.modalIndex).insecAssumeNotNil(),
+                    let lastAliveNavData = lastAliveModalFrame.navigationData.insecAssertNotNil()
+                {
+                    if lastAliveNavData.children.at(firstDeadNavChildIndex) != nil {
+                        firstDeadIndex = CoordinatorIndex(
+                            modalIndex: index.modalIndex,
+                            navigationData: CoordinatorIndex.NavigationData(
+                                navigationIndex: firstDeadNavChildIndex
+                            )
+                        )
+                        
+                        let firstDeadModalIndex = index.modalIndex + 1
+                        if self.frames.at(firstDeadModalIndex) != nil {
+                            modalIndexThatNeedsDismissing = firstDeadModalIndex
+                        } else {
+                            modalIndexThatNeedsDismissing = nil
+                        }
+                    } else {
+                        // There is no nav child to be dismissed, so it's a no-op
+                        firstDeadIndex = nil
+                        modalIndexThatNeedsDismissing = nil
+                    }
+                } else {
+                    // error
+                    firstDeadIndex = nil
+                    modalIndexThatNeedsDismissing = nil
+                }
+            } else {
+                let firstDeadModalIndex = index.modalIndex + 1
+                let navigationData: CoordinatorIndex.NavigationData?
+                
+                if let firstDeadFrame = self.frames.at(firstDeadModalIndex) {
+                    if let firstDeadFrameNavData = firstDeadFrame.navigationData {
+                        navigationData = CoordinatorIndex.NavigationData(navigationIndex: nil)
+                    } else {
+                        navigationData = nil
+                    }
+                    firstDeadIndex = CoordinatorIndex(modalIndex: firstDeadModalIndex,
+                                                      navigationData: navigationData)
+                    modalIndexThatNeedsDismissing = firstDeadModalIndex
+                } else {
+                    // There is no modal frame to kill, so NO-OP
+                    
+                    firstDeadIndex = nil
+                    modalIndexThatNeedsDismissing = nil
+                }
+            }
+            
+            if let firstDeadIndex = firstDeadIndex {
+                self.state.stage = .purging
+                self.purge(deepestDeadIndex: firstDeadIndex,
+                           modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing,
+                           scheduledStart: nil,
+                           animated: animated)
+                self.state.stage = .ready
+            }
+            
+        }
     }
 }

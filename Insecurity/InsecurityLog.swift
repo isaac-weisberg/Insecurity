@@ -1,4 +1,4 @@
-enum InsecurityLog {
+@frozen enum InsecurityLog {
     // Don't call finish on coordinator that wasn't mounted or that died
     case noFinishOnUnmounted
     case noFinishOnDead
@@ -32,6 +32,7 @@ enum InsecurityLog {
     case coordinatorDiedTwice
     
     case noStartOnDeadOrUnmounted
+    case noDismissChildrenOnDeadOrUnmounted
     
     case expectedThisToNotBeNil
     
@@ -50,4 +51,15 @@ enum InsecurityLog {
     case presumedParentForBatchedStartWasEitherDeadOrNotAtTheTopOfTheStack
     
     case wantedToBatchedStartButHostIsNotMountedAnymore
+    
+    enum Dismiss {
+        case cantDismissWhileDead
+        case cantDismissDuringBatchingOrPurging
+    }
+    
+    case dismiss(Dismiss)
+}
+
+@frozen public enum InsecurityAssumption {
+    case assumedThisThingWouldntBeNil
 }
