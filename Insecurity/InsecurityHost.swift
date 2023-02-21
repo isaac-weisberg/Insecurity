@@ -228,44 +228,73 @@ public final class InsecurityHost {
             insecAssertFail(.hostDiedBeforeStart)
         case .purging:
             insecAssertFail(.noStartingWhilePurging)
-        case .batching:
-            fatalError("Not implemented")
-        case .ready:
-            let index = CoordinatorIndex(
-                modalIndex: parentIndex.modalIndex + 1,
-                navigationData: CoordinatorIndex.NavigationData(
-                    navigationIndex: nil
-                )
-            )
-            if let parentFrame = frames.at(parentIndex.modalIndex) {
-                if let existingFrame = frames.at(index.modalIndex) {
-                    fatalError("Not impl")
-                } else {
-                    if let parentController = parentFrame.controller.value {
-                        let controller = child.mountOnHostNavigation(self, index, completion: completion)
-                        
-                        let frame = Frame(
-                            coordinator: child,
-                            controller: navigationController,
-                            previousController: parentController,
-                            navigationData: FrameNavigationData(
-                                children: [],
-                                navigationController: navigationController,
-                                rootController: controller
-                            )
-                        )
-                        
-                        self.frames.append(frame)
-                        
-                        navigationController.setViewControllers([ controller ], animated: false)
-                        parentController.present(navigationController, animated: animated, completion: nil)
-                    } else {
-                        insecAssertFail(.parentControllerHasBeenLost)
-                    }
+        case .batching(let batching):
+            let scheduledStart = InsecurityHostState.Stage.Batching.ScheduledStart { [unowned self] in
+                guard let topAliveIndex = self.frames.topIndex() else {
+                    insecAssertFail(.wantedToBatchedStartButHostIsNotMountedAnymore)
+                    return
                 }
-            } else {
-                insecAssertFail(.noFrameAtIndexPath)
+                
+                insecAssert(topAliveIndex == parentIndex,
+                            .presumedParentForBatchedStartWasEitherDeadOrNotAtTheTopOfTheStack)
+                
+                self.startNavigationNewImmediately(navigationController,
+                                                   child,
+                                                   after: topAliveIndex,
+                                                   animated: animated,
+                                                   completion)
             }
+            self.state.stage = .batching(batching.settingScheduledStart(scheduledStart))
+        case .ready:
+            startNavigationNewImmediately(navigationController,
+                                          child,
+                                          after: parentIndex,
+                                          animated: animated,
+                                          completion)
+        }
+    }
+    
+    func startNavigationNewImmediately<Coordinator: CommonNavigationCoordinator>(
+        _ navigationController: UINavigationController,
+        _ child: Coordinator,
+        after parentIndex: CoordinatorIndex,
+        animated: Bool,
+        _ completion: @escaping (Coordinator.Result?) -> Void
+    ) {
+        let index = CoordinatorIndex(
+            modalIndex: parentIndex.modalIndex + 1,
+            navigationData: CoordinatorIndex.NavigationData(
+                navigationIndex: nil
+            )
+        )
+        if let parentFrame = frames.at(parentIndex.modalIndex) {
+            if let existingFrame = frames.at(index.modalIndex) {
+                fatalError("Not impl")
+            } else {
+                if let parentController = parentFrame.controller.value {
+                    let controller = child.mountOnHostNavigation(self, index, completion: completion)
+                    
+                    let frame = Frame(
+                        coordinator: child,
+                        controller: navigationController,
+                        previousController: parentController,
+                        navigationData: FrameNavigationData(
+                            children: [],
+                            navigationController: navigationController,
+                            rootController: controller
+                        )
+                    )
+                    
+                    self.frames.append(frame)
+                    
+                    navigationController.setViewControllers([ controller ], animated: false)
+                    parentController.present(navigationController, animated: animated, completion: nil)
+                } else {
+                    insecAssertFail(.parentControllerHasBeenLost)
+                }
+            }
+        } else {
+            insecAssertFail(.noFrameAtIndexPath)
         }
     }
     
@@ -309,7 +338,7 @@ public final class InsecurityHost {
                 }
             }
             
-            var newFrames = Array(prepurgeFrames.prefix(aliveFramesCount))
+            let newFrames = Array(prepurgeFrames.prefix(aliveFramesCount))
             
             let newNavigationData = navigationData.replacingChildren(aliveNavChildren)
             let newFrame = firstDeadChild.replacingNavigationData(newNavigationData)
