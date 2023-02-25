@@ -92,16 +92,18 @@ extension Array where Element == Frame {
         let modalIndex = count - 1
         
         if let navigationData = self[modalIndex].navigationData {
-            let navIndex: Int?
+            let navichildIndex: Int?
             if navigationData.children.isEmpty {
-                navIndex = nil
+                navichildIndex = nil
             } else {
-                navIndex = navigationData.children.count - 1
+                navichildIndex = navigationData.children.count - 1
             }
-            return CoordinatorIndex(modalIndex: modalIndex,
-                                    navigationData: CoordinatorIndex.NavigationData(navigationIndex: navIndex))
+            return CoordinatorIndex.navigation(NavigationIndex(
+                modalIndex: modalIndex,
+                navichildIndex: navichildIndex
+            ))
         }
-        return CoordinatorIndex(modalIndex: modalIndex, navigationData: nil)
+        return CoordinatorIndex.modal(ModalIndex(modalIndex: modalIndex))
     }
 }
 

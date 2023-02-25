@@ -198,17 +198,17 @@ public final class InsecurityHost {
             insecAssertFail(.indexAssuredNavigationButFrameWasModal)
             return
         }
-        guard let parentNavIndex = parentIndex.asNavigationIndex() else {
+        guard let parentNavIndex = parentIndex.assertNavigationIndex() else {
             return
         }
         
         // Mount Coordinator
-        let index = parentNavIndex.nextNavigationIndex
+        let index = parentNavIndex.nextNavichildIndex
         
         let controller = child.mountOnHostNavigation(self, index.asUntypedIndex, completion: completion)
         
         let previousController: Weak<UIViewController>
-        if let parentNavichildIndex = parentNavIndex.navigationData.navigationIndex {
+        if let parentNavichildIndex = parentNavIndex.navichildIndex {
             previousController = parentNavigationData.children[parentNavichildIndex].controller
         } else {
             previousController = parentNavigationData.rootController
@@ -226,7 +226,7 @@ public final class InsecurityHost {
         let aliveFrames = preTransformFrames.prefix(aliveFramesCount)
         
         // Calculate dead navigation frames
-        let aliveNavChildCount = parentNavIndex.navigationData.navigationIndex
+        let aliveNavChildCount = parentNavIndex.navichildIndex
             .flatMap { $0 + 1 } ?? 0
         let deadNavChildCount = parentNavigationData.children.count - aliveNavChildCount
         let deadNavChildren = parentNavigationData.children.suffix(deadNavChildCount)
@@ -311,7 +311,7 @@ public final class InsecurityHost {
         let index = CoordinatorIndex(
             modalIndex: parentIndex.modalIndex + 1,
             navigationData: CoordinatorIndex.NavigationData(
-                navigationIndex: nil
+                naviChildIndex: nil
             )
         )
         if let parentFrame = frames.at(parentIndex.modalIndex) {
@@ -396,13 +396,11 @@ public final class InsecurityHost {
         if
             let navigationData = firstDeadChild.navigationData,
             let indexNavData = deepestDeadIndex.navigationData.presenceAssuredByIndex(),
-            let navigationChildIndex = indexNavData.navigationIndex
+            let navigationChildIndex = indexNavData.naviChildIndex
         {
             let aliveNavChildrenCount = navigationChildIndex
             let deadNavChildrenCount = navigationData.children.count - aliveNavChildrenCount
-            navigationData.children.suffix(deadNavChildrenCount).forEach { child in
-                child.coordinator.dismountFromHost()
-            }
+            navigationData.children.suffix(deadNavChildrenCount).dismountFromHost()
             
             let aliveNavChildren = Array(navigationData.children.prefix(aliveNavChildrenCount))
             
@@ -433,7 +431,7 @@ public final class InsecurityHost {
         self.frames = postPurgeFrames
         
         if
-            let deadNavIndex = deepestDeadIndex.navigationData?.navigationIndex,
+            let deadNavIndex = deepestDeadIndex.navigationData?.naviChildIndex,
             let deadNavData = firstDeadChild.navigationData
         {
             let deadNavChild = deadNavData.children[deadNavIndex]
@@ -540,7 +538,7 @@ public final class InsecurityHost {
                 case let (.some(newlyNavigationData), .some(deepestNavigationData)):
                     // It's 2 navigation frames inside one modal frame
                     
-                    switch (newlyNavigationData.navigationIndex, deepestNavigationData.navigationIndex) {
+                    switch (newlyNavigationData.naviChildIndex, deepestNavigationData.naviChildIndex) {
                     case let (.some(newDeadNavIndex), .some(deepestDeadNavIndex)):
                         // Both navigation frames are child frames
                         switch compare(newDeadNavIndex, deepestDeadNavIndex) {
@@ -601,7 +599,7 @@ public final class InsecurityHost {
                 
                 if let navigationData = index.navigationData {
                     // This is a modal frame with nav data
-                    if navigationData.navigationIndex != nil {
+                    if navigationData.naviChildIndex != nil {
                         // This is a navigation child
                         // This means, the UINavigationController doesn't die
                         // The need for modal dismissal still affects only controllers above
@@ -686,6 +684,67 @@ public final class InsecurityHost {
     
     // MARK: - NEW Dismiss API
     
+    func nextNavigationIndex(after index: CoordinatorIndex) -> CoordinatorIndex? {
+        let frame = self.frames[index.modalIndex]
+        if let navigationIndex = index.asNavigationIndex() {
+            // Current frame navigation
+            let nextNavichildIndex = navigationIndex.nextNavichildIndex
+            
+            guard let navigationData = frame.navigationData.insecAssertNotNil() else {
+                return nil
+            }
+            
+            let naviChildExists = navigationData.children.at(nextNavichildIndex.navichildIndexUnwrapped) != nil
+            
+            if naviChildExists {
+                // There is a navichild after current index
+                
+                return nextNavichildIndex.asUntypedIndex
+            } else {
+                // There is no navichild after current index, so we fallback to the next
+                
+            }
+        } else {
+            // Current frame modal
+            let nextModalIndex = index.modalIndex + 1
+            if let nextFrame = self.frames.at(nextModalIndex) {
+                // Next frame exists
+                let nextFrameNavData: CoordinatorIndex.NavigationData?
+                if nextFrame.navigationData != nil {
+                    // Next frame is navigation frame
+                    nextFrameNavData = CoordinatorIndex.NavigationData(
+                        naviChildIndex: nil
+                    )
+                } else {
+                    // Next frame is modal frame
+                    nextFrameNavData = nil
+                }
+                return CoordinatorIndex(
+                    modalIndex: nextModalIndex,
+                    navigationData: nextFrameNavData
+                )
+            } else {
+                // Next frame doesnt exist
+                return nil
+            }
+        }
+    }
+    
+    func dismissChildrenV2(animated: Bool, after index: CoordinatorIndex) {
+        let firstDeadIndex: CoordinatorIndex
+        if let navigationIndex = index.asNavigationIndex() {
+            
+        } else {
+            
+        }
+        
+        dismiss(animated, at: firstDeadIndex)
+    }
+    
+    func dismiss(_ animated: Bool, at index: CoordinatorIndex) {
+        
+    }
+    
     func dismissChildren(animated: Bool, after index: CoordinatorIndex) {
         switch state.stage {
         case .batching, .purging:
@@ -698,7 +757,7 @@ public final class InsecurityHost {
             
             if let indexNavigationData = index.navigationData {
                 let firstDeadNavChildIndex: Int
-                if let lastAliveNavIndex = indexNavigationData.navigationIndex {
+                if let lastAliveNavIndex = indexNavigationData.naviChildIndex {
                     firstDeadNavChildIndex = lastAliveNavIndex + 1
                 } else {
                     firstDeadNavChildIndex = 0
@@ -712,7 +771,7 @@ public final class InsecurityHost {
                         firstDeadIndex = CoordinatorIndex(
                             modalIndex: index.modalIndex,
                             navigationData: CoordinatorIndex.NavigationData(
-                                navigationIndex: firstDeadNavChildIndex
+                                naviChildIndex: firstDeadNavChildIndex
                             )
                         )
                         
@@ -738,7 +797,7 @@ public final class InsecurityHost {
                 
                 if let firstDeadFrame = self.frames.at(firstDeadModalIndex) {
                     if let firstDeadFrameNavData = firstDeadFrame.navigationData {
-                        navigationData = CoordinatorIndex.NavigationData(navigationIndex: nil)
+                        navigationData = CoordinatorIndex.NavigationData(naviChildIndex: nil)
                     } else {
                         navigationData = nil
                     }
