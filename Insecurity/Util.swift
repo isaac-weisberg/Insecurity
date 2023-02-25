@@ -70,6 +70,15 @@ extension Array {
     }
 }
 
+extension Optional {
+    func wrapToArrayOrEmpty() -> [Wrapped] {
+        if let self = self {
+            return [self]
+        }
+        return []
+    }
+}
+
 extension Sequence where Self: RandomAccessCollection & MutableCollection, Index == Int {
     func replacing(_ index: Index, with element: Element) -> Self {
         var array = self

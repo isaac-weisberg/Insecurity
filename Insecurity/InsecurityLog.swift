@@ -52,12 +52,14 @@
     
     case wantedToBatchedStartButHostIsNotMountedAnymore
     
-    enum Dismiss {
+    @frozen enum Dismiss {
         case cantDismissWhileDead
         case cantDismissDuringBatchingOrPurging
     }
     
     case dismiss(Dismiss)
+    
+    case startNavigationCalledOverANonNavigationIndex
 }
 
 @frozen public enum InsecurityAssumption {

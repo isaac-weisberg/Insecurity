@@ -36,6 +36,36 @@ func compare(_ lhs: Int, _ rhs: Int) -> InsecComparisonResult {
     }
 }
 
+struct NavigationIndex {
+    let modalIndex: Int
+    let navigationData: CoordinatorIndex.NavigationData
+    
+    var asUntypedIndex: CoordinatorIndex {
+        return CoordinatorIndex(
+            modalIndex: modalIndex,
+            navigationData: CoordinatorIndex.NavigationData(
+                navigationIndex: navigationData.navigationIndex
+            )
+        )
+    }
+    
+    var nextNavigationIndex: NavigationIndex {
+        let newNavigationIndex: Int
+        if let naviChildIndex = navigationData.navigationIndex {
+            newNavigationIndex = naviChildIndex + 1
+        } else {
+            newNavigationIndex = 0
+        }
+        let index = NavigationIndex(
+            modalIndex: modalIndex,
+            navigationData: CoordinatorIndex.NavigationData(
+                navigationIndex: newNavigationIndex
+            )
+        )
+        return index
+    }
+}
+
 struct CoordinatorIndex: Equatable {
     struct NavigationData: Equatable {
         let navigationIndex: Int?
@@ -50,6 +80,14 @@ struct CoordinatorIndex: Equatable {
         return "(mod: \(modalIndex) nav: \(navIndexString))"
     }
     #endif
+    
+    func asNavigationIndex(_ file: StaticString = #file, _ line: UInt = #line) -> NavigationIndex? {
+        guard let navigationData = self.navigationData else {
+            insecAssertFail(.indexAssuredNavigationButFrameWasModal, file, line)
+            return nil
+        }
+        return NavigationIndex(modalIndex: modalIndex, navigationData: navigationData)
+    }
 }
 
 extension Optional where Wrapped == CoordinatorIndex.NavigationData {

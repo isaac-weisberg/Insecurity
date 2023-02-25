@@ -190,94 +190,74 @@ public final class InsecurityHost {
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
-        let existingModalFrame = self.frames[parentIndex.modalIndex]
-        guard let existingNavigationData = existingModalFrame.navigationData else {
-            insecFatalError(.indexAssuredNavigationButFrameWasModal)
+        let preTransformFrames = self.frames
+        // Sanity checks
+        
+        let parentFrame = preTransformFrames[parentIndex.modalIndex]
+        guard let parentNavigationData = parentFrame.navigationData else {
+            insecAssertFail(.indexAssuredNavigationButFrameWasModal)
+            return
         }
-        if
-            let parentIndexNavData = parentIndex.navigationData,
-            let navigationController = existingNavigationData.navigationController.value
-        {
-            let newNavigationIndex: Int
-            if let naviChildIndex = parentIndexNavData.navigationIndex {
-                newNavigationIndex = naviChildIndex + 1
-            } else {
-                newNavigationIndex = 0
-            }
-            let index = CoordinatorIndex(
-                modalIndex: parentIndex.modalIndex,
-                navigationData: CoordinatorIndex.NavigationData(
-                    navigationIndex: newNavigationIndex
-                )
-            )
-            
-            let controller = child.mountOnHostNavigation(self, index, completion: completion)
-            
-            let previousController: Weak<UIViewController>
-            if let parentNavichildIndex = parentIndexNavData.navigationIndex {
-                previousController = existingNavigationData.children[parentNavichildIndex].controller
-            } else {
-                previousController = existingNavigationData.rootController
-            }
-            let newNavichildFrame = FrameNavigationChild(coordinator: child,
-                                                         controller: Weak(controller),
-                                                         previousController: previousController)
-            
-            let navigationDataChildren = existingNavigationData.children
-            let thereIsANaviChildAboveParentAlready = navigationDataChildren.at(newNavigationIndex) != nil
-            if thereIsANaviChildAboveParentAlready {
-                let aliveNavFramesCount = newNavigationIndex + 1
-                let aliveNavFrames = navigationDataChildren.prefix(aliveNavFramesCount)
-                let deadNavFrames = navigationDataChildren.suffix(navigationDataChildren.count - aliveNavFramesCount)
-                
-                deadNavFrames.dismountFromHost()
-                
-                let newNavFrames = aliveNavFrames + [newNavichildFrame]
-                let newNavigationData = existingNavigationData.replacingChildren(Array(newNavFrames))
-                let updatedFrame = existingModalFrame.replacingNavigationData(newNavigationData)
-                let aliveModalFramesCount = parentIndex.modalIndex + 1
-                let oldFrames = self.frames.prefix(aliveModalFramesCount)
-                let newFrames = oldFrames.replacingLast(with: updatedFrame)
-                 
-                let existingViewControllers = navigationController.viewControllers
-                let aliveControllers = existingViewControllers.prefix(aliveNavFramesCount)
-                let newControllers = Array(aliveControllers + [controller])
-                
-                let thereIsAModalFrameAboveCurrent = self.frames.at(parentIndex.modalIndex + 1) != nil
-                if thereIsAModalFrameAboveCurrent {
-                    let aliveModalFramesCount = parentIndex.modalIndex + 1
-                    let aliveModalFrames = self.frames.prefix(aliveModalFramesCount)
-                    let deadModalFrames = self.frames.suffix(self.frames.count - aliveModalFramesCount)
-                    deadModalFrames.dismountFromHost()
-                    
-                    self.frames = Array(newFrames)
-                    
-                    if navigationController.presentedViewController != nil {
-                        navigationController.setViewControllers(newControllers, animated: false)
-                        navigationController.dismiss(animated: animated)
-                    } else {
-                        navigationController.setViewControllers(newControllers, animated: animated)
-                    }
-                } else {
-                    self.frames = Array(newFrames)
-                    navigationController.setViewControllers(newControllers, animated: animated)
-                }
-            } else {
-                let newNavichildren = navigationDataChildren + [newNavichildFrame]
-                
-                let newNavigationData = existingNavigationData.replacingChildren(newNavichildren)
-                
-                let frame = existingModalFrame.replacingNavigationData(newNavigationData)
-                
-                self.frames = self.frames.replacing(index.modalIndex, with: frame)
-                
-                navigationController.pushViewController(
-                    controller,
-                    animated: animated
-                )
-            }
+        guard let parentNavIndex = parentIndex.asNavigationIndex() else {
+            return
+        }
+        
+        // Mount Coordinator
+        let index = parentNavIndex.nextNavigationIndex
+        
+        let controller = child.mountOnHostNavigation(self, index.asUntypedIndex, completion: completion)
+        
+        let previousController: Weak<UIViewController>
+        if let parentNavichildIndex = parentNavIndex.navigationData.navigationIndex {
+            previousController = parentNavigationData.children[parentNavichildIndex].controller
         } else {
-            insecAssertFail(.cantStartNavigationOverModalContext)
+            previousController = parentNavigationData.rootController
+        }
+        let newNavichildFrame = FrameNavigationChild(coordinator: child,
+                                                     controller: Weak(controller),
+                                                     previousController: previousController)
+        
+        // Transform frames
+        
+        // Calculate dead modal frames
+        let aliveFramesCount = parentIndex.modalIndex + 1
+        let deadFramesCount = preTransformFrames.count - aliveFramesCount
+        let oldFrames = preTransformFrames.suffix(deadFramesCount)
+        let aliveFrames = preTransformFrames.prefix(aliveFramesCount)
+        
+        // Calculate dead navigation frames
+        let aliveNavChildCount = parentNavIndex.navigationData.navigationIndex
+            .flatMap { $0 + 1 } ?? 0
+        let deadNavChildCount = parentNavigationData.children.count - aliveNavChildCount
+        let deadNavChildren = parentNavigationData.children.suffix(deadNavChildCount)
+        let aliveNavChildren = parentNavigationData.children.prefix(aliveNavChildCount)
+        
+        // Then assemble a new navChild array and everything else
+        let newNavChildren = aliveNavChildren + [newNavichildFrame]
+        let newNavData = parentNavigationData.replacingChildren(Array(newNavChildren))
+        let newFrame = parentFrame.replacingNavigationData(newNavData)
+        let newFrames = aliveFrames.replacingLast(with: newFrame)
+        
+        // Then, write the changes to the state
+        oldFrames.dismountFromHost()
+        deadNavChildren.dismountFromHost()
+        self.frames = Array(newFrames)
+            
+        // Perform navigation
+        let newNavControllers = newNavData.rootController.value.insecAssumeNotNil().wrapToArrayOrEmpty()
+        + newNavChildren.compactMap { navichild in
+            navichild.controller.value.insecAssumeNotNil()
+        }
+        
+        if let modalController = newFrame.controller.value.insecAssumeNotNil() {
+            if modalController.presentedViewController != nil {
+                parentNavigationData.navigationController.value.insecAssumeNotNil()?
+                    .setViewControllers(newNavControllers, animated: false)
+                modalController.dismiss(animated: animated)
+            } else {
+                parentNavigationData.navigationController.value.insecAssumeNotNil()?
+                    .setViewControllers(newNavControllers, animated: false)
+            }
         }
     }
     
@@ -469,10 +449,8 @@ public final class InsecurityHost {
                 let popToController = deadNavChild.previousController.value.insecAssertNotNil()
             {
                 if let frameThatNeedsModalDismissal = frameThatNeedsModalDismissalOpt {
-                    frameThatNeedsModalDismissal.previousController.value.insecAssumeNotNil()
-                    
                     navigationController.popToViewController(popToController, animated: false)
-                    if let presentingViewController = frameThatNeedsModalDismissal.previousController.value {
+                    if let presentingViewController = frameThatNeedsModalDismissal.previousController.value.insecAssumeNotNil() {
                         presentingViewController.dismiss(animated: animated) {
                             scheduledStart?.routine()
                         }
