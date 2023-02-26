@@ -53,6 +53,10 @@ struct NavigationIndex: Equatable {
         return CoordinatorIndex.navigation(self)
     }
     
+    func asModalIndex() -> ModalIndex {
+        return ModalIndex.init(modalIndex: modalIndex)
+    }
+    
     func nextNavichildIndex() -> NavichildIndex {
         let newNavichildIndex: Int
         if let naviChildIndex = self.navichildIndex {
@@ -68,9 +72,26 @@ struct NavigationIndex: Equatable {
 
 struct ModalIndex: Equatable {
     let modalIndex: Int
+    
+    func nextModalIndex() -> ModalIndex {
+        return ModalIndex(modalIndex: modalIndex)
+    }
 }
 
 enum CoordinatorIndex: Equatable {
+    static func modal(_ modalIndex: Int) -> CoordinatorIndex {
+        return .modal(ModalIndex(modalIndex: modalIndex))
+    }
+    
+    static func navigation(_ modalIndex: Int, navichildIndex: Int?) -> CoordinatorIndex {
+        return .navigation(
+            NavigationIndex(
+                modalIndex: modalIndex,
+                navichildIndex: navichildIndex
+            )
+        )
+    }
+    
     case modal(ModalIndex)
     case navigation(NavigationIndex)
     

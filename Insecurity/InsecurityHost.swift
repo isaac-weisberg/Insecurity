@@ -96,8 +96,7 @@ public final class InsecurityHost {
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
-        let index = CoordinatorIndex(modalIndex: parentIndex.modalIndex + 1,
-                                     navigationData: nil)
+        let index = CoordinatorIndex.modal(parentIndex.modalIndex + 1)
         if let parentFrame = frames.at(parentIndex.modalIndex) {
             if let existingFrame = frames.at(index.modalIndex) {
                 let aliveFramesCount = parentIndex.modalIndex + 1
@@ -203,9 +202,9 @@ public final class InsecurityHost {
         }
         
         // Mount Coordinator
-        let index = parentNavIndex.nextNavichildIndex
+        let index = parentNavIndex.nextNavichildIndex()
         
-        let controller = child.mountOnHostNavigation(self, index.asUntypedIndex, completion: completion)
+        let controller = child.mountOnHostNavigation(self, index.asUntypedIndex(), completion: completion)
         
         let previousController: Weak<UIViewController>
         if let parentNavichildIndex = parentNavIndex.navichildIndex {
@@ -308,12 +307,7 @@ public final class InsecurityHost {
         animated: Bool,
         _ completion: @escaping (Coordinator.Result?) -> Void
     ) {
-        let index = CoordinatorIndex(
-            modalIndex: parentIndex.modalIndex + 1,
-            navigationData: CoordinatorIndex.NavigationData(
-                naviChildIndex: nil
-            )
-        )
+        let index = CoordinatorIndex.navigation(parentIndex.modalIndex + 1, navichildIndex: nil)
         if let parentFrame = frames.at(parentIndex.modalIndex) {
             if let existingFrame = frames.at(index.modalIndex) {
                 let aliveFramesCount = parentIndex.modalIndex + 1
@@ -672,7 +666,7 @@ public final class InsecurityHost {
             insecFatalError(.hostIsAlreadyMounted)
         }
             
-        let index = CoordinatorIndex(modalIndex: 0, navigationData: nil)
+        let index = CoordinatorIndex.modal(0)
         let controller = coordinator.mountOnHostModal(self, index, completion: completion)
         let frame = Frame(coordinator: coordinator,
                           controller: controller,
@@ -684,61 +678,55 @@ public final class InsecurityHost {
     
     // MARK: - NEW Dismiss API
     
-    func nextNavigationIndex(after index: CoordinatorIndex) -> CoordinatorIndex? {
+    func nextIndex(after index: CoordinatorIndex) -> CoordinatorIndex? {
         let frame = self.frames[index.modalIndex]
-        if let navigationIndex = index.asNavigationIndex() {
-            // Current frame navigation
-            let nextNavichildIndex = navigationIndex.nextNavichildIndex
+        switch index {
+        case .navigation(let navigationIndex):
+            let nextNavichildIndex = navigationIndex.nextNavichildIndex()
             
             guard let navigationData = frame.navigationData.insecAssertNotNil() else {
                 return nil
             }
             
-            let naviChildExists = navigationData.children.at(nextNavichildIndex.navichildIndexUnwrapped) != nil
+            let naviChildExists = navigationData.children.at(nextNavichildIndex.navichildIndex) != nil
             
             if naviChildExists {
                 // There is a navichild after current index
                 
-                return nextNavichildIndex.asUntypedIndex
+                return nextNavichildIndex.asUntypedIndex()
             } else {
-                // There is no navichild after current index, so we fallback to the next
-                
+                // There is no navichild after current index, so we fallback to the next modal frame
+                return nextIndexAfterModal(navigationIndex.asModalIndex())
             }
-        } else {
+        case .modal(let modalIndex):
             // Current frame modal
-            let nextModalIndex = index.modalIndex + 1
-            if let nextFrame = self.frames.at(nextModalIndex) {
-                // Next frame exists
-                let nextFrameNavData: CoordinatorIndex.NavigationData?
-                if nextFrame.navigationData != nil {
-                    // Next frame is navigation frame
-                    nextFrameNavData = CoordinatorIndex.NavigationData(
-                        naviChildIndex: nil
-                    )
-                } else {
-                    // Next frame is modal frame
-                    nextFrameNavData = nil
-                }
-                return CoordinatorIndex(
-                    modalIndex: nextModalIndex,
-                    navigationData: nextFrameNavData
-                )
+            return nextIndexAfterModal(modalIndex)
+        }
+    }
+    
+    func nextIndexAfterModal(_ index: ModalIndex) -> CoordinatorIndex? {
+        let nextModalIndex = index.modalIndex + 1
+        if let nextFrame = self.frames.at(nextModalIndex) {
+            // Next frame exists
+            let nextFrameIndex: CoordinatorIndex
+            if nextFrame.navigationData != nil {
+                // Next frame is navigation frame
+                nextFrameIndex = .navigation(nextModalIndex, navichildIndex: nil)
             } else {
-                // Next frame doesnt exist
-                return nil
+                // Next frame is modal frame
+                nextFrameIndex = .modal(nextModalIndex)
             }
+            return nextFrameIndex
+        } else {
+            // Next frame doesnt exist
+            return nil
         }
     }
     
     func dismissChildrenV2(animated: Bool, after index: CoordinatorIndex) {
-        let firstDeadIndex: CoordinatorIndex
-        if let navigationIndex = index.asNavigationIndex() {
-            
-        } else {
-            
+        if let firstDeadIndex = nextIndex(after: index) {
+            dismiss(animated, at: firstDeadIndex)
         }
-        
-        dismiss(animated, at: firstDeadIndex)
     }
     
     func dismiss(_ animated: Bool, at index: CoordinatorIndex) {
@@ -768,12 +756,7 @@ public final class InsecurityHost {
                     let lastAliveNavData = lastAliveModalFrame.navigationData.insecAssertNotNil()
                 {
                     if lastAliveNavData.children.at(firstDeadNavChildIndex) != nil {
-                        firstDeadIndex = CoordinatorIndex(
-                            modalIndex: index.modalIndex,
-                            navigationData: CoordinatorIndex.NavigationData(
-                                naviChildIndex: firstDeadNavChildIndex
-                            )
-                        )
+                        firstDeadIndex = CoordinatorIndex.navigation(index.modalIndex, navichildIndex: firstDeadNavChildIndex)
                         
                         let firstDeadModalIndex = index.modalIndex + 1
                         if self.frames.at(firstDeadModalIndex) != nil {
@@ -793,16 +776,13 @@ public final class InsecurityHost {
                 }
             } else {
                 let firstDeadModalIndex = index.modalIndex + 1
-                let navigationData: CoordinatorIndex.NavigationData?
                 
                 if let firstDeadFrame = self.frames.at(firstDeadModalIndex) {
                     if let firstDeadFrameNavData = firstDeadFrame.navigationData {
-                        navigationData = CoordinatorIndex.NavigationData(naviChildIndex: nil)
+                        firstDeadIndex = .navigation(firstDeadModalIndex, navichildIndex: nil)
                     } else {
-                        navigationData = nil
+                        firstDeadIndex = .modal(firstDeadModalIndex)
                     }
-                    firstDeadIndex = CoordinatorIndex(modalIndex: firstDeadModalIndex,
-                                                      navigationData: navigationData)
                     modalIndexThatNeedsDismissing = firstDeadModalIndex
                 } else {
                     // There is no modal frame to kill, so NO-OP
