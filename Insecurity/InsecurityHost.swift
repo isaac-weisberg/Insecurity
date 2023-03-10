@@ -724,13 +724,55 @@ public final class InsecurityHost {
     }
     
     func dismissChildrenV2(animated: Bool, after index: CoordinatorIndex) {
-        if let firstDeadIndex = nextIndex(after: index) {
-            dismiss(animated, at: firstDeadIndex)
+        guard let firstDeadIndex = nextIndex(after: index) else {
+            return
         }
+        
+        dismissImmediately(animated, lastAliveIndex: index, firstDeadIndex: firstDeadIndex)
     }
     
-    func dismiss(_ animated: Bool, at index: CoordinatorIndex) {
+    func dismissImmediately(_ animated: Bool,
+                            lastAliveIndex: CoordinatorIndex,
+                            firstDeadIndex: CoordinatorIndex) {
+        let prePurgeFrames = self.frames
         
+        let aliveFramesCount = lastAliveIndex.modalIndex + 1
+        let deadFramesCount = prePurgeFrames.count - aliveFramesCount
+        let deadFrames = prePurgeFrames.suffix(deadFramesCount)
+        let aliveFrames = prePurgeFrames.prefix(aliveFramesCount)
+        
+        deadFrames.dismountFromHost()
+        
+        let resultingFrames: ArraySlice<Frame>
+        if
+            let firstDeadIndex = firstDeadIndex.asNavigationIndex(),
+            let lastAliveFrame = aliveFrames.last,
+            let firstDeadNavData = lastAliveFrame.navigationData.insecAssumeNotNil()
+        {
+            let aliveNavichildrenCount: Int
+            if let deadNavichildIndex = firstDeadIndex.navichildIndex {
+                aliveNavichildrenCount = deadNavichildIndex
+            } else {
+                aliveNavichildrenCount = 0
+            }
+            let deadNavichildrenCount = firstDeadNavData.children.count - aliveNavichildrenCount
+            let deadNavichildren = firstDeadNavData.children.suffix(deadNavichildrenCount)
+            let aliveNavichildren = firstDeadNavData.children.prefix(aliveNavichildrenCount)
+            
+            deadNavichildren.dismountFromHost()
+            
+            let newNavData = firstDeadNavData.replacingChildren(Array(aliveNavichildren))
+            let newFrame = lastAliveFrame.replacingNavigationData(newNavData)
+            let newFrames = aliveFrames.replacingLast(with: newFrame)
+            
+            resultingFrames = newFrames
+        } else {
+            resultingFrames = aliveFrames
+        }
+        
+        let postPurgeFrames = Array(resultingFrames)
+        
+        self.frames = postPurgeFrames
     }
     
     func dismissChildren(animated: Bool, after index: CoordinatorIndex) {
