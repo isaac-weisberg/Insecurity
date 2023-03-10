@@ -11,25 +11,25 @@ extension DispatchQueue {
 // MARK: - Extensions
 
 @inline(__always) func insecAssert(_ condition: @autoclosure () -> Bool,
-                 _ log: InsecurityLog,
-                 _ file: StaticString = #file,
-                 _ line: UInt = #line) {
-    #if DEBUG
+                                   _ log: InsecurityLog,
+                                   _ file: StaticString = #file,
+                                   _ line: UInt = #line) {
+#if DEBUG
     assert(condition(), "\(log)", file: file, line: line)
-    #endif
+#endif
 }
 
 @inline(__always) func insecAssertFail(_ log: InsecurityLog,
-                     _ file: StaticString = #file,
-                     _ line: UInt = #line) {
-    #if DEBUG
+                                       _ file: StaticString = #file,
+                                       _ line: UInt = #line) {
+#if DEBUG
     assertionFailure("\(log)", file: file, line: line)
-    #endif
+#endif
 }
 
 @inline(__always) func insecFatalError(_ log: InsecurityLog,
-                     _ file: StaticString = #file,
-                     _ line: UInt = #line) -> Never {
+                                       _ file: StaticString = #file,
+                                       _ line: UInt = #line) -> Never {
     fatalError("\(log)", file: file, line: line)
 }
 
@@ -41,22 +41,22 @@ func insecAssumptionFailed(_ assumption: InsecurityAssumption,
 
 extension Optional {
     func insecAssertNotNil(_ file: StaticString = #file,
-                                             _ line: UInt = #line) -> Optional {
-        #if DEBUG
+                           _ line: UInt = #line) -> Optional {
+#if DEBUG
         if self == nil {
             insecAssertFail(.expectedThisToNotBeNil)
         }
-        #endif
+#endif
         return self
     }
     
     func insecAssumeNotNil(_ file: StaticString = #file,
                            _ line: UInt = #line) -> Optional {
-        #if DEBUG
+#if DEBUG
         if self == nil {
             insecAssumptionFailed(.assumedThisThingWouldntBeNil)
         }
-        #endif
+#endif
         return self
     }
 }

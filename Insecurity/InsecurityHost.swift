@@ -724,19 +724,31 @@ public final class InsecurityHost {
     }
     
     func dismissChildrenV2(animated: Bool, after index: CoordinatorIndex) {
-        guard let firstDeadIndex = nextIndex(after: index) else {
-            return
+        switch state.stage {
+        case .ready:
+            if let firstDeadIndex = nextIndex(after: index) {
+                dismissImmediately(animated, firstDeadIndex: firstDeadIndex)
+            }
+        case .batching, .dead, .purging:
+            insecAssertFail(.dismiss(.cantDismissDuringBatchingOrPurging))
         }
         
-        dismissImmediately(animated, lastAliveIndex: index, firstDeadIndex: firstDeadIndex)
     }
     
     func dismissImmediately(_ animated: Bool,
-                            lastAliveIndex: CoordinatorIndex,
                             firstDeadIndex: CoordinatorIndex) {
         let prePurgeFrames = self.frames
         
-        let aliveFramesCount = lastAliveIndex.modalIndex + 1
+        let aliveFramesCount: Int
+        if let firstDeadIndex = firstDeadIndex.asNavigationIndex() {
+            if firstDeadIndex.navichildIndex != nil {
+                aliveFramesCount = firstDeadIndex.modalIndex + 1
+            } else {
+                aliveFramesCount = firstDeadIndex.modalIndex
+            }
+        } else {
+            aliveFramesCount = firstDeadIndex.modalIndex
+        }
         let deadFramesCount = prePurgeFrames.count - aliveFramesCount
         let deadFrames = prePurgeFrames.suffix(deadFramesCount)
         let aliveFrames = prePurgeFrames.prefix(aliveFramesCount)
@@ -747,25 +759,29 @@ public final class InsecurityHost {
         if
             let firstDeadIndex = firstDeadIndex.asNavigationIndex(),
             let lastAliveFrame = aliveFrames.last,
-            let firstDeadNavData = lastAliveFrame.navigationData.insecAssumeNotNil()
+            let lastAliveNavData = lastAliveFrame.navigationData.insecAssumeNotNil()
         {
-            let aliveNavichildrenCount: Int
+            // It's a navigation frame
             if let deadNavichildIndex = firstDeadIndex.navichildIndex {
-                aliveNavichildrenCount = deadNavichildIndex
+                // A navichild died. The root is still alive.
+                let aliveNavichildrenCount = deadNavichildIndex
+                
+                let deadNavichildrenCount = lastAliveNavData.children.count - aliveNavichildrenCount
+                let deadNavichildren = lastAliveNavData.children.suffix(deadNavichildrenCount)
+                let aliveNavichildren = lastAliveNavData.children.prefix(aliveNavichildrenCount)
+                
+                deadNavichildren.dismountFromHost()
+                
+                let newNavData = lastAliveNavData.replacingChildren(Array(aliveNavichildren))
+                let newFrame = lastAliveFrame.replacingNavigationData(newNavData)
+                let newFrames = aliveFrames.replacingLast(with: newFrame)
+                
+                resultingFrames = newFrames
             } else {
-                aliveNavichildrenCount = 0
+                // The root controller of the navigation controller has died
+                
+                resultingFrames = aliveFrames
             }
-            let deadNavichildrenCount = firstDeadNavData.children.count - aliveNavichildrenCount
-            let deadNavichildren = firstDeadNavData.children.suffix(deadNavichildrenCount)
-            let aliveNavichildren = firstDeadNavData.children.prefix(aliveNavichildrenCount)
-            
-            deadNavichildren.dismountFromHost()
-            
-            let newNavData = firstDeadNavData.replacingChildren(Array(aliveNavichildren))
-            let newFrame = lastAliveFrame.replacingNavigationData(newNavData)
-            let newFrames = aliveFrames.replacingLast(with: newFrame)
-            
-            resultingFrames = newFrames
         } else {
             resultingFrames = aliveFrames
         }
@@ -775,7 +791,7 @@ public final class InsecurityHost {
         self.frames = postPurgeFrames
         
         if
-            lastAliveIndex.asNavigationIndex() != nil,
+            firstDeadIndex.asNavigationIndex() != nil,
             let lastAliveFrame = postPurgeFrames.last.insecAssumeNotNil(),
             let lastAliveNavData = lastAliveFrame.navigationData.insecAssumeNotNil()
         {
