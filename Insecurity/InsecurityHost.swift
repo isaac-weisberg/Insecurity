@@ -372,6 +372,16 @@ public final class InsecurityHost {
     
     // MARK: - Purge
     
+    private func purgeV2(_ firstDeadIndex: CoordinatorIndex,
+                         scheduledStart: InsecurityHostState.Stage.Batching.ScheduledStart?,
+                         animated: Bool) {
+        if let scheduledStart = scheduledStart {
+            scheduledStart.routine()
+        } else {
+            dismissImmediately(animated, firstDeadIndex: firstDeadIndex)
+        }
+    }
+    
     private func purge(deepestDeadIndex: CoordinatorIndex,
                        modalIndexThatNeedsDismissing: Int?,
                        scheduledStart: InsecurityHostState.Stage.Batching.ScheduledStart?,
