@@ -773,6 +773,28 @@ public final class InsecurityHost {
         let postPurgeFrames = Array(resultingFrames)
         
         self.frames = postPurgeFrames
+        
+        if
+            lastAliveIndex.asNavigationIndex() != nil,
+            let lastAliveFrame = postPurgeFrames.last.insecAssumeNotNil(),
+            let lastAliveNavData = lastAliveFrame.navigationData.insecAssumeNotNil()
+        {
+            // The first dead index is navigation which is tougher
+            
+            let newNavControllers = lastAliveNavData.rootController.value.insecAssumeNotNil().wrapToArrayOrEmpty()
+            + lastAliveNavData.children.compactMap { navichild in
+                navichild.controller.value.insecAssumeNotNil()
+            }
+            
+            lastAliveNavData.navigationController.value.insecAssumeNotNil()?
+                .setViewControllers(newNavControllers, animated: animated)
+        } else {
+            // The first dead index is modal, which simplifies everything
+            
+            if let deadFrame = deadFrames.first.insecAssumeNotNil() {
+                deadFrame.controller.value?.presentingViewController?.dismiss(animated: animated)
+            }
+        }
     }
     
     func dismissChildren(animated: Bool, after index: CoordinatorIndex) {
