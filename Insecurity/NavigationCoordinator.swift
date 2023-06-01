@@ -120,6 +120,23 @@ open class NavigationCoordinator<Result>: CommonNavigationCoordinator {
         }
     }
     
+    public func start<Result>(
+        _ navigationController: UINavigationController,
+        _ child: NavigationCoordinator<Result>,
+        animated: Bool,
+        _ completion: @escaping (Result?) -> Void
+    ) {
+        startIfMounted { mounted in
+            mounted.host.value.insecAssertNotNil()?.startNavigationNew(
+                navigationController,
+                child,
+                after: mounted.index,
+                animated: animated,
+                completion
+            )
+        }
+    }
+    
     public func dismissChildren(animated: Bool) {
         switch state {
         case .mounted(let mounted):
