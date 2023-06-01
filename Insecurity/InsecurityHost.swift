@@ -591,6 +591,45 @@ public final class InsecurityHost {
         parentController.present(controller, animated: animated)
     }
     
+    public func mount<Result>(
+        _ navigationController: UINavigationController,
+        _ coordinator: NavigationCoordinator<Result>,
+        on parentController: UIViewController,
+        animated: Bool,
+        _ completion: @escaping (Result?) -> Void
+    ) {
+        guard frames.isEmpty else {
+            insecFatalError(.hostIsAlreadyMounted)
+        }
+        
+        let index = CoordinatorIndex.navigation(0, navichildIndex: nil)
+        
+        let controller = coordinator.mountOnHostNavigation(self, index, completion: completion)
+        
+        let frame = Frame(
+            coordinator: coordinator,
+            controller: navigationController,
+            previousController: parentController,
+            navigationData: FrameNavigationData(
+                children: [],
+                navigationController: navigationController,
+                rootController: controller
+            )
+        )
+        
+        let newFrames = [frame]
+        self.frames = Array(newFrames)
+        
+        navigationController.setViewControllers([ controller ], animated: false)
+        if parentController.presentedViewController != nil {
+            parentController.dismiss(animated: animated) {
+                parentController.present(navigationController, animated: animated)
+            }
+        } else {
+            parentController.present(navigationController, animated: animated)
+        }
+    }
+    
     // MARK: - NEW Dismiss API
     
     func nextIndex(after index: CoordinatorIndex) -> CoordinatorIndex? {
