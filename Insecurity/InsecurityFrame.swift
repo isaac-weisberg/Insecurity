@@ -3,28 +3,23 @@ import UIKit
 struct Frame {
     let coordinator: CommonCoordinatorAny
     let controller: Weak<UIViewController>
-    let previousController: Weak<UIViewController>
     
     init(
         coordinator: CommonCoordinatorAny,
-        controller: UIViewController,
-        previousController: UIViewController
+        controller: UIViewController
     ) {
         self.init(
             coordinator: coordinator,
-            controller: Weak(controller),
-            previousController: Weak(previousController)
+            controller: Weak(controller)
         )
     }
     
     init(
         coordinator: CommonCoordinatorAny,
-        controller: Weak<UIViewController>,
-        previousController: Weak<UIViewController>
+        controller: Weak<UIViewController>
     ) {
         self.coordinator = coordinator
         self.controller = controller
-        self.previousController = previousController
     }
 }
 

@@ -1,12 +1,21 @@
 import Insecurity
 import UIKit
 
-class ApplicationCoordinator: WindowCoordinator {
+class ApplicationCoordinator {
+    let window: UIWindow
+    let insecurityHost = InsecurityHost()
+
+    init(_ window: UIWindow) {
+        self.window = window
+    }
+
     func start() {
         let profileCoordinator = ProfileCoordinator()
-        
-        navigation.start(NavigationController(), profileCoordinator, animated: true) { result in
-            
+
+        let controller = insecurityHost.mountForManualManagement(profileCoordinator) { _ in
+
         }
+
+        window.rootViewController = controller
     }
 }

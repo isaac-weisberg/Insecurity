@@ -91,7 +91,7 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         
     }
     
-    func start<Result>(
+    public func start<Result>(
         _ child: ModalCoordinator<Result>,
         animated: Bool,
         _ completion: @escaping (Result?) -> Void

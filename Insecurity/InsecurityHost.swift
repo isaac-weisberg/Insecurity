@@ -110,8 +110,7 @@ public final class InsecurityHost {
                     
                     let frame = Frame(
                         coordinator: child,
-                        controller: controller,
-                        previousController: parentController
+                        controller: controller
                     )
                     
                     let newFrames = aliveFrames + [frame]
@@ -131,8 +130,7 @@ public final class InsecurityHost {
                     
                     let frame = Frame(
                         coordinator: child,
-                        controller: controller,
-                        previousController: parentController
+                        controller: controller
                     )
                     
                     self.frames = self.frames + [frame]
@@ -255,11 +253,32 @@ public final class InsecurityHost {
     }
     
     // MARK: - NEW Mount API
+
+    public func mountForManualManagement<
+        Result
+    >(
+        _ coordinator: ModalCoordinator<Result>,
+        _ completion: @escaping (Result?) -> Void
+    ) -> UIViewController {
+        guard frames.isEmpty else {
+            insecFatalError(.hostIsAlreadyMounted)
+        }
+
+        let index = CoordinatorIndex(modalIndex: 0)
+        let controller = coordinator.mountOnHostModal(self, index, completion: completion)
+        let frame = Frame(coordinator: coordinator,
+                          controller: controller)
+        self.frames = [frame]
+
+        return controller
+    }
     
-    public func mount<Result>(_ coordinator: ModalCoordinator<Result>,
-                              on parentController: UIViewController,
-                              animated: Bool,
-                              _ completion: @escaping (Result?) -> Void) {
+    public func mountOnExistingController<Result>(
+        _ coordinator: ModalCoordinator<Result>,
+        on parentController: UIViewController,
+        animated: Bool,
+        _ completion: @escaping (Result?) -> Void
+    ) {
         guard frames.isEmpty else {
             insecFatalError(.hostIsAlreadyMounted)
         }
@@ -267,8 +286,7 @@ public final class InsecurityHost {
         let index = CoordinatorIndex(modalIndex: 0)
         let controller = coordinator.mountOnHostModal(self, index, completion: completion)
         let frame = Frame(coordinator: coordinator,
-                          controller: controller,
-                          previousController: parentController)
+                          controller: controller)
         self.frames = [frame]
         
         parentController.present(controller, animated: animated)
@@ -300,7 +318,6 @@ public final class InsecurityHost {
         case .batching, .dead, .purging:
             insecAssertFail(.dismiss(.cantDismissDuringBatchingOrPurging))
         }
-        
     }
     
     func dismissImmediately(_ animated: Bool,
@@ -319,8 +336,6 @@ public final class InsecurityHost {
         let postPurgeFrames = Array(resultingFrames)
         
         self.frames = postPurgeFrames
-
-        // The first dead index is modal, which simplifies everything
 
         if let deadFrame = deadFrames.first.insecAssumeNotNil() {
             deadFrame.controller.value?.presentingViewController?.dismiss(animated: animated)
