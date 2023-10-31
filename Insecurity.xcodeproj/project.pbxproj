@@ -11,9 +11,7 @@
 		6039A8D0C53204A35B9478F6 /* libPods-InsecurityPodspecTest.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 27E16FBB5A85ED77C35AC7D8 /* libPods-InsecurityPodspecTest.a */; };
 		6BA2676A691705959F4C475A /* libPods-InsecurityDemo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */; };
 		A3097429274C1CD2003EB063 /* ProfileOrdersButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3097428274C1CD2003EB063 /* ProfileOrdersButton.swift */; };
-		A309742B274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */; };
 		A309742D274C2B3D003EB063 /* PaymentMethodAddCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */; };
-		A309742F274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */; };
 		A320333227164E1300ABD197 /* ModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A320333127164E1300ABD197 /* ModalCoordinator.swift */; };
 		A3383BC6270E430D006982B1 /* ParentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC5270E430D006982B1 /* ParentViewController.swift */; };
 		A3383BC8270E43B4006982B1 /* ParentCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */; };
@@ -112,7 +110,6 @@
 		A3ECDE982995321E0068D3C0 /* Insecurity.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = A3968FDD26FF25A800B6A59B /* Insecurity.framework */; };
 		A3ECDE9F299536320068D3C0 /* TestModalCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ECDE9E299536320068D3C0 /* TestModalCoordinator.swift */; };
 		A3ECDEA329953DED0068D3C0 /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ECDEA229953DED0068D3C0 /* Util.swift */; };
-		A3ECDEA529953F6A0068D3C0 /* TestNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ECDEA429953F6A0068D3C0 /* TestNavigationCoordinator.swift */; };
 		D1D9AE3220A705AF5D0D21CD /* libPods-InsecurityAutotestTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E72BC42AA782E405B108CE69 /* libPods-InsecurityAutotestTests.a */; };
 /* End PBXBuildFile section */
 
@@ -182,9 +179,7 @@
 		94AB1B17C48F00C580CE0980 /* Pods-InsecurityAutotestTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityAutotestTests.release.xcconfig"; path = "Target Support Files/Pods-InsecurityAutotestTests/Pods-InsecurityAutotestTests.release.xcconfig"; sourceTree = "<group>"; };
 		9630C86ACEA183BA279A7CFE /* Pods-InsecurityPodspecTest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityPodspecTest.release.xcconfig"; path = "Target Support Files/Pods-InsecurityPodspecTest/Pods-InsecurityPodspecTest.release.xcconfig"; sourceTree = "<group>"; };
 		A3097428274C1CD2003EB063 /* ProfileOrdersButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileOrdersButton.swift; sourceTree = "<group>"; };
-		A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodsAdaptiveCoordinator.swift; sourceTree = "<group>"; };
 		A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaymentMethodAddCell.swift; sourceTree = "<group>"; };
-		A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddPaymentMethodAdaptiveCoordinator.swift; sourceTree = "<group>"; };
 		A320333127164E1300ABD197 /* ModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModalCoordinator.swift; sourceTree = "<group>"; };
 		A3383BC5270E430D006982B1 /* ParentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentViewController.swift; sourceTree = "<group>"; };
 		A3383BC7270E43B4006982B1 /* ParentCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParentCoordinator.swift; sourceTree = "<group>"; };
@@ -288,7 +283,6 @@
 		A3ECDE962995321E0068D3C0 /* InsecurityAutotestTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InsecurityAutotestTests.swift; sourceTree = "<group>"; };
 		A3ECDE9E299536320068D3C0 /* TestModalCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestModalCoordinator.swift; sourceTree = "<group>"; };
 		A3ECDEA229953DED0068D3C0 /* Util.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
-		A3ECDEA429953F6A0068D3C0 /* TestNavigationCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestNavigationCoordinator.swift; sourceTree = "<group>"; };
 		BEBC148144E0CC7E3A7D66E2 /* Pods-InsecurityAutotestTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InsecurityAutotestTests.debug.xcconfig"; path = "Target Support Files/Pods-InsecurityAutotestTests/Pods-InsecurityAutotestTests.debug.xcconfig"; sourceTree = "<group>"; };
 		C7413295E5FC00E9B85FA410 /* libPods-InsecurityPlayground.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityPlayground.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D7468773ED7F24D055785CB0 /* libPods-InsecurityDemo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-InsecurityDemo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -494,7 +488,6 @@
 				A377B59C27139A4200A4331B /* PaymentMethodsCoordinator.swift */,
 				A393F31E2728AF36006CD54C /* PaymentMethodTableCell.swift */,
 				A309742C274C2B3D003EB063 /* PaymentMethodAddCell.swift */,
-				A309742A274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift */,
 			);
 			path = PaymentMethods;
 			sourceTree = "<group>";
@@ -509,7 +502,6 @@
 				A3986FE12748FD69002AA98B /* SeparatorView.swift */,
 				A3986FE32748FE43002AA98B /* CVVTextField.swift */,
 				A3986FE5274901D1002AA98B /* CardHolderTextField.swift */,
-				A309742E274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift */,
 			);
 			path = AddPaymentMethod;
 			sourceTree = "<group>";
@@ -741,7 +733,6 @@
 				A3ECDE962995321E0068D3C0 /* InsecurityAutotestTests.swift */,
 				A3ECDE9E299536320068D3C0 /* TestModalCoordinator.swift */,
 				A3ECDEA229953DED0068D3C0 /* Util.swift */,
-				A3ECDEA429953F6A0068D3C0 /* TestNavigationCoordinator.swift */,
 			);
 			path = InsecurityAutotestTests;
 			sourceTree = "<group>";
@@ -1099,7 +1090,6 @@
 				A393F31A2728A7F2006CD54C /* DispatchQueue+asyncAfter.swift in Sources */,
 				A393F3192728A7F2006CD54C /* DefaultStringInterpolation+Optional.swift in Sources */,
 				A3097429274C1CD2003EB063 /* ProfileOrdersButton.swift in Sources */,
-				A309742B274C2940003EB063 /* PaymentMethodsAdaptiveCoordinator.swift in Sources */,
 				A393F2EC27289F53006CD54C /* AppDelegate.swift in Sources */,
 				A3986FE02748FCA9002AA98B /* CardNumberTextField.swift in Sources */,
 				A3986FDE2748F86F002AA98B /* InsetTextField.swift in Sources */,
@@ -1107,7 +1097,6 @@
 				A393F31F2728AF36006CD54C /* PaymentMethodTableCell.swift in Sources */,
 				A3986FE6274901D1002AA98B /* CardHolderTextField.swift in Sources */,
 				A393F3232728B49C006CD54C /* NavigationController.swift in Sources */,
-				A309742F274C2D2C003EB063 /* AddPaymentMethodAdaptiveCoordinator.swift in Sources */,
 				A393F30F2728A7B1006CD54C /* AddPaymentMethodViewController.swift in Sources */,
 				A393F30D2728A766006CD54C /* ProfileCoordinator.swift in Sources */,
 				A393F3042728A4E8006CD54C /* ApplicationCoordinator.swift in Sources */,
@@ -1200,7 +1189,6 @@
 			files = (
 				A3ECDE9F299536320068D3C0 /* TestModalCoordinator.swift in Sources */,
 				A3ECDEA329953DED0068D3C0 /* Util.swift in Sources */,
-				A3ECDEA529953F6A0068D3C0 /* TestNavigationCoordinator.swift in Sources */,
 				A3ECDE972995321E0068D3C0 /* InsecurityAutotestTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
