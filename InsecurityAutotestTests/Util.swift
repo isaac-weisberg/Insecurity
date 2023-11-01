@@ -33,6 +33,14 @@ extension UIViewController {
         
         await awaitAnims()
     }
+
+    func dismissProm() -> Prom<Void> {
+        Prom { res in
+            self.dismiss(animated: true, completion: {
+                res(())
+            })
+        }
+    }
 }
 
 extension ModalCoordinator {

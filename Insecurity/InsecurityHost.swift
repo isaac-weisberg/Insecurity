@@ -59,7 +59,8 @@ public final class InsecurityHost {
         _ child: Coordinator,
         after parentIndex: CoordinatorIndex,
         animated: Bool,
-        _ completion: @escaping (Coordinator.Result?) -> Void
+        _ completion: @escaping (Coordinator.Result?) -> Void,
+        presentationCompleted: (() -> Void)?
     ) {
         switch state.stage {
         case .dead:
@@ -76,17 +77,27 @@ public final class InsecurityHost {
                 insecAssert(topAliveIndex == parentIndex,
                             .presumedParentForBatchedStartWasEitherDeadOrNotAtTheTopOfTheStack)
                 
-                self.startModalImmediately(child,
-                                           after: topAliveIndex,
-                                           animated: animated,
-                                           completion)
+                self.startModalImmediately(
+                    child,
+                    after: topAliveIndex,
+                    animated: animated,
+                    completion,
+                    presentationCompleted: presentationCompleted.map { presentationCompleted in
+                        { presentationCompleted() }
+                    }
+                )
             }
             self.state.stage = .batching(batching.settingScheduledStart(scheduledStart))
         case .ready:
-            startModalImmediately(child,
-                                  after: parentIndex,
-                                  animated: animated,
-                                  completion)
+            startModalImmediately(
+                child,
+                after: parentIndex,
+                animated: animated,
+                completion,
+                presentationCompleted: presentationCompleted.map { presentationCompleted in
+                    { presentationCompleted() }
+                }
+            )
         }
     }
     
@@ -94,7 +105,8 @@ public final class InsecurityHost {
         _ child: Coordinator,
         after parentIndex: CoordinatorIndex,
         animated: Bool,
-        _ completion: @escaping (Coordinator.Result?) -> Void
+        _ completion: @escaping (Coordinator.Result?) -> Void,
+        presentationCompleted: (() -> Void)?
     ) {
         let index = CoordinatorIndex(modalIndex: parentIndex.modalIndex + 1)
         if let parentFrame = frames.at(parentIndex.modalIndex) {
@@ -118,10 +130,22 @@ public final class InsecurityHost {
                     
                     if parentController.presentedViewController != nil {
                         parentController.dismiss(animated: animated) {
-                            parentController.present(controller, animated: animated)
+                            parentController.present(
+                                controller,
+                                animated: animated,
+                                completion: presentationCompleted.map { presentationCompleted in
+                                    { presentationCompleted() }
+                                }
+                            )
                         }
                     } else {
-                        parentController.present(controller, animated: animated)
+                        parentController.present(
+                            controller,
+                            animated: animated,
+                            completion: presentationCompleted.map { presentationCompleted in
+                                { presentationCompleted() }
+                            }
+                        )
                     }
                 }
             } else {
@@ -135,7 +159,13 @@ public final class InsecurityHost {
                     
                     self.frames = self.frames + [frame]
                     
-                    parentController.present(controller, animated: animated)
+                    parentController.present(
+                        controller,
+                        animated: animated,
+                        completion: presentationCompleted.map { presentationCompleted in
+                            { presentationCompleted() }
+                        }
+                    )
                 } else {
                     insecAssertFail(.parentControllerHasBeenLost)
                 }
@@ -153,7 +183,11 @@ public final class InsecurityHost {
         if let scheduledStart = scheduledStart {
             scheduledStart.routine()
         } else {
-            dismissImmediately(animated, firstDeadIndex: firstDeadIndex)
+            dismissImmediately(
+                animated,
+                firstDeadIndex: firstDeadIndex,
+                presentationCompleted: nil
+            )
         }
     }
     
@@ -309,19 +343,32 @@ public final class InsecurityHost {
         }
     }
     
-    func dismissChildren(animated: Bool, after index: CoordinatorIndex) {
+    func dismissChildren(
+        animated: Bool,
+        after index: CoordinatorIndex,
+        presentationCompleted: (() -> Void)?
+    ) {
         switch state.stage {
         case .ready:
             if let firstDeadIndex = nextIndex(after: index) {
-                dismissImmediately(animated, firstDeadIndex: firstDeadIndex)
+                dismissImmediately(
+                    animated,
+                    firstDeadIndex: firstDeadIndex,
+                    presentationCompleted: presentationCompleted.flatMap { presentationCompleted in
+                        { presentationCompleted() }
+                    }
+                )
             }
         case .batching, .dead, .purging:
             insecAssertFail(.dismiss(.cantDismissDuringBatchingOrPurging))
         }
     }
     
-    func dismissImmediately(_ animated: Bool,
-                            firstDeadIndex: CoordinatorIndex) {
+    func dismissImmediately(
+        _ animated: Bool,
+        firstDeadIndex: CoordinatorIndex,
+        presentationCompleted: (() -> Void)?
+    ) {
         let prePurgeFrames = self.frames
         
         let aliveFramesCount = firstDeadIndex.modalIndex
@@ -338,7 +385,13 @@ public final class InsecurityHost {
         self.frames = postPurgeFrames
 
         if let deadFrame = deadFrames.first.insecAssumeNotNil() {
-            deadFrame.controller.value?.presentingViewController?.dismiss(animated: animated)
+            deadFrame.controller.value?.presentingViewController?
+                .dismiss(
+                    animated: animated,
+                    completion: presentationCompleted.flatMap { presentationCompleted in
+                        { presentationCompleted() }
+                    }
+                )
         }
     }
 

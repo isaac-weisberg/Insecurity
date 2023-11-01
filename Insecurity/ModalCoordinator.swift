@@ -94,20 +94,36 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
     public func start<Result>(
         _ child: ModalCoordinator<Result>,
         animated: Bool,
-        _ completion: @escaping (Result?) -> Void
+        _ completion: @escaping (Result?) -> Void,
+        presentationCompleted: (() -> Void)? = nil
     ) {
         startIfMounted { mounted in
-            mounted.host.value.insecAssertNotNil()?.startModal(child,
-                                                               after: mounted.index,
-                                                               animated: animated,
-                                                               completion)
+            mounted.host.value.insecAssertNotNil()?.startModal(
+                child,
+                after: mounted.index,
+                animated: animated,
+                completion,
+                presentationCompleted: presentationCompleted.flatMap { presentationCompleted in
+                    { presentationCompleted() }
+                }
+            )
         }
     }
     
-    public func dismissChildren(animated: Bool) {
+    public func dismissChildren(
+        animated: Bool,
+        presentationCompleted: (() -> Void)? = nil
+    ) {
         switch state {
         case .mounted(let mounted):
-            mounted.host.value.insecAssertNotNil()?.dismissChildren(animated: animated, after: mounted.index)
+            mounted.host.value.insecAssertNotNil()?
+                .dismissChildren(
+                    animated: animated,
+                    after: mounted.index,
+                    presentationCompleted: presentationCompleted.flatMap { presentationCompleted in
+                        { presentationCompleted() }
+                    }
+                )
         case .dead, .unmounted:
             insecAssertFail(.noDismissChildrenOnDeadOrUnmounted)
         }

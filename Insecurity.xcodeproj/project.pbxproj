@@ -100,6 +100,7 @@
 		A3986FE22748FD69002AA98B /* SeparatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3986FE12748FD69002AA98B /* SeparatorView.swift */; };
 		A3986FE42748FE43002AA98B /* CVVTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3986FE32748FE43002AA98B /* CVVTextField.swift */; };
 		A3986FE6274901D1002AA98B /* CardHolderTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3986FE5274901D1002AA98B /* CardHolderTextField.swift */; };
+		A39985622AF2F6F400456E02 /* Prom.swift in Sources */ = {isa = PBXBuildFile; fileRef = A39985612AF2F6F400456E02 /* Prom.swift */; };
 		A3A5C3EA273497BC00689F0B /* CommonCoordinatorAny.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3A5C3E9273497BC00689F0B /* CommonCoordinatorAny.swift */; };
 		A3ECDE7F299530D30068D3C0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ECDE7E299530D30068D3C0 /* AppDelegate.swift */; };
 		A3ECDE83299530D30068D3C0 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3ECDE82299530D30068D3C0 /* ViewController.swift */; };
@@ -271,6 +272,7 @@
 		A3986FE12748FD69002AA98B /* SeparatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeparatorView.swift; sourceTree = "<group>"; };
 		A3986FE32748FE43002AA98B /* CVVTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CVVTextField.swift; sourceTree = "<group>"; };
 		A3986FE5274901D1002AA98B /* CardHolderTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardHolderTextField.swift; sourceTree = "<group>"; };
+		A39985612AF2F6F400456E02 /* Prom.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Prom.swift; sourceTree = "<group>"; };
 		A3A5C3E9273497BC00689F0B /* CommonCoordinatorAny.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommonCoordinatorAny.swift; sourceTree = "<group>"; };
 		A3ECDE7C299530D30068D3C0 /* InsecurityAutotestHost.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InsecurityAutotestHost.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A3ECDE7E299530D30068D3C0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -733,6 +735,7 @@
 				A3ECDE962995321E0068D3C0 /* InsecurityAutotestTests.swift */,
 				A3ECDE9E299536320068D3C0 /* TestModalCoordinator.swift */,
 				A3ECDEA229953DED0068D3C0 /* Util.swift */,
+				A39985612AF2F6F400456E02 /* Prom.swift */,
 			);
 			path = InsecurityAutotestTests;
 			sourceTree = "<group>";
@@ -1190,6 +1193,7 @@
 				A3ECDE9F299536320068D3C0 /* TestModalCoordinator.swift in Sources */,
 				A3ECDEA329953DED0068D3C0 /* Util.swift in Sources */,
 				A3ECDE972995321E0068D3C0 /* InsecurityAutotestTests.swift in Sources */,
+				A39985622AF2F6F400456E02 /* Prom.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

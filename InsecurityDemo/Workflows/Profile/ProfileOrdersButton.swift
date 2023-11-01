@@ -1,10 +1,3 @@
-//
-//  ProfileOrdersButton.swift
-//  InsecurityDemo
-//
-//  Created by a.vaysberg on 11/22/21.
-//
-
 import Foundation
 import UIKit
 
