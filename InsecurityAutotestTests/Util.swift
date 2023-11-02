@@ -54,24 +54,24 @@ extension ModalCoordinator {
     }
 }
 
-enum Type1 {
+struct Type1 {
+
+}
+
+
+struct Type2 {
     
 }
 
 
-enum Type2 {
+struct Type3 {
     
 }
 
-
-enum Type3 {
+struct Type4 {
     
 }
 
-enum Type4 {
-    
-}
-
-enum Type5 {
+struct Type5 {
     
 }

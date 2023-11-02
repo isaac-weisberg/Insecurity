@@ -9,6 +9,12 @@ class ProfileCoordinator: ModalCoordinator<Never> {
         let navigationController = UINavigationController(rootViewController: profileViewController)
         
         profileViewController.onPaymentMethodsRequested = { [weak profileViewController] in
+//            let addPM = AddPaymentMethodCoordinator()
+//
+//            self.start(addPM, animated: true) { _ in
+//
+//            }
+
             let paymentMethodsCoordinator = PaymentMethodsCoordinator()
 
             self.start(paymentMethodsCoordinator, animated: true) { result in

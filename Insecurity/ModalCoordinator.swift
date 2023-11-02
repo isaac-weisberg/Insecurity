@@ -26,12 +26,29 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         fatalError("This coordinator didn't define a viewController")
     }
     
-    public func finish(_ result: Result) {
-        self.handleFinish(result, .result)
+    public func finish(
+        _ result: Result,
+        presentationCompleted: (() -> Void)? = nil
+    ) {
+        self.handleFinish(
+            result,
+            .result,
+            presentationCompleted: presentationCompleted.flatMap { presentationCompleted in
+                { presentationCompleted() }
+            }
+        )
     }
     
-    public func dismiss() {
-        self.handleFinish(nil, .result)
+    public func dismiss(
+        presentationCompleted: (() -> Void)? = nil
+    ) {
+        self.handleFinish(
+            nil,
+            .result,
+            presentationCompleted: presentationCompleted.flatMap { presentationCompleted in
+                { presentationCompleted() }
+            }
+        )
     }
     
     func dismountFromHost() {
@@ -45,13 +62,15 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         }
     }
     
-    func mountOnHostModal(_ host: InsecurityHost,
-                     _ index: CoordinatorIndex,
-                     completion: @escaping (Result?) -> Void) -> UIViewController {
+    func mountOnHostModal(
+        _ host: InsecurityHost,
+        _ index: CoordinatorIndex,
+        completion: @escaping (Result?) -> Void
+    ) -> UIViewController {
         let controller = self.viewController
         
         controller.deinitObservable.onDeinit = { [weak self] in
-            self?.handleFinish(nil, .deinitOrKvo)
+            self?.handleFinish(nil, .deinitOrKvo, presentationCompleted: nil)
         }
         
         self.state = .mounted(State.Mounted(controller: Weak(controller),
@@ -61,7 +80,11 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
         return controller
     }
     
-    func handleFinish(_ result: Result?, _ reason: CoordinatorDeathReason) {
+    func handleFinish(
+        _ result: Result?,
+        _ reason: CoordinatorDeathReason,
+        presentationCompleted: (() -> Void)?
+    ) {
         switch self.state {
         case .unmounted:
             insecAssertFail(.noFinishOnUnmounted)
@@ -79,11 +102,16 @@ open class ModalCoordinator<Result>: CommonModalCoordinator {
             }
             self.state = .dead(dead)
             
-            mounted.host.value?.handleCoordinatorDied(self,
-                                                      mounted.index,
-                                                      reason,
-                                                      result,
-                                                      mounted.completion)
+            mounted.host.value?.handleCoordinatorDied(
+                self,
+                mounted.index,
+                reason,
+                result,
+                mounted.completion,
+                presentationCompleted: presentationCompleted.flatMap { presentationCompleted in
+                    { presentationCompleted() }
+                }
+            )
         }
     }
     

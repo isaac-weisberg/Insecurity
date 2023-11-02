@@ -50,14 +50,50 @@ final class InsecurityAutotestTests: XCTestCase {
                 return type1Coord.startProm(type2Coord)
                     .map { _ in Coords(type1Coord: type1Coord, type2Coord: type2Coord) }
             }
-            .flatMap { (coords: Coords) in
+            .flatMap { coords in
                 expect(root.modalChain) == [
                     chainRoot.instantiatedVC,
                     coordToReturnTo.instantiatedVC,
                     coords.type1Coord.instantiatedVC,
                     coords.type2Coord.instantiatedVC
                 ]
+                expect(insecurityHost.frames.count) == 4
                 return coordToReturnTo.dismissChildrenProm()
+            }
+            .flatMap { _ in
+                expect(root.modalChain) == [
+                    chainRoot.instantiatedVC,
+                    coordToReturnTo.instantiatedVC
+                ]
+                expect(insecurityHost.frames.count) == 2
+
+                let type1Coord = Coord(Type1.self)
+                let type2Coord = Coord(Type2.self)
+
+                return coordToReturnTo.startProm(type1Coord)
+                    .flatMap { _ in
+                        type1Coord.startProm(type2Coord, completion: { _ in
+                            type1Coord.finish(Type1())
+                        })
+                    }
+                    .map { _ in Coords(type1Coord: type1Coord, type2Coord: type2Coord) }
+            }
+            .flatMap { args in
+                expect(root.modalChain) == [
+                    chainRoot.instantiatedVC,
+                    coordToReturnTo.instantiatedVC,
+                    args.type1Coord.instantiatedVC,
+                    args.type2Coord.instantiatedVC
+                ]
+                expect(insecurityHost.frames.count) == 4
+                return args.type2Coord.dismissProm()
+            }
+            .map { _ in
+                expect(root.modalChain) == [
+                    chainRoot.instantiatedVC,
+                    coordToReturnTo.instantiatedVC
+                ]
+                expect(insecurityHost.frames.count) == 2
             }
             .flatMap { _ in
                 root.dismissProm()
@@ -66,7 +102,7 @@ final class InsecurityAutotestTests: XCTestCase {
                 exp.fulfill()
             }
 
-        wait(for: [exp], timeout: 20)
+        wait(for: [exp], timeout: 60)
     }
 }
 
@@ -74,7 +110,7 @@ extension ModalCoordinator {
     func startProm<Result>(
         _ child: ModalCoordinator<Result>,
         animated: Bool = true,
-        _ completion: @escaping (Result?) -> Void = { _ in }
+        completion: @escaping (Result?) -> Void = { _ in }
     ) -> Prom<Void> {
         Prom { resolve in
             self.start(child, animated: animated, completion, presentationCompleted: {
@@ -88,6 +124,16 @@ extension ModalCoordinator {
     ) -> Prom<Void> {
         Prom { res in
             self.dismissChildren(animated: animated, presentationCompleted: {
+                res(())
+            })
+        }
+    }
+
+    func dismissProm(
+
+    ) -> Prom<Void> {
+        Prom { res in
+            self.dismiss(presentationCompleted: {
                 res(())
             })
         }

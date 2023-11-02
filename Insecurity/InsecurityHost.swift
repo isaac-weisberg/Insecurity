@@ -19,11 +19,15 @@ struct InsecurityHostState {
             let deepestDeadIndex: CoordinatorIndex
             let modalIndexThatNeedsDismissing: Int?
             let scheduledStart: ScheduledStart?
+            let presentationCompleted: (() -> Void)?
             
             func settingScheduledStart(_ scheduledStart: ScheduledStart) -> Batching {
-                return Batching(deepestDeadIndex: deepestDeadIndex,
-                                modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing,
-                                scheduledStart: scheduledStart)
+                return Batching(
+                    deepestDeadIndex: deepestDeadIndex,
+                    modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing,
+                    scheduledStart: scheduledStart,
+                    presentationCompleted: presentationCompleted
+                )
             }
         }
         
@@ -82,8 +86,9 @@ public final class InsecurityHost {
                     after: topAliveIndex,
                     animated: animated,
                     completion,
-                    presentationCompleted: presentationCompleted.map { presentationCompleted in
-                        { presentationCompleted() }
+                    presentationCompleted: {
+                        batching.presentationCompleted?()
+                        presentationCompleted?()
                     }
                 )
             }
@@ -114,7 +119,7 @@ public final class InsecurityHost {
                 let aliveFramesCount = parentIndex.modalIndex + 1
                 let aliveFrames = self.frames.prefix(aliveFramesCount)
                 
-                if let parentController = existingFrame.controller.value.insecAssertNotNil() {
+                if let parentController = existingFrame.controller.value?.presentingViewController.insecAssertNotNil() {
                     let deadFrames = self.frames.suffix(self.frames.count - aliveFramesCount)
                     deadFrames.dismountFromHost()
                     
@@ -177,16 +182,21 @@ public final class InsecurityHost {
     
     // MARK: - Purge
     
-    private func purge(_ firstDeadIndex: CoordinatorIndex,
-                       scheduledStart: InsecurityHostState.Stage.Batching.ScheduledStart?,
-                       animated: Bool) {
+    private func purge(
+        _ firstDeadIndex: CoordinatorIndex,
+        scheduledStart: InsecurityHostState.Stage.Batching.ScheduledStart?,
+        animated: Bool,
+        presentationCompleted: (() -> Void)?
+    ) {
         if let scheduledStart = scheduledStart {
             scheduledStart.routine()
         } else {
             dismissImmediately(
                 animated,
                 firstDeadIndex: firstDeadIndex,
-                presentationCompleted: nil
+                presentationCompleted: presentationCompleted.flatMap { presentationCompleted in
+                    { presentationCompleted() }
+                }
             )
         }
     }
@@ -199,11 +209,14 @@ public final class InsecurityHost {
     
     // MARK: - New API
     
-    func handleCoordinatorDied<Result>(_ coordinator: CommonCoordinatorAny,
-                                       _ index: CoordinatorIndex,
-                                       _ deathReason: CoordinatorDeathReason,
-                                       _ result: Result?,
-                                       _ callback: (Result?) -> Void) {
+    func handleCoordinatorDied<Result>(
+        _ coordinator: CommonCoordinatorAny,
+        _ index: CoordinatorIndex,
+        _ deathReason: CoordinatorDeathReason,
+        _ result: Result?,
+        _ callback: (Result?) -> Void,
+        presentationCompleted: (() -> Void)?
+    ) {
 #if DEBUG
         insecPrint("Index \(index.string) died")
 #endif
@@ -225,7 +238,10 @@ public final class InsecurityHost {
                 InsecurityHostState.Stage.Batching(
                     deepestDeadIndex: index,
                     modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing,
-                    scheduledStart: nil
+                    scheduledStart: nil,
+                    presentationCompleted: presentationCompleted.flatMap { presentationCompleted in
+                        { presentationCompleted() }
+                    }
                 )
             )
             callback(result)
@@ -233,9 +249,14 @@ public final class InsecurityHost {
             switch self.state.stage {
             case .batching(let batch):
                 self.state.stage = .purging
-                self.purge(batch.deepestDeadIndex,
-                           scheduledStart: batch.scheduledStart,
-                           animated: true)
+                self.purge(
+                    batch.deepestDeadIndex,
+                    scheduledStart: batch.scheduledStart,
+                    animated: true,
+                    presentationCompleted: batch.presentationCompleted.flatMap { presentationCompleted in
+                        { presentationCompleted() }
+                    }
+                )
                 self.state.stage = .ready
             case .ready, .purging:
                 insecAssertFail(.unexpectedState)
@@ -276,7 +297,8 @@ public final class InsecurityHost {
                 InsecurityHostState.Stage.Batching(
                     deepestDeadIndex: newDeepestDeadIndex,
                     modalIndexThatNeedsDismissing: modalIndexThatNeedsDismissing,
-                    scheduledStart: batching.scheduledStart
+                    scheduledStart: batching.scheduledStart,
+                    presentationCompleted: batching.presentationCompleted
                 )
             )
             

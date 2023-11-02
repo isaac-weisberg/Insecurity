@@ -13,10 +13,10 @@ class PaymentMethodsCoordinator: ModalCoordinator<PaymentMethodsScreenResult> {
             self.finish(result)
         }
         
-        viewController.onNewPaymentMethodRequested = {
+        viewController.onNewPaymentMethodRequested = { [weak viewController] in
             let addPaymentMethodCoordinator = AddPaymentMethodCoordinator()
             
-            self.start(addPaymentMethodCoordinator, animated: true) { [weak viewController] paymentMethod in
+            self.start(addPaymentMethodCoordinator, animated: true) { paymentMethod in
                 if let paymentMethod = paymentMethod {
                     // User has added a new payment method
                     viewController?.handleNewPaymentMethodAdded(paymentMethod)

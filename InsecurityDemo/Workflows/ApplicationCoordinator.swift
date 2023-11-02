@@ -13,7 +13,7 @@ class ApplicationCoordinator {
         let profileCoordinator = ProfileCoordinator()
 
         let controller = insecurityHost.mountForManualManagement(profileCoordinator) { _ in
-
+            
         }
 
         window.rootViewController = controller
